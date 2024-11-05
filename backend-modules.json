@@ -1,0 +1,20 @@
+[
+  {
+    "id": "mod-okapi-facade-2.0.0"
+  },
+  {
+    "id": "mod-consortia-keycloak-1.6.0"
+  },
+  {
+    "id": "mod-login-keycloak-2.0.0"
+  },
+  {
+    "id": "mod-roles-keycloak-2.0.2"
+  },
+  {
+    "id": "mod-scheduler-2.0.0"
+  },
+  {
+    "id": "mod-users-keycloak-2.0.0"
+  }
+]

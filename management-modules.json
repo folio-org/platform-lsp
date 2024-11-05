@@ -1,0 +1,8 @@
+{
+  "kong" : "3.7.2",
+  "folio-keycloak" : "25.0.5",
+  "mgr-applications" : "2.0.0",
+  "mgr-tenants" : "2.0.0",
+  "mgr-tenant-entitlements" : "2.0.0",
+  "folio-module-sidecar" : "2.0.0"
+}
