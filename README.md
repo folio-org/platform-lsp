@@ -25,7 +25,7 @@ Github repository for storing Eureka files required for installation.
   - ### stripes.modules.js
     File which contain modules, which will be included in the UI bundle.
 
-  - ### yarn.locl
+  - ### yarn.lock
     File with all dependencies. [yarn.lock](https://classic.yarnpkg.com/lang/en/docs/yarn-lock/)
 
 
