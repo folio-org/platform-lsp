@@ -1,11 +1,11 @@
 [
     {
-      "id": "mod-okapi-facade-2.0.0"
+      "id": "authorization-policies-1.3.0"
     },
     {
-      "id": "mod-consortia-keycloak-1.6.0"
+      "id": "authorization-roles-1.6.0"
     },
     {
-      "id": "mod-login-keycloak-2.0.0"
+      "id": "plugin-select-application-1.0.1"
     }
   ]
