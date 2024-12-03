@@ -1,9 +1,9 @@
 [
-  {"id": "app-platform-complete-1.0.23"},
-  {"id": "app-consortia-1.0.2"},
-  {"id": "app-platform-minimal-1.0.10"},
+  {"id": "app-platform-minimal-1.0.11"},
   {"id": "app-erm-usage-1.0.2"},
-  {"id": "app-edge-complete-1.0.3"},
+  {"id": "app-dcb-1.0.4"},
+  {"id": "app-platform-complete-1.0.24"},
   {"id": "app-edge-locate-1.0.0"},
-  {"id": "app-dcb-1.0.4"}
+  {"id": "app-edge-complete-1.0.3"},
+  {"id": "app-consortia-1.0.2"}
 ]
