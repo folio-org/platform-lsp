@@ -16,5 +16,14 @@
   },
   {
     "id": "mod-users-keycloak-2.0.1"
+  },
+  {
+    "id": "mod-requests-mediated-1.0.1"
+  },
+  {
+    "id": "mod-tlr-1.0.1"
+  },
+  {
+    "id": "mod-circulation-bff-1.0.1"
   }
 ]
