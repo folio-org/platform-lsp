@@ -18,12 +18,12 @@
     "id": "mod-users-keycloak-2.0.2"
   },
   {
-    "id": "mod-requests-mediated-1.0.1"
+    "id": "mod-requests-mediated-1.0.2"
   },
   {
     "id": "mod-tlr-1.0.1"
   },
   {
-    "id": "mod-circulation-bff-1.0.2"
+    "id": "mod-circulation-bff-1.0.3"
   }
 ]
