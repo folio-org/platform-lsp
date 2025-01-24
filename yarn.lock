@@ -1258,10 +1258,10 @@
     react-final-form-arrays "^3.1.4"
     utility-types "^3.10.0"
 
-"@folio/checkin@9.2.1":
-  version "9.2.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/checkin/-/checkin-9.2.1.tgz#aa7128ad8438bd2fc4cdbe0ecec9bbc523567585"
-  integrity sha512-9DyRi5jKsqnpQu/y65td8bpjqyQGD2HO8fwEhwl7h8ebny/h7TeaBPaHIX6qy9O4YAMxmu1YTqWLWQZAkOJfDg==
+"@folio/checkin@10.0.1":
+  version "10.0.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/checkin/-/checkin-10.0.1.tgz#7d823d3827bf68c3becd80eb82c96b9bb97d29f8"
+  integrity sha512-kVgrhqAmPAxOlsBKK7YckJ/wREhbwWoehfk21zIk+dHmdI+BEg0WwG7rFx6wZb611sL2nqTLw92T9/mGeBa+2A==
   dependencies:
     dateformat "^2.0.0"
     dompurify "^3.0.9"
@@ -1587,10 +1587,10 @@
     "@folio/plugin-create-inventory-records" "^5.0.0"
     "@folio/plugin-find-instance" "^8.0.0"
 
-"@folio/invoice@6.1.1":
-  version "6.1.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/invoice/-/invoice-6.1.1.tgz#6586c886cba342ca8bdaf986e27e31e210e3ea04"
-  integrity sha512-qzUzZtv7gxwhvuxx5MLymInhMEqoViOsh9fAgiJxNYBjewgtqnVcgadlQ4Mt4n2biAjOU2g03p6ym2yMioWLxg==
+"@folio/invoice@6.1.2":
+  version "6.1.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/invoice/-/invoice-6.1.2.tgz#4bf83d808ff45cd5877b5eb6293f366b060a83c1"
+  integrity sha512-ZVZyJvBGpGq8TId6m358EuBd2WQxdVzvQOA/U0wLavSaKPRRyvywfqrVQJUqAE7HsRO7XXPo5HF9jW34wa+MGw==
   dependencies:
     "@folio/stripes-acq-components" "~6.0.0"
     file-saver "^2.0.0"
@@ -1646,10 +1646,10 @@
     react-final-form-arrays "^3.1.0"
     react-router-prop-types "^1.0.4"
 
-"@folio/lists@3.1.5":
-  version "3.1.5"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/lists/-/lists-3.1.5.tgz#9358a3aa68a1bf664873dea442a6304c412049ea"
-  integrity sha512-GxDiPq1L/mDNguvEWIseKOnr4oEF1im15WCxwlVVUHO+5XjMZA4XThERFkYWQw6QP2NAltG0kbKkWMpY0ds/Qg==
+"@folio/lists@3.1.6":
+  version "3.1.6"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/lists/-/lists-3.1.6.tgz#b86bc7ef994688f8d9f1ab66ee41d56e9e0b30e4"
+  integrity sha512-joUelBk14FqpREMVoocyaL/fNQqNkClfZNb4HeDXGwziD6aOh2pUefdkbsPh3eXfZRpK69crWOrX0vfzl32PBw==
   dependencies:
     "@folio/plugin-query-builder" "^1.1.2"
     "@folio/stripes-acq-components" "~6.0.0"
@@ -1955,7 +1955,18 @@
     lodash "^4.17.4"
     prop-types "^15.6.0"
 
-"@folio/plugin-query-builder@1.2.8", "@folio/plugin-query-builder@^1.1.2":
+"@folio/plugin-query-builder@1.2.9":
+  version "1.2.9"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-query-builder/-/plugin-query-builder-1.2.9.tgz#efcc547676174ad9e233fa116842c5d8308cd302"
+  integrity sha512-H1KeS2vTs/ARw6sgdBOYumczCw7KiKZHStCSqfGOIR1BK0DCK7XSb4/5swNwc4OHYVViXclVWvym4L06Yqpo2g==
+  dependencies:
+    "@folio/stripes-acq-components" "^6.0.0"
+    ky "^0.33.2"
+    lodash "^4.17.5"
+    prop-types "^15.5.10"
+    react-query "^3.6.0"
+
+"@folio/plugin-query-builder@^1.1.2":
   version "1.2.8"
   resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-query-builder/-/plugin-query-builder-1.2.8.tgz#d0f5d9b50675cef9af656ec1605be4ed7bf2a4dc"
   integrity sha512-6aNYfyp9JMgL3u+1aXKMAvjVx2lK4G1yoclYhLXsj7caHIchyqZ70Dvpb0a5ofHrIrSINvtTcAonwkGSmf45gA==
@@ -2096,6 +2107,28 @@
   dependencies:
     lodash "^4.17.4"
     prop-types "^15.6.0"
+
+"@folio/stripes-acq-components@6.0.4":
+  version "6.0.4"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-acq-components/-/stripes-acq-components-6.0.4.tgz#367d1a2a2a0555bd800759b5d8b040a44137ed94"
+  integrity sha512-V3gjF99IQqud8lF6IqOBRfyj567W6I9lFWgZKiQ6P77YtfW5vM65CQ4Vx/Ryb3Mq6XKcqC8Ygrwkx4NkoredkA==
+  dependencies:
+    "@folio/stripes-types" "^2.1.0"
+    "@rehooks/local-storage" "^2.4.4"
+    classnames "^2.2.5"
+    dom-helpers "^3.4.0"
+    final-form "^4.18.2"
+    final-form-arrays "^3.0.2"
+    lodash "^4.17.11"
+    prop-types "^15.7.2"
+    query-string "^7.1.2"
+    react-beautiful-dnd "^13.1.0"
+    react-dropzone "^10.0.0"
+    react-final-form "^6.3.0"
+    react-final-form-arrays "^3.1.1"
+    react-to-print "^2.15.1"
+    react-virtualized-auto-sizer "^1.0.6"
+    redux-form "^8.3.0"
 
 "@folio/stripes-acq-components@^6.0.0", "@folio/stripes-acq-components@~6.0.0":
   version "6.0.3"
