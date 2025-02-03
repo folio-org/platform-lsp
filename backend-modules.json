@@ -6,16 +6,16 @@
     "id": "mod-consortia-keycloak-1.6.6"
   },
   {
-    "id": "mod-login-keycloak-2.0.1"
+    "id": "mod-login-keycloak-2.0.2"
   },
   {
-    "id": "mod-roles-keycloak-2.0.13"
+    "id": "mod-roles-keycloak-2.0.14"
   },
   {
-    "id": "mod-scheduler-2.0.0"
+    "id": "mod-scheduler-2.0.1"
   },
   {
-    "id": "mod-users-keycloak-2.0.3"
+    "id": "mod-users-keycloak-2.0.4"
   },
   {
     "id": "mod-requests-mediated-1.0.5"
