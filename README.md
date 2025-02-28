@@ -1,6 +1,7 @@
 # Platform-lsp
 
 ## TODO purpose of repo
+Equivalent of platform complete for the Eureka.
 ## branching strategy
 ## taggins strategy
 ## brief examples
