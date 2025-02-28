@@ -1,20 +1,25 @@
 # Platform-lsp
 
+## TODO purpose of repo
+## branching strategy
+## taggins strategy
+## brief examples
+
 Github repository for storing Eureka files required for installation.
 
 # Repository structure
 
   - ### install-applications.json
-    This file contains all available applications for latest release.
+    This file contains specific versions of appications for specific release.
 
   - ### management-modules.json
-    List of eureka management modules applicable for latest release
+    List of eureka management modules, sidecars that are applicable for specific release
 
   - ### backend-modules.json
-    List of backend modules, which are part of applications, but not present in [Platform complete](https://github.com/folio-org/platform-complete) repository.
+    List of backend modules, which are part of applications, but not present in [Platform complete](https://github.com/folio-org/platform-complete) repository. Safe to ignore.
 
   - ### frontend-modules.json
-    List of the eureka specific UI modules and plugins.
+    List of the eureka specific UI modules and plugins. Safe to ignore.
 
   - ### package.json
     An NPM [package.json](https://docs.npmjs.com/cli/v10/configuring-npm/package-json) that specifies the version of UI components.
@@ -26,6 +31,5 @@ Github repository for storing Eureka files required for installation.
     File which contain modules, which will be included in the UI bundle.
 
   - ### yarn.lock
-    File with all dependencies. [yarn.lock](https://classic.yarnpkg.com/lang/en/docs/yarn-lock/)
-
-
+    File with UI dependencies. [yarn.lock](https://classic.yarnpkg.com/lang/en/docs/yarn-lock/)
+    
