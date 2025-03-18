@@ -6,15 +6,15 @@
     "id": "folio-keycloak-26.1.1"
   },
   {
-    "id": "mgr-applications-2.1.0"
+    "id": "mgr-applications-3.0.0"
   },
   {
-    "id": "mgr-tenants-2.0.1"
+    "id": "mgr-tenants-3.0.0"
   },
   {
-    "id": "mgr-tenant-entitlements-2.0.8"
+    "id": "mgr-tenant-entitlements-3.0.0"
   },
   {
-    "id": "folio-module-sidecar-2.0.8"
+    "id": "folio-module-sidecar-3.0.0"
   }
 ]
