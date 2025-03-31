@@ -3,7 +3,7 @@
     "id": "mod-okapi-facade-3.0.0"
   },
   {
-    "id": "mod-consortia-keycloak-1.7.0"
+    "id": "mod-consortia-keycloak-1.7.1"
   },
   {
     "id": "mod-login-keycloak-3.0.0"
@@ -15,6 +15,6 @@
     "id": "mod-scheduler-3.0.0"
   },
   {
-    "id": "mod-users-keycloak-3.0.0"
+    "id": "mod-users-keycloak-3.0.1"
   }
 ]
