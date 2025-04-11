@@ -1743,10 +1743,10 @@
     "@folio/plugin-create-inventory-records" "^6.0.0"
     "@folio/plugin-find-instance" "^9.0.0"
 
-"@folio/invoice@7.0.2":
-  version "7.0.2"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/invoice/-/invoice-7.0.2.tgz#f09331ff7e2029bcdd560313f3254c9ba23ac1fe"
-  integrity sha512-0nJesspFe9dQGM/Ilq8m4AjQY+HfG9GW8BvhL+PCTORrMjM5KPkkqhOxfYX8aYGju5Btpud7+Pi1LK15WPg2BA==
+"@folio/invoice@7.0.3":
+  version "7.0.3"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/invoice/-/invoice-7.0.3.tgz#0ec1c87880de8257af58226b885ba0a0db5d58de"
+  integrity sha512-aGZ2gM/CYfaqx/PqrtqibTVelHlpYaDSqJqyQXt9SyPyxuO9DqXzQlUpVuGyaxvXluf1fpOw13sVZDw0enSFbA==
   dependencies:
     "@folio/stripes-acq-components" "~7.0.0"
     file-saver "^2.0.0"
@@ -1897,10 +1897,10 @@
     react-query "^3.39.3"
     react-router-prop-types "^1.0.4"
 
-"@folio/orders@8.0.1":
-  version "8.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/orders/-/orders-8.0.1.tgz#1c018ca13d4151beb1669ffdd238845799106c58"
-  integrity sha512-SofKH5CDB6TKjy4phT6INw9i9QJ3LMHhBTMINkwnm/NwpAzN0GXYKFIaeeyuaX+gsu7DGdbtjPRCsl2N+lLMPw==
+"@folio/orders@8.0.3":
+  version "8.0.3"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/orders/-/orders-8.0.3.tgz#76e674e4a1c812f661f084c6d7e73fd93727c5dc"
+  integrity sha512-aRouBPdvxKVctJAGsU24tk5D9+KhIw924ZHqn9juN3nmJRMMc3Vl0/m/cjYGCtzNgsLlf0qPKxN4VG8uYRE0kQ==
   dependencies:
     "@folio/plugin-find-po-line" "^6.0.0"
     "@folio/stripes-acq-components" "~7.0.0"
@@ -2715,10 +2715,10 @@
     react-final-form-arrays "^3.1.1"
     redux-form "^8.0.0"
 
-"@folio/users@12.1.1":
-  version "12.1.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/users/-/users-12.1.1.tgz#7fbeb74a5f4d612f048ea44686a57a94125d7ceb"
-  integrity sha512-5IO6zObZU1GkTwF2pwEi89xmpCgKCrqb8HIDxaAWWd/CDPQOMd4Xt0bseCc1VwE/9332VJY/9Qce7gYDZxyZyg==
+"@folio/users@12.1.2":
+  version "12.1.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/users/-/users-12.1.2.tgz#ba7f4ca33b6c04a2b37573de77aab6dbec0e16cb"
+  integrity sha512-iZEcxZVbfzdnrak9j/iyEE5SSYQH0uAlmPK80dmgbFW0kscFMl4nmXdy6dAUIlTKdHSuD/lt3pK6fsgr8QvmWw==
   dependencies:
     compressorjs "^1.2.1"
     dompurify "^3.2.0"
