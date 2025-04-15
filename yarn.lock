@@ -1714,10 +1714,10 @@
     lodash "^4.17.11"
     prop-types "^15.6.0"
 
-"@folio/inventory@13.0.1":
-  version "13.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory/-/inventory-13.0.1.tgz#545878b9cf78371d505cfb93d3a4c09cc21ff26d"
-  integrity sha512-U0e1jVuy1xTmSjlQwZx+ULwRq/XoGFf6oSIBw/Dp8WCATwV/R99ohRpoAnJD5WR5FS0UzaMe1kE9+UzdJ901iA==
+"@folio/inventory@13.0.3":
+  version "13.0.3"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory/-/inventory-13.0.3.tgz#55417730e1969c240f17fd8863e802700121f107"
+  integrity sha512-644tdWTBKNWaN+mPZI4oaNB4yDPy9KqBZm0ED8ZoxZweOjnug3FbjZpT8j5YMv19+6py0ftGBL/nHIWt9Fr7Jg==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.3.2"
@@ -1853,10 +1853,10 @@
     react-final-form "^6.3.0"
     react-final-form-arrays "^3.1.1"
 
-"@folio/marc-authorities@7.0.1":
-  version "7.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/marc-authorities/-/marc-authorities-7.0.1.tgz#583355f6c26fe9c8673307926c1825cf7bf39c86"
-  integrity sha512-ww3U5qrzeyoN6DzrsieUFHMvI+NlOfFt9b+12/G65nx2+QH0HLZAeg4iDR0iNtalMi0jB2bR9kyljglvB+7gOQ==
+"@folio/marc-authorities@7.0.2":
+  version "7.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/marc-authorities/-/marc-authorities-7.0.2.tgz#ca21e45be1f8928343c42a64ecb6529ca5c077df"
+  integrity sha512-QUh9aCvV92xF+XpK0KrZKcHbl+39deb9M8MOBVxJLQTnDisOTBlWQs69XXCQ/KnGyDIPvj0IpHx09aBdEvpbvg==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     "@rehooks/local-storage" "^2.4.4"
@@ -2207,10 +2207,10 @@
     react-final-form "^6.3.0"
     uuid "^9.0.0"
 
-"@folio/receiving@7.0.1":
-  version "7.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/receiving/-/receiving-7.0.1.tgz#5e0677f820760fe05d2dda87d0fc033c65afdacd"
-  integrity sha512-Ucx59rq9GKL7SpQ/VP1ZvYyeGTFv3XbTBWWpHTfMKQE/JFW6H+wENFE4Lqbh7fqytZ9bVadEdtwgr4Cs7EJDNA==
+"@folio/receiving@7.0.2":
+  version "7.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/receiving/-/receiving-7.0.2.tgz#d72da3a7bdd6a3ec9c5591d4493f6d264e3ea6a8"
+  integrity sha512-gfTtrHkzYwA2c23/oAD7BKNTYCq/N82dSyhzLmnSkC8Mw3OD2Lm1hK3dJP3qcze5VxdCBhRzEh+horeHpcMchA==
   dependencies:
     "@folio/stripes-acq-components" "~7.0.0"
     final-form "^4.18.2"
