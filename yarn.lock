@@ -1625,10 +1625,10 @@
     react-inspector "^6.0.0"
     react-query "^3.38.1"
 
-"@folio/eholdings@11.0.0":
-  version "11.0.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/eholdings/-/eholdings-11.0.0.tgz#821fd1a1e4420447b6d295f8e622c3c7d17bbb88"
-  integrity sha512-LGQHFduk7yGkaLXUOZSJOvwssyfWVe2izitCzzo94BFeJutLzOfZbpfdJ9gCDAQ861tZrYcd74ozwcVYoBwXJw==
+"@folio/eholdings@11.0.1":
+  version "11.0.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/eholdings/-/eholdings-11.0.1.tgz#8fd262651b64bce0b9bd237bbeae14f57eae17ba"
+  integrity sha512-NHqpeOyn/VzXRYhgmEIWkEQvSnYO3HehOlcCdE+w4sKP9CRrPFsjg25tx8RwZDU4ZWu5oaV/nXnqNU7ApwexfA==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
@@ -2197,7 +2197,27 @@
     lodash "^4.17.11"
     prop-types "^15.6.0"
 
-"@folio/quick-marc@10.0.0", "@folio/quick-marc@^10.0.0":
+"@folio/quick-marc@10.0.1":
+  version "10.0.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/quick-marc/-/quick-marc-10.0.1.tgz#c44f0f0a6a716a9b48ce2ec4e6f737d9b9cdd548"
+  integrity sha512-R/JfI8kfY4FvBDG6chSJWGLzknWcN/yIYEG76WmTCJNZjAYE/joC/gdzZkXbaFrWkI+SXzEXmWz8JCoIGOrTYw==
+  dependencies:
+    "@folio/stripes-acq-components" "^7.0.0"
+    classnames "^2.5.1"
+    final-form "^4.18.2"
+    final-form-arrays "^3.0.1"
+    lodash "^4.17.5"
+    prop-types "^15.5.10"
+    react-final-form "^6.3.0"
+    react-final-form-arrays "^3.1.0"
+    react-final-form-listeners "^1.0.2"
+    react-query "^3.39.2"
+    react-router-prop-types "^1.0.4"
+    uuid "^8.3.2"
+  optionalDependencies:
+    "@folio/plugin-find-authority" "^5.0.0"
+
+"@folio/quick-marc@^10.0.0":
   version "10.0.0"
   resolved "https://repository.folio.org/repository/npm-folio/@folio/quick-marc/-/quick-marc-10.0.0.tgz#438bc725d75e20eae00ccf9725c630de46df36c2"
   integrity sha512-1fTjA+J5IMiDHv93Y/HJqZUiQzuvPm65+Xj+pCVHIpSqTGlhiyrofRE+3wJ9lH+QU/mjn4cBrdnOFkTWtjGE/Q==
