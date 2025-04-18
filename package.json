@@ -9,7 +9,7 @@
   "dependencies":   {
     "@folio/acquisition-units": "6.0.0",
     "@folio/agreements": "12.0.2",
-    "@folio/bulk-edit": "5.0.0",
+    "@folio/bulk-edit": "5.0.2",
     "@folio/calendar": "12.0.0",
     "@folio/checkin": "11.0.0",
     "@folio/checkout": "12.0.1",

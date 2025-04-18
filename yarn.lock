@@ -1367,10 +1367,10 @@
     react-router-prop-types "^1.0.4"
     zustand "^4.1.5"
 
-"@folio/bulk-edit@5.0.0":
-  version "5.0.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/bulk-edit/-/bulk-edit-5.0.0.tgz#b4fb20f7b3263d444f560ad77b6d93dc374fbe35"
-  integrity sha512-nEn5CjpjEoaZjxe947IGHvaiP7EkyX1Gj6F5zTBEIW+T7Fk/HxpVlU6N5IFplDDdT83Ke+vcjfO5wSmpZhvbHA==
+"@folio/bulk-edit@5.0.2":
+  version "5.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/bulk-edit/-/bulk-edit-5.0.2.tgz#4d9ab44c9b85cdb567f5ed5088020abd1e144bf7"
+  integrity sha512-M0JtiQUKS64A5sIs6cmw9ExHHBj4lVTbuzKZukSxHCgg5IUFWcfbIn92Ubl8dgswG/B7UW4pqWJxf67jTqVkuQ==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     file-saver "^2.0.5"
