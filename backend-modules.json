@@ -16,5 +16,11 @@
   },
   {
     "id": "mod-users-keycloak-3.0.1"
+  },
+  {
+    "id": "edge-inventory-2.2.0"
+  },
+  {
+    "id": "edge-users-2.1.0"
   }
 ]
