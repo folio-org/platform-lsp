@@ -2767,10 +2767,10 @@
     react-final-form-arrays "^3.1.1"
     redux-form "^8.0.0"
 
-"@folio/users@12.1.3":
-  version "12.1.3"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/users/-/users-12.1.3.tgz#3e0d1201c7d9e0dd409d03ac58528a0b538154d9"
-  integrity sha512-0q8BzGlZkTp/9GvfcHPXaGdykau1kmy/KIrGqEvaMBMz4n7PhLNevfR6DXzXbkutxLjyfc5JKfWJkSw8YjeANw==
+"@folio/users@12.1.4":
+  version "12.1.4"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/users/-/users-12.1.4.tgz#572c4bffbf60538ad6c680b7bcf973fa34af73c2"
+  integrity sha512-UuGc7meZCAatmpnt3OqPWYJJVSl6UQI819gLfDN1sQpbTZn0Q6JtTxjIGlbBB8i9Bt0OLSrhesXV663HzQJtrA==
   dependencies:
     compressorjs "^1.2.1"
     dompurify "^3.2.0"
