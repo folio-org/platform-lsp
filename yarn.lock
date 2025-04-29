@@ -1763,10 +1763,10 @@
     "@folio/plugin-create-inventory-records" "^6.0.0"
     "@folio/plugin-find-instance" "^9.0.0"
 
-"@folio/invoice@7.0.3":
-  version "7.0.3"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/invoice/-/invoice-7.0.3.tgz#0ec1c87880de8257af58226b885ba0a0db5d58de"
-  integrity sha512-aGZ2gM/CYfaqx/PqrtqibTVelHlpYaDSqJqyQXt9SyPyxuO9DqXzQlUpVuGyaxvXluf1fpOw13sVZDw0enSFbA==
+"@folio/invoice@7.0.4":
+  version "7.0.4"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/invoice/-/invoice-7.0.4.tgz#91874c28e111f637cf14664a74dc965d4fb92a09"
+  integrity sha512-x0CRk5HTJCzfJNbsLibuyC2gE/sxPZhhYaQVBt5Xt6irXmNXbxW0YVAuzS1Yq89amB9JmLSz2bmiXwdKgiWYOQ==
   dependencies:
     "@folio/stripes-acq-components" "~7.0.0"
     file-saver "^2.0.0"
@@ -2302,10 +2302,10 @@
     "@folio/plugin-find-instance" "^9.0.0"
     "@folio/plugin-find-user" "^8.0.0"
 
-"@folio/serials-management@2.0.3":
-  version "2.0.3"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/serials-management/-/serials-management-2.0.3.tgz#da4a097558743b33880267028c5162cdf444d121"
-  integrity sha512-kKbrASvl7V/Z4AOvh/rnW8zx16D8rLDm+6DMLH5bsp31q4h6dSVjr+xNrirYZ96osg3h16A4Q3yn47yIDj1Wdw==
+"@folio/serials-management@2.0.4":
+  version "2.0.4"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/serials-management/-/serials-management-2.0.4.tgz#53694d2f70138a5e95c1c802a5167621d01be2bc"
+  integrity sha512-g+y6/LzZXeCkSQDICdLdf/aOqMVBCWSUdoz7k6kCtsWpkZ8+RTPCSG8u0Zh/bi5JB3rRnLB8s/Ls47UFqwEZVw==
   dependencies:
     "@k-int/stripes-kint-components" "^5.15.0"
     final-form "^4.18.4"
