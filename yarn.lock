@@ -1503,13 +1503,13 @@
     "@folio/stripes-acq-components" "^7.0.0"
     lodash "^4.17.21"
 
-"@folio/consortia-settings@3.0.0":
-  version "3.0.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/consortia-settings/-/consortia-settings-3.0.0.tgz#2696fe1e0bb3ab6b7de964b22ca3eed943e33e36"
-  integrity sha512-WLTz1YmneXgUm99pG4dunEWMrGRXEiGii6y67oYwShDCCPyPsixTQrx2sdDJI+qLyWc59IVyoHS+JmXYAEUr7A==
+"@folio/consortia-settings@3.0.1":
+  version "3.0.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/consortia-settings/-/consortia-settings-3.0.1.tgz#c864b524448101371a0b3527841c01a7b8d52ba8"
+  integrity sha512-fOrAirsxs7vIGl0WSYkOBpdggNm/ZZoIfsZmsXxJ/7EABB24+yKbYPKsat7D9p8rPXyu8URT70YCnBV5Cdf0HA==
   dependencies:
     "@folio/stripes-acq-components" "~7.0.0"
-    "@folio/stripes-authorization-components" "^2.0.0"
+    "@folio/stripes-authorization-components" "^2.0.2"
     "@folio/stripes-data-transfer-components" "^7.0.0"
     "@rehooks/local-storage" "^2.4.4"
     dom-helpers "^3.4.0"
@@ -2197,10 +2197,10 @@
     lodash "^4.17.11"
     prop-types "^15.6.0"
 
-"@folio/quick-marc@10.0.1":
-  version "10.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/quick-marc/-/quick-marc-10.0.1.tgz#c44f0f0a6a716a9b48ce2ec4e6f737d9b9cdd548"
-  integrity sha512-R/JfI8kfY4FvBDG6chSJWGLzknWcN/yIYEG76WmTCJNZjAYE/joC/gdzZkXbaFrWkI+SXzEXmWz8JCoIGOrTYw==
+"@folio/quick-marc@10.0.2":
+  version "10.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/quick-marc/-/quick-marc-10.0.2.tgz#c945390b0e8c24a8cafd911e7bdcf4cae1d45447"
+  integrity sha512-FiVrRk8aES0+yNJlIqvOxzjQuNjNpntTu+YaAL5uhyppmC6LRBcqQb/RPKakFbulqHnNCtbynWksmz7/97prlQ==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
@@ -2372,10 +2372,10 @@
     query-string "^7.0.1"
     react-query "^3.39.3"
 
-"@folio/stripes-authorization-components@^2.0.0":
-  version "2.0.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-authorization-components/-/stripes-authorization-components-2.0.0.tgz#53606cc8bb5c9b8c0334497b43cc16b459374ac3"
-  integrity sha512-go25idHSK+buMaaiQxLS7AN6nbWgQhRSwme9PSstfuH18nU/K9zmxh8IuHhoefrp2/XKxeMKkY98E9MLltNSrQ==
+"@folio/stripes-authorization-components@^2.0.2":
+  version "2.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-authorization-components/-/stripes-authorization-components-2.0.2.tgz#8407ee941c05b85453d72591da20ca905699f093"
+  integrity sha512-wHijZIqOnUv5Wu1tNJcQfltE83kMdhGJG0vKEDzB3Gdw+EGpbs1xI99KJszJSbxpwA7PqX4Oump/mBG950jaHw==
   dependencies:
     "@folio/plugin-select-application" "^2.0.0"
     classnames "^2.2.6"
