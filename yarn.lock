@@ -2448,10 +2448,10 @@
     redux "^4.2.1"
     uuid "^9.0.0"
 
-"@folio/stripes-core@~11.0.6":
-  version "11.0.6"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-core/-/stripes-core-11.0.6.tgz#f2fce2e8054ecfa6a497653727a182d8a35695ba"
-  integrity sha512-gaEw/m6Q+H/5NjbF7vPBIniijwWpy1wrbqf9OlG3gkhgj2gUcYr6Tw77p+yZXaWIO6GBLDXVdHTfEdnFc2f9Qw==
+"@folio/stripes-core@~11.0.7":
+  version "11.0.7"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-core/-/stripes-core-11.0.7.tgz#f2f2150af5633e0eb93d6f1ab8d18627b7be4cdd"
+  integrity sha512-qLoZzhmBYky7an/u/0vHwYy1LaXfwc1yflgR3JX4Lj1MtMhBHJtxxJnZsrdo8zbuS2OAsiMcM3k5vlTuy5mVrA==
   dependencies:
     "@apollo/client" "^3.2.1"
     classnames "^2.2.5"
@@ -2542,10 +2542,10 @@
     prop-types "^15.5.10"
     redux-form "^8.3.0"
 
-"@folio/stripes-inventory-components@2.0.3":
-  version "2.0.3"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-inventory-components/-/stripes-inventory-components-2.0.3.tgz#f358c38315e8112e69adaa274e587df13af1b169"
-  integrity sha512-o3kxAyiyDHRnxanJRjq1Sc0RGn0bDqElQ+ANlGv5lgTV/YYrQpFskY9WyBx3VMF7b1ow4pncnA2UzGQS5nrPRw==
+"@folio/stripes-inventory-components@2.0.4":
+  version "2.0.4"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-inventory-components/-/stripes-inventory-components-2.0.4.tgz#1da4ea63f7e66d976f20158a3dae82a708429674"
+  integrity sha512-MMlWcut2dlV3cuueP7ShosQUyQuhwgEG1mcp4q3SfzO6LLX1mYFfcMEyZyyuckF1RGB+N7U0GuD8eoAG8KZC+g==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     history "^4.10.0"
@@ -2729,14 +2729,14 @@
     webpack-remove-empty-scripts "^1.0.1"
     webpack-virtual-modules "^0.4.3"
 
-"@folio/stripes@10.0.10":
-  version "10.0.10"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes/-/stripes-10.0.10.tgz#a75d04c2d9587621bad9236db85fc593c942f5bf"
-  integrity sha512-4YAMKXvjFj9yl6FuzpuwpjRuq//Ukne+54N5V9clKSCbYcpikc8j2ILOO7aEP0d8TF6XN3HKi07I4WFzoCW7Ng==
+"@folio/stripes@10.0.11":
+  version "10.0.11"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes/-/stripes-10.0.11.tgz#1ed3e08f26a456bbcca8e212ae41a63b14be3a04"
+  integrity sha512-24PyTYZpbinUDZvWGgz1C6CKj6Fuk4h2dwyUigXQA2Njc3Z0A/av13La1Q9VmcSF8H+ccomhtbzIDckld9Ityw==
   dependencies:
     "@folio/stripes-components" "~13.0.6"
     "@folio/stripes-connect" "~10.0.0"
-    "@folio/stripes-core" "~11.0.6"
+    "@folio/stripes-core" "~11.0.7"
     "@folio/stripes-final-form" "~9.0.0"
     "@folio/stripes-form" "~10.0.0"
     "@folio/stripes-logger" "~1.0.0"
