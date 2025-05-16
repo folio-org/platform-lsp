@@ -23,7 +23,7 @@
     "@folio/data-import": "9.0.1",
     "@folio/developer": "10.0.0",
     "@folio/eholdings": "11.0.1",
-    "@folio/erm-comparisons": "8.0.0",
+    "@folio/erm-comparisons": "8.0.1",
     "@folio/erm-usage": "11.0.1",
     "@folio/export-manager": "4.0.0",
     "@folio/finance": "8.0.4",
@@ -103,6 +103,7 @@
   "resolutions":   {
     "@rehooks/local-storage": "2.4.5",
     "@folio/stripes-acq-components": "7.0.5",
+    "@folio/stripes-authorization-components": "2.0.4",
     "colors": "1.4.0",
     "final-form": "^4.20.4",
     "minimist": "^1.2.3",
