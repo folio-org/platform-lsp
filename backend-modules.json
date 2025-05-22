@@ -18,13 +18,13 @@
     "id": "mod-users-keycloak-2.0.5"
   },
   {
-    "id": "mod-requests-mediated-1.0.13"
+    "id": "mod-requests-mediated-1.0.15"
   },
   {
-    "id": "mod-tlr-1.0.15"
+    "id": "mod-tlr-1.0.16"
   },
   {
-    "id": "mod-circulation-bff-1.0.16"
+    "id": "mod-circulation-bff-1.0.17"
   },
   {
     "id": "edge-inventory-2.1.3"
