@@ -1,14 +1,14 @@
 [
   {"id": "app-platform-minimal-1.0.40"},
-  {"id": "app-platform-complete-1.1.71"},
   {"id": "app-edge-locate-1.0.3"},
   {"id": "app-edge-complete-1.0.8"},
+  {"id": "app-platform-complete-1.1.72"},
   {"id": "app-reading-room-1.1.0"},
-  {"id": "app-erm-usage-1.0.3"},
   {"id": "app-dcb-1.0.11"},
-  {"id": "app-requests-mediated-1.1.10"},
+  {"id": "app-erm-usage-1.0.3"},
   {"id": "app-consortia-1.1.3"},
-  {"id": "app-consortia-manager-1.0.0"},
   {"id": "app-requests-ecs-1.0.14"},
-  {"id": "app-requests-mediated-ui-1.0.3"}
+  {"id": "app-requests-mediated-1.1.10"},
+  {"id": "app-requests-mediated-ui-1.0.3"},
+  {"id": "app-consortia-manager-1.0.0"}
 ]
