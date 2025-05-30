@@ -1739,10 +1739,10 @@
     lodash "^4.17.11"
     prop-types "^15.6.0"
 
-"@folio/inventory@13.0.4":
-  version "13.0.4"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory/-/inventory-13.0.4.tgz#55085928eb0e1cadadaf4732de0368e47d00cca3"
-  integrity sha512-zfsoyRJIO0FmJN2XSHBgGLR+Igapk7zEs/TZYtS4i4U0XeBGJwDHdu5qm/n0cRlAtZZ65v0IO0RDdBpU3k7hpA==
+"@folio/inventory@13.0.5":
+  version "13.0.5"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory/-/inventory-13.0.5.tgz#58e3ab0491a235726617a765ecefdce249e9b988"
+  integrity sha512-+OLjBvXSDg7IUkkYYTZ3Q5/x+jdh3BfHWrcN/MHialZ7ck8ff0RvQkDrE7FD31wl0Qa0mtrn/AfDltXcKc1zgw==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.3.2"
@@ -2285,10 +2285,10 @@
     react-final-form "^6.5.2"
     react-router-prop-types "^1.0.4"
 
-"@folio/requests@12.0.2":
-  version "12.0.2"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/requests/-/requests-12.0.2.tgz#cc670d0804a5e10aa547a565a7571506bd11ef5d"
-  integrity sha512-zFdVHRc9j3TW1+PioIklaJvgck4bWyNEbomr03XnH874uDgLzH/STYY8vRlKDsF1t+YzAQpuPU+WH89LAam8RQ==
+"@folio/requests@12.0.3":
+  version "12.0.3"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/requests/-/requests-12.0.3.tgz#54427fe2c9562c0fddd8958f89338c80e6bf8227"
+  integrity sha512-LigluU1FNfb/lHNLkE6jHl9n0lFPzE911yyYT53o0NqLWcWWgQ81fJ+f11vXaGLm7YU0WTgCQW5xSXbku3fqCg==
   dependencies:
     dompurify "^3.0.9"
     final-form "^4.20.7"
