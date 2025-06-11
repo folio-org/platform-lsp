@@ -1,0 +1,134 @@
+{
+  "name": "FOLIO LSP",
+  "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
+  "version": "R2-2025-SNAPSHOT.4803",
+  "eureka-components": [
+    {
+      "name": "folio-kong",
+      "version": "3.10.0-SNAPSHOT.16"
+    },
+    {
+      "name": "folio-keycloak",
+      "version": "26.3.0-SNAPSHOT.53"
+    },
+    {
+      "name": "folio-module-sidecar",
+      "version": "3.1.0-SNAPSHOT.194"
+    },
+    {
+      "name": "mgr-applications",
+      "version": "4.0.0-SNAPSHOT.168"
+    },
+    {
+      "name": "mgr-tenants",
+      "version": "3.1.0-SNAPSHOT.134"
+    },
+    {
+      "name": "mgr-tenant-entitlements",
+      "version": "4.0.0-SNAPSHOT.194"
+    }
+  ],
+  "applications": {
+    "required": [
+      {
+        "name": "app-platform-minimal",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-platform-complete",
+        "version": "1.0.0-SNAPSHOT.4808"
+      }
+    ],
+    "optional": [
+      {
+        "name": "app-erm-usage",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-edge-complete",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-dcb",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-consortia-manager",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-consortia",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-requests-mediated",
+        "version": "1.1.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-requests-ecs",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-reading-room",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-requests-mediated-ui",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-acquisitions",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-bulk-edit",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-ebsconet",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-fqm",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-gobi",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-inn-reach",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-linked-data",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-marc-migrations",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-mosaic",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-oai-pmh",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-reporting",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-rtac",
+        "version": "1.0.0-SNAPSHOT.4803"
+      }
+    ]
+  },
+  "dependencies": {
+    "postgres": ">=16.0",
+    "kafka": ">=3.8.0",
+    "opensearch": ">=3.0.0"
+  }
+}

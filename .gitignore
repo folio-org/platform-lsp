@@ -1,0 +1,28 @@
+# Stripes Framework related
+ModuleDescriptors
+node_modules
+npm-debug.log*
+stripes.config.js.local
+output
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# VS Code related
+.vscode/
+
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+.git/
+.hg/
