@@ -1768,10 +1768,10 @@
     "@folio/plugin-create-inventory-records" "^6.0.0"
     "@folio/plugin-find-instance" "^9.0.0"
 
-"@folio/invoice@7.0.4":
-  version "7.0.4"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/invoice/-/invoice-7.0.4.tgz#91874c28e111f637cf14664a74dc965d4fb92a09"
-  integrity sha512-x0CRk5HTJCzfJNbsLibuyC2gE/sxPZhhYaQVBt5Xt6irXmNXbxW0YVAuzS1Yq89amB9JmLSz2bmiXwdKgiWYOQ==
+"@folio/invoice@7.0.5":
+  version "7.0.5"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/invoice/-/invoice-7.0.5.tgz#bb64bd9a51540b476d6fcaee8c53c0312d88f049"
+  integrity sha512-2JK45FkQ08LgZyst5OXnv5RPv6xo5zvDuRq9iuTpZgrJGBA/bQNrVnFFI8IeM72M2Jjj5gD68ZAnRYXsKXQpoA==
   dependencies:
     "@folio/stripes-acq-components" "~7.0.0"
     file-saver "^2.0.0"
@@ -1922,10 +1922,10 @@
     react-query "^3.39.3"
     react-router-prop-types "^1.0.4"
 
-"@folio/orders@8.0.3":
-  version "8.0.3"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/orders/-/orders-8.0.3.tgz#76e674e4a1c812f661f084c6d7e73fd93727c5dc"
-  integrity sha512-aRouBPdvxKVctJAGsU24tk5D9+KhIw924ZHqn9juN3nmJRMMc3Vl0/m/cjYGCtzNgsLlf0qPKxN4VG8uYRE0kQ==
+"@folio/orders@8.0.4":
+  version "8.0.4"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/orders/-/orders-8.0.4.tgz#d805780d42b682106ca59415300e4ff83d76eba0"
+  integrity sha512-5/jUx/NkrP/FiqvHzX1GvY+ARdgJ7xvpuen1qP3Z/8Jt8fii9IDgxFuwfkt7Uz0jqMGd9Q2yNUvTnZiR8CaIgg==
   dependencies:
     "@folio/plugin-find-po-line" "^6.0.0"
     "@folio/stripes-acq-components" "~7.0.0"
