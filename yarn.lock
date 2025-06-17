@@ -1739,10 +1739,10 @@
     lodash "^4.17.11"
     prop-types "^15.6.0"
 
-"@folio/inventory@13.0.5":
-  version "13.0.5"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory/-/inventory-13.0.5.tgz#58e3ab0491a235726617a765ecefdce249e9b988"
-  integrity sha512-+OLjBvXSDg7IUkkYYTZ3Q5/x+jdh3BfHWrcN/MHialZ7ck8ff0RvQkDrE7FD31wl0Qa0mtrn/AfDltXcKc1zgw==
+"@folio/inventory@13.0.6":
+  version "13.0.6"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory/-/inventory-13.0.6.tgz#520e36bd113315992f71240772bef3d5df6d8053"
+  integrity sha512-0NFYz3dzOc+hj3dCw+yxhS/oxfvFOZ8MkPQ/uymbLYDZt9sNN56lB1sSpBlc48T7uErGOn0NKFUmtvOiiHIqrA==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.3.2"
@@ -2554,10 +2554,10 @@
     prop-types "^15.5.10"
     redux-form "^8.3.0"
 
-"@folio/stripes-inventory-components@2.0.4":
-  version "2.0.4"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-inventory-components/-/stripes-inventory-components-2.0.4.tgz#1da4ea63f7e66d976f20158a3dae82a708429674"
-  integrity sha512-MMlWcut2dlV3cuueP7ShosQUyQuhwgEG1mcp4q3SfzO6LLX1mYFfcMEyZyyuckF1RGB+N7U0GuD8eoAG8KZC+g==
+"@folio/stripes-inventory-components@2.0.5":
+  version "2.0.5"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-inventory-components/-/stripes-inventory-components-2.0.5.tgz#b27329bf886606e23fa2305b459146dbf4cb47f8"
+  integrity sha512-FEV0wYIiRgLza/dQuxX8B3HINaEzTTncbLwvX+ioY2j+g+0fy89j2isLsOPEmSwpY4shitaTRYHlh6YdwaK/fg==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     history "^4.10.0"
