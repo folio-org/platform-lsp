@@ -1578,10 +1578,10 @@
     react-router-prop-types "^1.0.4"
     react-window "^1.8.5"
 
-"@folio/data-import@9.0.1":
-  version "9.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/data-import/-/data-import-9.0.1.tgz#ade10b77d66964f47d597827b1c0cf0df45b4fe1"
-  integrity sha512-e6H606q1o9TjOpMr5ZxJYZlM0IPOTnbZPHpHTDx1wTFBKrcdGfxFwl7+R7TC9KG19AKTv7JUt3AiiRQjO0nN8Q==
+"@folio/data-import@9.0.2":
+  version "9.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/data-import/-/data-import-9.0.2.tgz#bd37d0900b9dfe9a6b7a4fe1ff55395f5c77a516"
+  integrity sha512-wzQvgaGslrJBOU1jExTvzGg7/d41tvQVfaqzH48qiBXgiv1qchVAT9Hl/B6oYPTCtKuXrVdp9yyK5rTV8THs+Q==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     "@folio/stripes-data-transfer-components" "^7.0.0"
@@ -1739,10 +1739,10 @@
     lodash "^4.17.11"
     prop-types "^15.6.0"
 
-"@folio/inventory@13.0.6":
-  version "13.0.6"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory/-/inventory-13.0.6.tgz#520e36bd113315992f71240772bef3d5df6d8053"
-  integrity sha512-0NFYz3dzOc+hj3dCw+yxhS/oxfvFOZ8MkPQ/uymbLYDZt9sNN56lB1sSpBlc48T7uErGOn0NKFUmtvOiiHIqrA==
+"@folio/inventory@13.0.7":
+  version "13.0.7"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory/-/inventory-13.0.7.tgz#74fc176fa9b11fe9f65c5d6494256bd9f5362f04"
+  integrity sha512-ob3EBhFRfhZqeD4SuRIR3PhC54kQt2C+xTGrBvfdyX6gcuZh4NI6n0A3c33pmsCtU6/IsvpttsmDt/NIJdqh4g==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.3.2"
@@ -1922,10 +1922,10 @@
     react-query "^3.39.3"
     react-router-prop-types "^1.0.4"
 
-"@folio/orders@8.0.4":
-  version "8.0.4"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/orders/-/orders-8.0.4.tgz#d805780d42b682106ca59415300e4ff83d76eba0"
-  integrity sha512-5/jUx/NkrP/FiqvHzX1GvY+ARdgJ7xvpuen1qP3Z/8Jt8fii9IDgxFuwfkt7Uz0jqMGd9Q2yNUvTnZiR8CaIgg==
+"@folio/orders@8.0.5":
+  version "8.0.5"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/orders/-/orders-8.0.5.tgz#3e707a19f85d9b2de800970b205d39b67bbdc20f"
+  integrity sha512-EE4CdMIRYqj5aJAz3hEyZUXhxeRreZ4PaswQrkp1niNOPQMXVOgCvnuNHeS3h1XvxusjDXjU3wFSquNyk1vreA==
   dependencies:
     "@folio/plugin-find-po-line" "^6.0.0"
     "@folio/stripes-acq-components" "~7.0.0"
@@ -2209,10 +2209,10 @@
     lodash "^4.17.11"
     prop-types "^15.6.0"
 
-"@folio/quick-marc@10.0.2":
-  version "10.0.2"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/quick-marc/-/quick-marc-10.0.2.tgz#c945390b0e8c24a8cafd911e7bdcf4cae1d45447"
-  integrity sha512-FiVrRk8aES0+yNJlIqvOxzjQuNjNpntTu+YaAL5uhyppmC6LRBcqQb/RPKakFbulqHnNCtbynWksmz7/97prlQ==
+"@folio/quick-marc@10.0.3":
+  version "10.0.3"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/quick-marc/-/quick-marc-10.0.3.tgz#1bd24a8ba0df99103c94b6b29c4b0510e8e31caf"
+  integrity sha512-htjPYuuxy1DhwnPI4chseHSwfP0FIjSbwax+UrRnUkFox041fBZoqc33XTDs4rzwkqpC0sBkBw63geDueMbf1Q==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
