@@ -2571,10 +2571,10 @@
   resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-logger/-/stripes-logger-1.0.0.tgz#588cdf4d27f90ce99389ccbb87a221fa6dd9e683"
   integrity sha512-YPd1NKDvEpr5d35o/P5Z1aCT37lujH0FR1CrJMJ9hiqe/qtva5ACte3BQdGGV02+M5sC13gBiITs6Vcx7A+GEg==
 
-"@folio/stripes-marc-components@2.0.1":
-  version "2.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-marc-components/-/stripes-marc-components-2.0.1.tgz#2fbc3824cec07df448cbf08c515a0e77c1e79753"
-  integrity sha512-gDfOYY5z6FKMmpiyQ0e/gXdW/wyX129vHpb0l/kIGfzhoG4D9Vl2/Fgh8Vlq+8/nIbwy1w2TiYfL+EvHYzWDmw==
+"@folio/stripes-marc-components@2.0.2":
+  version "2.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-marc-components/-/stripes-marc-components-2.0.2.tgz#5c03d010fd022f3fab2ddf57011b512589fe6ab4"
+  integrity sha512-5SNQkH8MyYUUEs5BUmRRlAqmVLI1i/7OWazlypEYGdr9ykmflTMs6CFl0ipmOtUDwQJ6wzddvtt1Z87f/yfFVg==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.3.2"
