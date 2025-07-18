@@ -1739,10 +1739,10 @@
     lodash "^4.17.11"
     prop-types "^15.6.0"
 
-"@folio/inventory@13.0.7":
-  version "13.0.7"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory/-/inventory-13.0.7.tgz#74fc176fa9b11fe9f65c5d6494256bd9f5362f04"
-  integrity sha512-ob3EBhFRfhZqeD4SuRIR3PhC54kQt2C+xTGrBvfdyX6gcuZh4NI6n0A3c33pmsCtU6/IsvpttsmDt/NIJdqh4g==
+"@folio/inventory@13.0.8":
+  version "13.0.8"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory/-/inventory-13.0.8.tgz#fb59abf3e4f68e48feed57ba20af6101ec7c0a6e"
+  integrity sha512-LCFKctl9gH7oZiLSPGAFASReh+2ckhJCJ5A9qlabQ1DVBbit+JMcQhUkIF8jIPhUweUFwbovC/GPmIYsxek2IA==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.3.2"
@@ -2209,10 +2209,10 @@
     lodash "^4.17.11"
     prop-types "^15.6.0"
 
-"@folio/quick-marc@10.0.3":
-  version "10.0.3"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/quick-marc/-/quick-marc-10.0.3.tgz#1bd24a8ba0df99103c94b6b29c4b0510e8e31caf"
-  integrity sha512-htjPYuuxy1DhwnPI4chseHSwfP0FIjSbwax+UrRnUkFox041fBZoqc33XTDs4rzwkqpC0sBkBw63geDueMbf1Q==
+"@folio/quick-marc@10.0.4":
+  version "10.0.4"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/quick-marc/-/quick-marc-10.0.4.tgz#f11a4df82f04488a587cde5ac374f47e87a1258a"
+  integrity sha512-doBkIaDzqhC+7mmhV47qykP3q7XVl++tB9B1MUWFEL6bYotgnay0oY8MhC6vA2fX9OncnrIHpty7hysciqrjuw==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
