@@ -1,0 +1,134 @@
+{
+  "name": "FOLIO LSP",
+  "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
+  "version": "R1-2025",
+  "eureka-components": [
+    {
+      "name": "folio-kong",
+      "version": "3.9.0"
+    },
+    {
+      "name": "folio-keycloak",
+      "version": "26.1.3"
+    },
+    {
+      "name": "folio-module-sidecar",
+      "version": "3.0.4"
+    },
+    {
+      "name": "mgr-applications",
+      "version": "3.0.0"
+    },
+    {
+      "name": "mgr-tenants",
+      "version": "3.0.0"
+    },
+    {
+      "name": "mgr-tenant-entitlements",
+      "version": "3.1.1"
+    }
+  ],
+  "applications": {
+    "required": [
+      {
+        "name": "app-platform-minimal",
+        "version": "2.0.16"
+      },
+      {
+        "name": "app-platform-complete",
+        "version": "2.1.31"
+      }
+    ],
+    "optional": [
+      {
+        "name": "app-erm-usage",
+        "version": "2.0.3"
+      },
+      {
+        "name": "app-edge-complete",
+        "version": "2.0.6"
+      },
+      {
+        "name": "app-dcb",
+        "version": "1.1.1"
+      },
+      {
+        "name": "app-consortia-manager",
+        "version": "1.1.1"
+      },
+      {
+        "name": "app-consortia",
+        "version": "1.2.1"
+      },
+      {
+        "name": "app-requests-mediated",
+        "version": "1.1.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-requests-ecs",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-reading-room",
+        "version": "2.0.1"
+      },
+      {
+        "name": "app-requests-mediated-ui",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-acquisitions",
+        "version": "1.0.18"
+      },
+      {
+        "name": "app-bulk-edit",
+        "version": "1.0.6"
+      },
+      {
+        "name": "app-ebsconet",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-fqm",
+        "version": "1.0.7"
+      },
+      {
+        "name": "app-gobi",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-inn-reach",
+        "version": "1.0.0"
+      },
+      {
+        "name": "app-linked-data",
+        "version": "1.1.6"
+      },
+      {
+        "name": "app-marc-migrations",
+        "version": "2.0.1"
+      },
+      {
+        "name": "app-mosaic",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-oai-pmh",
+        "version": "1.0.1"
+      },
+      {
+        "name": "app-reporting",
+        "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-rtac",
+        "version": "1.0.0-SNAPSHOT.4803"
+      }
+    ]
+  },
+  "dependencies": {
+    "postgres": ">=16.0",
+    "kafka": ">=3.5.1",
+    "opensearch": ">=2.0.0"
+  }
+}
