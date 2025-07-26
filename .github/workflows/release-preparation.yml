@@ -1,0 +1,352 @@
+name: Release Branch Preparation
+on:
+  workflow_dispatch:
+    inputs:
+      previous_release_version:
+        description: 'Previous release version (e.g., R1-2024)'
+        required: true
+        type: string
+      new_release_name:
+        description: 'New release name (e.g., R2-2024)'
+        required: true
+        type: string
+      dry_run:
+        description: 'Perform dry run without making changes'
+        required: false
+        type: boolean
+        default: true
+      use_snapshot_fallback:
+        description: 'Use snapshot versions if release versions not found'
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  validate:
+    name: 'Validate Parameters and Authorization'
+    runs-on: ubuntu-latest
+    environment: Eureka CI Approvement
+    outputs:
+      applications: ${{ steps.parse-applications.outputs.applications }}
+      application_count: ${{ steps.parse-applications.outputs.application_count }}
+    
+    steps:
+      - name: 'Validate Team Membership'
+        id: validate-team
+        uses: folio-org/kitfox-github/.github/actions/validate-team-membership@RANCHER-2320
+        with:
+          username: ${{ github.actor }}
+          organization: 'folio-org'
+          team: 'kitfox'
+
+      - name: 'Check Authorization'
+        if: steps.validate-team.outputs.authorized != 'true'
+        run: |
+          echo "❌ Authorization failed: Only Kitfox team members can execute release preparation"
+          echo "   User: ${{ github.actor }}"
+          echo "   Required: Kitfox team membership"
+          exit 1
+
+      - name: 'Checkout Platform Repository'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 'Validate Parameters'
+        id: validation
+        run: |
+          echo "🔍 Validating input parameters..."
+          
+          if [[ ! "${{ inputs.previous_release_version }}" =~ ^R[0-9]+-[0-9]{4}$ ]]; then
+            echo "❌ Invalid previous release version format: ${{ inputs.previous_release_version }}"
+            echo "   Expected format: R{number}-{year} (e.g., R1-2024)"
+            exit 1
+          fi
+          
+          if [[ ! "${{ inputs.new_release_name }}" =~ ^R[0-9]+-[0-9]{4}$ ]]; then
+            echo "❌ Invalid new release name format: ${{ inputs.new_release_name }}"
+            echo "   Expected format: R{number}-{year} (e.g., R2-2024)"
+            exit 1
+          fi
+          
+          echo "✅ Parameters validated successfully"
+          echo "   Previous Release: ${{ inputs.previous_release_version }}"
+          echo "   New Release: ${{ inputs.new_release_name }}"
+          echo "   Dry Run: ${{ inputs.dry_run }}"
+          echo "   Snapshot Fallback: ${{ inputs.use_snapshot_fallback }}"
+
+      - name: 'Verify Previous Release Branch and Parse Applications'
+        id: parse-applications
+        run: |
+          echo "🔍 Checking previous release branch: ${{ inputs.previous_release_version }}"
+          
+          if ! git ls-remote --heads origin "${{ inputs.previous_release_version }}" | grep -q "${{ inputs.previous_release_version }}"; then
+            echo "❌ Previous release branch '${{ inputs.previous_release_version }}' not found"
+            echo "📋 Available release branches:"
+            
+            git ls-remote --heads origin | grep 'refs/heads/R' | sed 's/.*refs\/heads\//   - /' | head -10
+            exit 1
+          fi
+          
+          echo "✅ Previous release branch found"
+          echo "📋 Parsing platform-descriptor.json from previous release..."
+          
+          git checkout "origin/${{ inputs.previous_release_version }}"
+          
+          if [[ ! -f "platform-descriptor.json" ]]; then
+            echo "❌ platform-descriptor.json not found in previous release"
+            exit 1
+          fi          
+
+          applications=$(jq -c '[.applications.required[]?, .applications.optional[]?] | map(select(.name | startswith("app-"))) | map(.name)' platform-descriptor.json)
+          app_count=$(echo "$applications" | jq length)
+          
+          echo "✅ Found $app_count applications in platform-descriptor.json:"
+          echo "$applications" | jq -r '.[]' | sed 's/^/   - /'
+          
+          echo "applications=$applications" >> "$GITHUB_OUTPUT"
+          echo "application_count=$app_count" >> "$GITHUB_OUTPUT"
+          
+          git checkout "${{ github.ref_name }}"
+
+  # prepare-applications:
+  #   name: 'Prepare Applications'
+  #   needs: validate
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       application: ${{ fromJson(needs.validate.outputs.applications) }}
+  #     fail-fast: false
+  #     max-parallel: 5
+  #   
+  #   steps:
+  #     - name: 'Checkout Platform Repository'
+  #       uses: actions/checkout@v4
+
+  #     - name: 'Setup GitHub CLI'
+  #       run: |
+  #         echo "🔧 Setting up GitHub CLI for workflow dispatch"
+
+  #     - name: 'Trigger Application Release Preparation'
+  #       id: trigger-app
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       run: |
+  #         app_name="${{ matrix.application }}"
+  #         echo "🚀 Triggering release preparation for $app_name"
+  #         
+  #         gh workflow run release-preparation.yml \
+  #           --repo "folio-org/$app_name" \
+  #           --ref RANCHER-2320 \
+  #           --field previous_release_version="${{ inputs.previous_release_version }}" \
+  #           --field new_release_name="${{ inputs.new_release_name }}" \
+  #           --field dry_run="${{ inputs.dry_run }}" \
+  #           --field use_snapshot_fallback="${{ inputs.use_snapshot_fallback }}"
+  #         
+  #         echo "✅ Triggered workflow for $app_name"
+  #         echo "   Repository: folio-org/$app_name"
+  #         echo "   Branch: RANCHER-2320"
+  #         echo "   Previous Release: ${{ inputs.previous_release_version }}"
+  #         echo "   New Release: ${{ inputs.new_release_name }}"
+  #         echo "   Dry Run: ${{ inputs.dry_run }}"
+
+  #     - name: 'Wait for Application Completion'
+  #       id: wait-completion
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       run: |
+  #         app_name="${{ matrix.application }}"
+  #         echo "⏳ Waiting for $app_name release preparation to complete..."
+  #         
+  #         # Note: In a real implementation, this would poll the workflow status
+  #         # For now, we'll simulate the wait and assume success
+  #         sleep 5
+  #         
+  #         echo "✅ Application $app_name preparation completed"
+  #         echo "status=success" >> "$GITHUB_OUTPUT"
+  #         echo "app_version=1.0.0-SNAPSHOT" >> "$GITHUB_OUTPUT"
+  #         echo "changes_made=true" >> "$GITHUB_OUTPUT"
+
+  #     - name: 'Record Application Result'
+  #       id: record-result
+  #       run: |
+  #         echo "📊 Recording result for ${{ matrix.application }}"
+  #         echo "   Status: ${{ steps.wait-completion.outputs.status || 'failed' }}"
+  #         echo "   Version: ${{ steps.wait-completion.outputs.app_version || 'unknown' }}"
+  #         echo "   Changes: ${{ steps.wait-completion.outputs.changes_made || 'false' }}"
+  #         
+  #         mkdir -p /tmp/results
+  #         cat > "/tmp/results/${{ matrix.application }}.json" << EOF
+  #         {
+  #           "application": "${{ matrix.application }}",
+  #           "status": "${{ steps.wait-completion.outputs.status || 'failed' }}",
+  #           "version": "${{ steps.wait-completion.outputs.app_version || 'unknown' }}",
+  #           "changes_made": "${{ steps.wait-completion.outputs.changes_made || 'false' }}"
+  #         }
+  #         EOF
+
+  #     - name: 'Upload Application Result'
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: "result-${{ matrix.application }}"
+  #         path: "/tmp/results/${{ matrix.application }}.json"
+  #         retention-days: 1
+
+  # summarize-results:
+  #   name: 'Summarize Release Preparation'
+  #   needs: [validate, prepare-applications]
+  #   if: always() && needs.validate.result == 'success'
+  #   runs-on: ubuntu-latest
+  #   
+  #   steps:
+  #     - name: 'Checkout Platform Repository'
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+
+  #     - name: 'Download Application Results'
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         path: /tmp/app-results
+
+  #     - name: 'Gather Application Results'
+  #       id: gather-results
+  #       run: |
+  #         echo "📊 Gathering results from all application workflows..."
+  #         
+  #         total_apps=${{ needs.validate.outputs.application_count }}
+  #         success_count=0
+  #         failure_count=0
+  #         
+  #         if [ -d "/tmp/app-results" ]; then
+  #           for result_file in /tmp/app-results/result-*/app-*.json; do
+  #             if [ -f "$result_file" ]; then
+  #               app_name=$(basename "$result_file" .json)
+  #               status=$(jq -r '.status' "$result_file")
+  #               version=$(jq -r '.version' "$result_file")
+  #               
+  #               echo "   📋 $app_name: $status ($version)"
+  #               
+  #               if [ "$status" = "success" ]; then
+  #                 ((success_count++))
+  #               else
+  #                 ((failure_count++))
+  #               fi
+  #             fi
+  #           done
+  #         else
+  #           echo "⚠️ No application results found - using placeholder counts"
+  #           success_count=$total_apps
+  #           failure_count=0
+  #         fi
+  #         
+  #         echo "📊 Final Results:"
+  #         echo "   Total applications: $total_apps"
+  #         echo "   Successful: $success_count"
+  #         echo "   Failed: $failure_count"
+  #         
+  #         echo "success_count=$success_count" >> "$GITHUB_OUTPUT"
+  #         echo "failure_count=$failure_count" >> "$GITHUB_OUTPUT"
+
+  #     - name: 'Configure Git'
+  #       if: inputs.dry_run != true
+  #       run: |
+  #         git config --global user.name "github-actions[bot]"
+  #         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+  #     - name: 'Create Platform Release Branch'
+  #       if: inputs.dry_run != true
+  #       id: create-platform-branch
+  #       run: |
+  #         branch_name="${{ inputs.new_release_name }}"
+  #         echo "🌿 Creating platform release branch '$branch_name'"
+  #         
+  #         if git show-ref --verify --quiet "refs/heads/$branch_name"; then
+  #           echo "✅ Platform branch '$branch_name' already exists"
+  #           echo "branch_created=false" >> "$GITHUB_OUTPUT"
+  #         else
+  #           git checkout master
+  #           git pull origin master
+  #           git checkout -b "$branch_name"
+  #           git push -u origin "$branch_name"
+  #           echo "✅ Created and pushed platform branch '$branch_name'"
+  #           echo "branch_created=true" >> "$GITHUB_OUTPUT"
+  #         fi
+
+  #     - name: 'Update Platform Descriptor'
+  #       if: inputs.dry_run != true
+  #       id: update-platform
+  #       run: |
+  #         echo "🔧 Updating platform descriptor with application versions..."
+  #         
+  #         # TODO: Update platform-descriptor.json with results from application workflows
+  #         # This would collect the versions from each successful application preparation
+  #         
+  #         echo "📝 Platform descriptor update logic would go here"
+  #         echo "   This will be implemented to collect actual versions from application results"
+  #         
+  #         echo "descriptor_updated=false" >> "$GITHUB_OUTPUT"
+
+  #     - name: 'Commit Platform Changes'
+  #       if: steps.update-platform.outputs.descriptor_updated == 'true' && inputs.dry_run != true
+  #       run: |
+  #         echo "📝 Committing platform release preparation changes"
+  #         
+  #         git add platform-descriptor.json
+  #         
+  #         if git diff --cached --quiet; then
+  #           echo "✅ No platform changes to commit"
+  #         else
+  #           cat > commit_msg.txt << 'EOF'
+  #         ${{ inputs.new_release_name }}: Prepare platform for release
+
+  #         - Updated platform descriptor with application versions
+  #         - Coordinated release preparation across all applications
+  #         - Prepared for ${{ inputs.new_release_name }} release cycle
+
+  #         Previous release: ${{ inputs.previous_release_version }}
+  #         New release: ${{ inputs.new_release_name }}
+  #         Applications processed: ${{ needs.validate.outputs.application_count }}
+  #         EOF
+
+  #           git commit -F commit_msg.txt
+  #           rm commit_msg.txt
+  #           git push origin "${{ inputs.new_release_name }}"
+  #           
+  #           echo "✅ Platform changes committed and pushed"
+  #         fi
+
+  #     - name: 'Release Preparation Summary'
+  #       if: always()
+  #       run: |
+  #         echo "🎉 FOLIO Platform Release Preparation Complete"
+  #         echo ""
+  #         echo "📋 Summary:"
+  #         echo "   Previous Release: ${{ inputs.previous_release_version }}"
+  #         echo "   New Release: ${{ inputs.new_release_name }}"
+  #         echo "   Total Applications: ${{ needs.validate.outputs.application_count }}"
+  #         echo "   Successful Preparations: ${{ steps.gather-results.outputs.success_count }}"
+  #         echo "   Failed Preparations: ${{ steps.gather-results.outputs.failure_count }}"
+  #         echo "   Dry Run: ${{ inputs.dry_run }}"
+  #         echo ""
+  #         
+  #         if [ "${{ inputs.dry_run }}" = "true" ]; then
+  #           echo "🔍 This was a dry run - no actual changes were made"
+  #           echo "   Set dry_run=false to apply changes across all applications"
+  #           echo "   Review individual application results before proceeding"
+  #         else
+  #           echo "✅ Release preparation completed across FOLIO platform"
+  #           echo "   Check individual application repositories for updates"
+  #           echo "   Platform changes have been applied to ${{ inputs.new_release_name }} branch"
+  #         fi
+  #         
+  #         echo ""
+  #         echo "🔗 Next Steps:"
+  #         echo "   1. Review individual application preparations"
+  #         echo "   2. Verify version consistency across applications"
+  #         echo "   3. Update any CHANGE_ME placeholders with final versions"
+  #         echo "   4. Coordinate with application teams for final release" 
