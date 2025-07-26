@@ -14,7 +14,7 @@ on:
         description: 'Perform dry run without making changes'
         required: false
         type: boolean
-        default: true
+        default: false
       use_snapshot_fallback:
         description: 'Use snapshot versions if release versions not found'
         required: false
@@ -27,14 +27,21 @@ permissions:
 
 jobs:
   validate:
-    name: 'Validate Parameters and Authorization'
+    name: 'Validate Parameters'
     runs-on: ubuntu-latest
-    environment: Eureka CI Approvement
+    environment: Eureka CI
     outputs:
       applications: ${{ steps.parse-applications.outputs.applications }}
       application_count: ${{ steps.parse-applications.outputs.application_count }}
     
     steps:
+      - name: 'Generate App Token'
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.EUREKA_CI_APP_ID }}
+          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+
       - name: 'Validate Team Membership'
         id: validate-team
         uses: folio-org/kitfox-github/.github/actions/validate-team-membership@RANCHER-2320
@@ -42,76 +49,87 @@ jobs:
           username: ${{ github.actor }}
           organization: 'folio-org'
           team: 'kitfox'
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: 'Check Authorization'
         if: steps.validate-team.outputs.authorized != 'true'
         run: |
-          echo "❌ Authorization failed: Only Kitfox team members can execute release preparation"
-          echo "   User: ${{ github.actor }}"
-          echo "   Required: Kitfox team membership"
+          echo "::group::Authorization failure details"
+          echo "::error title=Authorization failed::Only Kitfox team members can execute release preparation"
+          echo "::error title=User details::User: ${{ github.actor }}, Required: Kitfox team membership"
+          echo "::endgroup::"
           exit 1
 
       - name: 'Checkout Platform Repository'
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
+      
       - name: 'Validate Parameters'
         id: validation
         run: |
-          echo "🔍 Validating input parameters..."
+          set -euo pipefail
           
+          echo "::group::Validate release names"
           if [[ ! "${{ inputs.previous_release_version }}" =~ ^R[0-9]+-[0-9]{4}$ ]]; then
-            echo "❌ Invalid previous release version format: ${{ inputs.previous_release_version }}"
-            echo "   Expected format: R{number}-{year} (e.g., R1-2024)"
+            echo "::error title=Invalid previous release version::'${{ inputs.previous_release_version }}' \
+                  doesn't match the expected pattern R{number}-{year} (e.g. R1-2024)"
             exit 1
           fi
           
           if [[ ! "${{ inputs.new_release_name }}" =~ ^R[0-9]+-[0-9]{4}$ ]]; then
-            echo "❌ Invalid new release name format: ${{ inputs.new_release_name }}"
-            echo "   Expected format: R{number}-{year} (e.g., R2-2024)"
+            echo "::error title=Invalid new release name::'${{ inputs.new_release_name }}' \
+                  doesn’t match the expected pattern R{number}-{year} (e.g. R2‑2024)"
             exit 1
           fi
+          echo "::endgroup::"
           
-          echo "✅ Parameters validated successfully"
-          echo "   Previous Release: ${{ inputs.previous_release_version }}"
-          echo "   New Release: ${{ inputs.new_release_name }}"
-          echo "   Dry Run: ${{ inputs.dry_run }}"
-          echo "   Snapshot Fallback: ${{ inputs.use_snapshot_fallback }}"
+          echo "::notice title=Input parameters validated::\
+          Previous Release=${{ inputs.previous_release_version }}, \
+          New Release=${{ inputs.new_release_name }}, \
+          Dry-Run=${{ inputs.dry_run }}, \
+          Snapshot-Fallback=${{ inputs.use_snapshot_fallback }}"
 
       - name: 'Verify Previous Release Branch and Parse Applications'
         id: parse-applications
         run: |
-          echo "🔍 Checking previous release branch: ${{ inputs.previous_release_version }}"
+          set -eo pipefail
           
-          if ! git ls-remote --heads origin "${{ inputs.previous_release_version }}" | grep -q "${{ inputs.previous_release_version }}"; then
-            echo "❌ Previous release branch '${{ inputs.previous_release_version }}' not found"
-            echo "📋 Available release branches:"
+          BRANCH="${{ inputs.previous_release_version }}"
+          FILE="platform-descriptor.json"
+
+          echo "::group::Verify branch exists"          
+          git fetch --quiet origin "$BRANCH"
+          if ! git rev-parse --verify --quiet "origin/$BRANCH" >/dev/null; then
+            echo "::error title=Missing branch::Previous release branch '$BRANCH' not found"
+            echo "Top 10 release branches:"
             
-            git ls-remote --heads origin | grep 'refs/heads/R' | sed 's/.*refs\/heads\//   - /' | head -10
+            git ls-remote --heads origin 'R*' | sed 's#.*/##' | head -10 | sed 's/^/  - /'
+              exit 1
+          fi
+          echo "::endgroup::"
+
+          echo "::group::Extract $FILE"
+          if git cat-file -e "origin/$BRANCH:$FILE"; then
+            git show "origin/$BRANCH:$FILE" >"$FILE"
+          else
+            echo "::error file=$FILE,title=Missing descriptor::$FILE not found in $BRANCH"
             exit 1
           fi
-          
-          echo "✅ Previous release branch found"
-          echo "📋 Parsing platform-descriptor.json from previous release..."
-          
-          git checkout "origin/${{ inputs.previous_release_version }}"
-          
-          if [[ ! -f "platform-descriptor.json" ]]; then
-            echo "❌ platform-descriptor.json not found in previous release"
-            exit 1
-          fi          
+          echo "::endgroup::"
 
-          applications=$(jq -c '[.applications.required[]?, .applications.optional[]?] | map(select(.name | startswith("app-"))) | map(.name)' platform-descriptor.json)
-          app_count=$(echo "$applications" | jq length)
-          
-          echo "✅ Found $app_count applications in platform-descriptor.json:"
-          echo "$applications" | jq -r '.[]' | sed 's/^/   - /'
-          
-          echo "applications=$applications" >> "$GITHUB_OUTPUT"
-          echo "application_count=$app_count" >> "$GITHUB_OUTPUT"
-          
-          git checkout "${{ github.ref_name }}"
+          echo "::group::Parse applications list"
+          applications=$(jq -c '[.applications.required[]?, .applications.optional[]?] \
+                                | map(select(.name | startswith("app-"))) \
+                                | map(.name)' "$FILE")
+          app_count=$(jq length <<<"$applications")
+          jq -r '.[]' <<<"$applications" | sed 's/^/  - /'
+          echo "::endgroup::"
+
+          echo "::notice title=Descriptor verified::$FILE found in $BRANCH with $app_count app(s)"
+
+          echo "applications=$applications"   >>"$GITHUB_OUTPUT"
+          echo "application_count=$app_count" >>"$GITHUB_OUTPUT"
 
   # prepare-applications:
   #   name: 'Prepare Applications'
