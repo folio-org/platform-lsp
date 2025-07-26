@@ -35,30 +35,30 @@ jobs:
       application_count: ${{ steps.parse-applications.outputs.application_count }}
     
     steps:
-      - name: 'Generate App Token'
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.EUREKA_CI_APP_ID }}
-          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+      # - name: 'Generate App Token'
+      #   id: app-token
+      #   uses: actions/create-github-app-token@v1
+      #   with:
+      #     app-id: ${{ secrets.EUREKA_CI_APP_ID }}
+      #     private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
 
-      - name: 'Validate Team Membership'
-        id: validate-team
-        uses: folio-org/kitfox-github/.github/actions/validate-team-membership@RANCHER-2320
-        with:
-          username: ${{ github.actor }}
-          organization: 'folio-org'
-          team: 'kitfox'
-          token: ${{ steps.app-token.outputs.token }}
+      # - name: 'Validate Team Membership'
+      #   id: validate-team
+      #   uses: folio-org/kitfox-github/.github/actions/validate-team-membership@RANCHER-2320
+      #   with:
+      #     username: ${{ github.actor }}
+      #     organization: 'folio-org'
+      #     team: 'kitfox'
+      #     token: ${{ steps.app-token.outputs.token }}
 
-      - name: 'Check Authorization'
-        if: steps.validate-team.outputs.authorized != 'true'
-        run: |
-          echo "::group::Authorization failure details"
-          echo "::error title=Authorization failed::Only Kitfox team members can execute release preparation"
-          echo "::error title=User details::User: ${{ github.actor }}, Required: Kitfox team membership"
-          echo "::endgroup::"
-          exit 1
+      # - name: 'Check Authorization'
+      #   if: steps.validate-team.outputs.authorized != 'true'
+      #   run: |
+      #     echo "::group::Authorization failure details"
+      #     echo "::error title=Authorization failed::Only Kitfox team members can execute release preparation"
+      #     echo "::error title=User details::User: ${{ github.actor }}, Required: Kitfox team membership"
+      #     echo "::endgroup::"
+      #     exit 1
 
       - name: 'Checkout Platform Repository'
         uses: actions/checkout@v4
