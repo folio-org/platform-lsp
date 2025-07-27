@@ -96,8 +96,13 @@ jobs:
 
           echo "::group::Parse applications list"
           applications=$(jq -c '[.applications.required[]?, .applications.optional[]? | select(.name | startswith("app-")) | .name]' "$FILE")
-          app_count=$(jq length <<<"$applications")
-          
+          app_count=$(jq -r 'length' <<<"$applications")
+
+          if ! [[ "$app_count" -gt 0 ]]; then
+            echo "::error file=$FILE,title=No applications found::Could not find any applications in $FILE, or the file is malformed."
+            exit 1
+          fi
+
           jq -r '.[]' <<<"$applications" | sed 's/^/  - /'
           echo "::endgroup::"
 
