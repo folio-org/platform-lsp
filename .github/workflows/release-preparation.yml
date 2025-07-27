@@ -73,15 +73,16 @@ jobs:
           BRANCH="${{ inputs.previous_release_version }}"
           FILE="platform-descriptor.json"
 
-          echo "::group::Verify branch exists"          
-          git fetch --quiet origin "$BRANCH"
-          if ! git rev-parse --verify --quiet "origin/$BRANCH" >/dev/null; then
+          echo "::group::Verify branch exists"
+          if ! git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
             echo "::error title=Missing branch::Previous release branch '$BRANCH' not found"
             echo "Top 10 release branches:"
-            
+
             git ls-remote --heads origin 'R*' | sed 's#.*/##' | head -10 | sed 's/^/  - /'
-              exit 1
+            exit 1
           fi
+          
+          git fetch --quiet origin "$BRANCH"
           echo "::endgroup::"
 
           echo "::group::Extract $FILE"
@@ -97,7 +98,9 @@ jobs:
           applications=$(jq -c '[.applications.required[]?, .applications.optional[]?] \
                                 | map(select(.name | startswith("app-"))) \
                                 | map(.name)' "$FILE")
+
           app_count=$(jq length <<<"$applications")
+          
           jq -r '.[]' <<<"$applications" | sed 's/^/  - /'
           echo "::endgroup::"
 
