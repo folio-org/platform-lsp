@@ -84,9 +84,9 @@ jobs:
           
           git fetch --quiet origin "$BRANCH"
           echo "::endgroup::"
-
+ 
           echo "::group::Extract $FILE"
-          if git cat-file -e "origin/$BRANCH:$FILE"; then
+          if git cat-file -e "origin/$BRANCH:$FILE" >/dev/null 2>&1; then
             git show "origin/$BRANCH:$FILE" >"$FILE"
           else
             echo "::error file=$FILE,title=Missing descriptor::$FILE not found in $BRANCH"
