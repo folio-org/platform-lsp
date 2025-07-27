@@ -84,7 +84,7 @@ jobs:
           
           git fetch --quiet origin "$BRANCH"
           echo "::endgroup::"
- 
+
           echo "::group::Extract $FILE"
           if git cat-file -e "origin/$BRANCH:$FILE" >/dev/null 2>&1; then
             git show "origin/$BRANCH:$FILE" >"$FILE"
@@ -95,10 +95,7 @@ jobs:
           echo "::endgroup::"
 
           echo "::group::Parse applications list"
-          applications=$(jq -c '[.applications.required[]?, .applications.optional[]?] \
-                                | map(select(.name | startswith("app-"))) \
-                                | map(.name)' "$FILE")
-
+          applications=$(jq -c '[.applications.required[]?, .applications.optional[]? | select(.name | startswith("app-")) | .name]' "$FILE")
           app_count=$(jq length <<<"$applications")
           
           jq -r '.[]' <<<"$applications" | sed 's/^/  - /'
