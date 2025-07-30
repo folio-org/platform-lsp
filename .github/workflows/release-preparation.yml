@@ -93,6 +93,21 @@ jobs:
       FILE: "platform-descriptor.json"
 
     steps:
+      - name: Input parameters
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call'
+        run: |
+          set -eo pipefail
+
+          echo "::notice title=Input parameters::"
+          echo ""
+          echo "${{ toJSON(github.event.inputs) }}"
+          echo ""
+
+          if [ "${{ inputs.dry_run }}" = "false" ]; then
+            echo "::notice::This was a dry run - no actual changes were made"
+            echo "::notice::Set dry_run=false to apply changes"
+          fi
+
       - name: Checkout Platform Repository
         uses: actions/checkout@v4
         with:
@@ -177,13 +192,11 @@ jobs:
           set -eo pipefail
           IFS=$'\n\t'
           
-          echo "DEBUG: EXISTING_APPS=$EXISTING_APPS"
-          echo "DEBUG: NEW_APPS=$NEW_APPS"
-          
-          # Use stdin approach instead of --argjson to avoid shell escaping issues
-          merged_apps=$(jq -c --null-input --argjson existing "$EXISTING_APPS" --argjson new "$NEW_APPS" '$existing + $new | unique | sort')
-          
-          echo "DEBUG: merged_apps result=$merged_apps"
+          merged_apps=$(jq -c -n --argjson existing "$EXISTING_APPS" --argjson new "$NEW_APPS" '
+              ( $existing + $new )                # concatenate
+              | unique                            # remove dupes
+              | sort                              # deterministic order
+          ')
 
           total_count=$(jq 'length' <<<"$merged_apps")
 
