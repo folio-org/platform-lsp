@@ -102,7 +102,7 @@ jobs:
             echo "::error file=$FILE,title=No applications found::Could not find any applications in $FILE, or the file is malformed."
             exit 1
           fi
-
+          
           jq -r '.[]' <<<"$applications" | sed 's/^/  - /'
           echo "::endgroup::"
 
