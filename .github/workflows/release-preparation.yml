@@ -177,11 +177,16 @@ jobs:
           set -eo pipefail
           IFS=$'\n\t'
           
+          echo "DEBUG: EXISTING_APPS=$EXISTING_APPS"
+          echo "DEBUG: NEW_APPS=$NEW_APPS"
+          
           merged_apps=$(jq -c --argjson existing "$EXISTING_APPS" --argjson new "$NEW_APPS" '
               ( $existing + $new )                # concatenate
               | unique                            # remove dupes
               | sort                              # deterministic order
           ')
+          
+          echo "DEBUG: merged_apps result=$merged_apps"
 
           total_count=$(jq 'length' <<<"$merged_apps")
 
