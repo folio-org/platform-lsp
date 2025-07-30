@@ -55,7 +55,7 @@ jobs:
 
       - name: Validate Actor
         id: validate-actor
-        uses: folio-org/kitfox-github/.github/actions/validate-actor@RANCHER-2320 # TODO: replace with a master branch when PR
+        uses: folio-org/kitfox-github/.github/actions/validate-team-membership@RANCHER-2320 # TODO: replace with a master branch when PR
         with:
           username: ${{ github.actor }}
           organization: 'folio-org'
