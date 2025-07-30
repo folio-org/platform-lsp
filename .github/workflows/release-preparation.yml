@@ -152,29 +152,19 @@ jobs:
           set -eo pipefail
           IFS=$'\n\t'
 
-          new_apps_json=$(jq -Rn --arg input "${NEW_APPS:-}" '
-              [ $input
-                | gsub("[,\\s]+"; "\n")   # turn every run of commas/white-space into a newline
-                | split("\n")             # split on those new-lines
-                | map(select(length>0))   # drop blanks
-                | unique                  # dedupe
-                | sort                    # stable order
-              ]')
+          new_apps_json=$(jq -Rn -c --arg input "${NEW_APPS:-}" '
+              $input
+              | gsub("[,[:space:]]+"; "\n")   # turn every run of commas/white-space into a newline
+              | split("\n")                   # split on those new-lines
+              | map(select(length>0))         # drop blanks
+              | unique                        # dedupe
+              | sort                          # stable order
+            ')
           
           new_count=$(jq 'length' <<<"$new_apps_json")
 
           echo "::notice title=New applications parsed::Found $new_count new application(s)"
-          
-          echo "DEBUG: new_apps_json content:"
-          echo "$new_apps_json"
-          echo "DEBUG: new_apps_json type and length:"
-          jq -r 'type, length' <<<"$new_apps_json"
-          echo "DEBUG: jq -r '.[]' output:"
-          jq -r '.[]' <<<"$new_apps_json"
-          echo "DEBUG: jq -r '.[]' with sed:"
-          jq -r '.[]' <<<"$new_apps_json" | sed 's/^/  - /'
-          echo "DEBUG: End of debug output"
-          
+          jq -r '.[]' <<<"$new_apps_json" | sed 's/^/  - /'  
           echo "applications=$new_apps_json" >> "$GITHUB_OUTPUT"
           echo "application_count=$new_count" >> "$GITHUB_OUTPUT"
 
