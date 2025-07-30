@@ -180,11 +180,12 @@ jobs:
           echo "DEBUG: EXISTING_APPS=$EXISTING_APPS"
           echo "DEBUG: NEW_APPS=$NEW_APPS"
           
-          merged_apps=$(jq -c --argjson existing "$EXISTING_APPS" --argjson new "$NEW_APPS" '
-              ( $existing + $new )                # concatenate
-              | unique                            # remove dupes
-              | sort                              # deterministic order
-          ')
+          # Test jq command step by step
+          echo "DEBUG: Testing jq parsing..."
+          echo "$EXISTING_APPS" | jq -c 'type, length' || echo "EXISTING_APPS parse failed"
+          echo "$NEW_APPS" | jq -c 'type, length' || echo "NEW_APPS parse failed"
+          
+          merged_apps=$(jq -c --argjson existing "$EXISTING_APPS" --argjson new "$NEW_APPS" '$existing + $new | unique | sort')
           
           echo "DEBUG: merged_apps result=$merged_apps"
 
