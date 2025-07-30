@@ -111,7 +111,9 @@ jobs:
           if git ls-remote --exit-code --heads origin "$NEW_BRANCH" >/dev/null 2>&1; then
             echo "::error title=Branch exists::New release branch '$NEW_BRANCH' already exists"
             exit 1
-          fi          
+          fi
+
+          echo "::notice title=Branches verified::Previous release branch '$PREV_BRANCH' exists and new release branch '$NEW_BRANCH' does not exist"
           
       - name: Checkout Previous Release branch
         uses: actions/checkout@v4
