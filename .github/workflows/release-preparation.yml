@@ -1,350 +1,419 @@
 name: Release Branch Preparation
+description: 'Platform orchestrator for FOLIO releases - coordinates release preparation across all applications'
+
 on:
   workflow_dispatch:
     inputs:
-      previous_release_version:
-        description: 'Previous release version (e.g., R1-2024)'
+      previous_release_branch:
+        description: 'Previous release branch (e.g., R1-2024)'
         required: true
         type: string
-      new_release_name:
-        description: 'New release name (e.g., R2-2024)'
+      new_release_branch:
+        description: 'New release branch (e.g., R2-2024)'
         required: true
         type: string
+      new_applications:
+        description: 'Comma, space, or newline-separated list of new applications to include in this release (e.g., app-new-feature,app-another)'
+        required: false
+        type: string
+        default: ''
+      use_snapshot_fallback:
+        description: 'Use app snapshot branch if previous release branch not found'
+        required: false
+        type: boolean
+        default: false
+      use_snapshot_version:
+        description: 'Use app snapshot version as a base version'
+        required: false
+        type: boolean
+        default: true
       dry_run:
         description: 'Perform dry run without making changes'
         required: false
         type: boolean
-        default: false
-      use_snapshot_fallback:
-        description: 'Use snapshot versions if release versions not found'
-        required: false
-        type: boolean
-        default: true
+        default: false                
 
 permissions:
   contents: write
-  pull-requests: write
+
+env:
+  DOWNSTREAM_WF_BRANCH: RANCHER-2320 # TODO: replace with a master branch when PR
 
 jobs:
-  initialize-release-preparation:
-    name: 'Initialize Release Preparation'
+  validate-actor:
+    name: Validate Actor
+    runs-on: ubuntu-latest
+    outputs:
+      authorized: ${{ steps.validate-actor.outputs.authorized }}
+    steps:
+      - name: Generate App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.EUREKA_CI_APP_ID }}
+          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+
+      - name: Validate Actor
+        id: validate-actor
+        uses: folio-org/kitfox-github/.github/actions/validate-actor@RANCHER-2320 # TODO: replace with a master branch when PR
+        with:
+          username: ${{ github.actor }}
+          organization: 'folio-org'
+          team: 'kitfox'
+          token: ${{ steps.app-token.outputs.token }}
+
+  approve-run:
+    name: Approve Run   
+    needs: validate-actor
     runs-on: ubuntu-latest
     environment: Eureka CI
-    outputs:
-      applications: ${{ steps.parse-applications.outputs.applications }}
-      application_count: ${{ steps.parse-applications.outputs.application_count }}
-    
+    if: needs.validate-actor.outputs.authorized == 'false'
     steps:
-      # - name: 'Generate App Token'
-      #   id: app-token
-      #   uses: actions/create-github-app-token@v1
-      #   with:
-      #     app-id: ${{ secrets.EUREKA_CI_APP_ID }}
-      #     private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+      - name: Run approvement
+        run: |
+          echo "::notice::This run was approved by $(
+            gh api \
+              /repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/approvals \
+              --jq \
+                '.[] 
+                | select(.environments[]?.name == "Eureka CI") 
+                | .user.login')"
 
-      # - name: 'Validate Team Membership'
-      #   id: validate-team
-      #   uses: folio-org/kitfox-github/.github/actions/validate-team-membership@RANCHER-2320
-      #   with:
-      #     username: ${{ github.actor }}
-      #     organization: 'folio-org'
-      #     team: 'kitfox'
-      #     token: ${{ steps.app-token.outputs.token }}
+  initial-check:
+    name: Initial Check
+    runs-on: ubuntu-latest
+    needs: [ validate-actor, approve-run ]
+    if: always() && (needs.validate-actor.outputs.authorized == 'true' || needs.approve-run.result == 'success')
+    outputs:
+      applications: ${{ steps.merge-applications.outputs.applications }}
+      application_count: ${{ steps.merge-applications.outputs.application_count }}
+    env:
+      PREV_BRANCH: ${{ inputs.previous_release_branch }}
+      NEW_BRANCH: ${{ inputs.new_release_branch }}
+      FILE: "platform-descriptor.json"
 
-      # - name: 'Check Authorization'
-      #   if: steps.validate-team.outputs.authorized != 'true'
-      #   run: |
-      #     echo "::group::Authorization failure details"
-      #     echo "::error title=Authorization failed::Only Kitfox team members can execute release preparation"
-      #     echo "::error title=User details::User: ${{ github.actor }}, Required: Kitfox team membership"
-      #     echo "::endgroup::"
-      #     exit 1
-
-      - name: 'Checkout Platform Repository'
+    steps:
+      - name: Checkout Platform Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
       
-      - name: 'Verify Previous Release Branch and Parse Applications'
-        id: parse-applications
+      - name: Verify Branches
+        id: verify-branches
+        run: |
+          set -eo pipefail
+
+          if ! git ls-remote --exit-code --heads origin "$PREV_BRANCH" >/dev/null 2>&1; then
+            echo "::error title=Missing branch::Previous release branch '$PREV_BRANCH' not found"
+            exit 1
+          fi
+
+          if git ls-remote --exit-code --heads origin "$NEW_BRANCH" >/dev/null 2>&1; then
+            echo "::error title=Branch exists::New release branch '$NEW_BRANCH' already exists"
+            exit 1
+          fi          
+          
+      - name: Checkout Previous Release branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.previous_release_branch }}
+          fetch-depth: 0
+
+      - name: Extract Existing Applications
+        id: extract-applications
         run: |
           set -eo pipefail
           
-          BRANCH="${{ inputs.previous_release_version }}"
-          FILE="platform-descriptor.json"
-
-          echo "::group::Verify branch exists"
-          if ! git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
-            echo "::error title=Missing branch::Previous release branch '$BRANCH' not found"
-            echo "Top 10 release branches:"
-
-            git ls-remote --heads origin 'R*' | sed 's#.*/##' | head -10 | sed 's/^/  - /'
+          if [ ! -f "$FILE" ]; then
+            echo "::error file=$FILE,title=Missing descriptor::$FILE not found in $PREV_BRANCH"
             exit 1
           fi
-          
-          git fetch --quiet origin "$BRANCH"
-          echo "::endgroup::"
 
-          echo "::group::Extract $FILE"
-          if git cat-file -e "origin/$BRANCH:$FILE" >/dev/null 2>&1; then
-            git show "origin/$BRANCH:$FILE" >"$FILE"
-          else
-            echo "::error file=$FILE,title=Missing descriptor::$FILE not found in $BRANCH"
-            exit 1
-          fi
-          echo "::endgroup::"
+          existing_apps=$(jq -c '[.applications.required[]?, .applications.optional[]? | select(.name | startswith("app-")) | .name]' "$FILE")
+          existing_count=$(jq -r 'length' <<<"$existing_apps")
 
-          echo "::group::Parse applications list"
-          applications=$(jq -c '[.applications.required[]?, .applications.optional[]? | select(.name | startswith("app-")) | .name]' "$FILE")
-          app_count=$(jq -r 'length' <<<"$applications")
-
-          if ! [[ "$app_count" -gt 0 ]]; then
+          if ! [[ "$existing_count" -gt 0 ]]; then
             echo "::error file=$FILE,title=No applications found::Could not find any applications in $FILE, or the file is malformed."
             exit 1
           fi
           
-          jq -r '.[]' <<<"$applications" | sed 's/^/  - /'
+          echo "::notice title=Descriptor verified::$FILE found in $PREV_BRANCH with $existing_count existing app(s)"
+          jq -r '.[]' <<<"$existing_apps" | sed 's/^/  - /'          
+          echo "applications=$existing_apps" >> "$GITHUB_OUTPUT"
+          echo "application_count=$existing_count" >> "$GITHUB_OUTPUT"
+
+      - name: Parse New Applications
+        id: parse-new-applications
+        env:
+          NEW_APPS: ${{ inputs.new_applications }}
+        run: |
+          set -eo pipefail
+          IFS=$'\n\t'
+
+          new_apps_json=$(jq -Rn --arg input "${NEW_APPS:-}" '
+              [ $input
+                | gsub("[,\\s]+"; "\n")   # turn every run of commas/white-space into a newline
+                | split("\n")             # split on those new-lines
+                | map(select(length>0))   # drop blanks
+                | unique                  # dedupe
+                | sort                    # stable order
+              ]')
+          
+          new_count=$(jq 'length' <<<"$new_apps_json")
+
+          echo "::notice title=New applications parsed::Found $new_count new application(s)"
+          jq -r '.[]' <<<"$new_apps_json" | sed 's/^/  - /'  
+          echo "applications=$new_apps_json" >> "$GITHUB_OUTPUT"
+          echo "application_count=$new_count" >> "$GITHUB_OUTPUT"
+
+      - name: Merge Applications
+        id: merge-applications
+        env:
+          EXISTING_APPS: ${{ steps.extract-applications.outputs.applications }}
+          NEW_APPS:      ${{ steps.parse-new-applications.outputs.applications }}        
+        run: |
+          set -eo pipefail
+          IFS=$'\n\t'
+          
+          merged_apps=$(jq -c --argjson existing "$EXISTING_APPS" --argjson new "$NEW_APPS" '
+              ( $existing + $new )                # concatenate
+              | unique                            # remove dupes
+              | sort                              # deterministic order
+          ')
+
+          total_count=$(jq 'length' <<<"$merged_apps")
+
+          if (( total_count == 0 )); then
+            echo "::error title=No applications to process::After merging, list is empty."
+            exit 1
+          fi
+
+          echo "::notice title=Applications merged::$total_count total application(s)"
+          echo "::group::Complete application list"
+          jq -r '.[]' <<<"$merged_apps" | sed 's/^/  - /'
           echo "::endgroup::"
 
-          echo "::notice title=Descriptor verified::$FILE found in $BRANCH with $app_count app(s)"
+          echo "applications=$merged_apps"      >> "$GITHUB_OUTPUT"
+          echo "application_count=$total_count" >> "$GITHUB_OUTPUT"
 
-          echo "applications=$applications"   >>"$GITHUB_OUTPUT"
-          echo "application_count=$app_count" >>"$GITHUB_OUTPUT"
+  check-applications:
+    name: Check ${{ matrix.application }} Application
+    needs: initial-check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        application: ${{ fromJson(needs.initial-check.outputs.applications) }}
+      fail-fast: false
+      max-parallel: 5
+    
+    steps:
+      - name: Trigger Application Release Preparation
+        id: orchestrate-app-workflow
+        uses: folio-org/kitfox-github/.github/actions/orchestrate-external-workflow@main
+        with:
+          repository: folio-org/${{ matrix.application }}
+          workflow_file: app-release-preparation.yml
+          workflow_branch: ${{ env.DOWNSTREAM_WF_BRANCH }}
+          workflow_parameters: |
+            previous_release_branch: ${{ inputs.previous_release_branch }}
+            new_release_branch: ${{ inputs.new_release_branch }}
+            use_snapshot_fallback: ${{ inputs.use_snapshot_fallback }}
+            use_snapshot_version: ${{ inputs.use_snapshot_version }}
+            dry_run: true
 
-  # prepare-applications:
-  #   name: 'Prepare Applications'
-  #   needs: validate
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       application: ${{ fromJson(needs.validate.outputs.applications) }}
-  #     fail-fast: false
-  #     max-parallel: 5
-  #   
-  #   steps:
-  #     - name: 'Checkout Platform Repository'
-  #       uses: actions/checkout@v4
+  prepare-applications:
+    name: Prepare ${{ matrix.application }} Application
+    needs: [initial-check, check-applications ]
+    runs-on: ubuntu-latest
+    if: inputs.dry_run != true
+    strategy:
+      matrix:
+        application: ${{ fromJson(needs.initial-check.outputs.applications) }}
+      fail-fast: false
+      max-parallel: 5
+    
+    steps:
+      - name: Trigger Application Release Preparation
+        id: orchestrate-app-workflow
+        uses: folio-org/kitfox-github/.github/actions/orchestrate-external-workflow@RANCHER-2320 # TODO: replace with a master branch when PR
+        with:
+          repository: folio-org/${{ matrix.application }}
+          workflow_file: app-release-preparation.yml
+          workflow_branch: ${{ env.DOWNSTREAM_WF_BRANCH }}
+          workflow_parameters: |
+            previous_release_branch: ${{ inputs.previous_release_branch }}
+            new_release_branch: ${{ inputs.new_release_branch }}
+            use_snapshot_fallback: ${{ inputs.use_snapshot_fallback }}
+            use_snapshot_version: ${{ inputs.use_snapshot_version }}
+            dry_run: ${{ inputs.dry_run }}
 
-  #     - name: 'Setup GitHub CLI'
-  #       run: |
-  #         echo "🔧 Setting up GitHub CLI for workflow dispatch"
+      - name: Verify Application Workflow Result
+        id: verify-app-branch
+        uses: folio-org/kitfox-github/.github/actions/collect-app-version@RANCHER-2320 # TODO: replace with a master branch when PR
+        with:
+          app_name: ${{ matrix.application }}
+          branch: ${{ inputs.new_release_branch }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-  #     - name: 'Trigger Application Release Preparation'
-  #       id: trigger-app
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       run: |
-  #         app_name="${{ matrix.application }}"
-  #         echo "🚀 Triggering release preparation for $app_name"
-  #         
-  #         gh workflow run release-preparation.yml \
-  #           --repo "folio-org/$app_name" \
-  #           --ref RANCHER-2320 \
-  #           --field previous_release_version="${{ inputs.previous_release_version }}" \
-  #           --field new_release_name="${{ inputs.new_release_name }}" \
-  #           --field dry_run="${{ inputs.dry_run }}" \
-  #           --field use_snapshot_fallback="${{ inputs.use_snapshot_fallback }}"
-  #         
-  #         echo "✅ Triggered workflow for $app_name"
-  #         echo "   Repository: folio-org/$app_name"
-  #         echo "   Branch: RANCHER-2320"
-  #         echo "   Previous Release: ${{ inputs.previous_release_version }}"
-  #         echo "   New Release: ${{ inputs.new_release_name }}"
-  #         echo "   Dry Run: ${{ inputs.dry_run }}"
+      - name: Prepare Output Artifact
+        id: prepare-artifact
+        if: always()
+        env:
+          APP_NAME: ${{ matrix.application }}
+          VERSION: ${{ steps.verify-app-branch.outputs.version }}
+          STATUS: >-
+            ${{ 
+                steps.orchestrate-app-workflow.outcome == 'failure' && 'workflow_failed' ||
+                steps.verify-app-branch.outcome == 'failure' && 'verify_failed' ||
+                'success'
+            }}
+        run: |
+          set -eo pipefail
 
-  #     - name: 'Wait for Application Completion'
-  #       id: wait-completion
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       run: |
-  #         app_name="${{ matrix.application }}"
-  #         echo "⏳ Waiting for $app_name release preparation to complete..."
-  #         
-  #         # Note: In a real implementation, this would poll the workflow status
-  #         # For now, we'll simulate the wait and assume success
-  #         sleep 5
-  #         
-  #         echo "✅ Application $app_name preparation completed"
-  #         echo "status=success" >> "$GITHUB_OUTPUT"
-  #         echo "app_version=1.0.0-SNAPSHOT" >> "$GITHUB_OUTPUT"
-  #         echo "changes_made=true" >> "$GITHUB_OUTPUT"
+          mkdir -p /tmp/results
+          cat > "/tmp/results/$APP_NAME.json" <<EOF
+          {
+            "application": $APP_NAME,
+            "status": $STATUS,
+            "version": $VERSION
+          }
+          EOF
+          
+          cat "/tmp/results/${{ matrix.application }}.json"
 
-  #     - name: 'Record Application Result'
-  #       id: record-result
-  #       run: |
-  #         echo "📊 Recording result for ${{ matrix.application }}"
-  #         echo "   Status: ${{ steps.wait-completion.outputs.status || 'failed' }}"
-  #         echo "   Version: ${{ steps.wait-completion.outputs.app_version || 'unknown' }}"
-  #         echo "   Changes: ${{ steps.wait-completion.outputs.changes_made || 'false' }}"
-  #         
-  #         mkdir -p /tmp/results
-  #         cat > "/tmp/results/${{ matrix.application }}.json" << EOF
-  #         {
-  #           "application": "${{ matrix.application }}",
-  #           "status": "${{ steps.wait-completion.outputs.status || 'failed' }}",
-  #           "version": "${{ steps.wait-completion.outputs.app_version || 'unknown' }}",
-  #           "changes_made": "${{ steps.wait-completion.outputs.changes_made || 'false' }}"
-  #         }
-  #         EOF
+      - name: Upload Application Result
+        uses: actions/upload-artifact@v4
+        with:
+          name: "result-${{ matrix.application }}"
+          path: "/tmp/results/${{ matrix.application }}.json"
+          retention-days: 1
 
-  #     - name: 'Upload Application Result'
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: "result-${{ matrix.application }}"
-  #         path: "/tmp/results/${{ matrix.application }}.json"
-  #         retention-days: 1
+  prepare-platform:
+    name: Prepare Platform
+    needs: [ initial-check, prepare-applications ]
+    runs-on: ubuntu-latest
+    if: inputs.dry_run != true
+    steps:
+      - name: Checkout Platform Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.previous_release_branch }}
+          fetch-depth: 0
 
-  # summarize-results:
-  #   name: 'Summarize Release Preparation'
-  #   needs: [validate, prepare-applications]
-  #   if: always() && needs.validate.result == 'success'
-  #   runs-on: ubuntu-latest
-  #   
-  #   steps:
-  #     - name: 'Checkout Platform Repository'
-  #       uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
+      - name: Download Application Results
+        uses: actions/download-artifact@v4
+        with:
+          path: /tmp/app-results
 
-  #     - name: 'Download Application Results'
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         path: /tmp/app-results
+      - name: Create Platform Release Branch
+        id: create-platform-branch
+        if: inputs.dry_run != true
+        env:
+          SOURCE_BRANCH: ${{ inputs.previous_release_branch }}
+          TARGET_BRANCH: ${{ inputs.new_release_branch }}
+        run: |
+          set -eo pipefail
 
-  #     - name: 'Gather Application Results'
-  #       id: gather-results
-  #       run: |
-  #         echo "📊 Gathering results from all application workflows..."
-  #         
-  #         total_apps=${{ needs.validate.outputs.application_count }}
-  #         success_count=0
-  #         failure_count=0
-  #         
-  #         if [ -d "/tmp/app-results" ]; then
-  #           for result_file in /tmp/app-results/result-*/app-*.json; do
-  #             if [ -f "$result_file" ]; then
-  #               app_name=$(basename "$result_file" .json)
-  #               status=$(jq -r '.status' "$result_file")
-  #               version=$(jq -r '.version' "$result_file")
-  #               
-  #               echo "   📋 $app_name: $status ($version)"
-  #               
-  #               if [ "$status" = "success" ]; then
-  #                 ((success_count++))
-  #               else
-  #                 ((failure_count++))
-  #               fi
-  #             fi
-  #           done
-  #         else
-  #           echo "⚠️ No application results found - using placeholder counts"
-  #           success_count=$total_apps
-  #           failure_count=0
-  #         fi
-  #         
-  #         echo "📊 Final Results:"
-  #         echo "   Total applications: $total_apps"
-  #         echo "   Successful: $success_count"
-  #         echo "   Failed: $failure_count"
-  #         
-  #         echo "success_count=$success_count" >> "$GITHUB_OUTPUT"
-  #         echo "failure_count=$failure_count" >> "$GITHUB_OUTPUT"
+          echo "::notice::Creating release branch '$TARGET_BRANCH' from '$SOURCE_BRANCH'"
 
-  #     - name: 'Configure Git'
-  #       if: inputs.dry_run != true
-  #       run: |
-  #         git config --global user.name "github-actions[bot]"
-  #         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout "origin/$SOURCE_BRANCH"
+          git checkout -b "$TARGET_BRANCH"
+          
+          echo "::notice::Successfully created branch '$TARGET_BRANCH'"
 
-  #     - name: 'Create Platform Release Branch'
-  #       if: inputs.dry_run != true
-  #       id: create-platform-branch
-  #       run: |
-  #         branch_name="${{ inputs.new_release_name }}"
-  #         echo "🌿 Creating platform release branch '$branch_name'"
-  #         
-  #         if git show-ref --verify --quiet "refs/heads/$branch_name"; then
-  #           echo "✅ Platform branch '$branch_name' already exists"
-  #           echo "branch_created=false" >> "$GITHUB_OUTPUT"
-  #         else
-  #           git checkout master
-  #           git pull origin master
-  #           git checkout -b "$branch_name"
-  #           git push -u origin "$branch_name"
-  #           echo "✅ Created and pushed platform branch '$branch_name'"
-  #           echo "branch_created=true" >> "$GITHUB_OUTPUT"
-  #         fi
+      - name: Update Platform Descriptor
+        id: update-platform-descriptor
+        run: |
+          set -eo pipefail
 
-  #     - name: 'Update Platform Descriptor'
-  #       if: inputs.dry_run != true
-  #       id: update-platform
-  #       run: |
-  #         echo "🔧 Updating platform descriptor with application versions..."
-  #         
-  #         # TODO: Update platform-descriptor.json with results from application workflows
-  #         # This would collect the versions from each successful application preparation
-  #         
-  #         echo "📝 Platform descriptor update logic would go here"
-  #         echo "   This will be implemented to collect actual versions from application results"
-  #         
-  #         echo "descriptor_updated=false" >> "$GITHUB_OUTPUT"
+          echo "::notice::Dumping downloaded application result files"
+          echo "::group::Application result artifacts"
+          for f in /tmp/app-results/*.json; do
+            echo "─── $f ───"
+            cat "$f"
+          done
+          echo "::endgroup::"
+          
+          echo "::group::Updating platform descriptor with application versions"
+          cat platform-descriptor.json
+          echo "::endgroup::"
 
-  #     - name: 'Commit Platform Changes'
-  #       if: steps.update-platform.outputs.descriptor_updated == 'true' && inputs.dry_run != true
-  #       run: |
-  #         echo "📝 Committing platform release preparation changes"
-  #         
-  #         git add platform-descriptor.json
-  #         
-  #         if git diff --cached --quiet; then
-  #           echo "✅ No platform changes to commit"
-  #         else
-  #           cat > commit_msg.txt << 'EOF'
-  #         ${{ inputs.new_release_name }}: Prepare platform for release
+          tmp=$(mktemp)
 
-  #         - Updated platform descriptor with application versions
-  #         - Coordinated release preparation across all applications
-  #         - Prepared for ${{ inputs.new_release_name }} release cycle
+          jq --slurpfile results /tmp/app-results/*.json '
+            reduce $results[] as $r (
+              .;
+              .applications.required |= map(
+                if .name == $r.application then .version = $r.version else . end
+              )
+              | .applications.optional |= map(
+                if .name == $r.application then .version = $r.version else . end
+              )
+            )
+          ' platform-descriptor.json > "$tmp"
+          && mv "$tmp" platform-descriptor.json
 
-  #         Previous release: ${{ inputs.previous_release_version }}
-  #         New release: ${{ inputs.new_release_name }}
-  #         Applications processed: ${{ needs.validate.outputs.application_count }}
-  #         EOF
+          echo "::group::Updated platform descriptor"
+          cat platform-descriptor.json
+          echo "::endgroup::"
 
-  #           git commit -F commit_msg.txt
-  #           rm commit_msg.txt
-  #           git push origin "${{ inputs.new_release_name }}"
-  #           
-  #           echo "✅ Platform changes committed and pushed"
-  #         fi
+      - name: Configure Git
+        run: |
+          set -eo pipefail
+          
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          echo "::notice::Git configured for automated commits"          
 
-  #     - name: 'Release Preparation Summary'
-  #       if: always()
-  #       run: |
-  #         echo "🎉 FOLIO Platform Release Preparation Complete"
-  #         echo ""
-  #         echo "📋 Summary:"
-  #         echo "   Previous Release: ${{ inputs.previous_release_version }}"
-  #         echo "   New Release: ${{ inputs.new_release_name }}"
-  #         echo "   Total Applications: ${{ needs.validate.outputs.application_count }}"
-  #         echo "   Successful Preparations: ${{ steps.gather-results.outputs.success_count }}"
-  #         echo "   Failed Preparations: ${{ steps.gather-results.outputs.failure_count }}"
-  #         echo "   Dry Run: ${{ inputs.dry_run }}"
-  #         echo ""
-  #         
-  #         if [ "${{ inputs.dry_run }}" = "true" ]; then
-  #           echo "🔍 This was a dry run - no actual changes were made"
-  #           echo "   Set dry_run=false to apply changes across all applications"
-  #           echo "   Review individual application results before proceeding"
-  #         else
-  #           echo "✅ Release preparation completed across FOLIO platform"
-  #           echo "   Check individual application repositories for updates"
-  #           echo "   Platform changes have been applied to ${{ inputs.new_release_name }} branch"
-  #         fi
-  #         
-  #         echo ""
-  #         echo "🔗 Next Steps:"
-  #         echo "   1. Review individual application preparations"
-  #         echo "   2. Verify version consistency across applications"
-  #         echo "   3. Update any CHANGE_ME placeholders with final versions"
-  #         echo "   4. Coordinate with application teams for final release" 
+      - name: Commit Platform Changes
+        id: commit-platform-changes
+        run: |
+          set -eo pipefail
+
+          echo "::group::Stage changes for commit"
+          git status
+          echo "::endgroup::"
+
+          git add platform-descriptor.json
+
+          if git diff --cached --quiet; then
+            echo "::error title=No changes to commit::"
+            exit 1
+          fi
+
+          git commit -F - <<EOF
+          Prepare platform for release. Initial commit.
+
+          Previous release: ${{ inputs.previous_release_branch }}
+          Applications processed: ${{ needs.initial-check.outputs.application_count }}
+          EOF
+
+          commit_sha=$(git rev-parse HEAD)
+          echo "::notice::Successfully committed changes #$commit_sha"
+          echo "commit_sha=$commit_sha" >> "$GITHUB_OUTUT"
+
+      - name: Push Platform Changes
+        id: push-platform-changes
+        run: |
+          set -eo pipefail
+
+          echo "::notice::Pushing changes to branch '$BRANCH_NAME'"
+          git push -u origin "$BRANCH_NAME"
+          echo "::notice::Successfully pushed changes to '$BRANCH_NAME'"
+
+      - name: Workflow Summary
+        run: |
+          set -eo pipefail
+
+          echo "::notice::Platform Release Preparation Summary"
+          echo ""
+          echo "Previous Release: ${{ inputs.previous_release_branch }}"
+          echo "New Release: ${{ inputs.new_release_branch }}"
+          echo "Applications processed: ${{ needs.initial-check.outputs.application_count }}"
+          echo "Commit: ${{ steps.commit-platform-changes.outputs.commit_sha }}"
+          echo ""
+          
+          if [ "${{ inputs.dry_run }}" = "false" ]; then
+            echo "::notice::This was a dry run - no actual changes were made"
+            echo "::notice::Set dry_run=false to apply changes"
+          fi 
