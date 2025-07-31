@@ -230,6 +230,7 @@ jobs:
         with:
           app-id: ${{ secrets.EUREKA_CI_APP_ID }}
           private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+          owner: folio-org
 
       - name: Trigger Application Release Preparation
         id: orchestrate-app-workflow
@@ -265,6 +266,7 @@ jobs:
         with:
           app-id: ${{ secrets.EUREKA_CI_APP_ID }}
           private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+          owner: folio-org
 
       - name: Trigger Application Release Preparation
         id: orchestrate-app-workflow
