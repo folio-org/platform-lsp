@@ -402,8 +402,7 @@ jobs:
             )
           ' platform-descriptor.json > "$tmp"
           
-          rm "$results_file"
-          && mv "$tmp" platform-descriptor.json
+          rm "$results_file" && mv "$tmp" platform-descriptor.json
 
           echo "::group::Updated platform descriptor"
           cat platform-descriptor.json
