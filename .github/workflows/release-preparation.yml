@@ -83,7 +83,7 @@ jobs:
     name: Initial Check
     runs-on: ubuntu-latest
     needs: [ validate-actor, approve-run ]
-    if: needs.validate-actor.outputs.authorized != 'true' || github.job.approve-run.result == 'success'
+    if: always() && (needs.validate-actor.outputs.authorized != 'true' || github.job.approve-run.result == 'success')
     outputs:
       applications: ${{ steps.merge-applications.outputs.applications }}
       application_count: ${{ steps.merge-applications.outputs.application_count }}
