@@ -219,7 +219,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        application: ${{ fromJson(needs.initial-check.outputs.applications) }}
+        application: [ 'app-platform-complete', 'app-platform-minimal' ]
       fail-fast: false
       max-parallel: 5
     
