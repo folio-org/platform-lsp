@@ -67,7 +67,7 @@ jobs:
     needs: validate-actor
     runs-on: ubuntu-latest
     environment: Eureka CI
-    if: needs.validate-actor.outputs.authorized != 'false'
+    if: needs.validate-actor.outputs.authorized == 'false'
     steps:
       - name: Run approvement
         run: |
@@ -83,7 +83,7 @@ jobs:
     name: Initial Check
     runs-on: ubuntu-latest
     needs: [ validate-actor, approve-run ]
-    if: always() && (needs.validate-actor.outputs.authorized != 'true' || needs.approve-run.result == 'success')
+    if: always() && (needs.validate-actor.outputs.authorized == 'true' || needs.approve-run.result == 'success')
     outputs:
       applications: ${{ steps.merge-applications.outputs.applications }}
       application_count: ${{ steps.merge-applications.outputs.application_count }}
