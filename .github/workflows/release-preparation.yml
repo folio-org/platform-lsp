@@ -445,6 +445,8 @@ jobs:
 
       - name: Push Platform Changes
         id: push-platform-changes
+        env:
+          BRANCH_NAME: ${{ inputs.new_release_branch }}
         run: |
           set -eo pipefail
 
