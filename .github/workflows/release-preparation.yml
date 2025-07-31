@@ -25,7 +25,7 @@ on:
         description: 'Use app snapshot version as a base version'
         required: false
         type: boolean
-        default: true
+        default: false
       dry_run:
         description: 'Perform dry run without making changes'
         required: false
