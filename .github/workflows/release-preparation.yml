@@ -83,7 +83,7 @@ jobs:
     name: Initial Check
     runs-on: ubuntu-latest
     needs: [ validate-actor, approve-run ]
-    if: always() && (needs.validate-actor.outputs.authorized == 'true' || needs.approve-run.result == 'success')
+    if: needs.validate-actor.outputs.authorized == 'true' || needs.approve-run.result == 'success'
     outputs:
       applications: ${{ steps.merge-applications.outputs.applications }}
       application_count: ${{ steps.merge-applications.outputs.application_count }}
@@ -217,7 +217,6 @@ jobs:
     name: Check ${{ matrix.application }} Application
     needs: initial-check
     runs-on: ubuntu-latest
-    if: always()
     strategy:
       matrix:
         application: ${{ fromJson(needs.initial-check.outputs.applications) }}
