@@ -98,7 +98,7 @@ jobs:
         run: |
           set -eo pipefail
 
-          echo "::notice title=Input parameters::Input parameters"
+          echo "::notice::Input parameters"
           echo ""
           echo "${{ toJSON(github.event.inputs) }}"
           echo ""
@@ -119,16 +119,16 @@ jobs:
           set -eo pipefail
 
           if ! git ls-remote --exit-code --heads origin "$PREV_BRANCH" >/dev/null 2>&1; then
-            echo "::error title=Missing branch::Previous release branch '$PREV_BRANCH' not found"
+            echo "::error::Missing branch. Previous release branch '$PREV_BRANCH' not found"
             exit 1
           fi
 
           if git ls-remote --exit-code --heads origin "$NEW_BRANCH" >/dev/null 2>&1; then
-            echo "::error title=Branch exists::New release branch '$NEW_BRANCH' already exists"
+            echo "::error::New release branch '$NEW_BRANCH' already exists"
             exit 1
           fi
 
-          echo "::notice title=Branches verified::Previous release branch '$PREV_BRANCH' exists and new release branch '$NEW_BRANCH' does not exist"
+          echo "::notice::Previous release branch '$PREV_BRANCH' exists and new release branch '$NEW_BRANCH' does not exist"
           
       - name: Checkout Previous Release branch
         uses: actions/checkout@v4
@@ -142,7 +142,7 @@ jobs:
           set -eo pipefail
           
           if [ ! -f "$FILE" ]; then
-            echo "::error file=$FILE,title=Missing descriptor::$FILE not found in $PREV_BRANCH"
+            echo "::error::$FILE not found in $PREV_BRANCH"
             exit 1
           fi
 
@@ -150,11 +150,11 @@ jobs:
           existing_count=$(jq -r 'length' <<<"$existing_apps")
 
           if ! [[ "$existing_count" -gt 0 ]]; then
-            echo "::error file=$FILE,title=No applications found::Could not find any applications in $FILE, or the file is malformed."
+            echo "::error::Could not find any applications in $FILE, or the file is malformed."
             exit 1
           fi
           
-          echo "::notice title=Descriptor verified::$FILE found in $PREV_BRANCH with $existing_count existing app(s)"
+          echo "::notice::Descriptor verified. $FILE found in $PREV_BRANCH with $existing_count existing app(s)"
           jq -r '.[]' <<<"$existing_apps" | sed 's/^/  - /'          
           echo "applications=$existing_apps" >> "$GITHUB_OUTPUT"
           echo "application_count=$existing_count" >> "$GITHUB_OUTPUT"
@@ -178,7 +178,7 @@ jobs:
           
           new_count=$(jq 'length' <<<"$new_apps_json")
 
-          echo "::notice title=New applications parsed::Found $new_count new application(s)"
+          echo "::notice::Found $new_count new application(s)"
           jq -r '.[]' <<<"$new_apps_json" | sed 's/^/  - /'  
           echo "applications=$new_apps_json" >> "$GITHUB_OUTPUT"
           echo "application_count=$new_count" >> "$GITHUB_OUTPUT"
@@ -201,11 +201,11 @@ jobs:
           total_count=$(jq 'length' <<<"$merged_apps")
 
           if (( total_count == 0 )); then
-            echo "::error title=No applications to process::After merging, list is empty."
+            echo "::error::No applications to process. After merging, list is empty."
             exit 1
           fi
 
-          echo "::notice title=Applications merged::$total_count total application(s)"
+          echo "::notice::Applications merged. $total_count total application(s)"
           echo "::group::Complete application list"
           jq -r '.[]' <<<"$merged_apps" | sed 's/^/  - /'
           echo "::endgroup::"
@@ -395,7 +395,7 @@ jobs:
           git add platform-descriptor.json
 
           if git diff --cached --quiet; then
-            echo "::error title=No changes to commit::"
+            echo "::error::No changes to commit"
             exit 1
           fi
 
