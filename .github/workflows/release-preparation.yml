@@ -216,6 +216,7 @@ jobs:
   check-applications:
     name: Check ${{ matrix.application }} Application
     needs: initial-check
+    if: always() && needs.initial-check.result == 'success'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -242,7 +243,7 @@ jobs:
     name: Prepare ${{ matrix.application }} Application
     needs: [initial-check, check-applications ]
     runs-on: ubuntu-latest
-    if: inputs.dry_run != true
+    if: always() && needs.check-applications.result == 'success' && inputs.dry_run != true
     strategy:
       matrix:
         application: ${{ fromJson(needs.initial-check.outputs.applications) }}
@@ -309,7 +310,7 @@ jobs:
     name: Prepare Platform
     needs: [ initial-check, prepare-applications ]
     runs-on: ubuntu-latest
-    if: inputs.dry_run != true
+    if: always() && needs.prepare-applications.result == 'success' && inputs.dry_run != true
     steps:
       - name: Checkout Platform Repository
         uses: actions/checkout@v4
