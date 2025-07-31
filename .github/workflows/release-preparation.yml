@@ -1,5 +1,4 @@
 name: Release Branch Preparation
-description: 'Platform orchestrator for FOLIO releases - coordinates release preparation across all applications'
 
 on:
   workflow_dispatch:
