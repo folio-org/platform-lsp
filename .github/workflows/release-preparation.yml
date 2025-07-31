@@ -370,7 +370,7 @@ jobs:
 
           echo "::notice::Dumping downloaded application result files"
           echo "::group::Application result artifacts"
-          for f in /tmp/app-results/*.json; do
+          for f in /tmp/app-results/*/*.json; do
             echo "─── $f ───"
             cat "$f"
           done
@@ -382,7 +382,7 @@ jobs:
 
           tmp=$(mktemp)
 
-          jq --slurpfile results /tmp/app-results/*.json '
+          jq --slurpfile results /tmp/app-results/*/*.json '
             reduce $results[] as $r (
               .;
               .applications.required |= map(
