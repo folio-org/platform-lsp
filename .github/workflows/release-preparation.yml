@@ -297,7 +297,11 @@ jobs:
         if: always()
         env:
           APP_NAME: ${{ matrix.application }}
-          VERSION: ${{ steps.verify-app-branch.outputs.version }}
+          VERSION: >-
+            ${{ 
+                steps.verify-app-branch.outcome == 'success' && steps.verify-app-branch.outputs.version ||
+                'unknown'
+            }}
           STATUS: >-
             ${{ 
                 steps.orchestrate-app-workflow.outcome == 'failure' && 'workflow_failed' ||
@@ -320,6 +324,7 @@ jobs:
 
       - name: Upload Application Result
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: "result-${{ matrix.application }}"
           path: "/tmp/results/${{ matrix.application }}.json"
