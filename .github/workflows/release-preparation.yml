@@ -434,14 +434,14 @@ jobs:
           echo "::notice::Successfully committed changes #$commit_sha"
           echo "commit_sha=$commit_sha" >> "$GITHUB_OUTUT"
 
-#      - name: Push Platform Changes
-#        id: push-platform-changes
-#        run: |
-#          set -eo pipefail
-#
-#          echo "::notice::Pushing changes to branch '$BRANCH_NAME'"
-#          git push -u origin "$BRANCH_NAME"
-#          echo "::notice::Successfully pushed changes to '$BRANCH_NAME'"
+      - name: Push Platform Changes
+        id: push-platform-changes
+        run: |
+          set -eo pipefail
+
+          echo "::notice::Pushing changes to branch '$BRANCH_NAME'"
+          git push -u origin "$BRANCH_NAME"
+          echo "::notice::Successfully pushed changes to '$BRANCH_NAME'"
 
       - name: Workflow Summary
         run: |
