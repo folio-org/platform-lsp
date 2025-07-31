@@ -441,7 +441,7 @@ jobs:
 
           commit_sha=$(git rev-parse HEAD)
           echo "::notice::Successfully committed changes #$commit_sha"
-          echo "commit_sha=$commit_sha" >> "$GITHUB_OUTUT"
+          echo "commit_sha=$commit_sha" >> "$GITHUB_OUTPUT"
 
       - name: Push Platform Changes
         id: push-platform-changes
