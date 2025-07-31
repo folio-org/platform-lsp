@@ -381,8 +381,11 @@ jobs:
           echo "::endgroup::"
 
           tmp=$(mktemp)
+          results_file=$(mktemp)
 
-          jq --slurpfile results /tmp/app-results/*/*.json '
+          jq -s '.' /tmp/app-results/*/*.json > "$results_file"   # Combine all JSON files into a single array
+
+          jq --slurpfile results "$results_file" '
             reduce $results[] as $r (
               .;
               .applications.required |= map(
@@ -393,6 +396,8 @@ jobs:
               )
             )
           ' platform-descriptor.json > "$tmp"
+          
+          rm "$results_file"
           && mv "$tmp" platform-descriptor.json
 
           echo "::group::Updated platform descriptor"
