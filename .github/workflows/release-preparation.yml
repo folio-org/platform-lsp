@@ -314,9 +314,9 @@ jobs:
           mkdir -p /tmp/results
           cat > "/tmp/results/$APP_NAME.json" <<EOF
           {
-            "application": $APP_NAME,
-            "status": $STATUS,
-            "version": $VERSION
+            "application": "$APP_NAME",
+            "status": "$STATUS",
+            "version": "$VERSION"
           }
           EOF
           
