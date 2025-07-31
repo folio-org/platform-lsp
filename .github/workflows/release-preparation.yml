@@ -217,6 +217,7 @@ jobs:
     name: Check ${{ matrix.application }} Application
     needs: initial-check
     runs-on: ubuntu-latest
+    if: always()
     strategy:
       matrix:
         application: [ 'app-platform-complete', 'app-platform-minimal' ]
