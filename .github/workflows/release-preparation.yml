@@ -237,6 +237,8 @@ jobs:
             use_snapshot_fallback: ${{ inputs.use_snapshot_fallback }}
             use_snapshot_version: ${{ inputs.use_snapshot_version }}
             dry_run: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   prepare-applications:
     name: Prepare ${{ matrix.application }} Application
@@ -263,6 +265,8 @@ jobs:
             use_snapshot_fallback: ${{ inputs.use_snapshot_fallback }}
             use_snapshot_version: ${{ inputs.use_snapshot_version }}
             dry_run: ${{ inputs.dry_run }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Verify Application Workflow Result
         id: verify-app-branch
