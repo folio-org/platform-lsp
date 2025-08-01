@@ -390,6 +390,7 @@ jobs:
           cat "$results_file"
           echo "::endgroup::"
 
+          echo "::notice::Updating application versions"
           jq --slurpfile results "$results_file" '
             reduce $results[0][] as $r (
               .;
@@ -403,6 +404,19 @@ jobs:
           ' platform-descriptor.json > "$tmp"
           
           rm "$results_file" && mv "$tmp" platform-descriptor.json
+          
+          echo "::group::Updated application versions"
+          cat platform-descriptor.json
+          echo "::endgroup::"
+
+          echo "::notice::Updating platform version and eureka-components"
+          tmp2=$(mktemp)
+          jq --arg newVer "${{ inputs.new_release_branch }}" '
+            .version = $newVer                                    #update platform version to release branch
+            | ."eureka-components" 
+            |= map(.version = "<CHANGE_ME>")                      #placeholder all eureka-component versions
+          ' platform-descriptor.json > "$tmp2" \
+          && mv "$tmp2" platform-descriptor.json
 
           echo "::group::Updated platform descriptor"
           cat platform-descriptor.json
