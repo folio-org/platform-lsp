@@ -391,7 +391,7 @@ jobs:
           echo "::endgroup::"
 
           jq --slurpfile results "$results_file" '
-            reduce $results[] as $r (
+            reduce $results[0][] as $r (
               .;
               .applications.required |= map(
                 if .name == $r.application then .version = $r.version else . end
