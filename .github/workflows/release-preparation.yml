@@ -384,7 +384,7 @@ jobs:
           results_file=$(mktemp)
 
           echo "::notice::Let's combine all application results into a single flat array"
-          jq -s 'add' /tmp/app-results/*/*.json > "$results_file"   # Combine all JSON files into a single flat array
+          jq -s '.' /tmp/app-results/*/*.json > "$results_file"   # Combine all JSON files into a single array
 
           echo "::group::Combined application results"
           cat "$results_file"
