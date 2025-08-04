@@ -1,0 +1,114 @@
+name: LSP Hourly Check and Update
+on:
+#    schedule:  UNCOMMENT this line to enable scheduled runs
+#        - cron: '0 * * * *'
+    workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    #if: github.ref == 'refs/heads/snapshot' || Not needed for scheduled runs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: snapshot
+
+      - name: Ensure jq is installed
+        run: sudo apt-get install -y jq
+
+      - name: Check & Update Eureka components version
+        run: |
+          components=$(jq -r '.["eureka-components"][] | .name' platform-descriptor.json)
+          for component in $components; do
+              version=$(curl -s "https://registry.hub.docker.com/v2/repositories/folioci/$component/tags?page_size=10" | jq -r '.results | map(select(.name != "latest")) | sort_by(.last_updated) | reverse | .[0].name')
+              if [ -z "$version" ]; then
+                  echo "Error: Version for component '$component' is not defined in platform-descriptor.json"
+                  exit 1
+              else
+                  echo "Component '$component' latest version: $version"
+                  # Find the line number for the component in platform-descriptor.json
+                  line_num=$(jq -r --arg comp "$component" 'to_entries[] | select(.key=="eureka-components") | .value | to_entries[] | select(.value.name==$comp) | .key' platform-descriptor.json)
+                  if [ -n "$line_num" ]; then
+                      # jq does not support in-place editing, so use sed to update the version on the correct line
+                      current_version=$(jq -r --arg comp "$component" '.["eureka-components"][] | select(.name==$comp) | .version' platform-descriptor.json)
+                      if [ "$current_version" != "$version" ]; then
+                          echo "Updating $component from $current_version to $version"
+                          # Use jq to update the version and overwrite the file
+                          jq --arg comp "$component" --arg ver "$version" '(.["eureka-components"][] | select(.name==$comp) | .version) |= $ver' platform-descriptor.json > tmp.json && mv tmp.json platform-descriptor.json
+                      fi
+                  fi
+              fi
+          done
+          
+      - name: Get Applications Names and Download JSON Files
+        run: |
+          jq -r '.applications.required[] | "\(.name)"' platform-descriptor.json > /tmp/applications-names.txt
+          jq -r '.applications.optional[] | "\(.name)"' platform-descriptor.json >> /tmp/applications-names.txt
+          mkdir /tmp/applications
+          for app in $(cat /tmp/applications-names.txt); do
+              # Get all versions for the app, select the last (newest) one
+              version=$(curl -s "env.FAR_URL/applications?query=name=$app" | jq -r '[.[] | select(.name == "'"$app"'") | .version] | last')
+              curl -X GET "env.FAR_URL/applications/$app-$version?full=true" -o "/tmp/applications/$app-$version.json"
+                if [ $? -ne 0 ]; then
+                    echo "Error: Failed to download JSON for application '$app' version '$version'"
+                    exit 1
+                fi
+                echo "$app-$version" >> /tmp/applications-versions.txt
+          done
+
+      - name: Upload Applications JSON Files to FAR
+        run: |
+          for app in $(ls /tmp/applications); do
+              curl -X POST "env.FAR_URL/applications" \
+                   -H "Content-Type: application/json" \
+                   --data-binary "@/tmp/applications/$app"
+          done
+
+      - name: Validate Application Descriptors
+        run: |
+          set -e
+          for app in $(ls /tmp/applications); do
+              curl -X POST "env.FAR_URL/applications/validate" \
+                   -H "Content-Type: application/json" \
+                   --data-binary "@/tmp/applications/$app"
+          done
+
+      - name: Validate Modules Interfaces Integrity
+        run: |
+          set -e
+          apps2validate=()
+          for app in $(cat /tmp/applications-versions.txt); do
+            apps2validate+=("$app")
+          done
+          apps2process=$(printf '"%s"' "${apps2validate[@]}" | sed 's/" "/", "/g')
+            curl -X POST "env.FAR_URL/modules/validate-interfaces" \
+                 -H "Content-Type: application/json" \
+                 --data "{\"applications\": [$apps2process]}"
+
+      - name: Validate Descriptor Integrity
+        run: |
+          set -e
+          for app in $(ls /tmp/applications); do
+              curl -X POST "env.FAR_URL/applications/validate-descriptors" \
+                   -H "Content-Type: application/json" \
+                   --data-binary "@/tmp/applications/$app"
+          done
+
+      - name: Update platform-descriptor.json
+        run: |
+          for app in $(cat /tmp/applications-names.txt); do
+            # Get all versions for the app, select the last (newest) one
+            version=$(curl -s "env.FAR_URL/applications?query=name=$app" | jq -r '[.[] | select(.name == "'"$app"'") | .version] | last')
+            # Update version in required and optional arrays if name matches, didn't find any other way to do it, sorry!!!
+            jq --arg app "$app" --arg ver "$version" '
+              .applications.required |= map(if .name == $app then .version = $ver else . end) |
+              .applications.optional |= map(if .name == $app then .version = $ver else . end)
+            ' platform-descriptor.json > tmp.json && mv tmp.json platform-descriptor.json
+          done
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "Eureka CI"
+          git config --global user.email "noreply-eureka-ci@folio.org"
+          git commit -am "Update platform-descriptor.json with latest versions"
+          git push origin snapshot || echo "No changes to commit"
