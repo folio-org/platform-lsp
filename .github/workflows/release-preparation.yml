@@ -489,7 +489,7 @@ jobs:
           method: conversations.join
           token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
           payload: |
-            channel: ${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}
+            channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
 
       - name: Send Global Slack Notification
         if: always()       
@@ -498,7 +498,7 @@ jobs:
           method: chat.postMessage
           token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
           payload: |
-            channel: ${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}
+            channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
             text: "${{ job.status == 'success' && '✅' || '❌' }} Platform-LSP Release Preparation ${{ job.status == 'success' && 'SUCCESS' || 'FAILED' }}"
             attachments:
               - color: "${{ job.status == 'success' && 'good' || 'danger' }}"
