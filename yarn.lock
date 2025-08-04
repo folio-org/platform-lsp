@@ -2249,10 +2249,10 @@
   optionalDependencies:
     "@folio/plugin-find-authority" "^5.0.0"
 
-"@folio/reading-room@2.0.0":
-  version "2.0.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/reading-room/-/reading-room-2.0.0.tgz#f1ade0a139559fe65220bf6cd8bfb9a35e53aac2"
-  integrity sha512-ZaH/7+sI8bNEKYLjvpPGqwqSlaXcldqN3XaKCybU3UIcbDHqkV/uJVC3n7Vy0RSh0nbNgWjRIP0SbgA0wPi4EA==
+"@folio/reading-room@2.0.1":
+  version "2.0.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/reading-room/-/reading-room-2.0.1.tgz#2fcea8b5e57c1ee109b4e49a83a3e9999ec8b15a"
+  integrity sha512-fXGlgl1ETDnwpnubzqzSnLWN3sOrkedswUjXWhgvmFIVTj9PVJPO3X1Fv8Gcn9fPmt9N1HmlTnGC29c/Xpu0Ww==
   dependencies:
     classnames "^2.2.5"
     prop-types "^15.6.0"
@@ -2779,10 +2779,10 @@
     react-final-form-arrays "^3.1.1"
     redux-form "^8.0.0"
 
-"@folio/users@12.1.7":
-  version "12.1.7"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/users/-/users-12.1.7.tgz#bc41e643723b2056e73edfb5d7f57b0235a9b6d3"
-  integrity sha512-gcGcfbZofmRsV+XC6h105DjDVpYu3QgVkP+Vnh4etCFHGjd4qkWTKDK/6AeBNPH+JN69DW++SeIoE1jNV9ophg==
+"@folio/users@12.1.9":
+  version "12.1.9"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/users/-/users-12.1.9.tgz#137198414efbfc4ca8de83b6c75c26ab0ae8de44"
+  integrity sha512-gZkMWJPTsAMmwwIT+TOsehZj3Sy/Ayd6ltk3yfpy5KeDJ7K8t4P2CpLAV42aaKtyiCdUQAia8TShdu24icu6cg==
   dependencies:
     compressorjs "^1.2.1"
     dompurify "^3.2.0"
@@ -2803,6 +2803,7 @@
     react-final-form-listeners "^1.0.3"
     react-router-prop-types "^1.0.4"
     react-to-print "^3.0.1"
+    react-webcam "^7.2.0"
     uuid "^9.0.0"
   optionalDependencies:
     "@folio/plugin-find-user" "^8.0.0"
@@ -7692,6 +7693,11 @@ react-virtualized-auto-sizer@^1.0.2, react-virtualized-auto-sizer@^1.0.6:
   version "1.0.25"
   resolved "https://registry.yarnpkg.com/react-virtualized-auto-sizer/-/react-virtualized-auto-sizer-1.0.25.tgz#b13cbc528ac200be2bd1ffa40c8bb19bcc60ac3f"
   integrity sha512-YHsksEGDfsHbHuaBVDYwJmcktblcHGafz4ZVuYPQYuSHMUGjpwmUCrAOcvMSGMwwk1eFWj1M/1GwYpNPuyhaBg==
+
+react-webcam@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/react-webcam/-/react-webcam-7.2.0.tgz#64141c4c7bdd3e956620500187fa3fcc77e1fd49"
+  integrity sha512-xkrzYPqa1ag2DP+2Q/kLKBmCIfEx49bVdgCCCcZf88oF+0NPEbkwYk3/s/C7Zy0mhM8k+hpdNkBLzxg8H0aWcg==
 
 react-window@^1.8.5:
   version "1.8.11"
