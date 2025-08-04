@@ -499,22 +499,20 @@ jobs:
           token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
           payload: |
             channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
-            text: "${{ job.status == 'success' && '✅' || '❌' }} Platform-LSP Release Preparation ${{ job.status == 'success' && 'SUCCESS' || 'FAILED' }}"
             attachments:
               - color: "${{ job.status == 'success' && 'good' || 'danger' }}"
-                title: "${{ job.status == 'success' && '✅' || '❌' }} Platform-LSP Release Preparation ${{ job.status == 'success' && 'SUCCESS' || 'FAILED' }}"
-                text: "${{ job.status == 'success' && 'Platform-LSP release branch preparation completed successfully!' || 'Platform-LSP release branch preparation failed!' }}"
+                title: "<https://github.com/folio-org/platform-lsp/actions/runs/${{ github.run_id }}|Platform Release Preparation ${{ job.status == 'success' && 'SUCCESS' || 'FAILED' }}>"
                 fields:
-                  - title: "Previous Release"
-                    value: "${{ inputs.previous_release_branch }}"
-                    short: true
                   - title: "New Release"
-                    value: "${{ inputs.new_release_branch }}"
+                    value: "<https://github.com/folio-org/platform-lsp/tree/${{ inputs.new_release_branch }}|${{ inputs.new_release_branch }}>"
                     short: true
+                  - title: "Previous Release"
+                    value: "<https://github.com/folio-org/platform-lsp/tree/${{ inputs.previous_release_branch }}|${{ inputs.previous_release_branch }}>"
+                    short: true                    
                   - title: "Applications Processed"
                     value: "${{ needs.initial-check.outputs.application_count }}"
                     short: true
                   - title: "Commit"
-                    value: "${{ steps.commit-platform-changes.outputs.commit_sha }}"
+                    value: "<https://github.com/folio-org/platform-lsp/commit/${{ steps.commit-platform-changes.outputs.commit_sha }}|${{ steps.commit-platform-changes.outputs.commit_sha }}>"
                     short: true
-                footer: "FOLIO Platform-LSP CI/CD" 
+                footer: "Eureka CI/CD" 
