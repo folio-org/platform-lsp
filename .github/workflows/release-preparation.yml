@@ -349,7 +349,6 @@ jobs:
 
       - name: Create Platform Release Branch
         id: create-platform-branch
-        if: inputs.dry_run != true
         env:
           SOURCE_BRANCH: ${{ inputs.previous_release_branch }}
           TARGET_BRANCH: ${{ inputs.new_release_branch }}
@@ -469,18 +468,53 @@ jobs:
           echo "::notice::Successfully pushed changes to '$BRANCH_NAME'"
 
       - name: Workflow Summary
+        if: always()
+        env:          
+          IS_SUCCESS: ${{ steps.push-platform-changes.outcome == 'success' }}
         run: |
           set -eo pipefail
 
-          echo "::notice::Platform Release Preparation Summary"
+          test "$IS_SUCCESS" = "true" && echo "::notice::Platform Release Preparation Summary" || echo "::error::Platform Release Preparation Summary"
           echo ""
           echo "Previous Release: ${{ inputs.previous_release_branch }}"
           echo "New Release: ${{ inputs.new_release_branch }}"
           echo "Applications processed: ${{ needs.initial-check.outputs.application_count }}"
-          echo "Commit: ${{ steps.commit-platform-changes.outputs.commit_sha }}"
+          test "$IS_SUCCESS" = "true" && echo "Commit: ${{ steps.commit-platform-changes.outputs.commit_sha }}"
           echo ""
-          
-          if [ "${{ inputs.dry_run }}" = "true" ]; then
-            echo "::notice::This was a dry run - no actual changes were made"
-            echo "::notice::Set dry_run=false to apply changes"
-          fi 
+
+      - name: Join Slack Channel
+        if: always()
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          method: conversations.join
+          token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}
+
+      - name: Send Global Slack Notification
+        if: always()       
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}
+            text: "${{ job.status == 'success' && '✅' || '❌' }} Platform-LSP Release Preparation ${{ job.status == 'success' && 'SUCCESS' || 'FAILED' }}"
+            attachments:
+              - color: "${{ job.status == 'success' && 'good' || 'danger' }}"
+                title: "${{ job.status == 'success' && '✅' || '❌' }} Platform-LSP Release Preparation ${{ job.status == 'success' && 'SUCCESS' || 'FAILED' }}"
+                text: "${{ job.status == 'success' && 'Platform-LSP release branch preparation completed successfully!' || 'Platform-LSP release branch preparation failed!' }}"
+                fields:
+                  - title: "Previous Release"
+                    value: "${{ inputs.previous_release_branch }}"
+                    short: true
+                  - title: "New Release"
+                    value: "${{ inputs.new_release_branch }}"
+                    short: true
+                  - title: "Applications Processed"
+                    value: "${{ needs.initial-check.outputs.application_count }}"
+                    short: true
+                  - title: "Commit"
+                    value: "${{ steps.commit-platform-changes.outputs.commit_sha }}"
+                    short: true
+                footer: "FOLIO Platform-LSP CI/CD" 
