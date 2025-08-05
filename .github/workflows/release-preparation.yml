@@ -503,20 +503,20 @@ jobs:
               - type: section
                 text:
                   type: mrkdwn
-                  text: "*Platform Release Preparation ${{ job.status == 'success' && 'SUCCESS' || 'FAILED' }} <https://github.com/folio-org/platform-lsp/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+                  text: "*Platform Release Preparation ${{ job.status == 'success' && 'SUCCESS' || 'FAILED' }} <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
             attachments:
               - color: "${{ job.status == 'success' && 'good' || 'danger' }}"
                 fields:
                   - title: "New Release"
-                    value: "<https://github.com/folio-org/platform-lsp/tree/${{ inputs.new_release_branch }}|${{ inputs.new_release_branch }}>"
+                    value: "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.new_release_branch }}|${{ inputs.new_release_branch }}>"
                     short: true
                   - title: "Previous Release"
-                    value: "<https://github.com/folio-org/platform-lsp/tree/${{ inputs.previous_release_branch }}|${{ inputs.previous_release_branch }}>"
+                    value: "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.previous_release_branch }}|${{ inputs.previous_release_branch }}>"
                     short: true                    
                   - title: "Applications Processed"
                     value: "${{ needs.initial-check.outputs.application_count }}"
                     short: true
                   - title: "Commit"
-                    value: "<https://github.com/folio-org/platform-lsp/commit/${{ steps.commit-platform-changes.outputs.commit_sha }}|${{ steps.commit-platform-changes.outputs.commit_sha }}>"
+                    value: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ steps.commit-platform-changes.outputs.commit_sha }}|${{ steps.commit-platform-changes.outputs.commit_sha }}>"
                     short: true
                 footer: "Eureka CI/CD" 
