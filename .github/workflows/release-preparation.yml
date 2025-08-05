@@ -482,15 +482,6 @@ jobs:
           test "$IS_SUCCESS" = "true" && echo "Commit: ${{ steps.commit-platform-changes.outputs.commit_sha }}"
           echo ""
 
-      - name: Join Slack Channel
-        if: always()
-        uses: slackapi/slack-github-action@v2.1.1
-        with:
-          method: conversations.join
-          token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
-          payload: |
-            channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
-
       - name: Send Global Slack Notification
         if: always()       
         uses: slackapi/slack-github-action@v2.1.1
