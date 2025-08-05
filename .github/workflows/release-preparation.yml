@@ -501,7 +501,7 @@ jobs:
             channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
             attachments:
               - color: "${{ job.status == 'success' && 'good' || 'danger' }}"
-                title: "<https://github.com/folio-org/platform-lsp/actions/runs/${{ github.run_id }}|Platform Release Preparation ${{ job.status == 'success' && 'SUCCESS' || 'FAILED' }}>"
+                title: "Platform Release Preparation ${{ job.status == 'success' && 'SUCCESS' || 'FAILED' }} <https://github.com/folio-org/platform-lsp/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>"
                 fields:
                   - title: "New Release"
                     value: "<https://github.com/folio-org/platform-lsp/tree/${{ inputs.new_release_branch }}|${{ inputs.new_release_branch }}>"
