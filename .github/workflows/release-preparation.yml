@@ -500,10 +500,10 @@ jobs:
           payload: |
             channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
             blocks:
-              - type: header
+              - type: section
                 text:
-                  type: plain_text
-                  text: "Platform Release Preparation ${{ job.status == 'success' && 'SUCCESS' || 'FAILED' }} <https://github.com/folio-org/platform-lsp/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>"
+                  type: mrkdwn
+                  text: "*Platform Release Preparation ${{ job.status == 'success' && 'SUCCESS' || 'FAILED' }} <https://github.com/folio-org/platform-lsp/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
             attachments:
               - color: "${{ job.status == 'success' && 'good' || 'danger' }}"
                 fields:
