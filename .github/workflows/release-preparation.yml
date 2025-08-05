@@ -499,9 +499,13 @@ jobs:
           token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
           payload: |
             channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
+            blocks:
+              - type: header
+                text:
+                  type: plain_text
+                  text: "Platform Release Preparation ${{ job.status == 'success' && 'SUCCESS' || 'FAILED' }} <https://github.com/folio-org/platform-lsp/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>"
             attachments:
               - color: "${{ job.status == 'success' && 'good' || 'danger' }}"
-                title: "Platform Release Preparation ${{ job.status == 'success' && 'SUCCESS' || 'FAILED' }} <https://github.com/folio-org/platform-lsp/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>"
                 fields:
                   - title: "New Release"
                     value: "<https://github.com/folio-org/platform-lsp/tree/${{ inputs.new_release_branch }}|${{ inputs.new_release_branch }}>"
