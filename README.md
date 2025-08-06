@@ -175,33 +175,6 @@ Platform Release: R2-2025.1
 └── Dependencies: Minimum required versions
 ```
 
-## 🔧 Local Development
-
-### Platform Descriptor Validation
-```bash
-# Validate JSON syntax
-jq . platform-descriptor.json
-
-# Check platform structure
-jq '.applications.required[] | .name' platform-descriptor.json
-
-# Validate component versions
-jq '.["eureka-components"][] | "\(.name): \(.version)"' platform-descriptor.json
-```
-
-### Stripes Configuration
-```bash
-# Install platform dependencies
-yarn install
-
-# Validate Stripes configuration
-yarn stripes build --analyze
-
-# Test platform composition
-yarn stripes dev --config stripes.config.js
-```
-```
-
 ## 🏗️ Platform Management
 
 ### Component Categories
@@ -221,8 +194,6 @@ yarn stripes dev --config stripes.config.js
 - Application Management (mgr-applications)
 - Service Discovery (sidecar)
 
-```
-
 ## 🤝 Contributing
 
 ### Making Platform Changes
@@ -231,7 +202,6 @@ yarn stripes dev --config stripes.config.js
 2. **🔍 Impact Assessment**: Consider effects across all platform components
 3. **📋 Update Platform Descriptor**: Modify component versions as needed
 4. **🧪 Test Changes**: Validate platform composition and dependencies
-5. **👥 Team Review**: Include Kitfox team members in all PRs
 
 ## 🎯 Platform Mission
 
@@ -242,8 +212,6 @@ Platform-lsp enables **FOLIO's Eureka implementation** by:
 - **🔄 Supporting CI/CD**: Integrates with automated scanning, validation, and release processes
 - **📦 Ensuring Consistency**: Provides reproducible platform deployments through versioned artifacts
 - **🛡️ Maintaining Security**: Team-based authorization for critical platform operations
-
-*Supporting libraries worldwide with advanced, scalable, and secure digital infrastructure through the FOLIO Eureka platform.*
 
 ---
 
