@@ -525,6 +525,7 @@ jobs:
           token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
           payload: |
             channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
+            text: "Platform Release Preparation SUCCESS"            
             blocks:
               - type: section
                 text:
@@ -555,21 +556,25 @@ jobs:
           token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
           payload: |
             channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
+            text: "Platform Release Preparation FAILED"
             blocks:
               - type: section
                 text:
                   type: mrkdwn
                   text: "*Platform Release Preparation FAILED <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
-            text: >-
-              ${{ 
-                needs.prepare-applications.result == 'failure' && 
-                  format(
-                    'Reason: Application preparation\nFailed app(s): %s',
-                    needs.prepare-applications.outputs.failed_apps
-                  )
-                ||
-                'Reason: Platform preparation'
-              }}
+              - type: section
+                text:
+                  type: mrkdwn
+                  text: >-
+                    ${{ 
+                      needs.prepare-applications.result == 'failure' && 
+                        format(
+                          'Reason: Application preparation\nFailed app(s): %s',
+                          needs.prepare-applications.outputs.failed_apps
+                        )
+                      ||
+                      'Reason: Platform preparation'
+                    }}
             attachments:
               - color: "danger"
                 fields:
