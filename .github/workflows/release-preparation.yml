@@ -566,10 +566,10 @@ jobs:
                 text:
                   type: mrkdwn
                   text: >-
-                    ${{ 
+                    ${{
                       needs.prepare-applications.result == 'failure' && 
                         format(
-                          'Reason: application preparation\nFailed app(s): {0}',
+                          "Reason: application preparation\nFailed app(s): {0}",
                           needs.prepare-applications.outputs.failed_apps || 'Unknown'
                         )
                       ||
