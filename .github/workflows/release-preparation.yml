@@ -572,7 +572,7 @@ jobs:
                       needs.prepare-applications.result == 'failure' && 
                         format(
                           'Reason: application preparation
-                    Failed app(s): {0}',
+                      Failed app(s): {0}',
                           needs.prepare-applications.outputs.failed_apps || 'Unknown'
                         )
                       ||
