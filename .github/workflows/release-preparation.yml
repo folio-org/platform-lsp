@@ -258,8 +258,7 @@ jobs:
         application: ${{ fromJson(needs.initial-check.outputs.applications) }}
       fail-fast: false
       max-parallel: 5
-    outputs:
-      failed_apps: ${{ steps.gather-failures.outputs.failed_apps }}
+
     steps:
       - name: Generate App Token
         id: app-token
@@ -331,28 +330,45 @@ jobs:
           path: "/tmp/results/${{ matrix.application }}.json"
           retention-days: 1
 
-      - name: Gather failed applications
+  collect-results:
+    name: Collect Application Results
+    needs: [initial-check, prepare-applications]
+    runs-on: ubuntu-latest
+    if: always() && needs.prepare-applications.result != 'skipped'
+    outputs:
+      failed_apps: ${{ steps.gather-failures.outputs.failed_apps }}
+      success_count: ${{ steps.gather-failures.outputs.success_count }}
+      failure_count: ${{ steps.gather-failures.outputs.failure_count }}
+    steps:
+      - name: Download All Application Results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "result-*"
+          path: /tmp/all-results
+          merge-multiple: true
+
+      - name: Gather Application Results
         id: gather-failures
-        if: always()
         run: |
           set -eo pipefail
+          
+          echo "::notice::Analyzing application results"
 
-          failed_list=""
-          for f in /tmp/results/*.json; do
-            status="$(jq -r .status "$f")"
-            app="$(jq -r .application "$f")"
+          all=$(jq -s '.' /tmp/all-results/*.json)
 
-            if [[ "$status" != "success" ]]; then
-              failed_list+="${app}," 
-            fi
-          done
-
-          failed_list="${failed_list%,}"
-          echo "failed_apps=$failed_list" >> "$GITHUB_OUTPUT"          
+          success_count=$(jq '[.[] | select(.status=="success")] | length' <<<"$all")
+          failure_count=$(jq '[.[] | select(.status!="success")] | length' <<<"$all")
+          failed_apps=$(jq -r '[.[] | select(.status!="success") | .application] | join(", ")' <<<"$all")
+          
+          echo "::notice::Results Summary - Success: $success_count, Failures: $failure_count"
+          
+          echo "failed_apps=$failed_apps" >> "$GITHUB_OUTPUT"
+          echo "success_count=$success_count" >> "$GITHUB_OUTPUT"
+          echo "failure_count=$failure_count" >> "$GITHUB_OUTPUT"
 
   prepare-platform:
     name: Prepare Platform
-    needs: [ initial-check, prepare-applications ]
+    needs: [ initial-check, prepare-applications, collect-results ]
     runs-on: ubuntu-latest
     if: always() && needs.prepare-applications.result == 'success' && inputs.dry_run != true
     outputs:
@@ -507,7 +523,7 @@ jobs:
   slack_notification:
     name: Slack Notification
     runs-on: ubuntu-latest
-    needs: [ initial-check, check-applications, prepare-applications, prepare-platform ]
+    needs: [ initial-check, check-applications, prepare-applications, collect-results, prepare-platform ]
     if: always() && inputs.dry_run == false && needs.check-applications.result == 'success'
     env:
       IS_SUCCESS: >-
@@ -573,7 +589,7 @@ jobs:
                         format(
                           'Reason: application preparation
                      Failed app(s): {0}',
-                          needs.prepare-applications.outputs.failed_apps || 'Unknown'
+                          needs.collect-results.outputs.failed_apps || 'Unknown'
                         )
                       ||
                       'Reason: platform preparation'
