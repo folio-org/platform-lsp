@@ -523,6 +523,7 @@ jobs:
         with:
           method: chat.postMessage
           token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+          errors: true
           payload: |
             channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
             text: "Platform Release Preparation SUCCESS"            
@@ -554,6 +555,7 @@ jobs:
         with:
           method: chat.postMessage
           token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+          errors: true
           payload: |
             channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
             text: "Platform Release Preparation FAILED"
