@@ -569,11 +569,12 @@ jobs:
                     ${{ 
                       needs.prepare-applications.result == 'failure' && 
                         format(
-                          'Reason: Application preparation\nFailed app(s): %s',
-                          needs.prepare-applications.outputs.failed_apps
+                          'Reason: application preparation
+                          Failed app(s): {0}',
+                          needs.prepare-applications.outputs.failed_apps || 'Unknown'
                         )
                       ||
-                      'Reason: Platform preparation'
+                      'Reason: platform preparation'
                     }}
             attachments:
               - color: "danger"
