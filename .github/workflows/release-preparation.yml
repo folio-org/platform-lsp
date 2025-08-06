@@ -507,8 +507,8 @@ jobs:
   slack_notification:
     name: Slack Notification
     runs-on: ubuntu-latest
-    needs: [ initial-check, prepare-applications, prepare-platform ]
-    if: always() && inputs.dry_run == false
+    needs: [ initial-check, check-applications, prepare-applications, prepare-platform ]
+    if: always() && inputs.dry_run == false && needs.check-applications.result == 'success'
     env:
       IS_SUCCESS: >-
         ${{ 
@@ -517,7 +517,7 @@ jobs:
             'true'
         }}
     steps:
-      - name: Send Global SUCCESS Slack Notification
+      - name: Send SUCCESS Slack Notification
         if: env.IS_SUCCESS == 'true'
         uses: slackapi/slack-github-action@v2.1.1
         with:
@@ -545,11 +545,11 @@ jobs:
                     value: "${{ needs.initial-check.outputs.application_count }}"
                     short: true
                   - title: "Commit"
-                    value: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ steps.commit-platform-changes.outputs.commit_sha }}|${{ steps.commit-platform-changes.outputs.commit_sha }}>"
+                    value: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ needs.prepare-platform.outputs.commit_sha }}|${{ needs.prepare-platform.outputs.commit_sha }}>"
                     short: true
                 footer: "Eureka CI/CD"
 
-      - name: Send Global FAILED Slack Notification
+      - name: Send FAILED Slack Notification
         if: env.IS_SUCCESS == 'false'
         uses: slackapi/slack-github-action@v2.1.1
         with:
