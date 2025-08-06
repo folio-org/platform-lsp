@@ -258,7 +258,8 @@ jobs:
         application: ${{ fromJson(needs.initial-check.outputs.applications) }}
       fail-fast: false
       max-parallel: 5
-    
+    outputs:
+      failed_apps: ${{ steps.gather-failures.outputs.failed_apps }}
     steps:
       - name: Generate App Token
         id: app-token
@@ -330,11 +331,32 @@ jobs:
           path: "/tmp/results/${{ matrix.application }}.json"
           retention-days: 1
 
+      - name: Gather failed applications
+        id: gather-failures
+        if: always()
+        run: |
+          set -eo pipefail
+
+          failed_list=""
+          for f in /tmp/results/*.json; do
+            status="$(jq -r .status "$f")"
+            app="$(jq -r .application "$f")"
+
+            if [[ "$status" != "success" ]]; then
+              failed_list+="${app}," 
+            fi
+          done
+
+          failed_list="${failed_list%,}"
+          echo "failed_apps=$failed_list" >> "$GITHUB_OUTPUT"          
+
   prepare-platform:
     name: Prepare Platform
     needs: [ initial-check, prepare-applications ]
     runs-on: ubuntu-latest
     if: always() && needs.prepare-applications.result == 'success' && inputs.dry_run != true
+    outputs:
+      commit_sha: ${{ steps.commit-platform-changes.outputs.commit_sha }}
     steps:
       - name: Checkout Platform Repository
         uses: actions/checkout@v4
@@ -481,9 +503,22 @@ jobs:
           echo "Applications processed: ${{ needs.initial-check.outputs.application_count }}"
           test "$IS_SUCCESS" = "true" && echo "Commit: ${{ steps.commit-platform-changes.outputs.commit_sha }}"
           echo ""
-
-      - name: Send Global Slack Notification
-        if: always()       
+          
+  slack_notification:
+    name: Slack Notification
+    runs-on: ubuntu-latest
+    needs: [ initial-check, prepare-applications, prepare-platform ]
+    if: always() && inputs.dry_run == false
+    env:
+      IS_SUCCESS: >-
+        ${{ 
+            needs.prepare-applications.result == 'failure' && 'false' ||
+            needs.prepare-platform.result == 'failure' && 'false' ||
+            'true'
+        }}
+    steps:
+      - name: Send Global SUCCESS Slack Notification
+        if: env.IS_SUCCESS == 'true'
         uses: slackapi/slack-github-action@v2.1.1
         with:
           method: chat.postMessage
@@ -494,9 +529,9 @@ jobs:
               - type: section
                 text:
                   type: mrkdwn
-                  text: "*Platform Release Preparation ${{ job.status == 'success' && 'SUCCESS' || 'FAILED' }} <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+                  text: "*Platform Release Preparation SUCCESS <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
             attachments:
-              - color: "${{ job.status == 'success' && 'good' || 'danger' }}"
+              - color: "good"
                 fields:
                   - title: "New Release"
                     value: "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.new_release_branch }}|${{ inputs.new_release_branch }}>"
@@ -510,4 +545,38 @@ jobs:
                   - title: "Commit"
                     value: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ steps.commit-platform-changes.outputs.commit_sha }}|${{ steps.commit-platform-changes.outputs.commit_sha }}>"
                     short: true
-                footer: "Eureka CI/CD" 
+                footer: "Eureka CI/CD"
+
+      - name: Send Global FAILED Slack Notification
+        if: env.IS_SUCCESS == 'false'
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+          payload: |
+            channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
+            blocks:
+              - type: section
+                text:
+                  type: mrkdwn
+                  text: "*Platform Release Preparation FAILED <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+            text: >-
+              ${{ 
+                needs.prepare-applications.result == 'failure' && 
+                  format(
+                    'Reason: Application preparation\nFailed app(s): %s',
+                    needs.prepare-applications.outputs.failed_apps
+                  )
+                ||
+                'Reason: Platform preparation'
+              }}
+            attachments:
+              - color: "danger"
+                fields:
+                  - title: "New Release"
+                    value: "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.new_release_branch }}|${{ inputs.new_release_branch }}>"
+                    short: true
+                  - title: "Previous Release"
+                    value: "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.previous_release_branch }}|${{ inputs.previous_release_branch }}>"
+                    short: true
+                footer: "Eureka CI/CD"
