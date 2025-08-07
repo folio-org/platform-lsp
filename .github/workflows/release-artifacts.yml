@@ -1,0 +1,102 @@
+name: FOLIO Release Artifact Creator
+
+on:
+  release:
+    types: [created, published]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag to create artifacts for'
+        required: true
+        type: string
+      variants:
+        description: 'Comma-separated list of variants to build (minimal,complete)'
+        required: false
+        default: 'minimal,complete'
+        type: string
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      variants: ${{ steps.variants.outputs.variants }}
+      release_id: ${{ steps.release.outputs.release_id }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get version from platform-descriptor.json
+        id: version
+        run: |
+          if [[ -f "platform-descriptor.json" ]]; then
+            VERSION=$(jq -r '.version' platform-descriptor.json)
+            echo "version=${VERSION}" >> $GITHUB_OUTPUT
+            echo "Found version: ${VERSION}"
+          else
+            echo "::error::platform-descriptor.json not found"
+            exit 1
+          fi
+
+      - name: Prepare variants
+        id: variants
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VARIANTS="${{ github.event.inputs.variants }}"
+          else
+            # Default variants for release events
+            VARIANTS="minimal,complete"
+          fi
+
+          # Convert to JSON array for matrix
+          VARIANTS_JSON=$(echo "$VARIANTS" | jq -Rc 'split(",") | map(select(length > 0))')
+          echo "variants=${VARIANTS_JSON}" >> $GITHUB_OUTPUT
+          echo "Building variants: ${VARIANTS}"
+
+      - name: Get release info
+        id: release
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            # Get release by tag
+            RELEASE_ID=$(gh api repos/${{ github.repository }}/releases/tags/${{ github.event.inputs.release_tag }} --jq '.id')
+            echo "release_id=${RELEASE_ID}" >> $GITHUB_OUTPUT
+          else
+            # Use current release
+            echo "release_id=${{ github.event.release.id }}" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  create-artifacts:
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        variant: ${{ fromJson(needs.prepare.outputs.variants) }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create FOLIO release artifact
+        uses: ./.github/actions/folio-release-creator
+        with:
+          variant: ${{ matrix.variant }}
+          version: ${{ needs.prepare.outputs.version }}
+          release_id: ${{ needs.prepare.outputs.release_id }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload artifact summary
+        if: always()
+        run: |
+          echo "## FOLIO Release Artifact - ${{ matrix.variant }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ needs.prepare.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Variant:** ${{ matrix.variant }}" >> $GITHUB_STEP_SUMMARY
+          if [[ -f "artifact-info.json" ]]; then
+            echo "**Status:** $(jq -r '.status' artifact-info.json)" >> $GITHUB_STEP_SUMMARY
+            echo "**Size:** $(jq -r '.size' artifact-info.json)" >> $GITHUB_STEP_SUMMARY
+            echo "**Download URL:** $(jq -r '.download_url' artifact-info.json)" >> $GITHUB_STEP_SUMMARY
+          fi
