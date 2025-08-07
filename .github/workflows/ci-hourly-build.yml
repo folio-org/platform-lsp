@@ -1,8 +1,8 @@
 name: LSP Hourly Check and Update
 on:
-#    schedule:  UNCOMMENT this line to enable scheduled runs
-#        - cron: '0 * * * *'
-    workflow_dispatch:
+  # schedule:
+  #   - cron: '0 * * * *'
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -106,9 +106,45 @@ jobs:
             ' platform-descriptor.json > tmp.json && mv tmp.json platform-descriptor.json
           done
 
+      - name: Build and Test Platform
+        run: |
+          set -e
+          if [ -f package.json ]; then
+            npm ci || npm install
+            npm run build || npm run test
+          else
+            echo "No package.json found, skipping build/test."
+          fi
+
       - name: Commit and push changes
+        if: success()
         run: |
           git config --global user.name "Eureka CI"
           git config --global user.email "noreply-eureka-ci@folio.org"
           git commit -am "Update platform-descriptor.json with latest versions"
           git push origin snapshot || echo "No changes to commit"
+
+      - name: Notify on Failure
+        if: failure()
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+          payload: |
+            channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
+            text: "LSP Hourly Check and Update FAILED"
+            blocks:
+              - type: section
+                text:
+                  type: mrkdwn
+                  text: "*LSP Hourly Check and Update FAILED <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+            attachments:
+              - color: "danger"
+                fields:
+                  - title: "Branch"
+                    value: "<${{ github.server_url }}/${{ github.repository }}/tree/snapshot|snapshot>"
+                    short: true
+                  - title: "Workflow"
+                    value: "LSP Hourly Check and Update"
+                    short: true
+                footer: "Eureka CI/CD"
