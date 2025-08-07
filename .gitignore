@@ -1,0 +1,36 @@
+# Stripes Framework related
+ModuleDescriptors
+node_modules
+npm-debug.log*
+stripes.config.js.local
+output
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# VS Code related
+.vscode/
+.history/
+
+# Ignore user-specific AI/development tool artifacts
+.cursor/
+.claude/
+.mcp.json
+.cursor*
+claude*
+
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+.git/
+.hg/
