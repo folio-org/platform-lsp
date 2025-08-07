@@ -133,6 +133,8 @@ The implementation uses a **proven distributed workflow architecture** with clea
 - **Standardized Templates**: Consistent patterns across all applications
 - **Centralized Maintenance**: Single point of updates for shared logic
 
+> 📚 **Detailed Documentation**: See [kitfox-github Workflow Implementation Guide](https://github.com/folio-org/kitfox-github/blob/master/.github/README.md) for comprehensive technical documentation of all reusable components and patterns.
+
 #### Layer 3: Application Wrappers (app-* repositories)
 - **Local Orchestration**: Application-specific workflow coordination
 - **Parameter Passing**: Input forwarding to shared templates
@@ -141,6 +143,8 @@ The implementation uses a **proven distributed workflow architecture** with clea
 ### Universal Actions Implementation
 
 **Composite Actions** (folio-org/kitfox-github):
+
+> 📋 **Action Documentation**: Each action includes comprehensive usage guides with examples. See [Universal Actions](https://github.com/folio-org/kitfox-github/blob/master/.github/README.md#-universal-actions) for complete documentation.
 
 #### 1. validate-team-membership
 ```yaml
@@ -468,13 +472,23 @@ strategy:
 
 ## 🔗 Related Documentation
 
+### Platform Documentation
 - [Platform Architecture](../../README.md)
 - [Release Preparation Process](https://folio-org.atlassian.net/wiki/spaces/FOLIJET/pages/886178625/Release+preparation)
 - [Eureka CI Flow Documentation](https://folio-org.atlassian.net/wiki/spaces/FOLIJET/pages/887488514/CI+flow+release)
 
+### Technical Implementation Guides
+The release preparation process relies heavily on the shared infrastructure provided by kitfox-github. For detailed technical documentation on the reusable components:
+
+- **[Workflow Implementation Guide](https://github.com/folio-org/kitfox-github/blob/master/.github/README.md)** - Entry point for all workflow documentation
+- **[Application Release Preparation](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/app-release-preparation.md)** - Detailed guide to the individual application workflow
+- **[Distributed Orchestration Patterns](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/distributed-orchestration.md)** - Cross-repository coordination architecture
+- **[Security Implementation](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/security-implementation.md)** - Team authorization and access control patterns
+- **[Application Notifications](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/app-notification.md)** - Slack notification standards
+
 ### Implementation References
 - [Release Preparation Workflow](../workflows/release-preparation.yml)
-- [Kitfox GitHub Actions](https://github.com/folio-org/kitfox-github)
+- [Kitfox GitHub Infrastructure](https://github.com/folio-org/kitfox-github)
 - [Universal Action: validate-team-membership](https://github.com/folio-org/kitfox-github/tree/master/.github/actions/validate-team-membership)
 - [Universal Action: orchestrate-external-workflow](https://github.com/folio-org/kitfox-github/tree/master/.github/actions/orchestrate-external-workflow)
 - [Reusable Workflow: app-release-preparation](https://github.com/folio-org/kitfox-github/blob/master/.github/workflows/app-release-preparation.yml)
