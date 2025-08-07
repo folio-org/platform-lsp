@@ -1,36 +1,22 @@
 # FOLIO Release Configuration
-# This file defines the variants and file requirements for FOLIO release artifacts
+# This file defines the file requirements for FOLIO release artifacts
 
-variants:
-  minimal:
-    description: "Minimal FOLIO platform release with core files only"
-    required_files:
-      - "platform-descriptor.json"
-      - "package.json"
-      - "yarn.lock"
-    optional_files:
-      - "README.md"
-      - "LICENSE"
-      - "stripes.config.js"
-    include_module_descriptors: false
-    collect_from_mgr_applications: false
-
-  complete:
-    description: "Complete FOLIO platform release with all files and descriptors"
-    required_files:
-      - "platform-descriptor.json"
-      - "package.json"
-      - "yarn.lock"
-      - "stripes.config.js"
-      - "stripes.*.js"
-    optional_files:
-      - "README.md"
-      - "LICENSE"
-      - "docker/"
-      - "tenant-assets/"
-      - "output/"
-    include_module_descriptors: true
-    collect_from_mgr_applications: true
+description: "FOLIO (Eureka) platform release with all files and descriptors"
+required_files:
+  - "platform-descriptor.json"
+  - "application-descriptors/*.json"
+  - "package.json"
+  - "yarn.lock"
+  - "stripes.config.js"
+  - "stripes.*.js"
+optional_files:
+  - "README.md"
+  - "LICENSE"
+  - "docker/"
+  - ".dockerignore"
+  - ".npmrc"
+  - "tenant-assets/"
+  - "output/"
 
 # Global settings
 settings:

@@ -1,201 +1,110 @@
 name: 'FOLIO Release Artifact Creator'
-description: 'Creates and uploads FOLIO platform release artifacts'
-author: 'FOLIO DevOps'
+description: 'Automatically packages and uploads complete platform release artifacts'
+author: 'FOLIO'
 
 inputs:
-  variant:
-    description: 'Artifact variant to create (minimal, complete, etc.)'
+  release_tag:
+    description: 'Release tag to create artifacts for'
     required: true
-  version:
-    description: 'Version string from platform-descriptor.json'
-    required: true
-  release_id:
-    description: 'GitHub release ID to upload artifact to'
-    required: true
-  github_token:
-    description: 'GitHub token for API access'
-    required: true
-  config_file:
+  config_path:
     description: 'Path to release configuration file'
     required: false
     default: '.github/release-config.yml'
-  mgr_applications_url:
-    description: 'URL for mgr-applications API'
+  far_url:
+    description: 'Base URL for FAR API'
     required: false
     default: 'https://far.ci.folio.org'
+  github_token:
+    description: 'GitHub token for uploading artifacts'
+    required: true
+  max_archive_size_mb:
+    description: 'Maximum archive size in MB'
+    required: false
+    default: '500'
 
 outputs:
-  artifact_name:
-    description: 'Name of the created artifact'
-    value: ${{ steps.create-archive.outputs.artifact_name }}
-  artifact_size:
-    description: 'Size of the created artifact in bytes'
-    value: ${{ steps.create-archive.outputs.artifact_size }}
-  download_url:
-    description: 'Download URL for the uploaded artifact'
-    value: ${{ steps.upload.outputs.download_url }}
-  status:
-    description: 'Final status (success/failure)'
-    value: ${{ steps.finalize.outputs.status }}
+  archive_path:
+    description: 'Path to the created archive'
+    value: ${{ steps.create-archive.outputs.archive_path }}
+  archive_size:
+    description: 'Size of the created archive in bytes'
+    value: ${{ steps.create-archive.outputs.archive_size }}
+  sha256_checksum:
+    description: 'SHA256 checksum of the archive'
+    value: ${{ steps.create-archive.outputs.sha256_checksum }}
 
 runs:
   using: 'composite'
   steps:
-    - name: Setup environment
-      shell: bash
-      run: |
-        echo "VARIANT=${{ inputs.variant }}" >> $GITHUB_ENV
-        echo "VERSION=${{ inputs.version }}" >> $GITHUB_ENV
-        echo "CONFIG_FILE=${{ inputs.config_file }}" >> $GITHUB_ENV
-        echo "MGR_APPLICATIONS_URL=${{ inputs.mgr_applications_url }}" >> $GITHUB_ENV
-        echo "WORK_DIR=/tmp/folio-artifact-${{ inputs.variant }}" >> $GITHUB_ENV
-
-        # Create working directory
-        mkdir -p "/tmp/folio-artifact-${{ inputs.variant }}"
-
-    - name: Load configuration
-      id: config
-      shell: bash
-      run: |
-        CONFIG_FILE="${{ inputs.config_file }}"
-
-        # Use default config if custom config doesn't exist
-        if [[ ! -f "$CONFIG_FILE" ]]; then
-          echo "::warning::Config file $CONFIG_FILE not found, using defaults"
-          CONFIG_FILE=".github/release-config.yml"
-        fi
-
-        # Create default config if none exists
-        if [[ ! -f "$CONFIG_FILE" ]]; then
-          echo "Creating default configuration..."
-          mkdir -p "$(dirname "$CONFIG_FILE")"
-          cat > "$CONFIG_FILE" << 'EOF'
-        # FOLIO Release Configuration
-        variants:
-          minimal:
-            description: "Minimal FOLIO platform release"
-            required_files:
-              - "platform-descriptor.json"
-              - "package.json"
-              - "yarn.lock"
-            optional_files:
-              - "stripes.config.js"
-              - "stripes.*.js"
-              - "README.md"
-              - "LICENSE"
-            include_module_descriptors: false
-
-          complete:
-            description: "Complete FOLIO platform release"
-            required_files:
-              - "platform-descriptor.json"
-              - "package.json"
-              - "yarn.lock"
-              - "stripes.config.js"
-              - "stripes.*.js"
-            optional_files:
-              - "README.md"
-              - "LICENSE"
-              - "docker/"
-              - "tenant-assets/"
-            include_module_descriptors: true
-            collect_from_mgr_applications: true
-        EOF
-        fi
-
-        echo "config_file=$CONFIG_FILE" >> $GITHUB_OUTPUT
-
     - name: Validate required files
       shell: bash
-      run: ${{ github.action_path }}/validate-files.sh
-      env:
-        CONFIG_FILE: ${{ steps.config.outputs.config_file }}
+      run: |
+        echo "::group::Validating required files"
+        ${{ github.action_path }}/validate-files.sh "${{ inputs.config_path }}"
+        echo "::endgroup::"
+
+    - name: Collect application descriptors
+      shell: bash
+      run: |
+        echo "::group::Collecting application descriptors from FAR"
+        mkdir -p application-descriptors
+
+        # Fetch applications from FAR API
+        echo "Fetching applications from ${{ inputs.far_url }}/applications"
+        response=$(curl -s -f "${{ inputs.far_url }}/applications" || {
+          echo "::error::Failed to fetch applications from FAR API"
+          exit 1
+        })
+
+        # Parse and save individual application descriptors
+        echo "$response" | jq -c '.[]' | while read -r app; do
+          name=$(echo "$app" | jq -r '.name')
+          echo "$app" > "application-descriptors/${name}.json"
+          echo "Created application-descriptors/${name}.json"
+        done
+
+        echo "Collected $(ls application-descriptors/*.json | wc -l) application descriptors"
+        echo "::endgroup::"
 
     - name: Collect platform files
       shell: bash
-      run: ${{ github.action_path }}/collect-files.sh
-      env:
-        CONFIG_FILE: ${{ steps.config.outputs.config_file }}
+      run: |
+        echo "::group::Collecting platform files"
+        ${{ github.action_path }}/collect-files.sh "${{ inputs.config_path }}"
+        echo "::endgroup::"
 
     - name: Create archive
       id: create-archive
       shell: bash
-      run: ${{ github.action_path }}/create-archive.sh
-      env:
-        CONFIG_FILE: ${{ steps.config.outputs.config_file }}
+      run: |
+        echo "::group::Creating release archive"
+        ${{ github.action_path }}/create-archive.sh \
+          "${{ inputs.release_tag }}" \
+          "${{ inputs.config_path }}" \
+          "${{ inputs.max_archive_size_mb }}"
+        echo "::endgroup::"
 
     - name: Upload to release
-      id: upload
       shell: bash
-      run: |
-        ARTIFACT_PATH="${WORK_DIR}/$(cat ${WORK_DIR}/artifact-name.txt)"
-        ARTIFACT_NAME="$(basename "$ARTIFACT_PATH")"
-
-        echo "Uploading artifact: $ARTIFACT_NAME"
-
-        # Upload to GitHub release
-        UPLOAD_RESPONSE=$(gh api \
-          --method POST \
-          -H "Accept: application/vnd.github+json" \
-          -H "X-GitHub-Api-Version: 2022-11-28" \
-          "/repos/${{ github.repository }}/releases/${{ inputs.release_id }}/assets" \
-          -F "name=$ARTIFACT_NAME" \
-          -F "data=@$ARTIFACT_PATH")
-
-        DOWNLOAD_URL=$(echo "$UPLOAD_RESPONSE" | jq -r '.browser_download_url')
-        ASSET_SIZE=$(echo "$UPLOAD_RESPONSE" | jq -r '.size')
-
-        echo "download_url=$DOWNLOAD_URL" >> $GITHUB_OUTPUT
-        echo "asset_size=$ASSET_SIZE" >> $GITHUB_OUTPUT
-
-        echo "✅ Successfully uploaded $ARTIFACT_NAME"
-        echo "📥 Download URL: $DOWNLOAD_URL"
-        echo "📊 Size: $(numfmt --to=iec $ASSET_SIZE)"
-
       env:
         GITHUB_TOKEN: ${{ inputs.github_token }}
-
-    - name: Finalize and report
-      id: finalize
-      shell: bash
       run: |
-        ARTIFACT_NAME="$(cat ${WORK_DIR}/artifact-name.txt 2>/dev/null || echo 'unknown')"
-        ARTIFACT_SIZE="$(cat ${WORK_DIR}/artifact-size.txt 2>/dev/null || echo '0')"
+        echo "::group::Uploading archive to release"
 
-        # Create artifact info JSON
-        cat > artifact-info.json << EOF
-        {
-          "status": "success",
-          "variant": "${{ inputs.variant }}",
-          "version": "${{ inputs.version }}",
-          "artifact_name": "$ARTIFACT_NAME",
-          "size": "$(numfmt --to=iec $ARTIFACT_SIZE)",
-          "size_bytes": $ARTIFACT_SIZE,
-          "download_url": "${{ steps.upload.outputs.download_url }}"
-        }
-        EOF
+        archive_path="${{ steps.create-archive.outputs.archive_path }}"
+        archive_name=$(basename "$archive_path")
+        checksum_file="${archive_path}.sha256"
 
-        echo "status=success" >> $GITHUB_OUTPUT
+        # Create checksum file
+        echo "${{ steps.create-archive.outputs.sha256_checksum }}  $archive_name" > "$checksum_file"
 
-        echo "🎉 Artifact creation completed successfully!"
-        echo "📦 Artifact: $ARTIFACT_NAME"
-        echo "📊 Size: $(numfmt --to=iec $ARTIFACT_SIZE)"
+        # Upload archive and checksum to release
+        gh release upload "${{ inputs.release_tag }}" \
+          "$archive_path" \
+          "$checksum_file" \
+          --clobber
 
-    - name: Cleanup on failure
-      if: failure()
-      shell: bash
-      run: |
-        echo "::error::Artifact creation failed for variant ${{ inputs.variant }}"
-
-        # Create failure info
-        cat > artifact-info.json << EOF
-        {
-          "status": "failure",
-          "variant": "${{ inputs.variant }}",
-          "version": "${{ inputs.version }}",
-          "error": "Artifact creation failed"
-        }
-        EOF
-
-        # Cleanup working directory
-        rm -rf "$WORK_DIR" || true
+        echo "✅ Uploaded $archive_name and checksum to release ${{ inputs.release_tag }}"
+        echo "Archive size: ${{ steps.create-archive.outputs.archive_size }} bytes"
+        echo "SHA256: ${{ steps.create-archive.outputs.sha256_checksum }}"
+        echo "::endgroup::"

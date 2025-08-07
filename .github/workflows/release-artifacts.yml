@@ -9,94 +9,187 @@ on:
         description: 'Release tag to create artifacts for'
         required: true
         type: string
-      variants:
-        description: 'Comma-separated list of variants to build (minimal,complete)'
+      far_url:
+        description: 'FAR API base URL'
         required: false
-        default: 'minimal,complete'
+        default: 'https://far.ci.folio.org'
+        type: string
+      max_archive_size_mb:
+        description: 'Maximum archive size in MB'
+        required: false
+        default: '500'
         type: string
 
 permissions:
   contents: write
   actions: read
 
+env:
+  FAR_URL: ${{ github.event.inputs.far_url || 'https://far.ci.folio.org' }}
+  MAX_ARCHIVE_SIZE: ${{ github.event.inputs.max_archive_size_mb || '500' }}
+
 jobs:
-  prepare:
+  validate-and-prepare:
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.version.outputs.version }}
-      variants: ${{ steps.variants.outputs.variants }}
-      release_id: ${{ steps.release.outputs.release_id }}
+      release_tag: ${{ steps.determine-tag.outputs.release_tag }}
+      platform_name: ${{ steps.platform-info.outputs.platform_name }}
+      platform_version: ${{ steps.platform-info.outputs.platform_version }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Get version from platform-descriptor.json
-        id: version
+      - name: Determine release tag
+        id: determine-tag
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            RELEASE_TAG="${{ github.event.inputs.release_tag }}"
+          else
+            RELEASE_TAG="${{ github.event.release.tag_name }}"
+          fi
+
+          echo "release_tag=$RELEASE_TAG" >> $GITHUB_OUTPUT
+          echo "Using release tag: $RELEASE_TAG"
+
+      - name: Extract platform information
+        id: platform-info
         run: |
           if [[ -f "platform-descriptor.json" ]]; then
-            VERSION=$(jq -r '.version' platform-descriptor.json)
-            echo "version=${VERSION}" >> $GITHUB_OUTPUT
-            echo "Found version: ${VERSION}"
+            PLATFORM_NAME=$(jq -r '.name // "unknown"' platform-descriptor.json)
+            PLATFORM_VERSION=$(jq -r '.version // env.RELEASE_TAG' platform-descriptor.json)
+
+            echo "platform_name=$PLATFORM_NAME" >> $GITHUB_OUTPUT
+            echo "platform_version=$PLATFORM_VERSION" >> $GITHUB_OUTPUT
+
+            echo "Platform: $PLATFORM_NAME"
+            echo "Version: $PLATFORM_VERSION"
           else
             echo "::error::platform-descriptor.json not found"
             exit 1
           fi
 
-      - name: Prepare variants
-        id: variants
+      - name: Validate configuration
         run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            VARIANTS="${{ github.event.inputs.variants }}"
-          else
-            # Default variants for release events
-            VARIANTS="minimal,complete"
+          if [[ ! -f ".github/release-config.yml" ]]; then
+            echo "::error::Release configuration file not found: .github/release-config.yml"
+            exit 1
           fi
 
-          # Convert to JSON array for matrix
-          VARIANTS_JSON=$(echo "$VARIANTS" | jq -Rc 'split(",") | map(select(length > 0))')
-          echo "variants=${VARIANTS_JSON}" >> $GITHUB_OUTPUT
-          echo "Building variants: ${VARIANTS}"
+          echo "✅ Configuration file found"
 
-      - name: Get release info
-        id: release
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            # Get release by tag
-            RELEASE_ID=$(gh api repos/${{ github.repository }}/releases/tags/${{ github.event.inputs.release_tag }} --jq '.id')
-            echo "release_id=${RELEASE_ID}" >> $GITHUB_OUTPUT
-          else
-            # Use current release
-            echo "release_id=${{ github.event.release.id }}" >> $GITHUB_OUTPUT
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  create-artifacts:
-    needs: prepare
+  create-release-artifact:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        variant: ${{ fromJson(needs.prepare.outputs.variants) }}
+    needs: validate-and-prepare
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create FOLIO release artifact
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
+
+      - name: Install jq for JSON processing
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Create release artifact
+        id: create-artifact
         uses: ./.github/actions/folio-release-creator
         with:
-          variant: ${{ matrix.variant }}
-          version: ${{ needs.prepare.outputs.version }}
-          release_id: ${{ needs.prepare.outputs.release_id }}
+          release_tag: ${{ needs.validate-and-prepare.outputs.release_tag }}
+          config_path: '.github/release-config.yml'
+          far_url: ${{ env.FAR_URL }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          max_archive_size_mb: ${{ env.MAX_ARCHIVE_SIZE }}
 
-      - name: Upload artifact summary
+      - name: Verify artifact upload
+        run: |
+          echo "🎉 Release artifact created successfully!"
+          echo "Archive: ${{ steps.create-artifact.outputs.archive_path }}"
+          echo "Size: ${{ steps.create-artifact.outputs.archive_size }} bytes"
+          echo "SHA256: ${{ steps.create-artifact.outputs.sha256_checksum }}"
+
+          # Verify the artifact was uploaded to the release
+          RELEASE_TAG="${{ needs.validate-and-prepare.outputs.release_tag }}"
+          ARCHIVE_NAME=$(basename "${{ steps.create-artifact.outputs.archive_path }}")
+
+          echo "Verifying upload for release: $RELEASE_TAG"
+          gh release view "$RELEASE_TAG" --json assets --jq '.assets[].name' | grep -q "$ARCHIVE_NAME" && {
+            echo "✅ Artifact successfully uploaded to release"
+          } || {
+            echo "::error::Artifact not found in release assets"
+            exit 1
+          }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update release notes
+        if: github.event_name == 'release'
+        run: |
+          RELEASE_TAG="${{ needs.validate-and-prepare.outputs.release_tag }}"
+          PLATFORM_NAME="${{ needs.validate-and-prepare.outputs.platform_name }}"
+          PLATFORM_VERSION="${{ needs.validate-and-prepare.outputs.platform_version }}"
+          ARCHIVE_SIZE="${{ steps.create-artifact.outputs.archive_size }}"
+          SHA256="${{ steps.create-artifact.outputs.sha256_checksum }}"
+
+          # Get current release body
+          CURRENT_BODY=$(gh release view "$RELEASE_TAG" --json body --jq '.body // ""')
+
+          # Create artifact info section
+          ARTIFACT_INFO="
+## 📦 Release Artifacts
+
+This release includes a complete platform package with all required files and application descriptors.
+
+### Package Information
+- **Platform**: $PLATFORM_NAME
+- **Version**: $PLATFORM_VERSION
+- **Archive Size**: $(( ARCHIVE_SIZE / 1024 / 1024 ))MB
+- **SHA256**: \`$SHA256\`
+
+### Contents
+- Platform descriptor and configuration files
+- Application descriptors from FAR registry
+- Stripes configuration and assets
+- Docker configuration
+- Documentation and licensing
+
+### Verification
+To verify the archive integrity:
+\`\`\`bash
+echo \"$SHA256  \$(basename ${{ steps.create-artifact.outputs.archive_path }})\" | sha256sum -c
+\`\`\`
+"
+
+          # Combine current body with artifact info
+          NEW_BODY="$CURRENT_BODY
+
+$ARTIFACT_INFO"
+
+          # Update the release
+          gh release edit "$RELEASE_TAG" --notes "$NEW_BODY"
+          echo "✅ Release notes updated with artifact information"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Post summary
         if: always()
         run: |
-          echo "## FOLIO Release Artifact - ${{ matrix.variant }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Version:** ${{ needs.prepare.outputs.version }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Variant:** ${{ matrix.variant }}" >> $GITHUB_STEP_SUMMARY
-          if [[ -f "artifact-info.json" ]]; then
-            echo "**Status:** $(jq -r '.status' artifact-info.json)" >> $GITHUB_STEP_SUMMARY
-            echo "**Size:** $(jq -r '.size' artifact-info.json)" >> $GITHUB_STEP_SUMMARY
-            echo "**Download URL:** $(jq -r '.download_url' artifact-info.json)" >> $GITHUB_STEP_SUMMARY
+          echo "## 🎯 FOLIO Release Artifact Creator Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Release Information" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tag**: ${{ needs.validate-and-prepare.outputs.release_tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Platform**: ${{ needs.validate-and-prepare.outputs.platform_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version**: ${{ needs.validate-and-prepare.outputs.platform_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [[ "${{ steps.create-artifact.conclusion }}" == "success" ]]; then
+            echo "### ✅ Artifact Creation Successful" >> $GITHUB_STEP_SUMMARY
+            echo "- **Archive**: $(basename ${{ steps.create-artifact.outputs.archive_path }})" >> $GITHUB_STEP_SUMMARY
+            echo "- **Size**: $(( ${{ steps.create-artifact.outputs.archive_size }} / 1024 / 1024 ))MB" >> $GITHUB_STEP_SUMMARY
+            echo "- **SHA256**: \`${{ steps.create-artifact.outputs.sha256_checksum }}\`" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### ❌ Artifact Creation Failed" >> $GITHUB_STEP_SUMMARY
+            echo "Check the job logs for detailed error information." >> $GITHUB_STEP_SUMMARY
           fi

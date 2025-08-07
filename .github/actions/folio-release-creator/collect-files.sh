@@ -1,267 +1,165 @@
 #!/bin/bash
 set -euo pipefail
 
-# FOLIO Release Artifact Creator - File Collection Script
-# Collects all required and optional files for the artifact
+# FOLIO Release Files Collector
+# Collects all required and optional files for the release archive
 
-echo "📦 Collecting files for variant: $VARIANT"
+CONFIG_PATH="${1:-.github/release-config.yml}"
 
-# Function to ensure yq is available
-ensure_yq() {
-    if ! command -v yq &> /dev/null; then
-        echo "Installing yq for YAML processing..."
-        sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-        sudo chmod +x /usr/local/bin/yq
-    fi
-}
+echo "📦 Collecting platform files using config: $CONFIG_PATH"
 
-# Function to copy files with pattern matching
+if [[ ! -f "$CONFIG_PATH" ]]; then
+    echo "::error::Configuration file not found: $CONFIG_PATH"
+    exit 1
+fi
+
+# Create staging directory for files
+STAGING_DIR="release-staging"
+rm -rf "$STAGING_DIR"
+mkdir -p "$STAGING_DIR"
+
+echo "Created staging directory: $STAGING_DIR"
+
+# Function to copy files matching pattern
 copy_files() {
-    local file_list="$1"
-    local destination="$2"
-    local file_type="$3"
+    local pattern="$1"
+    local file_type="$2"
 
-    echo "📋 Copying $file_type files:"
+    echo "  Processing $file_type: $pattern"
 
-    while IFS= read -r file_pattern; do
-        if [[ -z "$file_pattern" ]] || [[ "$file_pattern" == "null" ]]; then
-            continue
-        fi
+    if [[ "$pattern" == *"*"* ]]; then
+        # Handle glob patterns
+        if [[ "$pattern" == *"/"* ]]; then
+            # Directory with glob (e.g., "stripes.*.js")
+            dir=$(dirname "$pattern")
+            filename=$(basename "$pattern")
 
-        echo "  Processing: $file_pattern"
-
-        if [[ "$file_pattern" == *"*"* ]]; then
-            # Handle glob patterns
-            local matches
-            matches=$(find . -maxdepth 2 -name "$file_pattern" -type f 2>/dev/null || true)
-
-            if [[ -n "$matches" ]]; then
-                while IFS= read -r match; do
-                    if [[ -n "$match" ]]; then
-                        local dest_path="$destination/${match#./}"
-                        mkdir -p "$(dirname "$dest_path")"
-                        cp -p "$match" "$dest_path"
-                        echo "    ✅ Copied: $match → ${dest_path#$destination/}"
-                    fi
-                done <<< "$matches"
-            else
-                echo "    ⚠️  No matches found for pattern: $file_pattern"
+            if [[ -d "$dir" ]]; then
+                find "$dir" -name "$filename" -type f | while read -r file; do
+                    target_dir="$STAGING_DIR/$(dirname "$file")"
+                    mkdir -p "$target_dir"
+                    cp "$file" "$target_dir/"
+                    echo "    ✅ Copied: $file"
+                done
             fi
-        elif [[ -f "$file_pattern" ]]; then
-            # Handle direct files
-            local dest_path="$destination/$file_pattern"
-            mkdir -p "$(dirname "$dest_path")"
-            cp -p "$file_pattern" "$dest_path"
-            echo "    ✅ Copied: $file_pattern"
-        elif [[ -d "$file_pattern" ]]; then
-            # Handle directories
-            local dest_path="$destination/$file_pattern"
-            mkdir -p "$dest_path"
-            cp -rp "$file_pattern"/* "$dest_path"/ 2>/dev/null || true
-            echo "    ✅ Copied directory: $file_pattern"
         else
-            if [[ "$file_type" == "required" ]]; then
-                echo "    ❌ Required file not found: $file_pattern"
-                exit 1
-            else
-                echo "    ⚠️  Optional file not found: $file_pattern"
-            fi
-        fi
-    done <<< "$file_list"
-}
-
-# Function to collect from mgr-applications API
-collect_from_mgr_applications() {
-    local destination="$1"
-
-    echo "🌐 Collecting application descriptors from mgr-applications API"
-    echo "API URL: $MGR_APPLICATIONS_URL"
-
-    # Create mgr-applications directory
-    local mgr_dir="$destination/mgr-applications"
-    mkdir -p "$mgr_dir"
-
-    # Try to fetch application list
-    local api_url="$MGR_APPLICATIONS_URL/mgr-applications/applications"
-
-    echo "  Fetching application list from: $api_url"
-
-    if curl -sf "$api_url" -o "$mgr_dir/applications.json"; then
-        echo "    ✅ Successfully fetched applications list"
-
-        # Parse and count applications
-        local app_count
-        app_count=$(jq length "$mgr_dir/applications.json" 2>/dev/null || echo "0")
-        echo "    📊 Found $app_count applications"
-
-        # Optionally fetch individual application details
-        if [[ "$app_count" -gt 0 ]]; then
-            echo "  Fetching individual application descriptors..."
-
-            local processed=0
-            local max_apps=50  # Limit to prevent excessive API calls
-
-            jq -r '.[].id // empty' "$mgr_dir/applications.json" 2>/dev/null | head -n $max_apps | while read -r app_id; do
-                if [[ -n "$app_id" ]]; then
-                    local app_url="$MGR_APPLICATIONS_URL/mgr-applications/applications/$app_id"
-                    if curl -sf "$app_url" -o "$mgr_dir/app-$app_id.json"; then
-                        echo "    ✅ Fetched: app-$app_id.json"
-                        ((processed++))
-                    else
-                        echo "    ⚠️  Failed to fetch: app-$app_id.json"
-                    fi
-                fi
+            # Simple glob in current directory
+            find . -maxdepth 1 -name "$pattern" -type f | while read -r file; do
+                cp "$file" "$STAGING_DIR/"
+                echo "    ✅ Copied: $file"
             done
-
-            echo "    📊 Processed $processed application descriptors"
         fi
     else
-        echo "    ⚠️  Failed to fetch applications from mgr-applications API"
-        echo "    This is not critical for the build, continuing..."
-
-        # Create a placeholder file to indicate the attempt was made
-        cat > "$mgr_dir/README.txt" << EOF
-MGR-Applications API Collection
-==============================
-
-API URL: $MGR_APPLICATIONS_URL
-Status: Failed to connect
-Time: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
-
-This directory would contain application descriptors fetched from the
-mgr-applications API, but the connection failed during build.
-EOF
+        # Direct file or directory
+        if [[ -f "$pattern" ]]; then
+            target_dir="$STAGING_DIR/$(dirname "$pattern")"
+            mkdir -p "$target_dir"
+            cp "$pattern" "$target_dir/"
+            echo "    ✅ Copied file: $pattern"
+        elif [[ -d "$pattern" ]]; then
+            target_dir="$STAGING_DIR/$pattern"
+            mkdir -p "$(dirname "$target_dir")"
+            cp -r "$pattern" "$target_dir"
+            echo "    ✅ Copied directory: $pattern"
+        else
+            if [[ "$file_type" == "required" ]]; then
+                echo "    ❌ Required file not found: $pattern"
+                return 1
+            else
+                echo "    ⚠️  Optional file not found: $pattern"
+            fi
+        fi
     fi
 }
 
-# Function to create manifest file
-create_manifest() {
-    local destination="$1"
+# Extract file lists from config
+if command -v yq >/dev/null 2>&1; then
+    REQUIRED_FILES=$(yq eval '.required_files[]' "$CONFIG_PATH" 2>/dev/null || echo "")
+    OPTIONAL_FILES=$(yq eval '.optional_files[]' "$CONFIG_PATH" 2>/dev/null || echo "")
+    EXCLUDE_PATTERNS=$(yq eval '.exclude_patterns[]' "$CONFIG_PATH" 2>/dev/null || echo "")
+else
+    # Fallback parsing without yq
+    REQUIRED_FILES=$(awk '/^required_files:/,/^[a-zA-Z_]/ {
+        if ($0 ~ /^  - ".*"$/) {
+            gsub(/^  - "/, "")
+            gsub(/"$/, "")
+            print
+        }
+    }' "$CONFIG_PATH")
 
-    echo "📄 Creating artifact manifest"
+    OPTIONAL_FILES=$(awk '/^optional_files:/,/^[a-zA-Z_]/ {
+        if ($0 ~ /^  - ".*"$/) {
+            gsub(/^  - "/, "")
+            gsub(/"$/, "")
+            print
+        }
+    }' "$CONFIG_PATH")
 
-    local manifest_file="$destination/MANIFEST.txt"
+    EXCLUDE_PATTERNS=$(awk '/^exclude_patterns:/,/^[a-zA-Z_]/ {
+        if ($0 ~ /^  - ".*"$/) {
+            gsub(/^  - "/, "")
+            gsub(/"$/, "")
+            print
+        }
+    }' "$CONFIG_PATH")
+fi
 
-    cat > "$manifest_file" << EOF
-FOLIO Platform Release Artifact Manifest
-========================================
+echo ""
+echo "📋 Processing required files..."
+while IFS= read -r file_pattern; do
+    [[ -z "$file_pattern" ]] && continue
+    copy_files "$file_pattern" "required"
+done <<< "$REQUIRED_FILES"
 
-Artifact Details:
-- Variant: $VARIANT
-- Version: $VERSION
-- Created: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
-- Builder: GitHub Actions
-- Repository: $GITHUB_REPOSITORY
-- Commit: $GITHUB_SHA
+echo ""
+echo "📋 Processing optional files..."
+while IFS= read -r file_pattern; do
+    [[ -z "$file_pattern" ]] && continue
+    copy_files "$file_pattern" "optional"
+done <<< "$OPTIONAL_FILES"
 
-Configuration:
-- Config File: $CONFIG_FILE
-- MGR Applications URL: $MGR_APPLICATIONS_URL
-
-Contents:
-EOF
-
-    # List all files in the artifact
-    echo "" >> "$manifest_file"
-    echo "Files included in this artifact:" >> "$manifest_file"
-    echo "=================================" >> "$manifest_file"
-
-    find "$destination" -type f -not -name "MANIFEST.txt" | sort | while read -r file; do
-        local rel_path="${file#$destination/}"
-        local file_size
-        file_size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null || echo "unknown")
-        printf "%-50s %10s bytes\n" "$rel_path" "$file_size" >> "$manifest_file"
-    done
-
-    echo "" >> "$manifest_file"
-    echo "Total files: $(find "$destination" -type f -not -name "MANIFEST.txt" | wc -l)" >> "$manifest_file"
-    echo "Total size: $(du -sh "$destination" | cut -f1)" >> "$manifest_file"
-
-    echo "    ✅ Manifest created: MANIFEST.txt"
-}
-
-# Main collection function
-collect_platform_files() {
-    echo "🚀 Starting file collection for variant: $VARIANT"
-
-    ensure_yq
-
-    # Create destination directory structure
-    local artifact_dir="$WORK_DIR/platform-$VARIANT"
-    mkdir -p "$artifact_dir"
-
-    echo "📁 Artifact directory: $artifact_dir"
-
-    # Get file lists from configuration
-    local required_files
-    required_files=$(yq eval ".variants.$VARIANT.required_files[]" "$CONFIG_FILE")
-
-    local optional_files
-    optional_files=$(yq eval ".variants.$VARIANT.optional_files[]?" "$CONFIG_FILE" 2>/dev/null || echo "")
-
-    # Copy required files
+# Copy application descriptors if they exist
+if [[ -d "application-descriptors" ]]; then
     echo ""
-    copy_files "$required_files" "$artifact_dir" "required"
+    echo "📋 Copying application descriptors..."
+    cp -r application-descriptors "$STAGING_DIR/"
+    echo "    ✅ Copied application-descriptors/ directory"
+fi
 
-    # Copy optional files
-    if [[ -n "$optional_files" ]] && [[ "$optional_files" != "null" ]]; then
-        echo ""
-        copy_files "$optional_files" "$artifact_dir" "optional"
-    fi
-
-    # Include ModuleDescriptors if configured
-    local include_descriptors
-    include_descriptors=$(yq eval ".variants.$VARIANT.include_module_descriptors // false" "$CONFIG_FILE")
-
-    if [[ "$include_descriptors" == "true" ]] && [[ -d "ModuleDescriptors" ]]; then
-        echo ""
-        echo "📋 Including ModuleDescriptors:"
-        cp -rp "ModuleDescriptors" "$artifact_dir/"
-        local descriptor_count
-        descriptor_count=$(find "$artifact_dir/ModuleDescriptors" -name "*.json" -type f | wc -l)
-        echo "    ✅ Copied $descriptor_count module descriptors"
-    fi
-
-    # Collect from mgr-applications if configured
-    local collect_mgr
-    collect_mgr=$(yq eval ".variants.$VARIANT.collect_from_mgr_applications // false" "$CONFIG_FILE")
-
-    if [[ "$collect_mgr" == "true" ]]; then
-        echo ""
-        collect_from_mgr_applications "$artifact_dir"
-    fi
-
-    # Create manifest
+# Remove excluded files
+if [[ -n "$EXCLUDE_PATTERNS" ]]; then
     echo ""
-    create_manifest "$artifact_dir"
+    echo "🧹 Removing excluded files..."
+    while IFS= read -r pattern; do
+        [[ -z "$pattern" ]] && continue
+        echo "  Excluding pattern: $pattern"
 
-    # Report collection summary
-    echo ""
-    echo "📊 Collection Summary:"
-    local total_files
-    total_files=$(find "$artifact_dir" -type f | wc -l)
-    local total_size
-    total_size=$(du -sh "$artifact_dir" | cut -f1)
+        find "$STAGING_DIR" -name "$pattern" -type f -delete 2>/dev/null || true
+        find "$STAGING_DIR" -name "$pattern" -type d -exec rm -rf {} + 2>/dev/null || true
+    done <<< "$EXCLUDE_PATTERNS"
+fi
 
-    echo "  📁 Artifact directory: $artifact_dir"
-    echo "  📄 Total files: $total_files"
-    echo "  📊 Total size: $total_size"
-    echo "  📋 Variant: $VARIANT"
-    echo "  🏷️  Version: $VERSION"
+# Create file manifest
+echo ""
+echo "📋 Creating file manifest..."
+MANIFEST_FILE="$STAGING_DIR/MANIFEST.txt"
+echo "# FOLIO Platform Release Manifest" > "$MANIFEST_FILE"
+echo "# Generated: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> "$MANIFEST_FILE"
+echo "# Configuration: $CONFIG_PATH" >> "$MANIFEST_FILE"
+echo "" >> "$MANIFEST_FILE"
 
-    # Save collection info for next step
-    echo "$artifact_dir" > "$WORK_DIR/artifact-dir.txt"
+echo "## Included Files" >> "$MANIFEST_FILE"
+find "$STAGING_DIR" -type f | sed "s|^$STAGING_DIR/||" | sort >> "$MANIFEST_FILE"
 
-    echo ""
-    echo "✅ File collection completed successfully!"
-}
+echo ""
+echo "📊 Collection Summary"
+echo "===================="
+file_count=$(find "$STAGING_DIR" -type f | wc -l)
+dir_count=$(find "$STAGING_DIR" -type d | wc -l)
+total_size=$(du -sh "$STAGING_DIR" | cut -f1)
 
-# Main execution
-echo "Starting file collection for FOLIO release artifact..."
-echo "Variant: $VARIANT"
-echo "Version: $VERSION"
-echo "Work Directory: $WORK_DIR"
-
-collect_platform_files
-
-echo "📦 File collection phase completed!"
+echo "Files collected: $file_count"
+echo "Directories: $dir_count"
+echo "Total size: $total_size"
+echo "Staging directory: $STAGING_DIR"
+echo "✅ File collection completed successfully"

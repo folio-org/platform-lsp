@@ -1,277 +1,152 @@
 #!/bin/bash
 set -euo pipefail
 
-# FOLIO Release Artifact Creator - Archive Creation Script
-# Creates tar.gz archives with proper naming and validation
+# FOLIO Release Archive Creator
+# Creates a compressed archive of collected platform files
 
-echo "📦 Creating archive for variant: $VARIANT"
+RELEASE_TAG="$1"
+CONFIG_PATH="${2:-.github/release-config.yml}"
+MAX_SIZE_MB="${3:-500}"
 
-# Function to ensure required tools are available
-ensure_tools() {
-    if ! command -v tar &> /dev/null; then
-        echo "::error::tar command not found"
-        exit 1
+echo "🗜️  Creating release archive for tag: $RELEASE_TAG"
+
+STAGING_DIR="release-staging"
+if [[ ! -d "$STAGING_DIR" ]]; then
+    echo "::error::Staging directory not found: $STAGING_DIR"
+    echo "Make sure collect-files.sh has been run first."
+    exit 1
+fi
+
+# Extract platform name and version from platform-descriptor.json
+PLATFORM_NAME="unknown"
+PLATFORM_VERSION="$RELEASE_TAG"
+
+if [[ -f "$STAGING_DIR/platform-descriptor.json" ]]; then
+    if command -v jq >/dev/null 2>&1; then
+        PLATFORM_NAME=$(jq -r '.name // "unknown"' "$STAGING_DIR/platform-descriptor.json")
+        PLATFORM_VERSION=$(jq -r '.version // env.RELEASE_TAG' "$STAGING_DIR/platform-descriptor.json")
+    else
+        echo "⚠️  jq not available, using defaults for platform name/version"
     fi
+fi
 
-    if ! command -v gzip &> /dev/null; then
-        echo "::error::gzip command not found"
-        exit 1
-    fi
+# Clean up platform name for filename
+CLEAN_NAME=$(echo "$PLATFORM_NAME" | sed 's/[^a-zA-Z0-9.-]/_/g')
+CLEAN_VERSION=$(echo "$PLATFORM_VERSION" | sed 's/[^a-zA-Z0-9.-]/_/g')
 
-    if ! command -v sha256sum &> /dev/null && ! command -v shasum &> /dev/null; then
-        echo "::error::sha256sum or shasum command not found"
-        exit 1
-    fi
+# Generate archive name
+ARCHIVE_NAME="${CLEAN_NAME}-${CLEAN_VERSION}.tar.gz"
+ARCHIVE_PATH="$PWD/$ARCHIVE_NAME"
+
+echo "Platform: $PLATFORM_NAME"
+echo "Version: $PLATFORM_VERSION"
+echo "Archive: $ARCHIVE_NAME"
+
+# Check staging directory size
+echo ""
+echo "📏 Checking archive size..."
+STAGING_SIZE_KB=$(du -sk "$STAGING_DIR" | cut -f1)
+STAGING_SIZE_MB=$((STAGING_SIZE_KB / 1024))
+
+echo "Staging directory size: ${STAGING_SIZE_MB}MB"
+echo "Maximum allowed size: ${MAX_SIZE_MB}MB"
+
+if [[ $STAGING_SIZE_MB -gt $MAX_SIZE_MB ]]; then
+    echo "::error::Staging directory size (${STAGING_SIZE_MB}MB) exceeds maximum (${MAX_SIZE_MB}MB)"
+    echo "Consider excluding more files or increasing the limit."
+    exit 1
+fi
+
+# Create the archive
+echo ""
+echo "🗜️  Creating compressed archive..."
+cd "$STAGING_DIR"
+
+# Create tar.gz with progress indication
+tar -czf "$ARCHIVE_PATH" \
+    --exclude='.DS_Store' \
+    --exclude='Thumbs.db' \
+    --exclude='*.tmp' \
+    --exclude='*.log' \
+    . || {
+    echo "::error::Failed to create archive"
+    exit 1
 }
 
-# Function to generate archive name
-generate_archive_name() {
-    local version="$1"
-    local variant="$2"
+cd - >/dev/null
 
-    # Extract platform name from platform-descriptor.json if available
-    local platform_name="platform-lsp"
-    if [[ -f "platform-descriptor.json" ]]; then
-        local desc_name
-        desc_name=$(jq -r '.name // "platform-lsp"' platform-descriptor.json 2>/dev/null || echo "platform-lsp")
-        # Convert to lowercase and replace spaces with hyphens
-        platform_name=$(echo "$desc_name" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-\|-$//g')
+# Verify archive was created
+if [[ ! -f "$ARCHIVE_PATH" ]]; then
+    echo "::error::Archive was not created: $ARCHIVE_PATH"
+    exit 1
+fi
 
-        # Fallback if conversion results in empty string
-        if [[ -z "$platform_name" ]]; then
-            platform_name="platform-lsp"
-        fi
-    fi
+# Get archive information
+ARCHIVE_SIZE=$(stat -f%z "$ARCHIVE_PATH" 2>/dev/null || stat -c%s "$ARCHIVE_PATH" 2>/dev/null)
+ARCHIVE_SIZE_MB=$((ARCHIVE_SIZE / 1024 / 1024))
 
-    # Create archive name with variant suffix if not 'complete'
-    if [[ "$variant" == "complete" ]]; then
-        echo "${platform_name}-${version}.tar.gz"
-    else
-        echo "${platform_name}-${version}--${variant}.tar.gz"
-    fi
-}
+echo "✅ Archive created successfully"
+echo "   Path: $ARCHIVE_PATH"
+echo "   Size: ${ARCHIVE_SIZE} bytes (${ARCHIVE_SIZE_MB}MB)"
 
-# Function to create reproducible tar archive
-create_reproducible_archive() {
-    local source_dir="$1"
-    local archive_path="$2"
+# Generate checksums
+echo ""
+echo "🔐 Generating checksums..."
 
-    echo "📦 Creating reproducible tar.gz archive..."
-    echo "  Source: $source_dir"
-    echo "  Target: $archive_path"
+# SHA256 checksum
+if command -v sha256sum >/dev/null 2>&1; then
+    SHA256=$(sha256sum "$ARCHIVE_PATH" | cut -d' ' -f1)
+elif command -v shasum >/dev/null 2>&1; then
+    SHA256=$(shasum -a 256 "$ARCHIVE_PATH" | cut -d' ' -f1)
+else
+    echo "::warning::No SHA256 utility found, skipping checksum"
+    SHA256=""
+fi
 
-    # Use reproducible tar options for consistent archives
-    local tar_opts=(
-        "--create"
-        "--gzip"
-        "--file" "$archive_path"
-        "--directory" "$(dirname "$source_dir")"
-        "--sort=name"
-        "--mtime=@${SOURCE_DATE_EPOCH:-$(date +%s)}"
-        "--owner=0"
-        "--group=0"
-        "--numeric-owner"
-        "--pax-option=exthdr.name=%d/PaxHeaders/%f,delete=atime,delete=ctime"
-    )
+if [[ -n "$SHA256" ]]; then
+    echo "SHA256: $SHA256"
+fi
 
-    # Create the archive
-    if tar "${tar_opts[@]}" "$(basename "$source_dir")"; then
-        echo "    ✅ Archive created successfully"
-    else
-        echo "    ❌ Failed to create archive"
-        exit 1
-    fi
+# Test archive integrity
+echo ""
+echo "🧪 Testing archive integrity..."
+if tar -tzf "$ARCHIVE_PATH" >/dev/null 2>&1; then
+    echo "✅ Archive integrity test passed"
+else
+    echo "::error::Archive integrity test failed"
+    exit 1
+fi
 
-    # Verify the archive
-    if tar -tzf "$archive_path" >/dev/null 2>&1; then
-        echo "    ✅ Archive integrity verified"
-    else
-        echo "    ❌ Archive integrity check failed"
-        exit 1
-    fi
-}
+# List archive contents for verification
+echo ""
+echo "📋 Archive contents preview (first 20 files):"
+tar -tzf "$ARCHIVE_PATH" | head -20 | sed 's/^/  /'
 
-# Function to generate checksums
-generate_checksums() {
-    local archive_path="$1"
-    local checksum_file="${archive_path}.sha256"
+total_files=$(tar -tzf "$ARCHIVE_PATH" | wc -l)
+if [[ $total_files -gt 20 ]]; then
+    echo "  ... and $((total_files - 20)) more files"
+fi
 
-    echo "🔐 Generating checksums..."
-
-    # Generate SHA256 checksum
-    if command -v sha256sum &> /dev/null; then
-        sha256sum "$archive_path" > "$checksum_file"
-    elif command -v shasum &> /dev/null; then
-        shasum -a 256 "$archive_path" > "$checksum_file"
-    else
-        echo "::error::No checksum utility available"
-        exit 1
-    fi
-
-    echo "    ✅ SHA256 checksum: $(cut -d' ' -f1 "$checksum_file")"
-    echo "    📄 Checksum file: $checksum_file"
-}
-
-# Function to validate archive contents
-validate_archive() {
-    local archive_path="$1"
-    local expected_variant="$2"
-
-    echo "🔍 Validating archive contents..."
-
-    # List archive contents
-    local content_list
-    content_list=$(tar -tzf "$archive_path" | head -20)
-
-    echo "    📋 Archive contents (first 20 items):"
-    echo "$content_list" | sed 's/^/      /'
-
-    # Check for required files based on variant
-    local required_checks=()
-
-    case "$expected_variant" in
-        "minimal")
-            required_checks=("platform-descriptor.json" "package.json")
-            ;;
-        "complete")
-            required_checks=("platform-descriptor.json" "package.json" "stripes.config.js")
-            ;;
-        *)
-            required_checks=("platform-descriptor.json" "package.json")
-            ;;
-    esac
-
-    echo "    🔍 Checking for required files:"
-    for required_file in "${required_checks[@]}"; do
-        if tar -tzf "$archive_path" | grep -q "/$required_file$\|^[^/]*/$required_file$"; then
-            echo "      ✅ Found: $required_file"
-        else
-            echo "      ❌ Missing: $required_file"
-            echo "::error::Required file $required_file not found in archive"
-            exit 1
-        fi
-    done
-
-    # Count total files
-    local file_count
-    file_count=$(tar -tzf "$archive_path" | wc -l)
-    echo "    📊 Total items in archive: $file_count"
-
-    echo "    ✅ Archive validation completed"
-}
-
-# Function to create archive metadata
-create_archive_metadata() {
-    local archive_path="$1"
-    local archive_name="$2"
-    local metadata_file="$3"
-
-    echo "📄 Creating archive metadata..."
-
-    local archive_size
-    archive_size=$(stat -c%s "$archive_path" 2>/dev/null || stat -f%z "$archive_path" 2>/dev/null)
-
-    local checksum
-    if [[ -f "${archive_path}.sha256" ]]; then
-        checksum=$(cut -d' ' -f1 "${archive_path}.sha256")
-    else
-        checksum="unknown"
-    fi
-
-    cat > "$metadata_file" << EOF
+# Set outputs for GitHub Actions
+echo ""
+echo "📤 Setting GitHub Actions outputs..."
 {
-  "archive_name": "$archive_name",
-  "variant": "$VARIANT",
-  "version": "$VERSION",
-  "size_bytes": $archive_size,
-  "size_human": "$(numfmt --to=iec $archive_size)",
-  "sha256": "$checksum",
-  "created_at": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
-  "created_by": "folio-release-creator",
-  "repository": "${GITHUB_REPOSITORY:-unknown}",
-  "commit": "${GITHUB_SHA:-unknown}"
-}
-EOF
+    echo "archive_path=$ARCHIVE_PATH"
+    echo "archive_size=$ARCHIVE_SIZE"
+    echo "sha256_checksum=$SHA256"
+} >> "$GITHUB_OUTPUT"
 
-    echo "    ✅ Metadata saved to: $metadata_file"
-}
+echo ""
+echo "📊 Archive Creation Summary"
+echo "=========================="
+echo "Archive: $ARCHIVE_NAME"
+echo "Size: ${ARCHIVE_SIZE_MB}MB"
+echo "Files: $total_files"
+echo "SHA256: $SHA256"
+echo "✅ Archive creation completed successfully"
 
-# Main archive creation function
-create_archive() {
-    echo "🚀 Starting archive creation for variant: $VARIANT"
-
-    ensure_tools
-
-    # Get artifact directory from previous step
-    local artifact_dir
-    if [[ -f "$WORK_DIR/artifact-dir.txt" ]]; then
-        artifact_dir=$(cat "$WORK_DIR/artifact-dir.txt")
-    else
-        echo "::error::Artifact directory not found. Did file collection complete successfully?"
-        exit 1
-    fi
-
-    if [[ ! -d "$artifact_dir" ]]; then
-        echo "::error::Artifact directory does not exist: $artifact_dir"
-        exit 1
-    fi
-
-    echo "📁 Using artifact directory: $artifact_dir"
-
-    # Generate archive name
-    local archive_name
-    archive_name=$(generate_archive_name "$VERSION" "$VARIANT")
-    local archive_path="$WORK_DIR/$archive_name"
-
-    echo "📦 Archive name: $archive_name"
-    echo "📁 Archive path: $archive_path"
-
-    # Set SOURCE_DATE_EPOCH for reproducible builds
-    export SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH:-$(date +%s)}
-
-    # Create the archive
-    create_reproducible_archive "$artifact_dir" "$archive_path"
-
-    # Generate checksums
-    generate_checksums "$archive_path"
-
-    # Validate archive
-    validate_archive "$archive_path" "$VARIANT"
-
-    # Create metadata
-    local metadata_file="$WORK_DIR/archive-metadata.json"
-    create_archive_metadata "$archive_path" "$archive_name" "$metadata_file"
-
-    # Save archive info for upload step
-    echo "$archive_name" > "$WORK_DIR/artifact-name.txt"
-
-    local archive_size
-    archive_size=$(stat -c%s "$archive_path" 2>/dev/null || stat -f%z "$archive_path" 2>/dev/null)
-    echo "$archive_size" > "$WORK_DIR/artifact-size.txt"
-
-    # Set action outputs
-    echo "artifact_name=$archive_name" >> $GITHUB_OUTPUT
-    echo "artifact_size=$archive_size" >> $GITHUB_OUTPUT
-
-    # Final summary
-    echo ""
-    echo "📊 Archive Creation Summary:"
-    echo "  📦 Archive: $archive_name"
-    echo "  📊 Size: $(numfmt --to=iec $archive_size)"
-    echo "  🔐 SHA256: $(cut -d' ' -f1 "${archive_path}.sha256" 2>/dev/null || echo 'unknown')"
-    echo "  📁 Location: $archive_path"
-    echo "  📄 Metadata: $metadata_file"
-
-    echo ""
-    echo "✅ Archive creation completed successfully!"
-}
-
-# Main execution
-echo "Starting archive creation for FOLIO release artifact..."
-echo "Variant: $VARIANT"
-echo "Version: $VERSION"
-echo "Work Directory: $WORK_DIR"
-
-create_archive
-
-echo "📦 Archive creation phase completed!"
+# Clean up staging directory
+echo ""
+echo "🧹 Cleaning up staging directory..."
+rm -rf "$STAGING_DIR"
+echo "✅ Cleanup completed"
