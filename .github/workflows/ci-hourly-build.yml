@@ -47,7 +47,7 @@ jobs:
           mkdir /tmp/applications
           for app in $(cat /tmp/applications-names.txt); do
               # Get all versions for the app, select the last (newest) one
-              version=$(curl -s "env.FAR_URL/applications?query=name=$app" | jq -r '[.[] | select(.name == "'"$app"'") | .version] | last')
+              version=$(curl -s "env.FAR_URL/applications?name=$app&sortby=version" | jq -r '[.[] | select(.name == "'"$app"'") | .version] | last')
               curl -X GET "env.FAR_URL/applications/$app-$version?full=true" -o "/tmp/applications/$app-$version.json"
                 if [ $? -ne 0 ]; then
                     echo "Error: Failed to download JSON for application '$app' version '$version'"
@@ -98,7 +98,7 @@ jobs:
         run: |
           for app in $(cat /tmp/applications-names.txt); do
             # Get all versions for the app, select the last (newest) one
-            version=$(curl -s "env.FAR_URL/applications?query=name=$app" | jq -r '[.[] | select(.name == "'"$app"'") | .version] | last')
+            version=$(curl -s "env.FAR_URL/applications?name=$app&sortby=version" | jq -r '[.[] | select(.name == "'"$app"'") | .version] | last')
             # Update version in required and optional arrays if name matches, didn't find any other way to do it, sorry!!!
             jq --arg app "$app" --arg ver "$version" '
               .applications.required |= map(if .name == $app then .version = $ver else . end) |
