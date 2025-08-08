@@ -106,12 +106,174 @@ jobs:
             ' platform-descriptor.json > tmp.json && mv tmp.json platform-descriptor.json
           done
 
+      - name: Update package.json with UI modules
+        run: |
+          # Extract all UI modules from platform-descriptor.json and update package.json
+          echo "::notice::Updating package.json with UI modules from platform-descriptor.json"
+          
+          # Get all UI modules from platform-descriptor.json
+          ui_modules=$(jq -r '
+            (.applications.required[]?, .applications.optional[]?)
+            | select(.interfaceType == "ui" or (.id // .name) | startswith("ui-"))
+            | "@folio/" + (.id // .name)
+          ' platform-descriptor.json | sort -u)
+          
+          if [ -z "$ui_modules" ]; then
+            echo "::notice::No UI modules found in platform-descriptor.json"
+          else
+            echo "::notice::Found UI modules to add/update in package.json:"
+            echo "$ui_modules" | sed 's/^/  - /'
+            
+            # Update package.json dependencies
+            tmp_package=$(mktemp)
+            cp package.json "$tmp_package"
+            
+            for module in $ui_modules; do
+              echo "::notice::Adding/updating $module in package.json"
+              # Add or update the module with version >=1.0.0 (standard for UI modules)
+              jq --arg module "$module" '
+                .dependencies[$module] = ">=1.0.0"
+              ' "$tmp_package" > package.json.tmp && mv package.json.tmp "$tmp_package"
+            done
+            
+            # Sort dependencies alphabetically to maintain clean structure
+            jq '.dependencies = (.dependencies | to_entries | sort_by(.key) | from_entries)' "$tmp_package" > package.json
+            rm "$tmp_package"
+            
+            echo "::notice::package.json updated successfully"
+          fi
+
+      - name: Update Stripes configuration files
+        run: |
+          echo "::notice::Updating Stripes configuration files with new UI modules"
+          
+          # Get all UI modules from platform-descriptor.json
+          ui_modules=$(jq -r '
+            (.applications.required[]?, .applications.optional[]?)
+            | select(.interfaceType == "ui" or (.id // .name) | startswith("ui-"))
+            | "@folio/" + (.id // .name)
+          ' platform-descriptor.json | sort -u)
+          
+          if [ -z "$ui_modules" ]; then
+            echo "::notice::No UI modules found to update in Stripes config files"
+          else
+            echo "::notice::Processing UI modules for Stripes configuration:"
+            echo "$ui_modules" | sed 's/^/  - /'
+            
+            # Function to check if module exists in file
+            module_exists_in_file() {
+              local file="$1"
+              local module="$2"
+              grep -q "'$module'" "$file" 2>/dev/null || grep -q "\"$module\"" "$file" 2>/dev/null
+            }
+            
+            # Function to add module to stripes config file
+            add_to_stripes_config() {
+              local file="$1"
+              local module="$2"
+              
+              if [ ! -f "$file" ]; then
+                echo "::warning::File $file not found, skipping"
+                return
+              fi
+              
+              if module_exists_in_file "$file" "$module"; then
+                echo "::notice::Module $module already exists in $file"
+                return
+              fi
+              
+              echo "::notice::Adding $module to $file"
+              
+              # Create backup
+              cp "$file" "$file.bak"
+              
+              # Add the module before the closing brace, maintaining alphabetical order
+              # First, extract all existing modules
+              temp_modules=$(mktemp)
+              grep -E "  '@folio/[^']*'.*:" "$file" | sed "s/.*'\(@folio\/[^']*\)'.*/\1/" > "$temp_modules"
+              echo "$module" >> "$temp_modules"
+              
+              # Sort all modules
+              sort -u "$temp_modules" > "$temp_modules.sorted"
+              
+              # Rebuild the file
+              temp_file=$(mktemp)
+              head -n 2 "$file" > "$temp_file"
+              
+              while read -r mod; do
+                echo "  '$mod' : {}," >> "$temp_file"
+              done < "$temp_modules.sorted"
+              
+              echo "};" >> "$temp_file"
+              
+              # Replace the original file
+              mv "$temp_file" "$file"
+              
+              # Cleanup
+              rm -f "$temp_modules" "$temp_modules.sorted" "$file.bak"
+            }
+            
+            # Categorize modules and update appropriate files
+            for module in $ui_modules; do
+              # Determine if it's an app or plugin based on naming patterns
+              case "$module" in
+                *plugin-*)
+                  echo "::notice::Categorizing $module as plugin"
+                  add_to_stripes_config "stripes.plugins.js" "$module"
+                  ;;
+                *-settings|*settings*|*myprofile*|*servicepoints*|*tenant-settings*|*developer*|*calendar*|*circulation*|*acquisition-units*|*notes*|*tags*|*handler-*|*stripes-*-components*|*oai-pmh*|*gobi-settings*|*service-interaction*)
+                  echo "::notice::Categorizing $module as settings module"
+                  add_to_stripes_config "stripes.plugins.js" "$module"
+                  ;;
+                *)
+                  echo "::notice::Categorizing $module as user-facing app"
+                  add_to_stripes_config "stripes.apps.js" "$module"
+                  ;;
+              esac
+            done
+            
+            echo "::notice::Stripes configuration files updated successfully"
+          fi
+
+      - name: Update and validate yarn.lock
+        run: |
+          echo "::notice::Updating yarn.lock file"
+          
+          # Install yarn if not available
+          if ! command -v yarn >/dev/null 2>&1; then
+            echo "::notice::Installing yarn"
+            npm install -g yarn
+          fi
+          
+          # Update yarn.lock based on package.json changes
+          echo "::notice::Running yarn install to update yarn.lock"
+          yarn install --frozen-lockfile=false
+          
+          # Validate the lockfile
+          echo "::notice::Validating yarn.lock integrity"
+          yarn check --integrity || {
+            echo "::error::yarn.lock integrity check failed"
+            exit 1
+          }
+          
+          # Check if yarn.lock was actually updated
+          if git diff --quiet yarn.lock; then
+            echo "::notice::No changes in yarn.lock"
+          else
+            echo "::notice::yarn.lock has been updated"
+            git add yarn.lock
+          fi
+
       - name: Build and Test Platform
         run: |
           set -e
           if [ -f package.json ]; then
-            npm ci || npm install
-            npm run build || npm run test
+            echo "::notice::Installing dependencies and running build/test"
+            yarn install
+            yarn build || yarn test || {
+              echo "::error::Build/test failed with updated dependencies"
+              exit 1
+            }
           else
             echo "No package.json found, skipping build/test."
           fi
@@ -121,8 +283,22 @@ jobs:
         run: |
           git config --global user.name "Eureka CI"
           git config --global user.email "noreply-eureka-ci@folio.org"
-          git commit -am "Update platform-descriptor.json with latest versions"
-          git push origin snapshot || echo "No changes to commit"
+          
+          # Check if there are any changes to commit
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "::notice::No changes detected in platform files"
+          else
+            echo "::notice::Changes detected, committing updates"
+            git add platform-descriptor.json package.json stripes.apps.js stripes.plugins.js yarn.lock
+            git commit -m "Update platform files with latest versions
+            
+            - Updated application versions from FAR
+            - Added/updated UI modules in package.json
+            - Updated Stripes configuration files (stripes.apps.js, stripes.plugins.js)
+            - Updated yarn.lock with new dependencies
+            - Automated update via LSP Hourly Check workflow"
+            git push origin snapshot
+          fi
 
       - name: Notify on Failure
         if: failure()
