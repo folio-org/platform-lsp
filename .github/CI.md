@@ -6,8 +6,6 @@ This repository implements the **FOLIO Eureka CI/CD ecosystem** as the central o
 
 ## 🏗️ Eureka CI Architecture Overview
 
-The FOLIO Eureka platform operates through a sophisticated multi-tiered CI/CD architecture:
-
 ```
 ┌────────────────────────────────────────────────────────────┐
 │                 EUREKA CI ECOSYSTEM                        │
