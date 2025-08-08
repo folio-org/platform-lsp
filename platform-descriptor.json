@@ -123,6 +123,10 @@
       {
         "name": "app-rtac",
         "version": "1.0.0-SNAPSHOT.4803"
+      },
+      {
+        "name": "app-eholdings",
+        "version": "1.0.0-SNAPSHOT.4803"
       }
     ]
   },
