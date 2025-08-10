@@ -21,7 +21,6 @@ optional_files:
 settings:
   package_name: "platform-lsp"
   max_archive_size_mb: 500
-  mgr_applications_timeout: 30
   archive_format: "tar.gz"
 
 # File patterns to exclude from all variants
