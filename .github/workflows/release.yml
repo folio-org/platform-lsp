@@ -130,16 +130,28 @@ jobs:
           ARCHIVE_NAME=$(basename "${{ steps.create-artifact.outputs.archive_path }}")
 
           echo "Verifying upload for release: $RELEASE_TAG"
+          echo "Expected archive name: $ARCHIVE_NAME"
+
+          # Check if release exists first
+          if ! gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "::error::Release not found: $RELEASE_TAG"
+            exit 1
+          fi
+
           # Check if artifact exists in release assets
-          ASSETS=$(gh release view "$RELEASE_TAG" --jq '.assets[].name' 2>/dev/null) || {
+          ASSETS=$(gh release view "$RELEASE_TAG" --json assets --jq '.assets[].name' 2>/dev/null) || {
             echo "::error::Failed to retrieve release assets for tag: $RELEASE_TAG"
             exit 1
           }
+
+          echo "Available assets in release:"
+          echo "$ASSETS" | sed 's/^/  - /'
 
           if echo "$ASSETS" | grep -q "$ARCHIVE_NAME"; then
             echo "✅ Artifact successfully uploaded to release"
           else
             echo "::error::Artifact '$ARCHIVE_NAME' not found in release assets"
+            echo "Expected: $ARCHIVE_NAME"
             echo "Available assets:"
             echo "$ASSETS" | sed 's/^/  - /'
             exit 1
