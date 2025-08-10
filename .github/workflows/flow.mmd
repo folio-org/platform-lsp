@@ -1,0 +1,54 @@
+flowchart TD
+  A["Release Event or Manual Trigger"] --> B["validate-and-prepare job"]
+  B --> B1["Checkout repository"]
+  B1 --> B2["Validate configuration file exists"]
+  B2 --> B3["Determine release tag"]
+  B3 -->|release_tag output| C["create-release-artifact job"]
+
+  C --> C1["Checkout repository"]
+  C1 --> C2["Install dependencies"]
+  C2 --> C3["Run validate-files.sh"]
+  C3 --> C3a["Parse required_files from config (yq)"]
+  C3a --> C3b["For each required file pattern"]
+  C3b --> C3c{"Is it a glob?"}
+  C3c -- Yes --> C3d["find . -name pattern"]
+  C3c -- No --> C3e["Check file/dir exists"]
+  C3d --> C3f{"File(s) found?"}
+  C3e --> C3f
+  C3f -- No --> C3g["Add to missing_files"]
+  C3f -- Yes --> C3h["Validate file (JSON, JS, etc)"]
+  C3h --> C3i["Report errors if any"]
+  C3i --> C4["Run collect_descriptors.py"]
+
+  C4 --> C4a["Load platform-descriptor.json"]
+  C4a --> C4b["Extract all applications (required + optional)"]
+  C4b --> C4c["For each app: fetch from FAR API"]
+  C4c --> C4d{"Fetch success?"}
+  C4d -- Yes --> C4e["Save descriptor as JSON"]
+  C4d -- No --> C4f["Log error"]
+  C4e --> C4g["Count successes/failures"]
+  C4f --> C4g
+  C4g --> C5["Run collect-files.sh"]
+
+  C5 --> C5a["Create release-staging dir"]
+  C5a --> C5b["Copy required files (patterns)"]
+  C5b --> C5c["Copy optional files (if present)"]
+  C5c --> C5d["Remove excluded patterns"]
+  C5d --> C5e["Create MANIFEST.txt"]
+  C5e --> C6["Run create-archive.sh"]
+
+  C6 --> C6a["Check staging dir exists"]
+  C6a --> C6b["Check size vs max_archive_size_mb"]
+  C6b --> C6c["Create tar.gz archive"]
+  C6c --> C6d["Generate SHA256 checksum"]
+  C6d --> C6e["Test archive integrity"]
+  C6e --> C6f["Set outputs: archive_path, archive_size, sha256_checksum"]
+  C6f --> D["Upload to release (gh release upload)"]
+  D --> E["Verify artifact upload"]
+  E --> F["Post summary to GITHUB_STEP_SUMMARY"]
+
+  style A fill:#f9f,stroke:#333,stroke-width:2px
+  style C fill:#bbf,stroke:#333,stroke-width:2px
+  style D fill:#bfb,stroke:#333,stroke-width:2px
+  style E fill:#bfb,stroke:#333,stroke-width:2px
+  style F fill:#bfb,stroke:#333,stroke-width:2px
