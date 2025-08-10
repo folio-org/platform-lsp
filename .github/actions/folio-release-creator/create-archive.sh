@@ -116,11 +116,10 @@ fi
 # Set outputs for GitHub Actions
 echo ""
 echo "📤 Setting GitHub Actions outputs..."
-{
-    echo "archive_path=$ARCHIVE_PATH"
-    echo "archive_size=$ARCHIVE_SIZE"
-    echo "sha256_checksum=$SHA256"
-} >> "$GITHUB_OUTPUT"
+echo "archive_path=$ARCHIVE_PATH" >> "$GITHUB_OUTPUT"
+echo "archive_size=$ARCHIVE_SIZE" >> "$GITHUB_OUTPUT"
+echo "sha256_checksum=$SHA256" >> "$GITHUB_OUTPUT"
+
 
 echo ""
 echo "📊 Archive Creation Summary"
