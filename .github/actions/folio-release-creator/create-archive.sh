@@ -5,8 +5,9 @@ set -euo pipefail
 # Creates a compressed archive of collected platform files
 
 RELEASE_TAG="$1"
-CONFIG_PATH="${2:-.github/release-config.yml}"
-MAX_SIZE_MB="${3:-500}"
+MAX_SIZE_MB="${2:-500}"
+
+echo "Release tag: $RELEASE_TAG"
 
 echo "🗜️  Creating release archive for tag: $RELEASE_TAG"
 
@@ -106,19 +107,27 @@ fi
 # List archive contents for verification
 echo ""
 echo "📋 Archive contents preview (first 20 files):"
-tar -tzf "$ARCHIVE_PATH" | head -20 | sed 's/^/  /'
 
-total_files=$(tar -tzf "$ARCHIVE_PATH" | wc -l)
-if [[ $total_files -gt 20 ]]; then
+# Temporarily disable pipefail to handle SIGPIPE from head command gracefully
+set +o pipefail
+tar -tzf "$ARCHIVE_PATH" | head -20 | sed 's/^/  /' || true
+total_files=$(tar -tzf "$ARCHIVE_PATH" | wc -l || echo "0")
+set -o pipefail
+
+# Convert total_files to number and handle potential whitespace
+total_files=$(echo "$total_files" | tr -d '[:space:]')
+if [[ "$total_files" =~ ^[0-9]+$ ]] && [[ $total_files -gt 20 ]]; then
     echo "  ... and $((total_files - 20)) more files"
 fi
 
 # Set outputs for GitHub Actions
 echo ""
 echo "📤 Setting GitHub Actions outputs..."
-echo "archive_path=$ARCHIVE_PATH" >> "$GITHUB_OUTPUT"
-echo "archive_size=$ARCHIVE_SIZE" >> "$GITHUB_OUTPUT"
-echo "sha256_checksum=$SHA256" >> "$GITHUB_OUTPUT"
+{
+  echo "archive_path=$ARCHIVE_PATH"
+  echo "archive_size=$ARCHIVE_SIZE"
+  echo "sha256_checksum=$SHA256"
+} >> "$GITHUB_OUTPUT"
 
 
 echo ""

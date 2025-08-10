@@ -80,7 +80,6 @@ runs:
         echo "::group::Creating release archive"
         ${{ github.action_path }}/create-archive.sh \
           "${{ inputs.release_tag }}" \
-          "${{ inputs.config_path }}" \
           "${{ inputs.max_archive_size_mb }}"
         echo "::endgroup::"
 
