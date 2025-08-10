@@ -5,7 +5,9 @@ set -euo pipefail
 # Creates a compressed archive of collected platform files
 
 RELEASE_TAG="$1"
-MAX_SIZE_MB="${2:-500}"
+CONFIG_PATH="${2:-.github/release-config.yml}"
+
+MAX_SIZE_MB=$(yq eval '.settings.max_archive_size_mb' "$CONFIG_PATH" 2>/dev/null || echo "")
 
 echo "Release tag: $RELEASE_TAG"
 
@@ -18,8 +20,8 @@ if [[ ! -d "$STAGING_DIR" ]]; then
     exit 1
 fi
 
-# Extract platform name and version from platform-descriptor.json
-PLATFORM_NAME="platform-lsp"
+# Get platform name and version from config
+PLATFORM_NAME=$(yq eval '.settings.package_name' "$CONFIG_PATH" 2>/dev/null || echo "")
 PLATFORM_VERSION="$RELEASE_TAG"
 
 # Clean up platform name for filename
@@ -83,8 +85,6 @@ echo "🔐 Generating checksums..."
 # SHA256 checksum
 if command -v sha256sum >/dev/null 2>&1; then
     SHA256=$(sha256sum "$ARCHIVE_PATH" | cut -d' ' -f1)
-elif command -v shasum >/dev/null 2>&1; then
-    SHA256=$(shasum -a 256 "$ARCHIVE_PATH" | cut -d' ' -f1)
 else
     echo "::warning::No SHA256 utility found, skipping checksum"
     SHA256=""

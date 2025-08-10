@@ -17,10 +17,6 @@ inputs:
     description: 'Base URL for FAR API'
     required: false
     default: 'https://far.ci.folio.org'
-  max_archive_size_mb:
-    description: 'Maximum archive size in MB'
-    required: false
-    default: '500'
 
 outputs:
   archive_path:
@@ -80,30 +76,31 @@ runs:
         echo "::group::Creating release archive"
         ${{ github.action_path }}/create-archive.sh \
           "${{ inputs.release_tag }}" \
-          "${{ inputs.max_archive_size_mb }}"
+          "${{ inputs.config_path }}"
         echo "::endgroup::"
 
-    - name: Upload to release
-      shell: bash
-      env:
-        GITHUB_TOKEN: ${{ inputs.github_token }}
-      run: |
-        echo "::group::Uploading archive to release"
-
-        archive_path="${{ steps.create-archive.outputs.archive_path }}"
-        archive_name=$(basename "$archive_path")
-        checksum_file="${archive_path}.sha256"
-
-        # Create checksum file
-        echo "${{ steps.create-archive.outputs.sha256_checksum }}  $archive_name" > "$checksum_file"
-
-        # Upload archive and checksum to release
-        gh release upload "${{ inputs.release_tag }}" \
-          "$archive_path" \
-          "$checksum_file" \
-          --clobber
-
-        echo "✅ Uploaded $archive_name and checksum to release ${{ inputs.release_tag }}"
-        echo "Archive size: ${{ steps.create-archive.outputs.archive_size }} bytes"
-        echo "SHA256: ${{ steps.create-archive.outputs.sha256_checksum }}"
-        echo "::endgroup::"
+#     - name: Upload to release
+#       shell: bash
+#       env:
+#         GITHUB_TOKEN: ${{ inputs.github_token }}
+#       run: |
+#         echo "::group::Uploading archive to release"
+#
+#         archive_path="${{ steps.create-archive.outputs.archive_path }}"
+#         archive_name=$(basename "$archive_path")
+#         checksum_file="${archive_path}.sha256"
+#
+#         # Create checksum file
+#         echo "${{ steps.create-archive.outputs.sha256_checksum }}  $archive_name" > "$checksum_file"
+#
+#         # Upload archive and checksum to release
+#         gh release upload "${{ inputs.release_tag }}" \
+#           "$archive_path" \
+#           "$checksum_file" \
+#           --clobber
+#
+#         echo "✅ Uploaded $archive_name and checksum to release ${{ inputs.release_tag }}"
+#         echo "Archive size: ${{ steps.create-archive.outputs.archive_size }} bytes"
+#         echo "SHA256: ${{ steps.create-archive.outputs.sha256_checksum }}"
+#         echo "🎉 Release artifact created successfully!"
+#         echo "::endgroup::"

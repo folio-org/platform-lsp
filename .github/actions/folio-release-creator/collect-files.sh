@@ -91,13 +91,13 @@ while IFS= read -r file_pattern; do
     copy_files "$file_pattern" "optional"
 done <<< "$OPTIONAL_FILES"
 
-# Copy application descriptors if they exist
-if [[ -d "application-descriptors" ]]; then
-    echo ""
-    echo "📋 Copying application descriptors..."
-    cp -r application-descriptors "$STAGING_DIR/"
-    echo "    ✅ Copied application-descriptors/ directory"
-fi
+## Copy application descriptors if they exist
+#if [[ -d "application-descriptors" ]]; then
+#    echo ""
+#    echo "📋 Copying application descriptors..."
+#    cp -r application-descriptors "$STAGING_DIR/"
+#    echo "    ✅ Copied application-descriptors/ directory"
+#fi
 
 # Remove excluded files
 if [[ -n "$EXCLUDE_PATTERNS" ]]; then
