@@ -65,8 +65,6 @@ jobs:
             RELEASE_TAG="${{ github.event.release.tag_name }}"
           fi
 
-          RELEASE_TAG="R1-2025-GA" #TMP Remove this line when not testing
-
           echo "release_tag=$RELEASE_TAG" >> $GITHUB_OUTPUT
           echo "Using release tag: $RELEASE_TAG"
 
