@@ -73,36 +73,9 @@ copy_files() {
 }
 
 # Extract file lists from config
-if command -v yq >/dev/null 2>&1; then
-    REQUIRED_FILES=$(yq eval '.required_files[]' "$CONFIG_PATH" 2>/dev/null || echo "")
-    OPTIONAL_FILES=$(yq eval '.optional_files[]' "$CONFIG_PATH" 2>/dev/null || echo "")
-    EXCLUDE_PATTERNS=$(yq eval '.exclude_patterns[]' "$CONFIG_PATH" 2>/dev/null || echo "")
-else
-    # Fallback parsing without yq
-    REQUIRED_FILES=$(awk '/^required_files:/,/^[a-zA-Z_]/ {
-        if ($0 ~ /^  - ".*"$/) {
-            gsub(/^  - "/, "")
-            gsub(/"$/, "")
-            print
-        }
-    }' "$CONFIG_PATH")
-
-    OPTIONAL_FILES=$(awk '/^optional_files:/,/^[a-zA-Z_]/ {
-        if ($0 ~ /^  - ".*"$/) {
-            gsub(/^  - "/, "")
-            gsub(/"$/, "")
-            print
-        }
-    }' "$CONFIG_PATH")
-
-    EXCLUDE_PATTERNS=$(awk '/^exclude_patterns:/,/^[a-zA-Z_]/ {
-        if ($0 ~ /^  - ".*"$/) {
-            gsub(/^  - "/, "")
-            gsub(/"$/, "")
-            print
-        }
-    }' "$CONFIG_PATH")
-fi
+REQUIRED_FILES=$(yq eval '.required_files[]' "$CONFIG_PATH" 2>/dev/null || echo "")
+OPTIONAL_FILES=$(yq eval '.optional_files[]' "$CONFIG_PATH" 2>/dev/null || echo "")
+EXCLUDE_PATTERNS=$(yq eval '.exclude_patterns[]' "$CONFIG_PATH" 2>/dev/null || echo "")
 
 echo ""
 echo "📋 Processing required files..."

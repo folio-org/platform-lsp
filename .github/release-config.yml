@@ -16,7 +16,6 @@ optional_files:
   - ".dockerignore"
   - ".npmrc"
   - "tenant-assets/"
-  - "output/"
 
 # Global settings
 settings:
@@ -26,7 +25,9 @@ settings:
 
 # File patterns to exclude from all variants
 exclude_patterns:
+  - "ModuleDescriptors/"
   - "node_modules/"
+  - "output/"
   - ".git/"
   - ".github/"
   - "*.log"

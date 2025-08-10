@@ -18,17 +18,8 @@ if [[ ! -d "$STAGING_DIR" ]]; then
 fi
 
 # Extract platform name and version from platform-descriptor.json
-PLATFORM_NAME="unknown"
+PLATFORM_NAME="platform-lsp"
 PLATFORM_VERSION="$RELEASE_TAG"
-
-if [[ -f "$STAGING_DIR/platform-descriptor.json" ]]; then
-    if command -v jq >/dev/null 2>&1; then
-        PLATFORM_NAME=$(jq -r '.name // "unknown"' "$STAGING_DIR/platform-descriptor.json")
-        PLATFORM_VERSION=$(jq -r '.version // env.RELEASE_TAG' "$STAGING_DIR/platform-descriptor.json")
-    else
-        echo "⚠️  jq not available, using defaults for platform name/version"
-    fi
-fi
 
 # Clean up platform name for filename
 CLEAN_NAME=$(echo "$PLATFORM_NAME" | sed 's/[^a-zA-Z0-9.-]/_/g')
@@ -63,12 +54,7 @@ echo "🗜️  Creating compressed archive..."
 cd "$STAGING_DIR"
 
 # Create tar.gz with progress indication
-tar -czf "$ARCHIVE_PATH" \
-    --exclude='.DS_Store' \
-    --exclude='Thumbs.db' \
-    --exclude='*.tmp' \
-    --exclude='*.log' \
-    . || {
+tar -czf "$ARCHIVE_PATH" . || {
     echo "::error::Failed to create archive"
     exit 1
 }

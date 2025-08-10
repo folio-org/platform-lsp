@@ -65,24 +65,24 @@ runs:
 #
 #         echo "Collected $(ls application-descriptors/*.json | wc -l) application descriptors"
 #         echo "::endgroup::"
-#
-#     - name: Collect platform files
-#       shell: bash
-#       run: |
-#         echo "::group::Collecting platform files"
-#         ${{ github.action_path }}/collect-files.sh "${{ inputs.config_path }}"
-#         echo "::endgroup::"
-#
-#     - name: Create archive
-#       id: create-archive
-#       shell: bash
-#       run: |
-#         echo "::group::Creating release archive"
-#         ${{ github.action_path }}/create-archive.sh \
-#           "${{ inputs.release_tag }}" \
-#           "${{ inputs.config_path }}" \
-#           "${{ inputs.max_archive_size_mb }}"
-#         echo "::endgroup::"
+
+    - name: Collect platform files
+      shell: bash
+      run: |
+        echo "::group::Collecting platform files"
+        ${{ github.action_path }}/collect-files.sh "${{ inputs.config_path }}"
+        echo "::endgroup::"
+
+    - name: Create archive
+      id: create-archive
+      shell: bash
+      run: |
+        echo "::group::Creating release archive"
+        ${{ github.action_path }}/create-archive.sh \
+          "${{ inputs.release_tag }}" \
+          "${{ inputs.config_path }}" \
+          "${{ inputs.max_archive_size_mb }}"
+        echo "::endgroup::"
 #
 #     - name: Upload to release
 #       shell: bash
