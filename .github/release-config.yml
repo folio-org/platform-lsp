@@ -1,0 +1,37 @@
+# FOLIO Release Configuration
+# This file defines the file requirements for FOLIO release artifacts
+
+description: "FOLIO (Eureka) platform release with all files and descriptors"
+required_files:
+  - "platform-descriptor.json"
+  - "application-descriptors/*.json"
+  - "package.json"
+  - "yarn.lock"
+  - "stripes.config.js"
+  - "stripes.*.js"
+optional_files:
+  - "README.md"
+  - "LICENSE"
+  - "docker/"
+  - ".dockerignore"
+  - ".npmrc"
+  - "tenant-assets/"
+
+# Global settings
+settings:
+  package_name: "platform-lsp"
+  max_archive_size_mb: 500
+  mgr_applications_timeout: 30
+  archive_format: "tar.gz"
+
+# File patterns to exclude from all variants
+exclude_patterns:
+  - "ModuleDescriptors/"
+  - "node_modules/"
+  - "output/"
+  - ".git/"
+  - ".github/"
+  - "*.log"
+  - "*.tmp"
+  - ".DS_Store"
+  - "Thumbs.db"
