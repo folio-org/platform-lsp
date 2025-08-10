@@ -13,6 +13,14 @@ output
 
 # VS Code related
 .vscode/
+.history/
+
+# Ignore user-specific AI/development tool artifacts
+.cursor/
+.claude/
+.mcp.json
+.cursor*
+claude*
 
 # Miscellaneous
 *.class
@@ -25,4 +33,3 @@ output
 .history
 .svn/
 .git/
-.hg/
