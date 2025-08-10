@@ -91,7 +91,7 @@ jobs:
           cache: 'yarn'
 
       - name: Install jq for JSON processing
-        run: sudo apt-get update && sudo apt-get install -y jq
+        run: sudo apt-get update && sudo apt-get install -y jq gettext-base
 
       - name: Create release artifact
         id: create-artifact
@@ -132,21 +132,23 @@ jobs:
           PLATFORM_VERSION="${{ needs.validate-and-prepare.outputs.platform_version }}"
           ARCHIVE_SIZE="${{ steps.create-artifact.outputs.archive_size }}"
           SHA256="${{ steps.create-artifact.outputs.sha256_checksum }}"
+          ARCHIVE_NAME="$(basename ${{ steps.create-artifact.outputs.archive_path }})"
 
           # Get current release body
           CURRENT_BODY=$(gh release view "$RELEASE_TAG" --json body --jq '.body // ""')
 
-          # Create artifact info section
-          ARTIFACT_INFO="
+          # Create artifact info section using heredoc (removed quotes from EOF to allow variable expansion)
+          cat << EOF > artifact_info.md
+
 ## 📦 Release Artifacts
 
 This release includes a complete platform package with all required files and application descriptors.
 
 ### Package Information
-- **Platform**: $PLATFORM_NAME
-- **Version**: $PLATFORM_VERSION
-- **Archive Size**: $(( ARCHIVE_SIZE / 1024 / 1024 ))MB
-- **SHA256**: \`$SHA256\`
+- **Platform**: ${PLATFORM_NAME}
+- **Version**: ${PLATFORM_VERSION}
+- **Archive Size**: $((${ARCHIVE_SIZE} / 1024 / 1024))MB
+- **SHA256**: \`${SHA256}\`
 
 ### Contents
 - Platform descriptor and configuration files
@@ -158,9 +160,12 @@ This release includes a complete platform package with all required files and ap
 ### Verification
 To verify the archive integrity:
 \`\`\`bash
-echo \"$SHA256  \$(basename ${{ steps.create-artifact.outputs.archive_path }})\" | sha256sum -c
+echo "${SHA256}  ${ARCHIVE_NAME}" | sha256sum -c
 \`\`\`
-"
+EOF
+
+          # Read the artifact info (no need for envsubst now)
+          ARTIFACT_INFO=$(cat artifact_info.md)
 
           # Combine current body with artifact info
           NEW_BODY="$CURRENT_BODY
@@ -184,7 +189,7 @@ $ARTIFACT_INFO"
           echo "- **Version**: ${{ needs.validate-and-prepare.outputs.platform_version }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          if [[ "${{ steps.create-artifact.conclusion }}" == "success" ]]; then
+          if [[ "${{ steps.create-artifact.outcome }}" == "success" ]]; then
             echo "### ✅ Artifact Creation Successful" >> $GITHUB_STEP_SUMMARY
             echo "- **Archive**: $(basename ${{ steps.create-artifact.outputs.archive_path }})" >> $GITHUB_STEP_SUMMARY
             echo "- **Size**: $(( ${{ steps.create-artifact.outputs.archive_size }} / 1024 / 1024 ))MB" >> $GITHUB_STEP_SUMMARY

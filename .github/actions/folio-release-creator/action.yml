@@ -6,6 +6,9 @@ inputs:
   release_tag:
     description: 'Release tag to create artifacts for'
     required: true
+  github_token:
+    description: 'GitHub token for uploading artifacts'
+    required: true
   config_path:
     description: 'Path to release configuration file'
     required: false
@@ -14,9 +17,6 @@ inputs:
     description: 'Base URL for FAR API'
     required: false
     default: 'https://far.ci.folio.org'
-  github_token:
-    description: 'GitHub token for uploading artifacts'
-    required: true
   max_archive_size_mb:
     description: 'Maximum archive size in MB'
     required: false
@@ -43,68 +43,68 @@ runs:
         ${{ github.action_path }}/validate-files.sh "${{ inputs.config_path }}"
         echo "::endgroup::"
 
-    - name: Collect application descriptors
-      shell: bash
-      run: |
-        echo "::group::Collecting application descriptors from FAR"
-        mkdir -p application-descriptors
-
-        # Fetch applications from FAR API
-        echo "Fetching applications from ${{ inputs.far_url }}/applications"
-        response=$(curl -s -f "${{ inputs.far_url }}/applications" || {
-          echo "::error::Failed to fetch applications from FAR API"
-          exit 1
-        })
-
-        # Parse and save individual application descriptors
-        echo "$response" | jq -c '.[]' | while read -r app; do
-          name=$(echo "$app" | jq -r '.name')
-          echo "$app" > "application-descriptors/${name}.json"
-          echo "Created application-descriptors/${name}.json"
-        done
-
-        echo "Collected $(ls application-descriptors/*.json | wc -l) application descriptors"
-        echo "::endgroup::"
-
-    - name: Collect platform files
-      shell: bash
-      run: |
-        echo "::group::Collecting platform files"
-        ${{ github.action_path }}/collect-files.sh "${{ inputs.config_path }}"
-        echo "::endgroup::"
-
-    - name: Create archive
-      id: create-archive
-      shell: bash
-      run: |
-        echo "::group::Creating release archive"
-        ${{ github.action_path }}/create-archive.sh \
-          "${{ inputs.release_tag }}" \
-          "${{ inputs.config_path }}" \
-          "${{ inputs.max_archive_size_mb }}"
-        echo "::endgroup::"
-
-    - name: Upload to release
-      shell: bash
-      env:
-        GITHUB_TOKEN: ${{ inputs.github_token }}
-      run: |
-        echo "::group::Uploading archive to release"
-
-        archive_path="${{ steps.create-archive.outputs.archive_path }}"
-        archive_name=$(basename "$archive_path")
-        checksum_file="${archive_path}.sha256"
-
-        # Create checksum file
-        echo "${{ steps.create-archive.outputs.sha256_checksum }}  $archive_name" > "$checksum_file"
-
-        # Upload archive and checksum to release
-        gh release upload "${{ inputs.release_tag }}" \
-          "$archive_path" \
-          "$checksum_file" \
-          --clobber
-
-        echo "✅ Uploaded $archive_name and checksum to release ${{ inputs.release_tag }}"
-        echo "Archive size: ${{ steps.create-archive.outputs.archive_size }} bytes"
-        echo "SHA256: ${{ steps.create-archive.outputs.sha256_checksum }}"
-        echo "::endgroup::"
+#     - name: Collect application descriptors
+#       shell: bash
+#       run: |
+#         echo "::group::Collecting application descriptors from FAR"
+#         mkdir -p application-descriptors
+#
+#         # Fetch applications from FAR API
+#         echo "Fetching applications from ${{ inputs.far_url }}/applications"
+#         response=$(curl -s -f "${{ inputs.far_url }}/applications" || {
+#           echo "::error::Failed to fetch applications from FAR API"
+#           exit 1
+#         })
+#
+#         # Parse and save individual application descriptors
+#         echo "$response" | jq -c '.[]' | while read -r app; do
+#           name=$(echo "$app" | jq -r '.name')
+#           echo "$app" > "application-descriptors/${name}.json"
+#           echo "Created application-descriptors/${name}.json"
+#         done
+#
+#         echo "Collected $(ls application-descriptors/*.json | wc -l) application descriptors"
+#         echo "::endgroup::"
+#
+#     - name: Collect platform files
+#       shell: bash
+#       run: |
+#         echo "::group::Collecting platform files"
+#         ${{ github.action_path }}/collect-files.sh "${{ inputs.config_path }}"
+#         echo "::endgroup::"
+#
+#     - name: Create archive
+#       id: create-archive
+#       shell: bash
+#       run: |
+#         echo "::group::Creating release archive"
+#         ${{ github.action_path }}/create-archive.sh \
+#           "${{ inputs.release_tag }}" \
+#           "${{ inputs.config_path }}" \
+#           "${{ inputs.max_archive_size_mb }}"
+#         echo "::endgroup::"
+#
+#     - name: Upload to release
+#       shell: bash
+#       env:
+#         GITHUB_TOKEN: ${{ inputs.github_token }}
+#       run: |
+#         echo "::group::Uploading archive to release"
+#
+#         archive_path="${{ steps.create-archive.outputs.archive_path }}"
+#         archive_name=$(basename "$archive_path")
+#         checksum_file="${archive_path}.sha256"
+#
+#         # Create checksum file
+#         echo "${{ steps.create-archive.outputs.sha256_checksum }}  $archive_name" > "$checksum_file"
+#
+#         # Upload archive and checksum to release
+#         gh release upload "${{ inputs.release_tag }}" \
+#           "$archive_path" \
+#           "$checksum_file" \
+#           --clobber
+#
+#         echo "✅ Uploaded $archive_name and checksum to release ${{ inputs.release_tag }}"
+#         echo "Archive size: ${{ steps.create-archive.outputs.archive_size }} bytes"
+#         echo "SHA256: ${{ steps.create-archive.outputs.sha256_checksum }}"
+#         echo "::endgroup::"

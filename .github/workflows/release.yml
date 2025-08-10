@@ -1,0 +1,109 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Package Release Workflow
+
+# Controls when the workflow will run
+on:
+  release:
+    # The release event can be triggered by creating a new release or updating an existing one
+    types: [created, published]
+
+  # Allows you to run this workflow manually from the Actions tab
+#   workflow_dispatch:
+#     inputs:
+#       release_tag:
+#         description: 'Release tag to create artifacts for'
+#         required: true
+#         type: string
+#       far_url:
+#         description: 'FAR API base URL'
+#         required: false
+#         default: 'https://far.ci.folio.org'
+#         type: string
+#       max_archive_size_mb:
+#         description: 'Maximum archive size in MB'
+#         required: false
+#         default: '500'
+#         type: string
+
+permissions:
+  contents: write
+  actions: read
+
+env:
+  FAR_URL: ${{ github.event.inputs.far_url || 'https://far.ci.folio.org' }}
+  MAX_ARCHIVE_SIZE: ${{ github.event.inputs.max_archive_size_mb || '500' }}
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  validate-and-prepare:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      - name: Validate configuration
+        run: |
+          if [[ ! -f ".github/release-config.yml" ]]; then
+            echo "::error::Release configuration file not found: .github/release-config.yml"
+            exit 1
+          fi
+
+          echo "✅ Configuration file found"
+
+      - name: Determine release tag
+        id: determine-tag
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            RELEASE_TAG="${{ github.event.inputs.release_tag }}"
+          else
+            RELEASE_TAG="${{ github.event.release.tag_name }}"
+          fi
+          RELEASE_TAG="R1-2025-GA" #TMP Remove this line when not testing
+
+          echo "release_tag=$RELEASE_TAG" >> $GITHUB_OUTPUT
+          echo "Using release tag: $RELEASE_TAG"
+
+      - name: Extract platform information
+        id: platform-info
+        run: |
+          if [[ -f "platform-descriptor.json" ]]; then
+            PLATFORM_NAME=$(jq -r '.name // "unknown"' platform-descriptor.json)
+            PLATFORM_VERSION=$(jq -r '.version // env.RELEASE_TAG' platform-descriptor.json)
+
+            echo "platform_name=$PLATFORM_NAME" >> $GITHUB_OUTPUT
+            echo "platform_version=$PLATFORM_VERSION" >> $GITHUB_OUTPUT
+
+            echo "Platform: $PLATFORM_NAME"
+            echo "Version: $PLATFORM_VERSION"
+          else
+            echo "::error::platform-descriptor.json not found"
+            exit 1
+          fi
+
+  create-release-artifact:
+    runs-on: ubuntu-latest
+    needs: validate-and-prepare
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+#
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: '18'
+#           cache: 'yarn'
+
+      - name: Create release artifact
+        id: create-artifact
+        uses: ./.github/actions/folio-release-creator
+        with:
+          release_tag: ${{ needs.validate-and-prepare.outputs.release_tag }}
+          config_path: '.github/release-config.yml'
+          far_url: ${{ env.FAR_URL }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          max_archive_size_mb: ${{ env.MAX_ARCHIVE_SIZE }}

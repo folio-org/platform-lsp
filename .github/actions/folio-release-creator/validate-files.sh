@@ -17,17 +17,6 @@ fi
 if command -v yq >/dev/null 2>&1; then
     echo "Using yq for YAML parsing"
     REQUIRED_FILES=$(yq eval '.required_files[]' "$CONFIG_PATH" 2>/dev/null || echo "")
-else
-    echo "yq not available, using grep-based parsing"
-    # Extract required_files section using grep and basic text processing
-    REQUIRED_FILES=$(awk '/^required_files:/,/^[a-zA-Z_]/ {
-        if ($0 ~ /^  - ".*"$/) {
-            gsub(/^  - "/, "")
-            gsub(/"$/, "")
-            print
-        }
-    }' "$CONFIG_PATH")
-fi
 
 if [[ -z "$REQUIRED_FILES" ]]; then
     echo "::warning::No required files specified in configuration"
