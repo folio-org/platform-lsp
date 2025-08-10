@@ -1,4 +1,4 @@
-# This is a basic workflow to help you get started with Actions
+# This workflow creates and uploads FOLIO platform release artifacts
 
 name: Package Release Workflow
 
@@ -21,6 +21,11 @@ on:
 #         default: 'https://far.ci.folio.org'
 #         type: string
 
+# Prevent concurrent releases
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: write
   actions: read
@@ -36,14 +41,15 @@ jobs:
   validate-and-prepare:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    
+    timeout-minutes: 10
+
     outputs:
       release_tag: ${{ steps.determine-tag.outputs.release_tag }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Validate configuration
         run: |
@@ -70,16 +76,12 @@ jobs:
 
   create-release-artifact:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     needs: validate-and-prepare
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
-#
-#       - name: Setup Node.js
-#         uses: actions/setup-node@v4
-#         with:
-#           node-version: '18'
-#           cache: 'yarn'
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Create release artifact
         id: create-artifact
@@ -94,26 +96,26 @@ jobs:
       - name: Upload to release
         shell: bash
         env:
-          GITHUB_TOKEN: ${{ inputs.github_token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "::group::Uploading archive to release"
 
-          archive_path="${{ steps.create-archive.outputs.archive_path }}"
+          archive_path="${{ steps.create-artifact.outputs.archive_path }}"
           archive_name=$(basename "$archive_path")
           checksum_file="${archive_path}.sha256"
 
           # Create checksum file
-          echo "${{ steps.create-archive.outputs.sha256_checksum }}  $archive_name" > "$checksum_file"
+          echo "${{ steps.create-artifact.outputs.sha256_checksum }}  $archive_name" > "$checksum_file"
 
           # Upload archive and checksum to release
-          gh release upload "${{ inputs.release_tag }}" \
+          gh release upload "${{ needs.validate-and-prepare.outputs.release_tag }}" \
             "$archive_path" \
             "$checksum_file" \
             --clobber
 
-          echo "✅ Uploaded $archive_name and checksum to release ${{ inputs.release_tag }}"
-          echo "Archive size: ${{ steps.create-archive.outputs.archive_size }} bytes"
-          echo "SHA256: ${{ steps.create-archive.outputs.sha256_checksum }}"
+          echo "✅ Uploaded $archive_name and checksum to release ${{ needs.validate-and-prepare.outputs.release_tag }}"
+          echo "Archive size: ${{ steps.create-artifact.outputs.archive_size }} bytes"
+          echo "SHA256: ${{ steps.create-artifact.outputs.sha256_checksum }}"
           echo "🎉 Release artifact created successfully!"
           echo "::endgroup::"
 
@@ -153,6 +155,8 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Release Information" >> $GITHUB_STEP_SUMMARY
           echo "- **Tag**: ${{ needs.validate-and-prepare.outputs.release_tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Workflow**: ${{ github.workflow }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Run ID**: ${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
           if [[ "${{ steps.create-artifact.outcome }}" == "success" ]]; then
@@ -163,4 +167,5 @@ jobs:
           else
             echo "### ❌ Artifact Creation Failed" >> $GITHUB_STEP_SUMMARY
             echo "Check the job logs for detailed error information." >> $GITHUB_STEP_SUMMARY
+            echo "Debug artifacts have been uploaded for analysis." >> $GITHUB_STEP_SUMMARY
           fi

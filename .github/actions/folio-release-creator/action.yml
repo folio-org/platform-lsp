@@ -36,28 +36,64 @@ outputs:
 runs:
   using: 'composite'
   steps:
+    - name: Install dependencies
+      shell: bash
+      run: |
+        echo "::group::Installing dependencies"
+        # Ensure required tools are available
+        which python3 || (echo "::error::Python3 is required but not installed" && exit 1)
+        which jq || (echo "::error::jq is required but not installed" && exit 1)
+        which tar || (echo "::error::tar is required but not installed" && exit 1)
+
+        # Install Python dependencies if requirements file exists
+        if [[ -f "${{ github.action_path }}/requirements.txt" ]]; then
+          python3 -m pip install --user -r "${{ github.action_path }}/requirements.txt"
+        fi
+        echo "::endgroup::"
+
     - name: Validate required files
       shell: bash
       run: |
         echo "::group::Validating required files"
-        ${{ github.action_path }}/validate-files.sh "${{ inputs.config_path }}"
+        set -euo pipefail
+
+        # Make scripts executable
+        chmod +x "${{ github.action_path }}/validate-files.sh"
+        chmod +x "${{ github.action_path }}/collect-files.sh"
+        chmod +x "${{ github.action_path }}/create-archive.sh"
+
+        # Run validation with error handling
+        if ! "${{ github.action_path }}/validate-files.sh" "${{ inputs.config_path }}"; then
+          echo "::error::File validation failed"
+          exit 1
+        fi
         echo "::endgroup::"
 
     - name: Collect application descriptors
       shell: bash
       run: |
         echo "::group::Collecting application descriptors from FAR"
-        # Run Python script to collect descriptors based on platform-descriptor.json
-        python3 "${{ github.action_path }}/collect_descriptors.py" \
-          "${{ inputs.descriptor_path }}" \
-          "${{ inputs.far_url }}"
+          if python3 "${{ github.action_path }}/collect_descriptors.py" \
+            "${{ inputs.descriptor_path }}" \
+            "${{ inputs.far_url }}"; then
+            echo "✅ Successfully collected descriptors"
+            break
+          else
+            echo "::error::Failed to collect descriptors"
+            exit 1
+          fi
         echo "::endgroup::"
 
     - name: Collect platform files
       shell: bash
       run: |
         echo "::group::Collecting platform files"
-        ${{ github.action_path }}/collect-files.sh "${{ inputs.config_path }}"
+        set -euo pipefail
+
+        if ! "${{ github.action_path }}/collect-files.sh" "${{ inputs.config_path }}"; then
+          echo "::error::Failed to collect platform files"
+          exit 1
+        fi
         echo "::endgroup::"
 
     - name: Create archive
@@ -65,7 +101,12 @@ runs:
       shell: bash
       run: |
         echo "::group::Creating release archive"
-        ${{ github.action_path }}/create-archive.sh \
+        set -euo pipefail
+
+        if ! "${{ github.action_path }}/create-archive.sh" \
           "${{ inputs.release_tag }}" \
-          "${{ inputs.config_path }}"
+          "${{ inputs.config_path }}"; then
+          echo "::error::Failed to create release archive"
+          exit 1
+        fi
         echo "::endgroup::"
