@@ -28,6 +28,7 @@ permissions:
 env:
   FAR_URL: ${{ github.event.inputs.far_url || 'https://far.ci.folio.org' }}
   CONFIG_PATH: '.github/release-config.yml'
+  DESCRIPTOR_PATH: 'platform-descriptor.json'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -86,6 +87,7 @@ jobs:
         with:
           release_tag: ${{ needs.validate-and-prepare.outputs.release_tag }}
           config_path: ${{ env.CONFIG_PATH }}
+          descriptor_path: ${{ env.DESCRIPTOR_PATH }}
           far_url: ${{ env.FAR_URL }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
