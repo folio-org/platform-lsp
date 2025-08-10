@@ -14,6 +14,12 @@ echo "Release tag: $RELEASE_TAG"
 echo "🗜️  Creating release archive for tag: $RELEASE_TAG"
 
 STAGING_DIR="release-staging"
+# Add trap for cleanup
+cleanup() {
+    rm -rf "$STAGING_DIR"
+    echo "✅ Cleanup completed (trap)"
+}
+trap cleanup EXIT
 if [[ ! -d "$STAGING_DIR" ]]; then
     echo "::error::Staging directory not found: $STAGING_DIR"
     echo "Make sure collect-files.sh has been run first."
@@ -138,9 +144,3 @@ echo "Size: ${ARCHIVE_SIZE_MB}MB"
 echo "Files: $total_files"
 echo "SHA256: $SHA256"
 echo "✅ Archive creation completed successfully"
-
-# Clean up staging directory
-echo ""
-echo "🧹 Cleaning up staging directory..."
-rm -rf "$STAGING_DIR"
-echo "✅ Cleanup completed"

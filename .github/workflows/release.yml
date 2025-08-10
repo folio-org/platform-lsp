@@ -26,10 +26,6 @@ concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: false
 
-permissions:
-  contents: write
-  actions: read
-
 env:
   FAR_URL: ${{ github.event.inputs.far_url || 'https://far.ci.folio.org' }}
   CONFIG_PATH: '.github/release-config.yml'
@@ -78,6 +74,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: validate-and-prepare
+    permissions:
+      contents: write
+      actions: read
 
     steps:
       - name: Checkout repository

@@ -42,7 +42,19 @@ runs:
         echo "::group::Installing dependencies"
         # Ensure required tools are available
         which python3 || (echo "::error::Python3 is required but not installed" && exit 1)
-        which jq || (echo "::error::jq is required but not installed" && exit 1)
+        # Install jq if not present
+        if ! which jq > /dev/null 2>&1; then
+          echo "jq not found, installing..."
+          sudo apt-get update && sudo apt-get install -y jq
+        fi
+        # Install yq if not present
+        if ! which yq > /dev/null 2>&1; then
+          echo "yq not found, installing..."
+          sudo wget -O /usr/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/bin/yq
+        fi
+        which jq || (echo "::error::jq is required but could not be installed" && exit 1)
+        which yq || (echo "::error::yq is required but could not be installed" && exit 1)
         which tar || (echo "::error::tar is required but not installed" && exit 1)
 
         # Install Python dependencies if requirements file exists
@@ -73,15 +85,14 @@ runs:
       shell: bash
       run: |
         echo "::group::Collecting application descriptors from FAR"
-          if python3 "${{ github.action_path }}/collect_descriptors.py" \
-            "${{ inputs.descriptor_path }}" \
-            "${{ inputs.far_url }}"; then
-            echo "✅ Successfully collected descriptors"
-            break
-          else
-            echo "::error::Failed to collect descriptors"
-            exit 1
-          fi
+        if python3 "${{ github.action_path }}/collect_descriptors.py" \
+          "${{ inputs.descriptor_path }}" \
+          "${{ inputs.far_url }}"; then
+          echo "✅ Successfully collected descriptors"
+        else
+          echo "::error::Failed to collect descriptors"
+          exit 1
+        fi
         echo "::endgroup::"
 
     - name: Collect platform files
