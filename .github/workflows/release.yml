@@ -1,6 +1,6 @@
 # This workflow creates and uploads FOLIO platform release artifacts
 
-name: Package Release Workflow
+name: Release Package Workflow
 
 # Controls when the workflow will run
 on:
