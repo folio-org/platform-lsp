@@ -71,7 +71,7 @@ View Workflow Run
 
 Release Tag: R1-2025 (linked to GitHub release)
 Archive Size: 45MB
-Platform: platform-lsp
+Repository: platform-lsp
 Trigger: Manual
 SHA256 Checksum: `abc123...def456`
 ```
@@ -83,7 +83,7 @@ View Workflow Run
 
 Release Tag: R1-2025
 Failed Job: create-release-artifact
-Platform: platform-lsp
+Repository: platform-lsp
 Trigger: Release Created
 Action Required: Check workflow logs for detailed error information and retry the release process.
 ```
@@ -95,7 +95,7 @@ View Workflow Run
 
 Release Tag: R1-2025
 Status: Cancelled
-Platform: platform-lsp
+Repository: platform-lsp
 Trigger: Manual
 ```
 

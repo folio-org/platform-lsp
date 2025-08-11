@@ -61,7 +61,6 @@ optional_files:
 settings:
   package_name: "platform-lsp"
   max_archive_size_mb: 500
-  mgr_applications_timeout: 30
   archive_format: "tar.gz"
 
 # File patterns to exclude from all variants
@@ -152,7 +151,7 @@ name: Create Release Artifacts
 
 on:
   release:
-    types: [published]
+    types: [created]
 
 jobs:
   create-artifacts:
@@ -235,10 +234,11 @@ The action consists of several shell scripts and a Python script that work toget
 - Reports missing files and validation errors
 
 ### 2. Descriptor Collection (`collect_descriptors.py`)
-- Fetches application descriptors from FAR API
-- Based on dependencies listed in platform-descriptor.json
-- Saves descriptors to `application-descriptors/` directory
-- Handles API errors gracefully
+- Fetches application descriptors from FAR API concurrently using ThreadPoolExecutor
+- Based on applications listed in platform-descriptor.json (required + optional)
+- Saves descriptors to `application-descriptors/` directory with name-version.json format
+- Handles API errors gracefully with comprehensive error reporting
+- Provides detailed timing and success/failure statistics
 
 ### 3. File Collection (`collect-files.sh`)
 - Collects platform files according to configuration

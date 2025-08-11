@@ -1,54 +1,63 @@
 flowchart TD
-  A["Release Event or Manual Trigger"] --> B["validate-and-prepare job"]
+  A["Release Event or Manual Trigger"] --> B["validate-and-prepare job<br/>(1 min timeout)"]
   B --> B1["Checkout repository"]
   B1 --> B2["Validate configuration file exists"]
-  B2 --> B3["Determine release tag"]
-  B3 -->|release_tag output| C["create-release-artifact job"]
+  B2 --> B3["Validate release tag provided"]
+  B3 --> B4["Set environment variables"]
+  B4 --> C["create-release-artifact job<br/>(5 min timeout)"]
 
   C --> C1["Checkout repository"]
-  C1 --> C2["Install dependencies"]
-  C2 --> C3["Run validate-files.sh"]
-  C3 --> C3a["Parse required_files from config (yq)"]
-  C3a --> C3b["For each required file pattern"]
-  C3b --> C3c{"Is it a glob?"}
-  C3c -- Yes --> C3d["find . -name pattern"]
-  C3c -- No --> C3e["Check file/dir exists"]
-  C3d --> C3f{"File(s) found?"}
-  C3e --> C3f
-  C3f -- No --> C3g["Add to missing_files"]
-  C3f -- Yes --> C3h["Validate file (JSON, JS, etc)"]
-  C3h --> C3i["Report errors if any"]
-  C3i --> C4["Run collect_descriptors.py"]
+  C1 --> C2["Cache dependencies<br/>(yq, Python packages)"]
+  C2 --> C3["folio-release-creator action"]
+  
+  C3 --> C3a["Install dependencies<br/>(python3, jq, yq, tar)"]
+  C3a --> C3b["validate-files.sh"]
+  C3b --> C3c["Parse required_files from config"]
+  C3c --> C3d["For each file pattern"]
+  C3d --> C3e{"Is it a glob?"}
+  C3e -- Yes --> C3f["find . -name pattern"]
+  C3e -- No --> C3g["Check file/dir exists"]
+  C3f --> C3h{"File(s) found?"}
+  C3g --> C3h
+  C3h -- No --> C3i["Add to missing_files"]
+  C3h -- Yes --> C3j["Validate file content<br/>(JSON, JS, etc)"]
+  C3j --> C4["collect_descriptors.py"]
 
   C4 --> C4a["Load platform-descriptor.json"]
-  C4a --> C4b["Extract all applications (required + optional)"]
-  C4b --> C4c["For each app: fetch from FAR API"]
+  C4a --> C4b["Extract applications<br/>(required + optional)"]
+  C4b --> C4c["Concurrent fetch from FAR API<br/>(ThreadPoolExecutor)"]
   C4c --> C4d{"Fetch success?"}
-  C4d -- Yes --> C4e["Save descriptor as JSON"]
+  C4d -- Yes --> C4e["Save descriptor as JSON<br/>(name-version.json)"]
   C4d -- No --> C4f["Log error"]
-  C4e --> C4g["Count successes/failures"]
+  C4e --> C4g["Count results"]
   C4f --> C4g
-  C4g --> C5["Run collect-files.sh"]
+  C4g --> C5["collect-files.sh"]
 
   C5 --> C5a["Create release-staging dir"]
-  C5a --> C5b["Copy required files (patterns)"]
-  C5b --> C5c["Copy optional files (if present)"]
+  C5a --> C5b["Copy required files"]
+  C5b --> C5c["Copy optional files"]
   C5c --> C5d["Remove excluded patterns"]
   C5d --> C5e["Create MANIFEST.txt"]
-  C5e --> C6["Run create-archive.sh"]
+  C5e --> C6["create-archive.sh"]
 
   C6 --> C6a["Check staging dir exists"]
-  C6a --> C6b["Check size vs max_archive_size_mb"]
+  C6a --> C6b["Check size vs max limit"]
   C6b --> C6c["Create tar.gz archive"]
   C6c --> C6d["Generate SHA256 checksum"]
   C6d --> C6e["Test archive integrity"]
-  C6e --> C6f["Set outputs: archive_path, archive_size, sha256_checksum"]
-  C6f --> D["Upload to release (gh release upload)"]
-  D --> E["Verify artifact upload"]
-  E --> F["Post summary to GITHUB_STEP_SUMMARY"]
+  C6e --> C6f["Set action outputs"]
+  C6f --> D["Upload artifacts to GitHub Release"]
 
-  style A fill:#f9f,stroke:#333,stroke-width:2px
-  style C fill:#bbf,stroke:#333,stroke-width:2px
-  style D fill:#bfb,stroke:#333,stroke-width:2px
-  style E fill:#bfb,stroke:#333,stroke-width:2px
-  style F fill:#bfb,stroke:#333,stroke-width:2px
+  D --> D1["Create checksum file"]
+  D1 --> D2["Upload archive + checksum<br/>(gh release upload --clobber)"]
+  D2 --> D3["Verify upload success"]
+  D3 --> E["Post workflow summary"]
+  E --> F["Send Slack notification<br/>(success/failure status)"]
+
+  style A fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+  style B fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+  style C fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+  style C3 fill:#fff3e0,stroke:#e65100,stroke-width:2px
+  style D fill:#e0f2f1,stroke:#00695c,stroke-width:2px
+  style E fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+  style F fill:#fce4ec,stroke:#880e4f,stroke-width:2px
