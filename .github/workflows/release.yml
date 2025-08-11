@@ -1,6 +1,7 @@
 # This workflow creates and uploads FOLIO platform release artifacts
 
 name: Release Package Workflow
+run-name: 'Release Package - ${{ github.event.inputs.release_tag || github.event.release.tag_name || github.ref_name }}'
 
 # Controls when the workflow will run
 on:
