@@ -101,6 +101,7 @@ runs:
         echo "::group::Collecting application descriptors from FAR"
         set -euo pipefail
         
+        action_path="${{ github.action_path }}"
         python3 "$action_path/collect_descriptors.py" \
           "${{ inputs.descriptor_path }}" \
           "${{ inputs.far_url }}" || {
