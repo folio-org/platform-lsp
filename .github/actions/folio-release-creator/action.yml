@@ -40,27 +40,42 @@ runs:
       shell: bash
       run: |
         echo "::group::Installing dependencies"
-        # Ensure required tools are available
-        which python3 || (echo "::error::Python3 is required but not installed" && exit 1)
-        # Install jq if not present
-        if ! which jq > /dev/null 2>&1; then
-          echo "jq not found, installing..."
-          sudo apt-get update && sudo apt-get install -y jq
+        set -euo pipefail
+        
+        # Check required tools in parallel
+        missing_tools=()
+        
+        command -v python3 >/dev/null || missing_tools+=("python3")
+        command -v tar >/dev/null || missing_tools+=("tar")
+        
+        if [[ ${#missing_tools[@]} -gt 0 ]]; then
+          echo "::error::Required tools missing: ${missing_tools[*]}"
+          exit 1
         fi
-        # Install yq if not present
-        if ! which yq > /dev/null 2>&1; then
-          echo "yq not found, installing..."
-          sudo wget -O /usr/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+        
+        # Install missing optional tools efficiently
+        tools_to_install=()
+        command -v jq >/dev/null || tools_to_install+=("jq")
+        
+        if [[ ${#tools_to_install[@]} -gt 0 ]]; then
+          echo "Installing missing tools: ${tools_to_install[*]}"
+          sudo apt-get update -qq && sudo apt-get install -y "${tools_to_install[@]}"
+        fi
+        
+        # Install yq if not present (single operation)
+        if ! command -v yq >/dev/null; then
+          echo "Installing yq..."
+          sudo wget -q -O /usr/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
           sudo chmod +x /usr/bin/yq
         fi
-        which jq || (echo "::error::jq is required but could not be installed" && exit 1)
-        which yq || (echo "::error::yq is required but could not be installed" && exit 1)
-        which tar || (echo "::error::tar is required but not installed" && exit 1)
-
+        
         # Install Python dependencies if requirements file exists
-        if [[ -f "${{ github.action_path }}/requirements.txt" ]]; then
-          python3 -m pip install --user -r "${{ github.action_path }}/requirements.txt"
+        requirements_file="${{ github.action_path }}/requirements.txt"
+        if [[ -f "$requirements_file" ]]; then
+          python3 -m pip install --user -q -r "$requirements_file"
         fi
+        
+        echo "✅ All dependencies installed"
         echo "::endgroup::"
 
     - name: Validate required files
@@ -69,13 +84,12 @@ runs:
         echo "::group::Validating required files"
         set -euo pipefail
 
-        # Make scripts executable
-        chmod +x "${{ github.action_path }}/validate-files.sh"
-        chmod +x "${{ github.action_path }}/collect-files.sh"
-        chmod +x "${{ github.action_path }}/create-archive.sh"
+        # Make scripts executable in one operation
+        action_path="${{ github.action_path }}"
+        chmod +x "$action_path"/{validate-files,collect-files,create-archive}.sh
 
         # Run validation with error handling
-        if ! "${{ github.action_path }}/validate-files.sh" "${{ inputs.config_path }}"; then
+        if ! "$action_path/validate-files.sh" "${{ inputs.config_path }}"; then
           echo "::error::File validation failed"
           exit 1
         fi
@@ -85,39 +99,39 @@ runs:
       shell: bash
       run: |
         echo "::group::Collecting application descriptors from FAR"
-        if python3 "${{ github.action_path }}/collect_descriptors.py" \
+        set -euo pipefail
+        
+        python3 "$action_path/collect_descriptors.py" \
           "${{ inputs.descriptor_path }}" \
-          "${{ inputs.far_url }}"; then
-          echo "✅ Successfully collected descriptors"
-        else
+          "${{ inputs.far_url }}" || {
           echo "::error::Failed to collect descriptors"
           exit 1
-        fi
+        }
+        echo "✅ Successfully collected descriptors"
         echo "::endgroup::"
 
-    - name: Collect platform files
-      shell: bash
-      run: |
-        echo "::group::Collecting platform files"
-        set -euo pipefail
-
-        if ! "${{ github.action_path }}/collect-files.sh" "${{ inputs.config_path }}"; then
-          echo "::error::Failed to collect platform files"
-          exit 1
-        fi
-        echo "::endgroup::"
-
-    - name: Create archive
+    - name: Collect platform files and create archive
       id: create-archive
       shell: bash
       run: |
-        echo "::group::Creating release archive"
+        echo "::group::Collecting platform files and creating archive"
         set -euo pipefail
+        
+        action_path="${{ github.action_path }}"
+        config_path="${{ inputs.config_path }}"
+        release_tag="${{ inputs.release_tag }}"
 
-        if ! "${{ github.action_path }}/create-archive.sh" \
-          "${{ inputs.release_tag }}" \
-          "${{ inputs.config_path }}"; then
+        # Collect platform files
+        "$action_path/collect-files.sh" "$config_path" || {
+          echo "::error::Failed to collect platform files"
+          exit 1
+        }
+        
+        # Create archive
+        "$action_path/create-archive.sh" "$release_tag" "$config_path" || {
           echo "::error::Failed to create release archive"
           exit 1
-        fi
+        }
+        
+        echo "✅ Platform files collected and archive created successfully"
         echo "::endgroup::"

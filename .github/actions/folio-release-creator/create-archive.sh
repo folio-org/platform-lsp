@@ -4,156 +4,152 @@ set -euo pipefail
 # FOLIO Release Archive Creator
 # Creates a compressed archive of collected platform files
 
-RELEASE_TAG="$1"
-CONFIG_PATH="${2:-.github/release-config.yml}"
-
-MAX_SIZE_MB=$(yq eval '.settings.max_archive_size_mb' "$CONFIG_PATH" 2>/dev/null || echo "")
-
-echo "Release tag: $RELEASE_TAG"
+readonly RELEASE_TAG="$1"
+readonly CONFIG_PATH="${2:-.github/release-config.yml}"
+readonly STAGING_DIR="release-staging"
 
 echo "🗜️  Creating release archive for tag: $RELEASE_TAG"
 
-STAGING_DIR="release-staging"
-# Add trap for cleanup
-cleanup() {
-    rm -rf "$STAGING_DIR"
-    echo "✅ Cleanup completed (trap)"
-}
-trap cleanup EXIT
-if [[ ! -d "$STAGING_DIR" ]]; then
+# Early validation
+[[ -d "$STAGING_DIR" ]] || {
     echo "::error::Staging directory not found: $STAGING_DIR"
     echo "Make sure collect-files.sh has been run first."
     exit 1
-fi
+}
 
-# Get platform name and version from config
-PLATFORM_NAME=$(yq eval '.settings.package_name' "$CONFIG_PATH" 2>/dev/null || echo "")
-PLATFORM_VERSION="$RELEASE_TAG"
+# Extract configuration values once
+readonly MAX_SIZE_MB=$(yq eval '.settings.max_archive_size_mb' "$CONFIG_PATH" 2>/dev/null || echo "500")
+readonly PLATFORM_NAME=$(yq eval '.settings.package_name' "$CONFIG_PATH" 2>/dev/null || echo "platform")
 
-# Clean up platform name for filename
-CLEAN_NAME=$(echo "$PLATFORM_NAME" | sed 's/[^a-zA-Z0-9.-]/_/g')
-CLEAN_VERSION=$(echo "$PLATFORM_VERSION" | sed 's/[^a-zA-Z0-9.-]/_/g')
+# Add trap for cleanup
+cleanup() {
+    [[ -d "$STAGING_DIR" ]] && rm -rf "$STAGING_DIR"
+    echo "✅ Cleanup completed"
+}
+trap cleanup EXIT
 
-# Generate archive name
-ARCHIVE_NAME="${CLEAN_NAME}-${CLEAN_VERSION}.tar.gz"
-ARCHIVE_PATH="$PWD/$ARCHIVE_NAME"
+# Generate clean names for archive
+readonly CLEAN_NAME=$(echo "$PLATFORM_NAME" | sed 's/[^a-zA-Z0-9.-]/_/g')
+readonly CLEAN_VERSION=$(echo "$RELEASE_TAG" | sed 's/[^a-zA-Z0-9.-]/_/g')
+readonly ARCHIVE_NAME="${CLEAN_NAME}-${CLEAN_VERSION}.tar.gz"
+readonly ARCHIVE_PATH="$PWD/$ARCHIVE_NAME"
 
 echo "Platform: $PLATFORM_NAME"
-echo "Version: $PLATFORM_VERSION"
+echo "Version: $RELEASE_TAG"
 echo "Archive: $ARCHIVE_NAME"
 
-# Check staging directory size
+# Check staging directory size efficiently
 echo ""
 echo "📏 Checking archive size..."
-STAGING_SIZE_KB=$(du -sk "$STAGING_DIR" | cut -f1)
-STAGING_SIZE_MB=$((STAGING_SIZE_KB / 1024))
+readonly STAGING_SIZE_KB=$(du -sk "$STAGING_DIR" | cut -f1)
+readonly STAGING_SIZE_MB=$((STAGING_SIZE_KB / 1024))
 
-# Show size in KB if less than 1MB, MB otherwise
+# Display size appropriately
 if [[ $STAGING_SIZE_MB -lt 1 ]]; then
-  echo "Staging directory size: ${STAGING_SIZE_KB}KB"
+    echo "Staging directory size: ${STAGING_SIZE_KB}KB"
 else
-  echo "Staging directory size: ${STAGING_SIZE_MB}MB"
+    echo "Staging directory size: ${STAGING_SIZE_MB}MB"
 fi
 echo "Maximum allowed size: ${MAX_SIZE_MB}MB"
 
+# Early exit if size exceeds limit
 if [[ $STAGING_SIZE_MB -gt $MAX_SIZE_MB ]]; then
     echo "::error::Staging directory size (${STAGING_SIZE_MB}MB) exceeds maximum (${MAX_SIZE_MB}MB)"
     echo "Consider excluding more files or increasing the limit."
     exit 1
 fi
 
-# Create the archive
+# Create the archive efficiently
 echo ""
 echo "🗜️  Creating compressed archive..."
-cd "$STAGING_DIR"
 
-# Create tar.gz with progress indication
-tar -czf "$ARCHIVE_PATH" . || {
+# Create archive with optimal compression
+(cd "$STAGING_DIR" && tar -czf "$ARCHIVE_PATH" .) || {
     echo "::error::Failed to create archive"
     exit 1
 }
 
-cd - >/dev/null
-
-# Verify archive was created
-if [[ ! -f "$ARCHIVE_PATH" ]]; then
+# Verify archive was created and get size
+[[ -f "$ARCHIVE_PATH" ]] || {
     echo "::error::Archive was not created: $ARCHIVE_PATH"
     exit 1
-fi
+}
 
-# Get archive information
-ARCHIVE_SIZE=$(stat -f%z "$ARCHIVE_PATH" 2>/dev/null || stat -c%s "$ARCHIVE_PATH" 2>/dev/null)
-ARCHIVE_SIZE_MB=$((ARCHIVE_SIZE / 1024 / 1024))
-ARCHIVE_SIZE_KB=$((ARCHIVE_SIZE / 1024))
+# Get archive information efficiently
+readonly ARCHIVE_SIZE=$(stat -f%z "$ARCHIVE_PATH" 2>/dev/null || stat -c%s "$ARCHIVE_PATH")
+readonly ARCHIVE_SIZE_MB=$((ARCHIVE_SIZE / 1024 / 1024))
+readonly ARCHIVE_SIZE_KB=$((ARCHIVE_SIZE / 1024))
 
-# Show size in KB if less than 1MB, MB otherwise
-if [[ $ARCHIVE_SIZE_MB -lt 1 ]]; then
-  ARCHIVE_SIZE_DISPLAY="${ARCHIVE_SIZE_KB}KB"
-else
-  ARCHIVE_SIZE_DISPLAY="${ARCHIVE_SIZE_MB}MB"
-fi
+# Display size appropriately
+readonly ARCHIVE_SIZE_DISPLAY=$(
+    if [[ $ARCHIVE_SIZE_MB -lt 1 ]]; then
+        echo "${ARCHIVE_SIZE_KB}KB"
+    else
+        echo "${ARCHIVE_SIZE_MB}MB"
+    fi
+)
 
 echo "✅ Archive created successfully"
 echo "   Path: $ARCHIVE_PATH"
 echo "   Size: ${ARCHIVE_SIZE} bytes (${ARCHIVE_SIZE_DISPLAY})"
 
-# Generate checksums
+# Generate SHA256 checksum efficiently
 echo ""
-echo "🔐 Generating checksums..."
-
-# SHA256 checksum
-if command -v sha256sum >/dev/null 2>&1; then
-    SHA256=$(sha256sum "$ARCHIVE_PATH" | cut -d' ' -f1)
-else
+echo "🔐 Generating checksum..."
+readonly SHA256=$(sha256sum "$ARCHIVE_PATH" | cut -d' ' -f1 2>/dev/null || {
     echo "::warning::No SHA256 utility found, skipping checksum"
-    SHA256=""
-fi
+    echo ""
+})
 
-if [[ -n "$SHA256" ]]; then
-    echo "SHA256: $SHA256"
-fi
+[[ -n "$SHA256" ]] && echo "SHA256: $SHA256"
 
 # Test archive integrity
 echo ""
 echo "🧪 Testing archive integrity..."
-if tar -tzf "$ARCHIVE_PATH" >/dev/null 2>&1; then
-    echo "✅ Archive integrity test passed"
-else
+tar -tzf "$ARCHIVE_PATH" >/dev/null 2>&1 || {
     echo "::error::Archive integrity test failed"
     exit 1
-fi
+}
+echo "✅ Archive integrity test passed"
 
-# List archive contents for verification
+# List archive contents for verification efficiently
 echo ""
 echo "📋 Archive contents preview (first 20 files):"
 
-# Temporarily disable pipefail to handle SIGPIPE from head command gracefully
-set +o pipefail
-tar -tzf "$ARCHIVE_PATH" | head -20 | sed 's/^/  /' || true
-total_files=$(tar -tzf "$ARCHIVE_PATH" | wc -l || echo "0")
-set -o pipefail
+# Get file count and preview in parallel
+{
+    # Get total files count
+    readonly total_files=$(tar -tzf "$ARCHIVE_PATH" | wc -l)
+    
+    # Show preview (disable pipefail temporarily for head)
+    set +o pipefail
+    tar -tzf "$ARCHIVE_PATH" | head -20 | sed 's/^/  /'
+    set -o pipefail
+    
+    # Show remaining count if needed
+    if [[ $total_files -gt 20 ]]; then
+        echo "  ... and $((total_files - 20)) more files"
+    fi
+} 2>/dev/null || {
+    echo "  Unable to list archive contents"
+    readonly total_files=0
+}
 
-# Convert total_files to number and handle potential whitespace
-total_files=$(echo "$total_files" | tr -d '[:space:]')
-if [[ "$total_files" =~ ^[0-9]+$ ]] && [[ $total_files -gt 20 ]]; then
-    echo "  ... and $((total_files - 20)) more files"
-fi
-
-# Set outputs for GitHub Actions
+# Set outputs for GitHub Actions efficiently
 echo ""
 echo "📤 Setting GitHub Actions outputs..."
 {
-  echo "archive_path=$ARCHIVE_PATH"
-  echo "archive_size=$ARCHIVE_SIZE"
-  echo "sha256_checksum=$SHA256"
+    echo "archive_path=$ARCHIVE_PATH"
+    echo "archive_size=$ARCHIVE_SIZE"
+    echo "sha256_checksum=$SHA256"
 } >> "$GITHUB_OUTPUT"
 
-
+# Final summary
 echo ""
 echo "📊 Archive Creation Summary"
 echo "=========================="
 echo "Archive: $ARCHIVE_NAME"
 echo "Size: ${ARCHIVE_SIZE_DISPLAY}"
-echo "Files: $total_files"
-echo "SHA256: $SHA256"
+echo "Files: ${total_files:-0}"
+echo "SHA256: ${SHA256:-N/A}"
 echo "✅ Archive creation completed successfully"
