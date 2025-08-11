@@ -9,17 +9,17 @@ on:
     types: [created]
 
   # Allows you to run this workflow manually from the Actions tab
-#   workflow_dispatch:
-#     inputs:
-#       release_tag:
-#         description: 'Release tag to create artifacts for'
-#         required: true
-#         type: string
-#       far_url:
-#         description: 'FAR API base URL'
-#         required: false
-#         default: 'https://far.ci.folio.org'
-#         type: string
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag to create artifacts for'
+        required: true
+        type: string
+      far_url:
+        description: 'FAR API base URL'
+        required: false
+        default: 'https://far.ci.folio.org'
+        type: string
 
 # Prevent concurrent releases
 concurrency:
@@ -30,6 +30,8 @@ env:
   FAR_URL: ${{ github.event.inputs.far_url || 'https://far.ci.folio.org' }}
   CONFIG_PATH: '.github/release-config.yml'
   DESCRIPTOR_PATH: 'platform-descriptor.json'
+  CHECKOUT_ACTION: 'actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11' # v4.1.1
+  SLACK_NOTIFICATION_CHANNEL: '#folio-rancher-debug-notifications'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -45,7 +47,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - uses: ${{ env.CHECKOUT_ACTION }}
 
       - name: Validate configuration
         run: |
@@ -78,7 +80,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: ${{ env.CHECKOUT_ACTION }}
 
       - name: Create release artifact
         id: create-artifact
@@ -178,3 +180,28 @@ jobs:
             echo "Check the job logs for detailed error information." >> $GITHUB_STEP_SUMMARY
             echo "Debug artifacts have been uploaded for analysis." >> $GITHUB_STEP_SUMMARY
           fi
+
+  # Slack notification job - runs after main workflow completes
+  notify-slack:
+    runs-on: ubuntu-latest
+    needs: [validate-and-prepare, create-release-artifact]
+    if: always() && vars.SLACK_NOTIFICATION_CHANNEL != ''
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout repository
+        uses: ${{ env.CHECKOUT_ACTION }}
+
+      - name: Send notification
+        uses: ./.github/actions/slack-notification
+        with:
+          operation_status: ${{ needs.create-release-artifact.result }}
+          operation_type: 'Platform Release Artifact'
+          release_tag: ${{ needs.validate-and-prepare.outputs.release_tag }}
+          archive_size: ${{ needs.create-release-artifact.outputs.archive_size || '' }}
+          sha256_checksum: ${{ needs.create-release-artifact.outputs.sha256_checksum || '' }}
+          additional_info: ${{ needs.create-release-artifact.result == 'failure' && 'Check workflow logs for detailed error information and retry the release process.' || '' }}
+          workflow_run_id: ${{ github.run_id }}
+          slack_channel: ${{ vars.SLACK_NOTIFICATION_CHANNEL }}
+          slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
