@@ -184,7 +184,7 @@ jobs:
   notify-slack:
     runs-on: ubuntu-latest
     needs: [validate-and-prepare, create-release-artifact]
-    if: always() && env.SLACK_NOTIFICATION_CHANNEL != ''
+    if: always() && ${{ env.SLACK_NOTIFICATION_CHANNEL }} != ''
     permissions:
       contents: read
     
