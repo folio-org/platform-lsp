@@ -30,7 +30,6 @@ env:
   FAR_URL: ${{ github.event.inputs.far_url || 'https://far.ci.folio.org' }}
   CONFIG_PATH: '.github/release-config.yml'
   DESCRIPTOR_PATH: 'platform-descriptor.json'
-  CHECKOUT_ACTION: 'actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11' # v4.1.1
   SLACK_NOTIFICATION_CHANNEL: '#folio-rancher-debug-notifications'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -47,7 +46,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: ${{ env.CHECKOUT_ACTION }}
+      - uses: 'actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11'
 
       - name: Validate configuration
         run: |
@@ -191,7 +190,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: ${{ env.CHECKOUT_ACTION }}
+        uses: 'actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11'
 
       - name: Send notification
         uses: ./.github/actions/slack-notification
