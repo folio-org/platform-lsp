@@ -204,4 +204,4 @@ jobs:
           additional_info: ${{ needs.create-release-artifact.result == 'failure' && 'Check workflow logs for detailed error information and retry the release process.' || '' }}
           workflow_run_id: ${{ github.run_id }}
           slack_channel: ${{ env.SLACK_NOTIFICATION_CHANNEL }}
-          slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
+          slack_token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
