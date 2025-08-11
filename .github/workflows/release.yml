@@ -184,7 +184,7 @@ jobs:
   notify-slack:
     runs-on: ubuntu-latest
     needs: [validate-and-prepare, create-release-artifact]
-    if: always() && ${{ env.SLACK_NOTIFICATION_CHANNEL }} != ''
+    if: always()
     permissions:
       contents: read
     
@@ -193,6 +193,7 @@ jobs:
         uses: 'actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11'
 
       - name: Send notification
+        if: env.SLACK_NOTIFICATION_CHANNEL != ''
         uses: ./.github/actions/slack-notification
         with:
           operation_status: ${{ needs.create-release-artifact.result }}
