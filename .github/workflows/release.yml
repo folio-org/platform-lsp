@@ -184,7 +184,7 @@ jobs:
   notify-slack:
     runs-on: ubuntu-latest
     needs: [validate-and-prepare, create-release-artifact]
-    if: always() && vars.SLACK_NOTIFICATION_CHANNEL != ''
+    if: always() && env.SLACK_NOTIFICATION_CHANNEL != ''
     permissions:
       contents: read
     
@@ -202,5 +202,5 @@ jobs:
           sha256_checksum: ${{ needs.create-release-artifact.outputs.sha256_checksum || '' }}
           additional_info: ${{ needs.create-release-artifact.result == 'failure' && 'Check workflow logs for detailed error information and retry the release process.' || '' }}
           workflow_run_id: ${{ github.run_id }}
-          slack_channel: ${{ vars.SLACK_NOTIFICATION_CHANNEL }}
+          slack_channel: ${{ env.SLACK_NOTIFICATION_CHANNEL }}
           slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
