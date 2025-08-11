@@ -96,7 +96,12 @@ echo ""
 echo "📋 Processing required files..."
 if [[ -n "$REQUIRED_FILES" ]]; then
     while IFS= read -r file_pattern; do
-        [[ -n "$file_pattern" ]] && copy_files "$file_pattern" "required"
+        if [[ -n "$file_pattern" ]]; then
+            copy_files "$file_pattern" "required" || {
+                echo "::error::Failed to process required file pattern: $file_pattern"
+                exit 1
+            }
+        fi
     done <<< "$REQUIRED_FILES"
 else
     echo "  No required files specified"
@@ -107,7 +112,10 @@ echo ""
 echo "📋 Processing optional files..."
 if [[ -n "$OPTIONAL_FILES" ]]; then
     while IFS= read -r file_pattern; do
-        [[ -n "$file_pattern" ]] && copy_files "$file_pattern" "optional"
+        if [[ -n "$file_pattern" ]]; then
+            # Optional files don't cause script failure, just log warnings
+            copy_files "$file_pattern" "optional" || true
+        fi
     done <<< "$OPTIONAL_FILES"
 else
     echo "  No optional files specified"
