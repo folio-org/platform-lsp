@@ -36,9 +36,7 @@ env:
 jobs:
   validate-and-prepare:
     runs-on: ubuntu-latest
-    timeout-minutes: 5  # Reduced timeout for simple validation
-    outputs:
-      release_tag: ${{ env.RELEASE_TAG }}  # Use env variable directly
+    timeout-minutes: 1
     steps:
       - name: Checkout repository
         uses: 'actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11'
@@ -62,7 +60,7 @@ jobs:
 
   create-release-artifact:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 5
     needs: validate-and-prepare
     permissions:
       contents: write
@@ -85,7 +83,7 @@ jobs:
         id: create-artifact
         uses: ./.github/actions/folio-release-creator
         with:
-          release_tag: ${{ env.RELEASE_TAG }}  # Use env variable directly
+          release_tag: ${{ env.RELEASE_TAG }}
           config_path: ${{ env.CONFIG_PATH }}
           descriptor_path: ${{ env.DESCRIPTOR_PATH }}
           far_url: ${{ env.FAR_URL }}

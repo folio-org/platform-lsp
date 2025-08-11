@@ -26,7 +26,7 @@ fi
 declare -a missing_files=()
 declare -a validation_errors=()
 
-# Function to validate JSON files efficiently
+# Function to validate JSON files
 validate_json() {
     local file="$1"
     if [[ -f "$file" ]] && jq empty "$file" 2>/dev/null; then
@@ -39,7 +39,7 @@ validate_json() {
     fi
 }
 
-# Function to check file patterns efficiently
+# Function to check file patterns
 check_file_pattern() {
     local file_pattern="$1"
     
@@ -83,7 +83,7 @@ check_file_pattern() {
 }
 
 echo "📋 Checking required files..."
-# Process files more efficiently
+# Process files more
 while IFS= read -r file_pattern; do
     [[ -n "$file_pattern" ]] && check_file_pattern "$file_pattern"
 done <<< "$REQUIRED_FILES"

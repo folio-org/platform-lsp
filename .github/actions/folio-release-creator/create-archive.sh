@@ -38,7 +38,7 @@ echo "Platform: $PLATFORM_NAME"
 echo "Version: $RELEASE_TAG"
 echo "Archive: $ARCHIVE_NAME"
 
-# Check staging directory size efficiently
+# Check staging directory size
 echo ""
 echo "📏 Checking archive size..."
 readonly STAGING_SIZE_KB=$(du -sk "$STAGING_DIR" | cut -f1)
@@ -59,7 +59,7 @@ if [[ $STAGING_SIZE_MB -gt $MAX_SIZE_MB ]]; then
     exit 1
 fi
 
-# Create the archive efficiently
+# Create the archive
 echo ""
 echo "🗜️  Creating compressed archive..."
 
@@ -75,7 +75,7 @@ echo "🗜️  Creating compressed archive..."
     exit 1
 }
 
-# Get archive information efficiently
+# Get archive information
 readonly ARCHIVE_SIZE=$(stat -f%z "$ARCHIVE_PATH" 2>/dev/null || stat -c%s "$ARCHIVE_PATH")
 readonly ARCHIVE_SIZE_MB=$((ARCHIVE_SIZE / 1024 / 1024))
 readonly ARCHIVE_SIZE_KB=$((ARCHIVE_SIZE / 1024))
@@ -93,7 +93,7 @@ echo "✅ Archive created successfully"
 echo "   Path: $ARCHIVE_PATH"
 echo "   Size: ${ARCHIVE_SIZE} bytes (${ARCHIVE_SIZE_DISPLAY})"
 
-# Generate SHA256 checksum efficiently
+# Generate SHA256 checksum
 echo ""
 echo "🔐 Generating checksum..."
 readonly SHA256=$(sha256sum "$ARCHIVE_PATH" | cut -d' ' -f1 2>/dev/null || {
@@ -112,7 +112,7 @@ tar -tzf "$ARCHIVE_PATH" >/dev/null 2>&1 || {
 }
 echo "✅ Archive integrity test passed"
 
-# List archive contents for verification efficiently
+# List archive contents for verification
 echo ""
 echo "📋 Archive contents preview (first 20 files):"
 
@@ -135,7 +135,7 @@ echo "📋 Archive contents preview (first 20 files):"
     readonly total_files=0
 }
 
-# Set outputs for GitHub Actions efficiently
+# Set outputs for GitHub Actions
 echo ""
 echo "📤 Setting GitHub Actions outputs..."
 {

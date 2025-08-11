@@ -121,15 +121,7 @@ else
     echo "  No optional files specified"
 fi
 
-## Copy application descriptors if they exist
-#if [[ -d "application-descriptors" ]]; then
-#    echo ""
-#    echo "📋 Copying application descriptors..."
-#    cp -r application-descriptors "$STAGING_DIR/"
-#    echo "    ✅ Copied application-descriptors/ directory"
-#fi
-
-# Remove excluded files efficiently
+# Remove excluded files
 if [[ -n "$EXCLUDE_PATTERNS" ]]; then
     echo ""
     echo "🧹 Removing excluded files..."
@@ -166,7 +158,7 @@ readonly MANIFEST_FILE="$STAGING_DIR/MANIFEST.txt"
     find "$STAGING_DIR" -type f -not -name "MANIFEST.txt" | sed "s|^$STAGING_DIR/||" | sort
 } > "$MANIFEST_FILE"
 
-# Generate summary efficiently
+# Generate summary
 echo ""
 echo "📊 Collection Summary"
 echo "===================="
