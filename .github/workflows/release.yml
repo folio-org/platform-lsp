@@ -172,7 +172,17 @@ jobs:
           if [[ "${{ steps.create-artifact.outcome }}" == "success" ]]; then
             echo "### ✅ Artifact Creation Successful" >> $GITHUB_STEP_SUMMARY
             echo "- **Archive**: $(basename ${{ steps.create-artifact.outputs.archive_path }})" >> $GITHUB_STEP_SUMMARY
-            echo "- **Size**: $(( ${{ steps.create-artifact.outputs.archive_size }} / 1024 / 1024 ))MB" >> $GITHUB_STEP_SUMMARY
+            
+            # Calculate size in KB or MB
+            archive_size_mb=$(( ${{ steps.create-artifact.outputs.archive_size }} / 1024 / 1024 ))
+            archive_size_kb=$(( ${{ steps.create-artifact.outputs.archive_size }} / 1024 ))
+            
+            if [[ $archive_size_mb -lt 1 ]]; then
+              echo "- **Size**: ${archive_size_kb}KB" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "- **Size**: ${archive_size_mb}MB" >> $GITHUB_STEP_SUMMARY
+            fi
+            
             echo "- **SHA256**: \`${{ steps.create-artifact.outputs.sha256_checksum }}\`" >> $GITHUB_STEP_SUMMARY
           else
             echo "### ❌ Artifact Creation Failed" >> $GITHUB_STEP_SUMMARY

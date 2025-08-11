@@ -74,7 +74,14 @@ runs:
         # Format archive size
         if [[ -n "${{ inputs.archive_size }}" && "${{ inputs.archive_size }}" != "N/A" ]]; then
           archive_size_mb=$(( ${{ inputs.archive_size }} / 1024 / 1024 ))
-          echo "archive_size_display=${archive_size_mb}MB" >> "$GITHUB_OUTPUT"
+          archive_size_kb=$(( ${{ inputs.archive_size }} / 1024 ))
+          
+          # Show KB for archives smaller than 1MB, MB otherwise
+          if [[ $archive_size_mb -lt 1 ]]; then
+            echo "archive_size_display=${archive_size_kb}KB" >> "$GITHUB_OUTPUT"
+          else
+            echo "archive_size_display=${archive_size_mb}MB" >> "$GITHUB_OUTPUT"
+          fi
         else
           echo "archive_size_display=N/A" >> "$GITHUB_OUTPUT"
         fi

@@ -48,7 +48,12 @@ echo "📏 Checking archive size..."
 STAGING_SIZE_KB=$(du -sk "$STAGING_DIR" | cut -f1)
 STAGING_SIZE_MB=$((STAGING_SIZE_KB / 1024))
 
-echo "Staging directory size: ${STAGING_SIZE_MB}MB"
+# Show size in KB if less than 1MB, MB otherwise
+if [[ $STAGING_SIZE_MB -lt 1 ]]; then
+  echo "Staging directory size: ${STAGING_SIZE_KB}KB"
+else
+  echo "Staging directory size: ${STAGING_SIZE_MB}MB"
+fi
 echo "Maximum allowed size: ${MAX_SIZE_MB}MB"
 
 if [[ $STAGING_SIZE_MB -gt $MAX_SIZE_MB ]]; then
@@ -79,10 +84,18 @@ fi
 # Get archive information
 ARCHIVE_SIZE=$(stat -f%z "$ARCHIVE_PATH" 2>/dev/null || stat -c%s "$ARCHIVE_PATH" 2>/dev/null)
 ARCHIVE_SIZE_MB=$((ARCHIVE_SIZE / 1024 / 1024))
+ARCHIVE_SIZE_KB=$((ARCHIVE_SIZE / 1024))
+
+# Show size in KB if less than 1MB, MB otherwise
+if [[ $ARCHIVE_SIZE_MB -lt 1 ]]; then
+  ARCHIVE_SIZE_DISPLAY="${ARCHIVE_SIZE_KB}KB"
+else
+  ARCHIVE_SIZE_DISPLAY="${ARCHIVE_SIZE_MB}MB"
+fi
 
 echo "✅ Archive created successfully"
 echo "   Path: $ARCHIVE_PATH"
-echo "   Size: ${ARCHIVE_SIZE} bytes (${ARCHIVE_SIZE_MB}MB)"
+echo "   Size: ${ARCHIVE_SIZE} bytes (${ARCHIVE_SIZE_DISPLAY})"
 
 # Generate checksums
 echo ""
@@ -140,7 +153,7 @@ echo ""
 echo "📊 Archive Creation Summary"
 echo "=========================="
 echo "Archive: $ARCHIVE_NAME"
-echo "Size: ${ARCHIVE_SIZE_MB}MB"
+echo "Size: ${ARCHIVE_SIZE_DISPLAY}"
 echo "Files: $total_files"
 echo "SHA256: $SHA256"
 echo "✅ Archive creation completed successfully"
