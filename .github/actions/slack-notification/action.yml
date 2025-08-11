@@ -120,8 +120,8 @@ runs:
                     "short": true
                   },
                   {
-                    "title": "Platform",
-                    "value": "platform-lsp",
+                    "title": "Repository",
+                    "value": "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>",
                     "short": true
                   },
                   {
