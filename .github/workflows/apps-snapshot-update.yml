@@ -12,6 +12,9 @@ on:
         type: boolean
         default: false
 
+env:
+  DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: false
@@ -77,13 +80,13 @@ jobs:
     with:
       app_name: folio-org/${{ matrix.application }}
       workflow_run_number: ${{ github.run_number }}
-      dry_run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+      dry_run: ${{ env.DRY_RUN }}
 
   collect-results:
     name: Collect Application Results
     needs: [get-applications, update-applications]
     runs-on: ubuntu-latest
-    if: always() && needs.update-applications.result != 'skipped'
+    if: always() && needs.update-applications.result != 'skipped' && env.DRY_RUN != true
     outputs:
       failed_apps: ${{ steps.gather-failures.outputs.failed_apps }}
       failed_apps_reason: ${{ steps.gather-failures.outputs.failed_apps_reason }}
@@ -96,7 +99,6 @@ jobs:
           pattern: "result-*"
           path: /tmp/all-results
           merge-multiple: true
-          if-no-files-found: warn
 
       - name: Gather Application Results
         id: gather-failures
@@ -127,7 +129,7 @@ jobs:
     name: Slack Notification
     runs-on: ubuntu-latest
     needs: [get-applications, update-applications, collect-results]
-    if: always() && (github.event_name == 'workflow_dispatch' && inputs.dry_run || false)
+    if: always() && env.DRY_RUN != true
     env:
       IS_SUCCESS: ${{ needs.update-applications.result == 'success' && 'true' || 'false' }}
     steps:
