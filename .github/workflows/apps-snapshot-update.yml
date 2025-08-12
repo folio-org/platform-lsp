@@ -78,7 +78,8 @@ jobs:
       max-parallel: 5
     uses: folio-org/kitfox-github/.github/workflows/app-update.yml@RANCHER-2321-test
     with:
-      app_name: folio-org/${{ matrix.application }}
+      app_name: ${{ matrix.application }}
+      repo: folio-org/${{ matrix.application }}
       workflow_run_number: ${{ github.run_number }}
       dry_run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
 
