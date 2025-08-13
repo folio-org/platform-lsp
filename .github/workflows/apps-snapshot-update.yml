@@ -68,6 +68,13 @@ jobs:
           echo "applications=$existing_apps" >> "$GITHUB_OUTPUT"
           echo "application_count=$existing_count" >> "$GITHUB_OUTPUT"
 
+      - name: Upload Platform Descriptor
+        uses: actions/upload-artifact@v4
+        with:
+          name: platform-descriptor
+          path: platform-descriptor.json
+          retention-days: 1
+
   update-applications:
     name: Update ${{ matrix.application }}
     needs: get-applications
