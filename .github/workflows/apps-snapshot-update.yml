@@ -98,7 +98,7 @@ jobs:
       app_name: ${{ matrix.application }}
       repo: folio-org/${{ matrix.application }}
       workflow_run_number: ${{ github.run_number }}
-      descriptor_build_offset: ${{ github.event_name == 'workflow_dispatch' && inputs.descriptor_build_offset || 100100000000000 }}
+      descriptor_build_offset: ${{ github.event_name == 'workflow_dispatch' && inputs.descriptor_build_offset || '100100000000000' }}
       rely_on_FAR: ${{ github.event_name == 'workflow_dispatch' && inputs.rely_on_FAR || false }}
       dry_run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
 
