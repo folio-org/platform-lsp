@@ -6,6 +6,16 @@ on:
 
   workflow_dispatch:
     inputs:
+      descriptor_build_offset:
+        description: 'Offset to apply to application artifact version'
+        required: false
+        type: number
+        default: 100100000000000
+      rely_on_FAR:
+        description: 'Whether to rely on FAR for application descriptor dependencies'
+        required: false
+        type: boolean
+        default: false
       dry_run:
         description: 'Perform dry run without making changes'
         required: false
@@ -88,6 +98,8 @@ jobs:
       app_name: ${{ matrix.application }}
       repo: folio-org/${{ matrix.application }}
       workflow_run_number: ${{ github.run_number }}
+      descriptor_build_offset: ${{ github.event_name == 'workflow_dispatch' && inputs.descriptor_build_offset || 100100000000000 }}
+      rely_on_FAR: ${{ github.event_name == 'workflow_dispatch' && inputs.rely_on_FAR || false }}
       dry_run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
 
   collect-results:
