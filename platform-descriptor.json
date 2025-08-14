@@ -32,17 +32,17 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "2.1.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-platform-complete",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "3.0.0-SNAPSHOT.100000000000001"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "1.2.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-agreements",
@@ -50,15 +50,15 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "1.2.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-consortia",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "1.4.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-consortia-manager",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "1.3.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-dashboard",
@@ -66,15 +66,15 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "1.3.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-ebsconet",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "1.1.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-edge-complete",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "2.2.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-eholdings",
@@ -82,19 +82,19 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "2.2.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-fqm",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "1.2.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-gobi",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "1.1.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-inn-reach",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "1.1.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-licenses",
@@ -102,15 +102,15 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "1.1.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-lists",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "1.1.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-mosaic",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "1.1.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-oa",
@@ -118,31 +118,31 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "1.2.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-reading-room",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "1.3.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-reporting",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "1.3.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-requests-ecs",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "1.3.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-requests-mediated",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "1.2.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-requests-mediated-ui",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "1.3.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-rtac",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "1.1.0-SNAPSHOT.100000000000001"
       },
       {
         "name": "app-service-interaction",
