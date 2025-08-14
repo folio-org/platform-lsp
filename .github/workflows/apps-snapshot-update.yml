@@ -9,8 +9,8 @@ on:
       descriptor_build_offset:
         description: 'Offset to apply to application artifact version'
         required: false
-        type: number
-        default: 100100000000000
+        type: string
+        default: '100100000000000'
       rely_on_FAR:
         description: 'Whether to rely on FAR for application descriptor dependencies'
         required: false
