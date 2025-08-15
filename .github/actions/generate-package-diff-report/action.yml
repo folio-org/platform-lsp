@@ -1,0 +1,50 @@
+name: 'Generate Package Diff Report'
+description: 'Generates collapsed diff and markdown report comparing package.json dependencies between base and head branches'
+author: 'FOLIO DevOps'
+
+inputs:
+  base_package_path:
+    description: 'Path to base package.json file'
+    required: true
+  head_package_path:
+    description: 'Path to head package.json file'
+    required: true
+  release_branch:
+    description: 'Base branch name for display in markdown'
+    required: true
+  update_branch:
+    description: 'Head branch name for display in markdown'
+    required: true
+  dependency_type:
+    description: 'Dependency type to compare (dependencies, devDependencies, all)'
+    required: false
+    default: 'dependencies'
+
+outputs:
+  ui_updates_markdown:
+    description: 'Formatted markdown report of dependency changes'
+    value: ${{ steps.generate.outputs.ui_updates_markdown }}
+  ui_updates_cnt:
+    description: 'Number of dependency changes detected'
+    value: ${{ steps.generate.outputs.ui_updates_cnt }}
+  diff_json:
+    description: 'JSON array of dependency changes with old/new versions'
+    value: ${{ steps.generate.outputs.diff_json }}
+  has_changes:
+    description: 'Whether any dependency changes were detected (true/false)'
+    value: ${{ steps.generate.outputs.has_changes }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Generate package diff and markdown report'
+      id: generate
+      shell: bash
+      env:
+        BASE_PACKAGE: ${{ inputs.base_package_path }}
+        HEAD_PACKAGE: ${{ inputs.head_package_path }}
+        RELEASE_BRANCH: ${{ inputs.release_branch }}
+        UPDATE_BRANCH: ${{ inputs.update_branch }}
+        DEPENDENCY_TYPE: ${{ inputs.dependency_type }}
+      run: ${{ github.action_path }}/scripts/generate-package-diff.sh
+

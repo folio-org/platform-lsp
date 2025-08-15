@@ -1,0 +1,110 @@
+name: 'Update Package JSON Dependencies'
+description: 'Updates package.json dependencies based on UI modules list with version comparison'
+author: 'FOLIO DevOps'
+
+# Inputs are JSON strings passed from a previous workflow step.
+# They must already be valid JSON; the action will fail early if parsing fails.
+inputs:
+  package-json:
+    description: 'Content of package.json as JSON string'
+    required: true
+  ui-modules:
+    description: 'List of UI modules as JSON string (each with name, version)'
+    required: true
+
+outputs:
+  package-json:
+    description: 'Updated package.json content as JSON string'
+    value: ${{ steps.update-deps.outputs.package-json }}
+  updated-ui-report:
+    description: 'List of updated UI modules with change details'
+    value: ${{ steps.update-deps.outputs.updated-ui-report }}
+  not-found-ui-report:
+    description: 'Object of UI modules not found in existing dependencies'
+    value: ${{ steps.update-deps.outputs.not-found-ui-report }}
+  updated-count:
+    description: 'Number of dependencies that were updated'
+    value: ${{ steps.update-deps.outputs.updated-count }}
+  has-updates:
+    description: 'Whether any dependencies were updated (true/false)'
+    value: ${{ steps.update-deps.outputs.has-updates }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4 # Kept @v4 for stability; upgrade to @v5 when broadly adopted.
+      with:
+        python-version: '3.x'
+
+    - name: Update package.json dependencies
+      id: update-deps
+      shell: bash
+      env:
+        PACKAGE_JSON: ${{ inputs.package-json }}
+        UI_MODULES: ${{ inputs.ui-modules }}
+      run: |
+        # Bash safety options (do not exit on non-zero inside jq conditionals)
+        set -euo pipefail
+        # Create a temporary file for the output
+        TMP_OUTPUT_FILE=$(mktemp -t package-update-result.XXXXX.json)
+
+        # Make the script executable (redundant for Python, but harmless)
+        chmod +x "${{ github.action_path }}/update-package-json.py"
+
+        # Run the update script with the temporary file
+        python3 "${{ github.action_path }}/update-package-json.py" \
+          --package-json "$PACKAGE_JSON" \
+          --ui-modules "$UI_MODULES" \
+          --output-file "$TMP_OUTPUT_FILE"
+
+        # Parse the result file using jq to extract all outputs
+        if [[ -f "$TMP_OUTPUT_FILE" ]]; then
+          # Extract individual components using jq
+          package_json=$(jq -r '."package-json"' "$TMP_OUTPUT_FILE")
+          updated_ui_report=$(jq -c '."updated-ui-report"' "$TMP_OUTPUT_FILE")
+          not_found_ui_report=$(jq -c '."not-found-ui-report"' "$TMP_OUTPUT_FILE")
+
+          # Count updated modules
+          updated_count=$(jq '."updated-ui-report" | length' "$TMP_OUTPUT_FILE")
+
+          # Check if any updates were made
+          has_updates="false"
+          if [[ "$updated_count" -gt 0 ]]; then
+            has_updates="true"
+          fi
+
+          # Clean up temporary file after extracting all data
+          rm -f "$TMP_OUTPUT_FILE"
+
+          # Set all outputs using proper multiline handling for JSON content
+          {
+            echo "package-json<<EOF"
+            echo "$package_json"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo "updated-ui-report<<EOF"
+            echo "$updated_ui_report"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+            {
+            echo "not-found-ui-report<<EOF"
+            echo "$not_found_ui_report"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          echo "updated-count=$updated_count" >> "$GITHUB_OUTPUT"
+          echo "has-updates=$has_updates" >> "$GITHUB_OUTPUT"
+
+          echo "✅ Successfully processed dependencies"
+          echo "📊 Updated $updated_count dependencies"
+        else
+          echo "❌ Error: Output file not created"
+          exit 1
+        fi
+
+branding:
+  icon: 'package'
+  color: 'blue'

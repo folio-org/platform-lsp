@@ -1,31 +1,630 @@
 name: Release PR Check
 
 run-name: >-
-  Release application check • PR #${{ inputs.pr_number }} • ${{ inputs.repo_name }}
+  Release platform check • PR #${{ inputs.pr_number || github.event.pull_request.number }} • ${{ inputs.repo_name || github.event.repository.name }}
 
 on:
+  # TODO: Re-enable pull_request trigger when ready
+  # pull_request:
+  #   types: [opened, synchronize, reopened, labeled]
+  # pull_request_target:
+  #   types: [opened, synchronize, reopened, labeled]
+  # TODO: Remove workflow_dispatch trigger inputs when pull_request is re-enabled
   workflow_dispatch:
     inputs:
       repo_owner:
         description: 'Repository owner'
-        required: true
+        required: false
         type: string
       repo_name:
         description: 'Repository name'
-        required: true
+        required: false
         type: string
       pr_number:
         description: 'Pull request number'
-        required: true
+        required: false
         type: string
       head_sha:
         description: 'Head commit SHA that triggered the check suite'
-        required: true
+        required: false
         type: string
+      node-version:
+        description: 'Node.js version to use'
+        required: false
+        default: '20.x'
+        type: string
+      folio-npm-registry:
+        description: 'FOLIO NPM registry URL'
+        required: false
+        default: 'https://repository.folio.org/repository/npm-folio/'
+        type: string
+      yarn-lock-retention-days:
+        description: 'Number of days to retain the yarn.lock artifact'
+        required: false
+        default: 1
+        type: number
+      allow-lint-errors:
+        description: 'Whether to allow lint errors without failing the workflow'
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+  checks: write
+  statuses: write
+
+env:
+  PLATFORM_DESCRIPTOR_FILE: 'platform-descriptor.json'
+  GH_TOKEN: ${{ github.token }}
+  REPO_OWNER: ${{ inputs.repo_owner || github.event.pull_request.base.repo.owner.login || github.repository_owner }}
+  REPO_NAME: ${{ inputs.repo_name || github.event.pull_request.base.repo.name || github.event.repository.name }}
+  PR_NUMBER: ${{ inputs.pr_number || github.event.pull_request.number }}
+  HEAD_SHA: ${{ inputs.head_sha || github.event.pull_request.head.sha || github.sha }}
 
 jobs:
-  hello-world:
+  pre-check:
+    name: Pre-Check Configuration
+    runs-on: ubuntu-latest
+    outputs:
+      validation_status: ${{ steps.validate.outputs.status }}
+      validation_message: ${{ steps.validate.outputs.message }}
+      head_branch: ${{ steps.pr-info.outputs.head_ref }}
+      base_branch: ${{ steps.pr-info.outputs.base_ref }}
+    steps:
+      - name: Get Pull Request Information
+        id: pr-info
+        uses: folio-org/kitfox-github/.github/actions/get-pr-info@master
+        with:
+          repository: ${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}
+          pr_number: ${{ env.PR_NUMBER }}
+          github_token: ${{ env.GH_TOKEN }}
+
+      - name: Check Commit in PR
+        id: check-commit
+        if: steps.pr-info.outputs.pr_exists == 'true'
+        uses: folio-org/kitfox-github/.github/actions/is-commit-in-pr@master
+        with:
+          repository: ${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}
+          pr_number: ${{ env.PR_NUMBER }}
+          commit_sha: ${{ env.HEAD_SHA }}
+          github_token: ${{ env.GH_TOKEN }}
+
+      - name: Checkout Repository
+        if: steps.pr-info.outputs.pr_exists == 'true' && steps.check-commit.outputs.commit_found == 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}
+          ref: ${{ env.HEAD_SHA }}
+          token: ${{ env.GH_TOKEN }}
+
+      - name: Get Update Configuration
+        id: get-config
+        if: steps.pr-info.outputs.pr_exists == 'true' && steps.check-commit.outputs.commit_found == 'true'
+        uses: folio-org/kitfox-github/.github/actions/get-update-config@master
+        with:
+          repo: ${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}
+          branch: master
+          github_token: ${{ env.GH_TOKEN }}
+
+      - name: Validate Configuration
+        id: validate
+        if: steps.pr-info.outputs.pr_exists == 'true' && steps.check-commit.outputs.commit_found == 'true'
+        env:
+          TARGET_BRANCH: ${{ steps.pr-info.outputs.base_ref }}
+          PR_LABELS: ${{ steps.pr-info.outputs.labels }}
+          CONFIG_EXISTS: ${{ steps.get-config.outputs.config_exists }}
+          ENABLED: ${{ steps.get-config.outputs.enabled }}
+          RELEASE_BRANCHES: ${{ steps.get-config.outputs.release_branches }}
+          REQUIRED_LABELS: ${{ steps.get-config.outputs.pr_labels }}
+        run: |
+          echo "::notice::Validating configuration for branch $TARGET_BRANCH"
+
+          if [[ "$CONFIG_EXISTS" != "true" ]]; then
+            echo "status=skipped" >> "$GITHUB_OUTPUT"
+            echo "message=Release configuration file not found" >> "$GITHUB_OUTPUT"
+            echo "::warning::Configuration file not found: .github/update-config.yml"
+            exit 0
+          fi
+
+          if [[ "$ENABLED" != "true" ]]; then
+            echo "status=skipped" >> "$GITHUB_OUTPUT"
+            echo "message=Release scanning is disabled in configuration" >> "$GITHUB_OUTPUT"
+            echo "::notice::Release scanning is disabled"
+            exit 0
+          fi
+
+          BRANCH_EXISTS=$(echo "$RELEASE_BRANCHES" | jq -r ".[] | select(. == \"$TARGET_BRANCH\")" 2>/dev/null)
+          if [ -z "$BRANCH_EXISTS" ]; then
+            echo "status=skipped" >> "$GITHUB_OUTPUT"
+            echo "message=Target branch $TARGET_BRANCH is not configured for release scanning" >> "$GITHUB_OUTPUT"
+            echo "::notice::Branch $TARGET_BRANCH is not in release_branches configuration"
+            exit 0
+          fi
+
+          if [ -n "$REQUIRED_LABELS" ]; then
+            echo "::notice::Checking for required labels: $REQUIRED_LABELS"
+            PR_LABELS_ARRAY=$(echo "$PR_LABELS" | jq -r '.[]' 2>/dev/null || echo "")
+            MISSING_LABELS=""
+
+            # Convert comma-separated labels to array
+            IFS=',' read -ra LABEL_ARRAY <<< "$REQUIRED_LABELS"
+            for label in "${LABEL_ARRAY[@]}"; do
+              label=$(echo "$label" | xargs) # Trim whitespace
+              if ! echo "$PR_LABELS_ARRAY" | grep -q "^$label$"; then
+                MISSING_LABELS="${MISSING_LABELS}${MISSING_LABELS:+, }$label"
+              fi
+            done
+
+            if [ -n "$MISSING_LABELS" ]; then
+              echo "status=skipped" >> "$GITHUB_OUTPUT"
+              echo "message=PR is missing required labels: $MISSING_LABELS" >> "$GITHUB_OUTPUT"
+              echo "::notice::PR does not have required labels, skipping validation"
+              exit 0
+            fi
+          fi
+
+          echo "status=success" >> "$GITHUB_OUTPUT"
+          echo "message=Configuration validation passed" >> "$GITHUB_OUTPUT"
+          echo "::notice::Configuration validation successful"
+
+
+  # Replacing monolithic 'check' job with single-responsibility jobs
+  create-check-run:
+    name: Create and Initialize Check Run
+    needs: pre-check
+    if: needs.pre-check.outputs.validation_status == 'success'
+    runs-on: ubuntu-latest
+    outputs:
+      check_run_id: ${{ steps.create-check.outputs.check_run_id }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}
+          ref: ${{ env.HEAD_SHA }}
+          token: ${{ env.GH_TOKEN }}
+
+      - name: Upload Platform Descriptor
+        uses: actions/upload-artifact@v4
+        with:
+          name: platform-descriptor
+          path: ./${{ env.PLATFORM_DESCRIPTOR_FILE }}
+          retention-days: 1
+
+      - name: Create Check Run
+        id: create-check
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ env.GH_TOKEN }}
+          script: |
+            const { data: checkRun } = await github.rest.checks.create({
+              owner: '${{ env.REPO_OWNER }}',
+              repo: '${{ env.REPO_NAME }}',
+              name: 'eureka-ci/release-platform-validation',
+              head_sha: '${{ env.HEAD_SHA }}',
+              status: 'in_progress',
+              started_at: new Date().toISOString(),
+              output: {
+                title: 'Platform Verification',
+                summary: 'Starting platform verification for PR #${{ env.PR_NUMBER }}...'
+              },
+              details_url: `https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/pull/${{ env.PR_NUMBER }}`
+            });
+
+            console.log(`Created check run with ID: ${checkRun.id}`);
+            core.setOutput('check_run_id', checkRun.id);
+
+  validate-platform:
+    name: Validate Platform
+    needs: [pre-check, create-check-run]
+    if: needs.pre-check.outputs.validation_status == 'success'
+    runs-on: ubuntu-latest
+    outputs:
+      validation_passed: ${{ steps.validate.outputs.validation_passed }}
+      failure_reason: ${{ steps.validate.outputs.failure_reason || 'Check workflow logs for details' }}
+    steps:
+      - name: Update Check Run - Validating
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ env.GH_TOKEN }}
+          script: |
+            await github.rest.checks.update({
+              owner: '${{ env.REPO_OWNER }}',
+              repo: '${{ env.REPO_NAME }}',
+              check_run_id: ${{ needs.create-check-run.outputs.check_run_id }},
+              status: 'in_progress',
+              output: {
+                title: 'Platform Verification',
+                summary: 'Step 1/2: Validating platform descriptors and dependencies...'
+              }
+            });
+
+      - name: Validate Platform
+        id: validate
+        uses: folio-org/platform-lsp/.github/actions/validate-platform@master
+        with:
+          platform_descriptor_artifact_name: 'platform-descriptor'
+          far_url: ${{ vars.FAR_URL }}
+
+  build-stripes:
+    name: Compile Stripes UI
+    needs: [pre-check, create-check-run, validate-platform]
+    if: needs.pre-check.outputs.validation_status == 'success'
     runs-on: ubuntu-latest
     steps:
-      - name: Hello world step
-        run: echo "Hello, world!"
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}
+          ref: ${{ env.HEAD_SHA }}
+          token: ${{ env.GH_TOKEN }}
+
+      - name: Update Check Run - Compiling stripes (UI)
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ env.GH_TOKEN }}
+          script: |
+            await github.rest.checks.update({
+              owner: '${{ env.REPO_OWNER }}',
+              repo: '${{ env.REPO_NAME }}',
+              check_run_id: ${{ needs.create-check-run.outputs.check_run_id }},
+              status: 'in_progress',
+              output: {
+                title: 'Stripes compilation Verification',
+                summary: 'Step 2/2: Compiling stripes (UI)...'
+              }
+            });
+
+      - name: Install Node ${{ inputs.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          check-latest: true
+          always-auth: true
+
+      - name: Set FOLIO NPM registry
+        run: yarn config set @folio:registry ${{ inputs.folio-npm-registry }}
+
+      - name: Check if lockfile should be frozen
+        id: check-yarn-lock
+        run: echo install-args=''
+        # TODO: Re-enable frozen lockfile check when yarn.lock is stable
+        # run: echo install-args=$(test -f yarn.lock && echo --frozen-lockfile) | tee -a $GITHUB_OUTPUT
+
+      - name: Install dependencies
+        run: yarn install ${{ steps.check-yarn-lock.outputs.install-args }} --ignore-scripts --non-interactive
+
+      - name: List installed FOLIO package versions
+        run: yarn list --pattern @folio
+
+      - name: Publish yarn.lock
+        uses: actions/upload-artifact@v4
+        with:
+          name: yarn.lock
+          path: yarn.lock
+          retention-days: ${{ inputs.yarn-lock-retention-days }}
+
+      # TODO: Re-enable linting when platform is stable
+      # - name: Lint
+      #   run: yarn lint
+      #   continue-on-error: ${{ inputs.allow-lint-errors }}
+
+  finalize-check-run:
+    name: Finalize Check Run
+    needs: [pre-check, create-check-run, validate-platform, build-stripes]
+    if: always() && needs.pre-check.outputs.validation_status == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Finalize Check Run
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ env.GH_TOKEN }}
+          script: |
+            let conclusion, title, summary;
+            const validationPassed = '${{ needs.validate-platform.outputs.validation_passed }}';
+            const failureReason = '${{ needs.validate-platform.outputs.failure_reason }}';
+            const stripesBuildResult = '${{ needs.build-stripes.result }}';
+
+            if (validationPassed === 'false') {
+              conclusion = 'failure';
+              title = 'Verification Failed';
+              summary = failureReason || 'Platform verification failed. Check the logs for details.';
+            } else if (validationPassed === 'true' && stripesBuildResult === 'success') {
+              conclusion = 'success';
+              title = 'All Checks Passed';
+              summary = 'Platform verification and Stripes compilation completed successfully.';
+            } else if (validationPassed === 'true' && stripesBuildResult === 'failure') {
+              conclusion = 'failure';
+              title = 'Verification Failed';
+              summary = 'Stripes compilation failed. Check build logs for details.';
+            } else if (validationPassed === 'true' && stripesBuildResult === 'cancelled') {
+              conclusion = 'neutral';
+              title = 'Verification Incomplete';
+              summary = 'Stripes compilation was cancelled.';
+            } else {
+              conclusion = 'neutral';
+              title = 'Check Incomplete';
+              summary = 'Some checks could not be completed';
+            }
+
+            const text = `
+            ## Platform Verification Results
+
+            **Branch:** \`${{ needs.pre-check.outputs.head_branch }}\`
+            **Commit:** \`${{ env.HEAD_SHA }}\`
+            **Pull Request:** [#${{ env.PR_NUMBER }}](https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/pull/${{ env.PR_NUMBER }})
+
+            ### Configuration Check
+            - **Status:** ✅ ${{ needs.pre-check.outputs.validation_status || 'unknown' }}
+            - **Message:** ${{ needs.pre-check.outputs.validation_message || 'No message' }}
+
+            ### Platform Validation
+            - **Status:** ${validationPassed === 'true' ? '✅ Passed' : validationPassed === 'false' ? '❌ Failed' : '⏭️ Unknown'}
+            ${validationPassed === 'false' ? '- **Failure Reason:** ' + failureReason : ''}
+
+            ### Stripes Compilation
+            - **Status:** ${stripesBuildResult === 'success' ? '✅ Success' : stripesBuildResult === 'failure' ? '❌ Failed' : stripesBuildResult === 'skipped' ? '⏭️ Skipped' : stripesBuildResult === 'cancelled' ? '⚠️ Cancelled' : '⏭️ ' + stripesBuildResult}
+            - **Node Version:** ${{ inputs.node-version }}
+            - **Registry:** ${{ inputs.folio-npm-registry }}
+            - **Yarn Lock Artifact:** Uploaded (retention: ${{ inputs.yarn-lock-retention-days }} day(s))
+            ${stripesBuildResult === 'failure' ? '- **Hint:** Review yarn install and dependency resolution logs.' : ''}
+            ${stripesBuildResult === 'cancelled' ? '- **Hint:** Job was cancelled before completion.' : ''}
+
+            ### Workflow Run
+            - **Run ID:** ${{ github.run_id }}
+            - **Run Number:** ${{ github.run_number }}
+            - **Run URL:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            `;
+
+            const updateParams = {
+              owner: '${{ env.REPO_OWNER }}',
+              repo: '${{ env.REPO_NAME }}',
+              check_run_id: ${{ needs.create-check-run.outputs.check_run_id }},
+              status: 'completed',
+              conclusion: conclusion,
+              completed_at: new Date().toISOString(),
+              output: {
+                title: title,
+                summary: summary,
+                text: text
+              },
+              details_url: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+            };
+
+            if (validationPassed === 'false' || (validationPassed === 'true' && stripesBuildResult === 'failure')) {
+              updateParams.actions = [{
+                label: 'Re-run Checks',
+                description: 'Re-run platform validation',
+                identifier: 're-run-validation'
+              }];
+            }
+
+            await github.rest.checks.update(updateParams);
+
+
+  notify:
+    name: Send Notifications
+    needs: [pre-check, validate-platform, build-stripes, finalize-check-run]
+    if: always() && !cancelled() && needs.pre-check.outputs.validation_status == 'success'
+    runs-on: ubuntu-latest
+    outputs:
+      team_channel: ${{ steps.get-vars.outputs.team_channel }}
+    env:
+      TITLE_TEXT: "${{ inputs.repo_name || github.event.pull_request.base.repo.name || github.event.repository.name }} release update check ${{ (needs.validate-platform.outputs.validation_passed == 'true' && needs.build-stripes.result == 'success') && 'passed' || 'failed' }}"
+      TITLE_BLOCK: |
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*${{ inputs.repo_name || github.event.pull_request.base.repo.name || github.event.repository.name }} release update check ${{ (needs.validate-platform.outputs.validation_passed == 'true' && needs.build-stripes.result == 'success') && 'passed' || 'failed' }} <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+          }
+        }
+      ATTACHMENT: |
+        {
+          "color": "${{ (needs.validate-platform.outputs.validation_passed == 'true' && needs.build-stripes.result == 'success') && 'good' || 'danger' }}",
+          "fields": [
+            {
+              "title": "Repository",
+              "value": "${{ inputs.repo_owner || github.event.pull_request.base.repo.owner.login || github.repository_owner }}/${{ inputs.repo_name || github.event.pull_request.base.repo.name || github.event.repository.name }}",
+              "short": true
+            },
+            {
+              "title": "Release branch",
+              "value": "${{ needs.pre-check.outputs.base_branch }}",
+              "short": true
+            },
+            {
+              "title": "Update branch",
+              "value": "${{ needs.pre-check.outputs.head_branch }}",
+              "short": true
+            },
+            {
+              "title": "PR Number",
+              "value": "<https://github.com/${{ inputs.repo_owner || github.event.pull_request.base.repo.owner.login || github.repository_owner }}/${{ inputs.repo_name || github.event.pull_request.base.repo.name || github.event.repository.name }}/pull/${{ inputs.pr_number || github.event.pull_request.number }}|#${{ inputs.pr_number || github.event.pull_request.number }}>",
+              "short": true
+            },
+            {
+              "title": "Commit",
+              "value": "<https://github.com/${{ inputs.repo_owner || github.event.pull_request.base.repo.owner.login || github.repository_owner }}/${{ inputs.repo_name || github.event.pull_request.base.repo.name || github.event.repository.name }}/commit/${{ inputs.head_sha || github.event.pull_request.head.sha || github.sha }}|${{ inputs.head_sha || github.event.pull_request.head.sha || github.sha }}>",
+              "short": true
+            }${{ (needs.validate-platform.outputs.validation_passed != 'true' || needs.build-stripes.result != 'success') && format(',\n            {{\n              "title": "Failure Reason",\n              "value": "{0}",\n              "short": false\n            }}', needs.validate-platform.outputs.failure_reason || 'Check workflow logs for details') || '' }}
+          ],
+          "footer": "Eureka CI/CD"
+        }
+    steps:
+      - name: Get Repository Variables
+        id: get-vars
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ env.GH_TOKEN }}
+          script: |
+            try {
+              const { data: variable } = await github.rest.actions.getRepoVariable({
+                owner: '${{ env.REPO_OWNER }}',
+                repo: '${{ env.REPO_NAME }}',
+                name: 'SLACK_NOTIF_CHANNEL'
+              });
+              console.log(`Found SLACK_NOTIF_CHANNEL: ${variable.value}`);
+              core.setOutput('team_channel', variable.value);
+            } catch (error) {
+              console.log(`SLACK_NOTIF_CHANNEL not found or not accessible: ${error.message}`);
+              core.setOutput('team_channel', '');
+            }
+      - name: Send to General Channel
+        if: vars.GENERAL_SLACK_NOTIF_CHANNEL != ''
+        continue-on-error: true
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+          errors: false
+          payload: |
+            {
+              "channel": "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}",
+              "text": "${{ env.TITLE_TEXT }}",
+              "blocks": [
+                ${{ env.TITLE_BLOCK }}
+              ],
+              "attachments": [
+                ${{ env.ATTACHMENT }}
+              ]
+            }
+
+  summarize:
+    name: Workflow Summary
+    needs: [pre-check, validate-platform, build-stripes, notify]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Workflow Summary
+        env:
+          PRE_CHECK_RESULT: ${{ needs.pre-check.result }}
+          VALIDATION_STATUS: ${{ needs.pre-check.outputs.validation_status }}
+          VALIDATION_MESSAGE: ${{ needs.pre-check.outputs.validation_message }}
+          VALIDATE_PLATFORM_RESULT: ${{ needs.validate-platform.result }}
+          VALIDATION_PASSED: ${{ needs.validate-platform.outputs.validation_passed }}
+          FAILURE_REASON: ${{ needs.validate-platform.outputs.failure_reason }}
+          BUILD_STRIPES_RESULT: ${{ needs.build-stripes.result }}
+          HEAD_BRANCH: ${{ needs.pre-check.outputs.head_branch }}
+          BASE_BRANCH: ${{ needs.pre-check.outputs.base_branch }}
+        run: |
+          {
+            echo "### 🎯 Release PR Check Summary"
+            echo ""
+            echo "**Repository:** \`${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}\`"
+            echo "**PR:** [#${{ env.PR_NUMBER }}](https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/pull/${{ env.PR_NUMBER }})"
+            echo "**Commit:** [\`${{ env.HEAD_SHA }}\`](https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/commit/${{ env.HEAD_SHA }})"
+            echo ""
+
+            echo "### 📋 Pre-Check Status"
+            echo ""
+            if [[ "$PRE_CHECK_RESULT" == "success" ]]; then
+              if [[ "$VALIDATION_STATUS" == "success" ]]; then
+                echo "✅ **Pre-Check:** Passed"
+                echo "- **Base Branch:** $BASE_BRANCH"
+                echo "- **Head Branch:** $HEAD_BRANCH"
+                echo "- **Message:** $VALIDATION_MESSAGE"
+              elif [[ "$VALIDATION_STATUS" == "skipped" ]]; then
+                echo "⏭️ **Pre-Check:** Skipped"
+                echo "- **Reason:** $VALIDATION_MESSAGE"
+              elif [[ -z "$VALIDATION_STATUS" ]]; then
+                echo "⏭️ **Pre-Check:** Validation step was skipped"
+                echo "- This typically means the PR was not found or the commit is not in the PR"
+              else
+                echo "⚠️ **Pre-Check:** Unknown status ($VALIDATION_STATUS)"
+              fi
+            elif [[ "$PRE_CHECK_RESULT" == "failure" ]]; then
+              echo "❌ **Pre-Check:** Failed"
+              echo "- **Message:** $VALIDATION_MESSAGE"
+            elif [[ "$PRE_CHECK_RESULT" == "cancelled" ]]; then
+              echo "⚠️ **Pre-Check:** Cancelled"
+            else
+              echo "⏭️ **Pre-Check:** Skipped"
+            fi
+
+            echo ""
+            echo "### 🔍 Platform Validation Status"
+            echo ""
+
+            if [[ "$VALIDATION_STATUS" != "success" ]]; then
+              echo "ℹ️ Platform validation was skipped due to pre-check status"
+            elif [[ "$VALIDATE_PLATFORM_RESULT" == "success" ]]; then
+              if [[ "$VALIDATION_PASSED" == "true" ]]; then
+                echo "✅ **Platform Validation:** Passed"
+                echo "- All platform descriptors and dependencies validated successfully"
+              else
+                echo "❌ **Platform Validation:** Failed"
+                if [[ -n "$FAILURE_REASON" ]]; then
+                  echo "- **Failure Reason:** $FAILURE_REASON"
+                fi
+              fi
+            elif [[ "$VALIDATE_PLATFORM_RESULT" == "failure" ]]; then
+              echo "❌ **Platform Validation:** Failed"
+              if [[ -n "$FAILURE_REASON" ]]; then
+                echo "- **Failure Reason:** $FAILURE_REASON"
+              else
+                echo "- Check the workflow logs for details"
+              fi
+            elif [[ "$VALIDATE_PLATFORM_RESULT" == "cancelled" ]]; then
+              echo "⚠️ **Platform Validation:** Cancelled"
+            else
+              echo "⏭️ **Platform Validation:** Skipped"
+            fi
+
+            echo ""
+            echo "### 🏗️ Stripes Build Status"
+            echo ""
+
+            if [[ "$VALIDATION_STATUS" != "success" ]]; then
+              echo "ℹ️ Stripes build was skipped due to pre-check status"
+            elif [[ "$BUILD_STRIPES_RESULT" == "success" ]]; then
+              echo "✅ **Stripes Build:** Passed"
+              echo "- **Node Version:** ${{ inputs.node-version }}"
+              echo "- **Registry:** ${{ inputs.folio-npm-registry }}"
+              echo "- **Yarn Lock:** Uploaded (retention: ${{ inputs.yarn-lock-retention-days }} day(s))"
+            elif [[ "$BUILD_STRIPES_RESULT" == "failure" ]]; then
+              echo "❌ **Stripes Build:** Failed"
+              echo "- Check build logs for dependency resolution or compilation errors"
+            elif [[ "$BUILD_STRIPES_RESULT" == "cancelled" ]]; then
+              echo "⚠️ **Stripes Build:** Cancelled"
+            else
+              echo "⏭️ **Stripes Build:** Skipped"
+            fi
+
+            echo ""
+            echo "### 📨 Notification Status"
+            echo ""
+
+            if [[ -n "${{ needs.notify.outputs.team_channel }}" ]]; then
+              if [[ "${{ needs.notify.result }}" == "success" ]]; then
+                echo "✅ **Team Channel** (\`${{ needs.notify.outputs.team_channel }}\`): Sent"
+              elif [[ "${{ needs.notify.result }}" == "failure" ]]; then
+                echo "⚠️ **Team Channel** (\`${{ needs.notify.outputs.team_channel }}\`): Failed"
+              else
+                echo "ℹ️ **Team Channel** (\`${{ needs.notify.outputs.team_channel }}\`): Skipped"
+              fi
+            else
+              echo "ℹ️ **Team Channel:** Not configured"
+            fi
+
+            echo ""
+
+            if [[ -n "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}" ]]; then
+              if [[ "${{ needs.notify.result }}" == "success" ]]; then
+                echo "✅ **General Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Sent"
+              elif [[ "${{ needs.notify.result }}" == "failure" ]]; then
+                echo "⚠️ **General Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Failed"
+              else
+                echo "ℹ️ **General Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Skipped"
+              fi
+            else
+              echo "ℹ️ **General Channel:** Not configured"
+            fi
+
+            echo ""
+            echo "---"
+            echo ""
+            echo "**Workflow Run:** [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+          } >> $GITHUB_STEP_SUMMARY
