@@ -34,3 +34,13 @@ claude*
 .svn/
 .git/
 .hg/
+
+# Ignore .env files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Ignore copilot instructions file
+copilot-*

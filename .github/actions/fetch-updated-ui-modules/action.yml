@@ -1,0 +1,86 @@
+name: 'Fetch Updated UI Modules'
+description: 'Fetch UI modules from FOLIO application descriptors using FAR API'
+author: 'FOLIO'
+branding:
+  icon: 'download'
+  color: 'blue'
+
+inputs:
+  applications:
+    description: 'Applications data as JSON string (from updated applications)'
+    required: true
+  far-url:
+    description: 'FAR API base URL'
+    required: false
+    default: 'https://far.ci.folio.org'
+
+outputs:
+  ui-modules:
+    description: 'Extracted UI modules as JSON array'
+    value: ${{ steps.fetch-ui-modules.outputs.ui-modules }}
+  ui-modules-count:
+    description: 'Number of UI modules found'
+    value: ${{ steps.fetch-ui-modules.outputs.ui-modules-count }}
+
+# permissions: read-only default is sufficient; action only performs outbound HTTPS GETs.
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Fetch UI modules
+      id: fetch-ui-modules
+      shell: bash
+      env:
+        APPLICATIONS_DATA: ${{ inputs.applications }}
+        FAR_URL: ${{ inputs.far-url }}
+      run: |
+        set -euo pipefail
+
+        echo "::notice::Fetching UI modules from updated applications"
+
+        TMP_OUTPUT_FILE=$(mktemp -t ui-modules-output.XXXXX.json)
+
+        cd "${{ github.action_path }}"
+        python3 fetch-updated-ui-modules.py \
+          --api-url "$FAR_URL" \
+          --modules "$APPLICATIONS_DATA" \
+          --output-file "$TMP_OUTPUT_FILE"
+
+        if [[ ! -f "$TMP_OUTPUT_FILE" ]]; then
+          echo "::error::Output file was not created by the Python script"
+          exit 1
+        fi
+
+        if ! UI_MODULES_JSON=$(jq -r '.ui_modules' "$TMP_OUTPUT_FILE" 2>/dev/null); then
+          echo "::error::Failed to read ui_modules from output file"
+          cat "$TMP_OUTPUT_FILE"
+          exit 1
+        fi
+
+        if ! UI_MODULES_COUNT=$(jq -r '.ui_modules_count' "$TMP_OUTPUT_FILE" 2>/dev/null); then
+          echo "::error::Failed to read ui_modules_count from output file"
+          cat "$TMP_OUTPUT_FILE"
+          exit 1
+        fi
+
+        if [[ "$UI_MODULES_JSON" == "null" ]]; then
+          UI_MODULES_JSON="[]"
+          UI_MODULES_COUNT="0"
+        fi
+
+        {
+          echo "ui-modules<<EOF"
+          echo "$UI_MODULES_JSON" | jq -c '.'
+          echo "EOF"
+        } >> "$GITHUB_OUTPUT"
+
+        echo "ui-modules-count=$UI_MODULES_COUNT" >> "$GITHUB_OUTPUT"
+
+        echo "::notice::Successfully found $UI_MODULES_COUNT UI modules"
+
+        rm -f "$TMP_OUTPUT_FILE"
