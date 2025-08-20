@@ -19,9 +19,6 @@ on:
         type: boolean
         default: false
 
-env:
-  DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
-
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: false
@@ -90,20 +87,20 @@ jobs:
         application: ${{ fromJson(needs.get-applications.outputs.applications) }}
       fail-fast: false
       max-parallel: 10
-    uses: folio-org/kitfox-github/.github/workflows/app-update.yml@RANCHER-2321-test
+    uses: folio-org/kitfox-github/.github/workflows/app-update.yml@RANCHER-2321-test # TODO: Switch back to master before merging
     with:
       app_name: ${{ matrix.application }}
       repo: folio-org/${{ matrix.application }}
       workflow_run_number: ${{ github.run_number }}
-      descriptor_build_offset: ${{ github.event_name == 'workflow_dispatch' && inputs.descriptor_build_offset || '100100000000000' }}
-      rely_on_FAR: ${{ github.event_name == 'workflow_dispatch' && inputs.rely_on_FAR || false }}
-      dry_run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+      descriptor_build_offset: ${{ inputs.descriptor_build_offset }}
+      rely_on_FAR: ${{ inputs.rely_on_FAR }}
+      dry_run: ${{ inputs.dry_run }}
 
   collect-results:
     name: Collect Application Results
     needs: [get-applications, update-applications]
     runs-on: ubuntu-latest
-    if: always() && needs.update-applications.result != 'skipped' && !(github.event_name == 'workflow_dispatch' && inputs.dry_run)
+    if: always() && needs.update-applications.result != 'skipped' && !inputs.dry_run
     outputs:
       failed_apps: ${{ steps.gather-failures.outputs.failed_apps }}
       failed_apps_reason: ${{ steps.gather-failures.outputs.failed_apps_reason }}
@@ -146,7 +143,7 @@ jobs:
     name: Slack Notification
     runs-on: ubuntu-latest
     needs: [get-applications, update-applications, collect-results]
-    if: always() && !(github.event_name == 'workflow_dispatch' && inputs.dry_run)
+    if: always() && !inputs.dry_run
     env:
       IS_SUCCESS: ${{ needs.update-applications.result == 'success' && 'true' || 'false' }}
     steps:
