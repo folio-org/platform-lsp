@@ -73,6 +73,7 @@ jobs:
           echo "application_count=$existing_count" >> "$GITHUB_OUTPUT"
 
       - name: Upload Platform Descriptor
+        if: ! inputs.rely_on_FAR
         uses: actions/upload-artifact@v4
         with:
           name: platform-descriptor
