@@ -1,9 +1,6 @@
 name: Update Snapshot Applications Orchestrator
 
 on:
-  schedule:
-    - cron: "*/20 * * * *"
-
   workflow_dispatch:
     inputs:
       descriptor_build_offset:
