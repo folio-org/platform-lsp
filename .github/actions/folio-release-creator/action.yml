@@ -1,0 +1,138 @@
+name: 'FOLIO Release Artifact Creator'
+description: 'Automatically packages and uploads complete platform release artifacts'
+author: 'FOLIO'
+
+inputs:
+  release_tag:
+    description: 'Release tag to create artifacts for'
+    required: true
+  github_token:
+    description: 'GitHub token for uploading artifacts'
+    required: true
+  config_path:
+    description: 'Path to release configuration file'
+    required: false
+    default: '.github/release-package-config.yml'
+  descriptor_path:
+    description: 'Path to platform descriptor file'
+    required: false
+    default: 'platform-descriptor.json'
+  far_url:
+    description: 'Base URL for FAR API'
+    required: false
+    default: 'https://far.ci.folio.org'
+
+outputs:
+  archive_path:
+    description: 'Path to the created archive'
+    value: ${{ steps.create-archive.outputs.archive_path }}
+  archive_size:
+    description: 'Size of the created archive in bytes'
+    value: ${{ steps.create-archive.outputs.archive_size }}
+  sha256_checksum:
+    description: 'SHA256 checksum of the archive'
+    value: ${{ steps.create-archive.outputs.sha256_checksum }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install dependencies
+      shell: bash
+      run: |
+        echo "::group::Installing dependencies"
+        set -euo pipefail
+        
+        # Check required tools in parallel
+        missing_tools=()
+        
+        command -v python3 >/dev/null || missing_tools+=("python3")
+        command -v tar >/dev/null || missing_tools+=("tar")
+        
+        if [[ ${#missing_tools[@]} -gt 0 ]]; then
+          echo "::error::Required tools missing: ${missing_tools[*]}"
+          exit 1
+        fi
+        
+        # Install missing optional tools efficiently
+        tools_to_install=()
+        command -v jq >/dev/null || tools_to_install+=("jq")
+        
+        if [[ ${#tools_to_install[@]} -gt 0 ]]; then
+          echo "Installing missing tools: ${tools_to_install[*]}"
+          sudo apt-get update -qq && sudo apt-get install -y "${tools_to_install[@]}"
+        fi
+        
+        # Install yq if not present (single operation)
+        if ! command -v yq >/dev/null; then
+          echo "Installing yq..."
+          sudo wget -q -O /usr/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/bin/yq
+        fi
+        
+        # Install Python dependencies if requirements file exists
+        requirements_file="${{ github.action_path }}/requirements.txt"
+        if [[ -f "$requirements_file" ]]; then
+          python3 -m pip install --user -q -r "$requirements_file"
+        fi
+        
+        echo "✅ All dependencies installed"
+        echo "::endgroup::"
+
+    - name: Validate required files
+      shell: bash
+      run: |
+        echo "::group::Validating required files"
+        set -euo pipefail
+
+        # Make scripts executable in one operation
+        action_path="${{ github.action_path }}"
+        chmod +x "$action_path"/{validate-files,collect-files,create-archive}.sh
+
+        # Run validation with error handling
+        if ! "$action_path/validate-files.sh" "${{ inputs.config_path }}"; then
+          echo "::error::File validation failed"
+          exit 1
+        fi
+        echo "::endgroup::"
+
+    - name: Collect application descriptors
+      shell: bash
+      run: |
+        echo "::group::Collecting application descriptors from FAR"
+        set -euo pipefail
+        
+        action_path="${{ github.action_path }}"
+        python3 "$action_path/collect_descriptors.py" \
+          "${{ inputs.descriptor_path }}" \
+          "${{ inputs.far_url }}" || {
+          echo "::error::Failed to collect descriptors"
+          exit 1
+        }
+        echo "✅ Successfully collected descriptors"
+        echo "::endgroup::"
+
+    - name: Collect platform files and create archive
+      id: create-archive
+      shell: bash
+      run: |
+        echo "::group::Collecting platform files and creating archive"
+        set -euo pipefail
+        
+        action_path="${{ github.action_path }}"
+        config_path="${{ inputs.config_path }}"
+        release_tag="${{ inputs.release_tag }}"
+
+        # Collect platform files
+        "$action_path/collect-files.sh" "$config_path" || {
+          echo "::error::Failed to collect platform files"
+          exit 1
+        }
+        
+        # Create archive
+        "$action_path/create-archive.sh" "$release_tag" "$config_path" || {
+          echo "::error::Failed to create release archive"
+          exit 1
+        }
+        
+        echo "✅ Platform files collected and archive created successfully"
+        echo "::endgroup::"

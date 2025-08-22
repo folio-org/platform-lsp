@@ -1,0 +1,41 @@
+# Node modules (will be reinstalled in image)
+ModuleDescriptors
+node_modules
+npm-debug.log*
+stripes.config.js.local
+
+# Local environment files
+.env
+.env.local
+.env.*.local
+
+# VCS
+.git
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+
+# OS / Editor
+.DS_Store
+.idea
+.vscode
+*.swp
+*.swo
+
+# Build artifacts that are not needed in context
+/build
+/output
+/dist
+
+# Test and coverage artifacts
+coverage
+__tests__/
+*.spec.js
+*.test.js
+
+# Misc
+*.tgz
+*.bak
+*.tmp
