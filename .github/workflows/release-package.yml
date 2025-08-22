@@ -1,0 +1,175 @@
+# This workflow creates and uploads FOLIO platform release artifacts
+
+name: Release Package Workflow
+run-name: 'Release Package - ${{ github.event.inputs.release_tag || github.event.release.tag_name || github.ref_name }}'
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag to create artifacts for'
+        required: true
+        type: string
+      far_url:
+        description: 'FAR API base URL'
+        required: false
+        default: 'https://far.ci.folio.org'
+        type: string
+
+# Prevent concurrent releases
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  # Consolidate all environment variables
+  FAR_URL: ${{ github.event.inputs.far_url || 'https://far.ci.folio.org' }}
+  CONFIG_PATH: '.github/release-package-config.yml'
+  DESCRIPTOR_PATH: 'platform-descriptor.json'
+  SLACK_NOTIFICATION_CHANNEL: '#folio-rancher-debug-notifications'
+  RELEASE_TAG: ${{ github.event.inputs.release_tag || github.event.release.tag_name }}
+  # GitHub token used across multiple steps
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  validate-and-prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Checkout repository
+        uses: 'actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11'
+
+      - name: Validate configuration and release tag
+        run: |
+          # Validate configuration file exists
+          if [[ ! -f "$CONFIG_PATH" ]]; then
+            echo "::error::Release configuration file not found: $CONFIG_PATH"
+            exit 1
+          fi
+          
+          # Validate release tag is set
+          if [[ -z "$RELEASE_TAG" ]]; then
+            echo "::error::Release tag is required but not provided"
+            exit 1
+          fi
+          
+          echo "✅ Configuration file found: $CONFIG_PATH"
+          echo "✅ Release tag validated: $RELEASE_TAG"
+
+  create-release-artifact:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: validate-and-prepare
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - name: Checkout repository
+        uses: 'actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11'
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/bin/yq
+            ~/.local/lib/python*/site-packages
+          key: folio-release-deps-${{ runner.os }}-${{ hashFiles('.github/actions/folio-release-creator/requirements.txt', '.github/release-package-config.yml') }}
+          restore-keys: |
+            folio-release-deps-${{ runner.os }}-
+
+      - name: Create release artifact
+        id: create-artifact
+        uses: ./.github/actions/folio-release-creator
+        with:
+          release_tag: ${{ env.RELEASE_TAG }}
+          config_path: ${{ env.CONFIG_PATH }}
+          descriptor_path: ${{ env.DESCRIPTOR_PATH }}
+          far_url: ${{ env.FAR_URL }}
+          github_token: ${{ env.GITHUB_TOKEN }}
+
+      - name: Upload and verify release artifacts
+        shell: bash
+        run: |
+          echo "::group::Uploading archive to release"
+          
+          # Set variables once
+          archive_path="${{ steps.create-artifact.outputs.archive_path }}"
+          archive_name=$(basename "$archive_path")
+          checksum_file="${archive_path}.sha256"
+          archive_size="${{ steps.create-artifact.outputs.archive_size }}"
+          sha256_checksum="${{ steps.create-artifact.outputs.sha256_checksum }}"
+
+          # Create checksum file
+          echo "${sha256_checksum}  ${archive_name}" > "$checksum_file"
+
+          # Upload archive and checksum to release
+          gh release upload "$RELEASE_TAG" \
+            "$archive_path" \
+            "$checksum_file" \
+            --clobber
+
+          echo "✅ Uploaded $archive_name and checksum to release $RELEASE_TAG"
+          echo "Archive size: ${archive_size} bytes"
+          echo "SHA256: ${sha256_checksum}"
+          echo "::endgroup::"
+          
+          echo "::group::Verifying upload"
+          # Verify the artifact was uploaded successfully
+          if ! gh release view "$RELEASE_TAG" --json assets --jq '.assets[].name' | grep -q "$archive_name"; then
+            echo "::error::Artifact '$archive_name' not found in release assets"
+            exit 1
+          fi
+          
+          echo "✅ Artifact successfully verified in release"
+          echo "🎉 Release artifact created and uploaded successfully!"
+          echo "::endgroup::"
+
+      - name: Post summary
+        if: always()
+        run: |
+          # Generate summary in a single operation
+          {
+            echo "## 🎯 FOLIO Release Artifact Creator Summary"
+            echo ""
+            echo "### Release Information"
+            echo "- **Tag**: $RELEASE_TAG"
+            echo "- **Workflow**: ${{ github.workflow }}"
+            echo "- **Run ID**: ${{ github.run_id }}"
+            echo ""
+            
+            if [[ "${{ steps.create-artifact.outcome }}" == "success" ]]; then
+              archive_size="${{ steps.create-artifact.outputs.archive_size }}"
+              archive_size_mb=$((archive_size / 1024 / 1024))
+              archive_size_kb=$((archive_size / 1024))
+              
+              echo "### ✅ Artifact Creation Successful"
+              echo "- **Archive**: $(basename '${{ steps.create-artifact.outputs.archive_path }}')"
+              
+              if [[ $archive_size_mb -lt 1 ]]; then
+                echo "- **Size**: ${archive_size_kb}KB"
+              else
+                echo "- **Size**: ${archive_size_mb}MB"
+              fi
+              
+              echo "- **SHA256**: \`${{ steps.create-artifact.outputs.sha256_checksum }}\`"
+            else
+              echo "### ❌ Artifact Creation Failed"
+              echo "Check the job logs for detailed error information."
+            fi
+          } >> $GITHUB_STEP_SUMMARY
+
+      - name: Send Slack notification
+        if: always() && env.SLACK_NOTIFICATION_CHANNEL != ''
+        uses: ./.github/actions/slack-notification
+        with:
+          operation_status: ${{ job.status }}
+          operation_type: 'Platform Release Artifact'
+          release_tag: ${{ env.RELEASE_TAG }}
+          archive_size: ${{ steps.create-artifact.outputs.archive_size || '' }}
+          sha256_checksum: ${{ steps.create-artifact.outputs.sha256_checksum || '' }}
+          additional_info: ${{ job.status == 'failure' && 'Check workflow logs for detailed error information and retry the release process.' || '' }}
+          workflow_run_id: ${{ github.run_id }}
+          slack_channel: ${{ env.SLACK_NOTIFICATION_CHANNEL }}
+          slack_token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}

@@ -1,0 +1,157 @@
+name: 'FOLIO Platform Slack Notification'
+description: 'Send standardized Slack notifications for FOLIO platform operations'
+author: 'FOLIO'
+
+inputs:
+  operation_status:
+    description: 'Operation result (success, failure, cancelled)'
+    required: true
+  operation_type:
+    description: 'Type of operation performed'
+    required: false
+    default: 'Platform Release'
+  release_tag:
+    description: 'Release tag'
+    required: true
+  archive_size:
+    description: 'Archive size in bytes'
+    required: false
+  sha256_checksum:
+    description: 'SHA256 checksum of archive'
+    required: false
+  additional_info:
+    description: 'Additional context information'
+    required: false
+    default: ''
+  workflow_run_id:
+    description: 'GitHub workflow run ID'
+    required: true
+  slack_channel:
+    description: 'Slack channel to send notification to'
+    required: true
+  slack_token:
+    description: 'Slack bot token'
+    required: true
+
+outputs:
+  message_sent:
+    description: 'Whether the message was sent successfully'
+    value: ${{ steps.send-notification.outputs.message_sent }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Prepare notification data
+      id: prepare-data
+      shell: bash
+      run: |
+        set -euo pipefail
+        
+        # Determine colors and emojis based on status
+        case "${{ inputs.operation_status }}" in
+          "success")
+            echo "color=good" >> "$GITHUB_OUTPUT"
+            echo "emoji=✅" >> "$GITHUB_OUTPUT"
+            echo "status_text=SUCCESS" >> "$GITHUB_OUTPUT"
+            ;;
+          "failure")
+            echo "color=danger" >> "$GITHUB_OUTPUT"
+            echo "emoji=❌" >> "$GITHUB_OUTPUT"
+            echo "status_text=FAILED" >> "$GITHUB_OUTPUT"
+            ;;
+          "cancelled")
+            echo "color=warning" >> "$GITHUB_OUTPUT"
+            echo "emoji=⚠️" >> "$GITHUB_OUTPUT"
+            echo "status_text=CANCELLED" >> "$GITHUB_OUTPUT"
+            ;;
+          *)
+            echo "color=good" >> "$GITHUB_OUTPUT"
+            echo "emoji=ℹ️" >> "$GITHUB_OUTPUT"
+            echo "status_text=COMPLETED" >> "$GITHUB_OUTPUT"
+            ;;
+        esac
+        
+        # Format archive size
+        if [[ -n "${{ inputs.archive_size }}" && "${{ inputs.archive_size }}" != "N/A" ]]; then
+          archive_size_mb=$(( ${{ inputs.archive_size }} / 1024 / 1024 ))
+          archive_size_kb=$(( ${{ inputs.archive_size }} / 1024 ))
+          
+          # Show KB for archives smaller than 1MB, MB otherwise
+          if [[ $archive_size_mb -lt 1 ]]; then
+            echo "archive_size_display=${archive_size_kb}KB" >> "$GITHUB_OUTPUT"
+          else
+            echo "archive_size_display=${archive_size_mb}MB" >> "$GITHUB_OUTPUT"
+          fi
+        else
+          echo "archive_size_display=N/A" >> "$GITHUB_OUTPUT"
+        fi
+        
+        # Determine trigger type
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          echo "trigger_type=Manual" >> "$GITHUB_OUTPUT"
+        else
+          echo "trigger_type=Release Created" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Send Slack notification
+      id: send-notification
+      uses: slackapi/slack-github-action@v2.1.1
+      with:
+        method: chat.postMessage
+        token: ${{ inputs.slack_token }}
+        payload: |
+          {
+            "channel": "${{ inputs.slack_channel }}",
+            "text": "${{ steps.prepare-data.outputs.emoji }} FOLIO ${{ inputs.operation_type }} ${{ steps.prepare-data.outputs.status_text }}",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "*${{ steps.prepare-data.outputs.emoji }} FOLIO ${{ inputs.operation_type }} ${{ steps.prepare-data.outputs.status_text }}*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ inputs.workflow_run_id }}|View Workflow Run>"
+                }
+              }
+            ],
+            "attachments": [
+              {
+                "color": "${{ steps.prepare-data.outputs.color }}",
+                "fields": [
+                  {
+                    "title": "Release Tag",
+                    "value": "${{ inputs.operation_status == 'success' && format('<{0}/{1}/releases/tag/{2}|{2}>', github.server_url, github.repository, inputs.release_tag) || inputs.release_tag }}",
+                    "short": true
+                  },
+                  {
+                    "title": "${{ inputs.operation_status == 'success' && 'Archive Size' || inputs.operation_status == 'failure' && 'Failed Job' || 'Status' }}",
+                    "value": "${{ inputs.operation_status == 'success' && steps.prepare-data.outputs.archive_size_display || inputs.operation_status == 'failure' && 'create-release-artifact' || 'Cancelled' }}",
+                    "short": true
+                  },
+                  {
+                    "title": "Repository",
+                    "value": "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>",
+                    "short": true
+                  },
+                  {
+                    "title": "Trigger",
+                    "value": "${{ steps.prepare-data.outputs.trigger_type }}",
+                    "short": true
+                  }
+                  ${{ inputs.sha256_checksum != '' && inputs.operation_status == 'success' && format(',{{"title": "SHA256 Checksum", "value": "`{0}`", "short": false}}', inputs.sha256_checksum) || '' }}
+                  ${{ inputs.additional_info != '' && format(',{{"title": "{0}", "value": "{1}", "short": false}}', inputs.operation_status == 'failure' && 'Action Required' || 'Additional Info', inputs.additional_info) || '' }}
+                ],
+                "footer": "FOLIO Platform Release Pipeline"
+              }
+            ]
+          }
+      continue-on-error: true
+
+    - name: Set output
+      shell: bash
+      run: |
+        if [[ "${{ steps.send-notification.outcome }}" == "success" ]]; then
+          echo "message_sent=true" >> "$GITHUB_OUTPUT"
+          echo "✅ Slack notification sent successfully"
+        else
+          echo "message_sent=false" >> "$GITHUB_OUTPUT"
+          echo "⚠️ Failed to send Slack notification"
+        fi
