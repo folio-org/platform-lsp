@@ -140,7 +140,7 @@ jobs:
       rely_on_FAR: ${{ inputs.rely_on_FAR }}
       dry_run: ${{ inputs.dry_run }}
     secrets:
-      GITHUB_TOKEN: ${{ needs.validate-actor.outputs.app_token }}
+      GH_APP_TOKEN: ${{ needs.validate-actor.outputs.app_token }}
 
   collect-results:
     name: Collect Application Results
