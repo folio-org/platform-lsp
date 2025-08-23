@@ -27,9 +27,51 @@ permissions:
   contents: write
 
 jobs:
+  validate-actor:
+    name: Validate Actor
+    runs-on: ubuntu-latest
+    outputs:
+      authorized: ${{ steps.validate-actor.outputs.authorized }}
+      app_token: ${{ steps.app-token.outputs.token }}
+    steps:
+      - name: Generate App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.EUREKA_CI_APP_ID }}
+          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+
+      - name: Validate Actor
+        id: validate-actor
+        uses: folio-org/kitfox-github/.github/actions/validate-team-membership@master
+        with:
+          username: ${{ github.actor }}
+          organization: 'folio-org'
+          team: 'kitfox'
+          token: ${{ steps.app-token.outputs.token }}
+
+  approve-run:
+    name: Approve Run
+    needs: validate-actor
+    runs-on: ubuntu-latest
+    environment: Eureka CI
+    if: needs.validate-actor.outputs.authorized == 'false'
+    steps:
+      - name: Run approvement
+        run: |
+          echo "::notice::This run was approved by $(
+            gh api \
+              /repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/approvals \
+              --jq \
+                '.[] 
+                | select(.environments[]?.name == "Eureka CI") 
+                | .user.login')"
+
   get-applications:
     name: Extract Application List
     runs-on: ubuntu-latest
+    needs: [ validate-actor, approve-run ]
+    if: always() && (needs.validate-actor.outputs.authorized == 'true' || needs.approve-run.result == 'success')
     outputs:
       applications: ${{ steps.extract-applications.outputs.applications }}
       application_count: ${{ steps.extract-applications.outputs.application_count }}
@@ -83,6 +125,7 @@ jobs:
   update-applications:
     name: Update ${{ matrix.application }}
     needs: get-applications
+    if: always() && needs.get-applications.result == 'success'
     strategy:
       matrix:
         application: ${{ fromJson(needs.get-applications.outputs.applications) }}
@@ -96,6 +139,8 @@ jobs:
       descriptor_build_offset: ${{ inputs.descriptor_build_offset }}
       rely_on_FAR: ${{ inputs.rely_on_FAR }}
       dry_run: ${{ inputs.dry_run }}
+    secrets:
+      GITHUB_TOKEN: ${{ needs.validate-actor.outputs.app_token }}
 
   collect-results:
     name: Collect Application Results
