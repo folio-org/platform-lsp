@@ -262,5 +262,5 @@ jobs:
               - color: "danger"
                 mrkdwn_in: ["fields"]
                 title: "Reasons"
-                text: "${{ toJSON(steps.prepare-multiline.outputs.failed_reasons) }}
+                text: ${{ toJSON(steps.prepare-multiline.outputs.failed_reasons) }}
                 footer: "Eureka CI/CD"
