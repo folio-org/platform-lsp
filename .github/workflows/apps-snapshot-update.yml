@@ -176,7 +176,7 @@ jobs:
           failed_apps=$(jq -r '[.[] | select(.status!="success") | .application] | join(", ")' <<<"$all")
           failed_apps_reason=$(jq -r '
             [.[] | select(.status!="success") | "\(.application): \(.failure_reason // "unknown")"]
-            | .[]
+            | join("\n")
           ' <<<"$all")
           
           echo "::notice::Results Summary - Success: $success_count, Failures: $failure_count"
@@ -239,10 +239,10 @@ jobs:
             attachments:
               - color: "danger"
                 fields:
-                  - title: "Applications Successfully Processed"
+                  - title: "Successfully Processed"
                     value: "${{ needs.collect-results.outputs.success_count }}"
                     short: true
-                  - title: "Applications Failed"
+                  - title: "Failed"
                     value: "${{ needs.collect-results.outputs.failure_count }}"
                     short: true
               - color: "danger"
