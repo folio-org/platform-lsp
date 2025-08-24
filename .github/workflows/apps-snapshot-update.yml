@@ -207,7 +207,7 @@ jobs:
           set -eo pipefail
           
           echo "::notice::Build fail reasons info string"
-          echo "failed_reasons<<EOF"$'\n'"REASONS"$'\n'EOF >> "$GITHUB_OUTPUT"
+          echo "failed_reasons<<EOF"$'\n'"$REASONS"$'\n'EOF >> "$GITHUB_OUTPUT"
 
       - name: Send SUCCESS Slack Notification
         if: env.IS_SUCCESS == 'true'
