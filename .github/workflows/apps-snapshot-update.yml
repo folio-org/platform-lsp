@@ -152,6 +152,7 @@ jobs:
       failed_apps_reason: ${{ steps.gather-failures.outputs.failed_apps_reason }}
       success_count: ${{ steps.gather-failures.outputs.success_count }}
       failure_count: ${{ steps.gather-failures.outputs.failure_count }}
+      updated_count: ${{ steps.gather-failures.outputs.updated_count }}
     steps:
       - name: Download All Application Results
         uses: actions/download-artifact@v4
@@ -171,11 +172,11 @@ jobs:
 
           success_count=$(jq '[.[] | select(.status=="success")] | length' <<<"$all")
           failure_count=$(jq '[.[] | select(.status!="success")] | length' <<<"$all")
+          updated_count=$(jq '[.[] | select(.updated=="true")] | length' <<<"$all")
           failed_apps=$(jq -r '[.[] | select(.status!="success") | .application] | join(", ")' <<<"$all")
-          failed_apps_reason=$(jq -c '
-            map(select(.status!="success"))
-            | map({key: .application, value: {reason: (.reason // .error // .message // "unknown")}})
-            | from_entries
+          failed_apps_reason=$(jq -r '
+            [.[] | select(.status!="success") | "\(.application): \(.failure_reason // "unknown")"]
+            | .[]
           ' <<<"$all")
           
           echo "::notice::Results Summary - Success: $success_count, Failures: $failure_count"
@@ -183,7 +184,8 @@ jobs:
           echo "failed_apps=$failed_apps" >> "$GITHUB_OUTPUT"
           echo "failed_apps_reason=$failed_apps_reason" >> "$GITHUB_OUTPUT"
           echo "success_count=$success_count" >> "$GITHUB_OUTPUT"
-          echo "failure_count=$failure_count" >> "$GITHUB_OUTPUT"      
+          echo "failure_count=$failure_count" >> "$GITHUB_OUTPUT" 
+          echo "updated_count=$updated_count" >> "$GITHUB_OUTPUT"
 
   slack_notification:
     name: Slack Notification
@@ -207,12 +209,15 @@ jobs:
               - type: section
                 text:
                   type: mrkdwn
-                  text: "*Snapshot Applications Update SUCCESS <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+                  text: "*Platform Snapshot Applications Update SUCCESS <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
             attachments:
               - color: "good"
                 fields:
-                  - title: "Applications Processed"
-                    value: "${{ needs.get-applications.outputs.application_count }}"
+                  - title: "Updated Applications"
+                    value: "${{ needs.collect-results.outputs.updated_count }}"
+                    short: true
+                  - title: "Total Applications"
+                    value: "${{ needs.collect-results.outputs.success_count }}"
                     short: true
                 footer: "Eureka CI/CD"
 
@@ -230,13 +235,7 @@ jobs:
               - type: section
                 text:
                   type: mrkdwn
-                  text: "*Snapshot Applications Update FAILED <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
-              - type: section
-                text:
-                  type: mrkdwn
-                  text: |-
-                    *Failed app(s):*
-                    ${{ join(fromJson(needs.collect-results.outputs.failed_apps_reason) .* , '\n') }}
+                  text: "*Platform Snapshot Applications Update FAILED <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
             attachments:
               - color: "danger"
                 fields:
@@ -246,4 +245,8 @@ jobs:
                   - title: "Applications Failed"
                     value: "${{ needs.collect-results.outputs.failure_count }}"
                     short: true
+              - color: "danger"
+                mrkdwn_in: ["fields"]
+                title: "Reasons"
+                text: "${{ needs.collect-results.outputs.failed_apps_reason }}"
                 footer: "Eureka CI/CD"
