@@ -199,6 +199,16 @@ jobs:
     env:
       IS_SUCCESS: ${{ needs.update-applications.result == 'success' && 'true' || 'false' }}
     steps:
+      - name: Prepare Multiline Strings
+        id: prepare-multiline
+        env:
+          REASONS: "${{ needs.collect-results.outputs.failed_apps_reason }}"
+        run: |
+          set -eo pipefail
+          
+          echo "::notice::Build fail reasons info string"
+          echo "failed_reasons<<EOF"$'\n'"REASONS"$'\n'EOF >> "$GITHUB_OUTPUT"
+
       - name: Send SUCCESS Slack Notification
         if: env.IS_SUCCESS == 'true'
         uses: slackapi/slack-github-action@v2.1.1
@@ -252,5 +262,5 @@ jobs:
               - color: "danger"
                 mrkdwn_in: ["fields"]
                 title: "Reasons"
-                text: "${{ needs.collect-results.outputs.failed_apps_reason }}"
+                text: "${{ toJSON(steps.prepare-multiline.outputs.failed_reasons) }}
                 footer: "Eureka CI/CD"
