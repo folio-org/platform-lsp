@@ -182,10 +182,14 @@ jobs:
           echo "::notice::Results Summary - Success: $success_count, Failures: $failure_count"
           
           echo "failed_apps=$failed_apps" >> "$GITHUB_OUTPUT"
-          echo "failed_apps_reason=$failed_apps_reason" >> "$GITHUB_OUTPUT"
           echo "success_count=$success_count" >> "$GITHUB_OUTPUT"
           echo "failure_count=$failure_count" >> "$GITHUB_OUTPUT" 
           echo "updated_count=$updated_count" >> "$GITHUB_OUTPUT"
+          {
+            echo "failed_apps_reason<<EOF"
+            printf '%s\n' "$failed_apps_reason"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
   slack_notification:
     name: Slack Notification
