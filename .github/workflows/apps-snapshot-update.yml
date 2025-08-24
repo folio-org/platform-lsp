@@ -191,7 +191,7 @@ jobs:
     name: Slack Notification
     runs-on: ubuntu-latest
     needs: [get-applications, update-applications, collect-results]
-    if: always() && !inputs.dry_run
+    if: always() && needs.collect-results.result == 'success' && !inputs.dry_run
     env:
       IS_SUCCESS: ${{ needs.update-applications.result == 'success' && 'true' || 'false' }}
     steps:
