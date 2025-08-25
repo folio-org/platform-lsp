@@ -16,30 +16,31 @@ The Snapshot Flow handles continuous integration of ongoing development (snapsho
 ## 🏗️ Architecture Overview
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                  SNAPSHOT FLOW ARCHITECTURE             │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
+┌──────────────────────────────────────────────────────────┐
+│                  SNAPSHOT FLOW ARCHITECTURE              │
+├──────────────────────────────────────────────────────────┤
+│                                                          │
 │  📦 MODULE LEVEL           🎯 APPLICATION LEVEL         │
-│  ├─ Java Modules          ├─ App Descriptor Updates     │
-│  │  ├─ Build & Test       │  ├─ Module Version Sync     │
-│  │  ├─ Docker Image       │  ├─ Validation & Testing    │
-│  │  ├─ Module Descriptor  │  └─ Snapshot Branch Update  │
-│  │  └─ Artifact Publishing│                             │
-│  │                        │                             │
-│  └─ UI/Stripes Modules    │                             │
-│     ├─ Node.js Build      │                             │
-│     ├─ Test Execution     │                             │
-│     ├─ NPM Publishing     │                             │
-│     └─ Registry Update    │                             │
-│                           │                             │
-│  🏗️ PLATFORM LEVEL                                      │
-│  ├─ Platform Descriptor Updates                         │
-│  ├─ Application Version Sync                            │
-│  ├─ Build & Validation                                  │
-│  └─ Snapshot Environment Deployment                     │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
+│  ├─ Java Modules          ├─ Orchestrated Updates        │
+│  │  ├─ Build & Test       │  ├─ Platform-LSP Trigger     │
+│  │  ├─ Docker Image       │  ├─ Matrix Processing        │
+│  │  ├─ Module Descriptor  │  │  ├─ 31+ Apps Parallel     │
+│  │  └─ Artifact Publishing│  │  ├─ Fail-Safe Execution   │
+│  │                        │  │  └─ Result Aggregation    │
+│  └─ UI/Stripes Modules    │  ├─ Individual App Updates   │
+│     ├─ Node.js Build      │  │  ├─ Module Version Sync   │
+│     ├─ Test Execution     │  │  ├─ Validation & Testing  │
+│     ├─ NPM Publishing     │  │  └─ Snapshot Branch Update│
+│     └─ Registry Update    │  └─ Comprehensive Reporting  │
+│                           │                              │
+│  🏗️ PLATFORM LEVEL                                       │
+│  ├─ Application Discovery (platform-descriptor.json)     │
+│  ├─ Distributed Workflow Orchestration                   │
+│  ├─ Cross-Repository Authorization                       │
+│  ├─ Success/Failure Monitoring                           │
+│  └─ Slack Notification System                            │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
 ```
 
 ## 🔄 Snapshot Flow Components
@@ -82,22 +83,45 @@ The Snapshot Flow handles continuous integration of ongoing development (snapsho
 
 ### 2. Application Flows
 
-#### Application Snapshot Updates
-*Based on [CI flow [snapshot] - Applications](https://folio-org.atlassian.net/wiki/spaces/FOLIJET/pages/887193724/CI+flow+snapshot)*
+#### Application Snapshot Updates - Platform Orchestrator
+*Implemented via `apps-snapshot-update.yml` workflow in platform-lsp*
 
-**Trigger**: New module versions detected by scanning process
+**Trigger**: Manual workflow dispatch or scheduled execution
+
+**Authorization**: Kitfox team members or approved environment access
 
 **Process Flow**:
-1. **Version Detection**: Automated scanning identifies new module versions
-2. **Descriptor Updates**: Application descriptors updated with latest module versions
-3. **Validation Cycle**:
-   - **Descriptor Validation**: JSON syntax and structure verification
-   - **Build Testing**: Application composition validation
-   - **Integration Testing**: Module compatibility verification
-4. **Branch Update**: Snapshot branch updated with validated changes
-5. **Notification**: Team notified of successful/failed updates
+1. **Actor Validation**: 
+   - Generate GitHub App token for cross-repository access
+   - Validate team membership (Kitfox team) or require environment approval
+2. **Application Discovery**:
+   - Extract application list from platform-descriptor.json (snapshot branch)
+   - Identify all app-* repositories (required + optional applications)
+   - Upload platform descriptor as artifact for downstream workflows
+3. **Parallel Application Updates**:
+   - **Matrix Strategy**: Process all applications concurrently (max 5 parallel)
+   - **Individual Workflows**: Each application triggers `app-update.yml` from kitfox-github
+   - **Fail-Safe Processing**: Continue processing other apps even if some fail
+   - **Parameters**: 
+     - `descriptor_build_offset`: Version offset for application artifacts
+     - `rely_on_FAR`: Whether to use FAR (FOLIO Application Registry) for dependencies
+     - `dry_run`: Validation-only mode without making changes
+4. **Result Collection**:
+   - Download and analyze results from all application workflows
+   - Categorize outcomes: success, failure, updated applications
+   - Generate comprehensive failure reports with specific reasons
+5. **Slack Notifications**:
+   - **Success**: Report updated application count and total processed
+   - **Failure**: Detailed failure reasons and affected applications
+   - **Channel**: Configurable Slack channel for team notifications
 
-**Affected Repositories**: All 31 app-* repositories
+**Affected Repositories**: All 31+ app-* repositories processed in parallel
+
+**Key Features**:
+- **Distributed Processing**: Uses proven matrix strategy for concurrent updates
+- **Authorization Separation**: Team validation in orchestrator, pure functionality in workers
+- **Comprehensive Monitoring**: Detailed success/failure tracking and reporting
+- **Flexible Configuration**: Support for dry runs, FAR integration, and custom offsets
 
 ### 3. Platform Flow
 
@@ -209,20 +233,90 @@ Registry        App Descriptor     Platform Descriptor
 
 ### Current Implementation
 - ✅ **Module CI**: Both Java and UI module flows operational
-- ✅ **Application Scanning**: Automated version detection and updates
-- ✅ **Platform Synchronization**: Continuous platform state updates
-- ✅ **Notification System**: Comprehensive team notifications
+- ✅ **Application Orchestration**: Platform-LSP coordinates updates across all applications
+- ✅ **Distributed Processing**: Parallel matrix strategy for 31+ repositories
+- ✅ **Authorization Framework**: Team-based access control with environment fallback
+- ✅ **Comprehensive Monitoring**: Success/failure tracking with detailed reporting
+- ✅ **Notification System**: Slack integration with rich status reporting
 
 ### Platform-LSP Snapshot Integration
-- ✅ **Automated Scanning**: Platform continuously monitors for updates
-- ✅ **Validation Pipeline**: Complete platform composition testing
-- ✅ **Environment Sync**: Snapshot environment automatically updated
-- ✅ **Team Notifications**: Slack integration for real-time updates
+- ✅ **Orchestrated Updates**: `apps-snapshot-update.yml` coordinates all application updates
+- ✅ **Matrix Processing**: Concurrent processing with fail-safe mechanisms
+- ✅ **Result Aggregation**: Comprehensive success/failure analysis and reporting
+- ✅ **Flexible Configuration**: Support for dry runs, FAR integration, and custom parameters
+- ✅ **Team Notifications**: Rich Slack notifications with detailed status information
+
+## 🏗️ Workflow Architecture
+
+### Apps Snapshot Update Orchestrator (`apps-snapshot-update.yml`)
+
+**Location**: `platform-lsp/.github/workflows/apps-snapshot-update.yml`
+
+**Key Components**:
+
+#### 1. Authorization Layer
+```yaml
+validate-actor:
+  # GitHub App token generation for cross-repo access
+  # Kitfox team membership validation
+  # Fallback to environment approval for non-team members
+```
+
+#### 2. Application Discovery
+```yaml
+get-applications:
+  # Extract applications from platform-descriptor.json
+  # Support for both required and optional applications
+  # Artifact upload for downstream workflow consumption
+```
+
+#### 3. Distributed Processing
+```yaml
+update-applications:
+  strategy:
+    matrix:
+      application: ${{ fromJson(needs.get-applications.outputs.applications) }}
+    fail-fast: false
+    max-parallel: 5
+  # Calls kitfox-github/.github/workflows/app-update.yml for each application
+```
+
+#### 4. Result Aggregation
+```yaml
+collect-results:
+  # Download and analyze all application results
+  # Generate comprehensive success/failure statistics
+  # Prepare detailed failure reasons for notifications
+```
+
+#### 5. Notification System
+```yaml
+slack_notification:
+  # Rich Slack notifications with workflow status
+  # Detailed success metrics and failure analysis
+  # Configurable notification channels
+```
+
+**Input Parameters**:
+- `descriptor_build_offset`: Version offset for application artifacts (default: '100100000000000')
+- `rely_on_FAR`: Use FOLIO Application Registry for dependencies (default: false)
+- `dry_run`: Validation-only mode without making changes (default: false)
+
+**Concurrency Control**: Single workflow execution per repository to prevent conflicts
 
 ## 🔗 Related Documentation
 
+### Platform Documentation
 - [Platform Architecture](../../README.md)
+- [Eureka CI Overview](../CI.md)
+
+### Workflow Implementation
+- [`apps-snapshot-update.yml`](../workflows/apps-snapshot-update.yml) - Platform-LSP application orchestrator
+- [`app-update.yml`](https://github.com/folio-org/kitfox-github/blob/master/.github/workflows/app-update.yml) - Individual application update workflow
+
+### External References
 - [Eureka CI Flow [Snapshot]](https://folio-org.atlassian.net/wiki/spaces/FOLIJET/pages/887193724/CI+flow+snapshot)
+- [FOLIO Application Registry (FAR)](https://folio-org.atlassian.net/wiki/spaces/FOLIJET/pages/1115029566/Application+registry+hosting+approach)
 
 ---
 
