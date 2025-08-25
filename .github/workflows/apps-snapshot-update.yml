@@ -139,8 +139,7 @@ jobs:
       descriptor_build_offset: ${{ inputs.descriptor_build_offset }}
       rely_on_FAR: ${{ inputs.rely_on_FAR }}
       dry_run: ${{ inputs.dry_run }}
-    secrets:
-      GH_APP_TOKEN: ${{ needs.validate-actor.outputs.app_token }}
+      app_token: ${{ needs.validate-actor.outputs.app_token }}
 
   collect-results:
     name: Collect Application Results
