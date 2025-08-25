@@ -1,11 +1,18 @@
 name: Update Snapshot Applications Orchestrator
 
 on:
-  schedule:
-    - cron: "*/20 * * * *"
-
   workflow_dispatch:
     inputs:
+      descriptor_build_offset:
+        description: 'Offset to apply to application artifact version'
+        required: false
+        type: string
+        default: '100100000000000'
+      rely_on_FAR:
+        description: 'Whether to rely on FAR for application descriptor dependencies'
+        required: false
+        type: boolean
+        default: false
       dry_run:
         description: 'Perform dry run without making changes'
         required: false
@@ -20,9 +27,51 @@ permissions:
   contents: write
 
 jobs:
+  validate-actor:
+    name: Validate Actor
+    runs-on: ubuntu-latest
+    outputs:
+      authorized: ${{ steps.validate-actor.outputs.authorized }}
+      app_token: ${{ steps.app-token.outputs.token }}
+    steps:
+      - name: Generate App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.EUREKA_CI_APP_ID }}
+          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+
+      - name: Validate Actor
+        id: validate-actor
+        uses: folio-org/kitfox-github/.github/actions/validate-team-membership@master
+        with:
+          username: ${{ github.actor }}
+          organization: 'folio-org'
+          team: 'kitfox'
+          token: ${{ steps.app-token.outputs.token }}
+
+  approve-run:
+    name: Approve Run
+    needs: validate-actor
+    runs-on: ubuntu-latest
+    environment: Eureka CI
+    if: needs.validate-actor.outputs.authorized == 'false'
+    steps:
+      - name: Run approvement
+        run: |
+          echo "::notice::This run was approved by $(
+            gh api \
+              /repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/approvals \
+              --jq \
+                '.[] 
+                | select(.environments[]?.name == "Eureka CI") 
+                | .user.login')"
+
   get-applications:
     name: Extract Application List
     runs-on: ubuntu-latest
+    needs: [ validate-actor, approve-run ]
+    if: always() && (needs.validate-actor.outputs.authorized == 'true' || needs.approve-run.result == 'success')
     outputs:
       applications: ${{ steps.extract-applications.outputs.applications }}
       application_count: ${{ steps.extract-applications.outputs.application_count }}
@@ -65,29 +114,45 @@ jobs:
           echo "applications=$existing_apps" >> "$GITHUB_OUTPUT"
           echo "application_count=$existing_count" >> "$GITHUB_OUTPUT"
 
+      - name: Upload Platform Descriptor
+        if: ${{ !inputs.rely_on_FAR }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: platform-descriptor
+          path: platform-descriptor.json
+          retention-days: 1
+
   update-applications:
     name: Update ${{ matrix.application }}
     needs: get-applications
+    if: always() && needs.get-applications.result == 'success'
     strategy:
       matrix:
         application: ${{ fromJson(needs.get-applications.outputs.applications) }}
       fail-fast: false
       max-parallel: 5
-    uses: folio-org/kitfox-github/.github/workflows/app-snapshot-update.yml@master
+    uses: folio-org/kitfox-github/.github/workflows/app-update.yml@master
     with:
-      app_name: folio-org/${{ matrix.application }}
-      dry_run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+      app_name: ${{ matrix.application }}
+      repo: folio-org/${{ matrix.application }}
+      workflow_run_number: ${{ github.run_number }}
+      descriptor_build_offset: ${{ inputs.descriptor_build_offset }}
+      rely_on_FAR: ${{ inputs.rely_on_FAR }}
+      dry_run: ${{ inputs.dry_run }}
+    secrets:
+      GH_APP_TOKEN: ${{ needs.validate-actor.outputs.app_token }}
 
   collect-results:
     name: Collect Application Results
     needs: [get-applications, update-applications]
     runs-on: ubuntu-latest
-    if: always() && needs.update-applications.result != 'skipped'
+    if: always() && needs.update-applications.result != 'skipped' && !inputs.dry_run
     outputs:
       failed_apps: ${{ steps.gather-failures.outputs.failed_apps }}
       failed_apps_reason: ${{ steps.gather-failures.outputs.failed_apps_reason }}
       success_count: ${{ steps.gather-failures.outputs.success_count }}
       failure_count: ${{ steps.gather-failures.outputs.failure_count }}
+      updated_count: ${{ steps.gather-failures.outputs.updated_count }}
     steps:
       - name: Download All Application Results
         uses: actions/download-artifact@v4
@@ -95,7 +160,6 @@ jobs:
           pattern: "result-*"
           path: /tmp/all-results
           merge-multiple: true
-          if-no-files-found: warn
 
       - name: Gather Application Results
         id: gather-failures
@@ -108,28 +172,43 @@ jobs:
 
           success_count=$(jq '[.[] | select(.status=="success")] | length' <<<"$all")
           failure_count=$(jq '[.[] | select(.status!="success")] | length' <<<"$all")
+          updated_count=$(jq '[.[] | select(.updated=="true")] | length' <<<"$all")
           failed_apps=$(jq -r '[.[] | select(.status!="success") | .application] | join(", ")' <<<"$all")
-          failed_apps_reason=$(jq -c '
-            map(select(.status!="success"))
-            | map({key: .application, value: {reason: (.reason // .error // .message // "unknown")}})
-            | from_entries
+          failed_apps_reason=$(jq -r '
+            [.[] | select(.status!="success") | "\(.application): \(.failure_reason // "unknown")"]
+            | join("\n")
           ' <<<"$all")
           
           echo "::notice::Results Summary - Success: $success_count, Failures: $failure_count"
           
           echo "failed_apps=$failed_apps" >> "$GITHUB_OUTPUT"
-          echo "failed_apps_reason=$failed_apps_reason" >> "$GITHUB_OUTPUT"
           echo "success_count=$success_count" >> "$GITHUB_OUTPUT"
-          echo "failure_count=$failure_count" >> "$GITHUB_OUTPUT"      
+          echo "failure_count=$failure_count" >> "$GITHUB_OUTPUT" 
+          echo "updated_count=$updated_count" >> "$GITHUB_OUTPUT"
+          {
+            echo "failed_apps_reason<<EOF"
+            printf '%s\n' "$failed_apps_reason"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
   slack_notification:
     name: Slack Notification
     runs-on: ubuntu-latest
     needs: [get-applications, update-applications, collect-results]
-    if: always() && (github.event_name == 'workflow_dispatch' && inputs.dry_run || false)
+    if: always() && needs.collect-results.result == 'success' && !inputs.dry_run
     env:
       IS_SUCCESS: ${{ needs.update-applications.result == 'success' && 'true' || 'false' }}
     steps:
+      - name: Prepare Multiline Strings
+        id: prepare-multiline
+        env:
+          REASONS: "${{ needs.collect-results.outputs.failed_apps_reason }}"
+        run: |
+          set -eo pipefail
+          
+          echo "::notice::Build fail reasons info string"
+          echo "failed_reasons<<EOF"$'\n'"$REASONS"$'\n'EOF >> "$GITHUB_OUTPUT"
+
       - name: Send SUCCESS Slack Notification
         if: env.IS_SUCCESS == 'true'
         uses: slackapi/slack-github-action@v2.1.1
@@ -144,12 +223,15 @@ jobs:
               - type: section
                 text:
                   type: mrkdwn
-                  text: "*Snapshot Applications Update SUCCESS <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+                  text: "*Platform Snapshot Applications Update SUCCESS <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
             attachments:
               - color: "good"
                 fields:
-                  - title: "Applications Processed"
-                    value: "${{ needs.get-applications.outputs.application_count }}"
+                  - title: "Updated Applications"
+                    value: "${{ needs.collect-results.outputs.updated_count }}"
+                    short: true
+                  - title: "Total Applications"
+                    value: "${{ needs.collect-results.outputs.success_count }}"
                     short: true
                 footer: "Eureka CI/CD"
 
@@ -167,20 +249,18 @@ jobs:
               - type: section
                 text:
                   type: mrkdwn
-                  text: "*Snapshot Applications Update FAILED <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
-              - type: section
-                text:
-                  type: mrkdwn
-                  text: |-
-                    *Failed app(s):*
-                    ${{ join(fromJson(needs.collect-results.outputs.failed_apps_reason) .* , '\n') }}
+                  text: "*Platform Snapshot Applications Update FAILED <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
             attachments:
               - color: "danger"
                 fields:
-                  - title: "Applications Successfully Processed"
+                  - title: "Successfully Processed"
                     value: "${{ needs.collect-results.outputs.success_count }}"
                     short: true
-                  - title: "Applications Failed"
+                  - title: "Failed"
                     value: "${{ needs.collect-results.outputs.failure_count }}"
                     short: true
+              - color: "danger"
+                mrkdwn_in: ["fields"]
+                title: "Reasons"
+                text: ${{ toJSON(steps.prepare-multiline.outputs.failed_reasons) }}
                 footer: "Eureka CI/CD"
