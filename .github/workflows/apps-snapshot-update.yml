@@ -124,7 +124,7 @@ jobs:
 
   update-applications:
     name: Update ${{ matrix.application }}
-    needs: get-applications
+    needs: [validate-actor, get-applications]
     if: always() && needs.get-applications.result == 'success'
     strategy:
       matrix:
