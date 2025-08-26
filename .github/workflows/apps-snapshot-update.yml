@@ -139,6 +139,7 @@ jobs:
       rely_on_FAR: ${{ inputs.rely_on_FAR }}
       dry_run: ${{ inputs.dry_run }}
       use_github_app: true
+    secrets: inherit
 
   collect-results:
     name: Collect Application Results
