@@ -42,7 +42,7 @@ jobs:
       - name: Checkout Application Repository
         uses: actions/checkout@v4
         with:
-          repository: "folio-org/app-acquisitions"
+          repository: "folio-org/app-platform-minimal"
           ref: "snapshot"
           token: ${{ steps.app-token.outputs.token }}
 
