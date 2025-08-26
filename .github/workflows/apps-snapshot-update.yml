@@ -32,7 +32,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       authorized: ${{ steps.validate-actor.outputs.authorized }}
-      app_token: ${{ steps.app-token.outputs.token }}
     steps:
       - name: Generate App Token
         id: app-token
@@ -139,8 +138,7 @@ jobs:
       descriptor_build_offset: ${{ inputs.descriptor_build_offset }}
       rely_on_FAR: ${{ inputs.rely_on_FAR }}
       dry_run: ${{ inputs.dry_run }}
-    secrets:
-      GH_APP_TOKEN: ${{ needs.validate-actor.outputs.app_token }}
+      use_github_app: true
 
   collect-results:
     name: Collect Application Results
