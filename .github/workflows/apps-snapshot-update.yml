@@ -45,7 +45,7 @@ jobs:
           repository: "folio-org/app-platform-minimal"
           ref: "snapshot"
           token: ${{ steps.app-token.outputs.token }}
-          persist-credentials: true
+          persist-credentials: false
 
       - name: Configure Git
         run: |
