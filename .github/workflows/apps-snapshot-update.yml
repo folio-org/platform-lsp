@@ -152,6 +152,7 @@ jobs:
       success_count: ${{ steps.gather-failures.outputs.success_count }}
       failure_count: ${{ steps.gather-failures.outputs.failure_count }}
       updated_count: ${{ steps.gather-failures.outputs.updated_count }}
+      updated_applications: ${{ steps.gather-failures.outputs.updated_applications }}
     steps:
       - name: Download All Application Results
         uses: actions/download-artifact@v4
@@ -178,6 +179,14 @@ jobs:
             | join("\n")
           ' <<<"$all")
           
+          updated_applications=$(jq -r --arg base "${GITHUB_SERVER_URL}" '
+            [.[] 
+              | select(.updated=="true") 
+              | "<\($base)/${{ github.repository_owner }}/\(.application)/commit/\(.commit_sha)|\(.application) (\(.updated_cnt))>"
+            ] 
+            | join("\n")
+          ' <<<"$all")
+          
           echo "::notice::Results Summary - Success: $success_count, Failures: $failure_count"
           
           echo "failed_apps=$failed_apps" >> "$GITHUB_OUTPUT"
@@ -187,6 +196,11 @@ jobs:
           {
             echo "failed_apps_reason<<EOF"
             printf '%s\n' "$failed_apps_reason"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          {
+            echo "updated_applications<<EOF"
+            printf '%s\n' "$updated_applications"
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
@@ -202,11 +216,15 @@ jobs:
         id: prepare-multiline
         env:
           REASONS: "${{ needs.collect-results.outputs.failed_apps_reason }}"
+          UPDATED: "${{ needs.collect-results.outputs.updated_applications }}"
         run: |
           set -eo pipefail
           
           echo "::notice::Build fail reasons info string"
           echo "failed_reasons<<EOF"$'\n'"$REASONS"$'\n'EOF >> "$GITHUB_OUTPUT"
+
+          echo "::notice::Build updated applications info string"
+          echo "updated_applications<<EOF"$'\n'"$UPDATED"$'\n'EOF >> "$GITHUB_OUTPUT"
 
       - name: Send SUCCESS Slack Notification
         if: env.IS_SUCCESS == 'true'
@@ -232,6 +250,10 @@ jobs:
                   - title: "Total Applications"
                     value: "${{ needs.collect-results.outputs.success_count }}"
                     short: true
+                footer: "Eureka CI/CD"
+              - color: "good"
+                mrkdwn_in: ["fields"]
+                text: ${{ toJSON(steps.prepare-multiline.outputs.updated_applications) }}
                 footer: "Eureka CI/CD"
 
       - name: Send FAILED Slack Notification
