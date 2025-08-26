@@ -37,7 +37,9 @@ jobs:
         with:
           app-id: ${{ vars.EUREKA_CI_APP_ID }}
           private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+          owner: ${{ github.repository_owner }}
           permission-contents: write
+          repositories: "app-platform-minimal"
 
       - name: Checkout Application Repository
         uses: actions/checkout@v4
