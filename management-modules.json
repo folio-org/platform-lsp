@@ -9,12 +9,12 @@
     "id": "mgr-applications-3.0.1"
   },
   {
-    "id": "mgr-tenants-3.0.1"
+    "id": "mgr-tenants-3.0.2"
   },
   {
-    "id": "mgr-tenant-entitlements-3.1.4"
+    "id": "mgr-tenant-entitlements-3.1.5"
   },
   {
-    "id": "folio-module-sidecar-3.0.7"
+    "id": "folio-module-sidecar-3.0.8"
   }
 ]
