@@ -46,14 +46,14 @@ jobs:
           ref: "snapshot"
           token: ${{ steps.app-token.outputs.token }}
 
-#      - name: Configure Git
-#        run: |
-#          set -eo pipefail
-#
-#          git config --global user.name "github-actions[bot]"
-#          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Configure Git
+        run: |
+          set -eo pipefail
+
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 #          git remote set-url origin https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/folio-org/app-acquisitions.git
-#          echo "::notice::Git configured for automated commits"
+          echo "::notice::Git configured for automated commits"
 
       - name: Commit Changes
         id: commit-changes
