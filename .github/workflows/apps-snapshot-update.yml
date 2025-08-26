@@ -27,83 +27,9 @@ permissions:
   contents: write
 
 jobs:
-  commit-statefile:
-    name: Commit and push sate file
-    runs-on: ubuntu-latest
-    outputs:
-      token: ${{ steps.app-token.outputs.token }}
-    steps:
-      - name: Generate App Token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ vars.EUREKA_CI_APP_ID }}
-          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: "app-platform-minimal"
-
-  test-pass-token-another-job:
-    name: Test passing token to another job
-    runs-on: ubuntu-latest
-    needs: commit-statefile
-    steps:
-      - name: Checkout Application Repository
-        uses: actions/checkout@v4
-        with:
-          repository: "folio-org/app-platform-minimal"
-          ref: "snapshot"
-          token: ${{ needs.commit-statefile.outputs.token }}
-
-      - name: Configure Git
-        run: |
-          set -eo pipefail
-
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          echo "::notice::Git configured for automated commits"
-
-      - name: Commit Changes
-        id: commit-changes
-        run: |
-          set -eo pipefail
-          
-          git switch -c "test-app-token"
-          
-          echo "Test test" > test.txt
-
-          echo "::group::Stage changes for commit"
-          git status
-          echo "::endgroup::"
-
-          git add "test.txt" 2>/dev/null || true
-
-          if git diff --cached --quiet; then
-            echo "::error::No changes to commit"
-            echo "failure_reason=No changes to commit" >> "$GITHUB_OUTPUT"
-            exit 1
-          fi
-
-          git commit -F - <<EOF
-          Test commit".
-          EOF
-
-          commit_sha=$(git rev-parse HEAD)
-
-          echo "::notice::Successfully committed changes #$commit_sha"
-          echo "commit_sha=$commit_sha" >> "$GITHUB_OUTPUT"
-
-      - name: Push Changes
-        run: |
-          set -eo pipefail
-
-          echo "::notice::Pushing changes to branch 'test-app-token'"
-          git push -u origin "test-app-token"
-          echo "::notice::Successfully pushed changes to 'test-app-token'"
-
   validate-actor:
     name: Validate Actor
     runs-on: ubuntu-latest
-    if: false
     outputs:
       authorized: ${{ steps.validate-actor.outputs.authorized }}
     steps:
