@@ -187,7 +187,7 @@ jobs:
             | join("\n")
           ' <<<"$all")
 
-          echo "::notice::updated_count: $updated_count")"
+          echo "::notice::updated_count: $updated_count"
           
           # <\($base)/\($owner)/\(.application)/commit/\(.commit_sha)|
           
