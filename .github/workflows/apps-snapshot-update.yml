@@ -186,6 +186,8 @@ jobs:
             ] 
             | join("\n")
           ' <<<"$all")
+
+          echo "::notice::updated_count: $(jq '[.[] | select(.updated=="true")] | length' <<<"$all")"
           
           # <\($base)/\($owner)/\(.application)/commit/\(.commit_sha)|
           
