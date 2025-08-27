@@ -179,10 +179,10 @@ jobs:
             | join("\n")
           ' <<<"$all")
           
-          updated_applications=$(jq -r --arg base "${GITHUB_SERVER_URL}" '
+          updated_applications=$(jq -r --arg base "${GITHUB_SERVER_URL}" --arg owner "${{ github.repository_owner }}" '
             [.[] 
               | select(.updated=="true") 
-              | "<\($base)/${{ github.repository_owner }}/\(.application)/commit/\(.commit_sha)|\(.application) (\(.updated_cnt))>"
+              | "<\($base)/\($owner)/\(.application)/commit/\(.commit_sha)|\(.application) (\(.updated_cnt))>" 
             ] 
             | join("\n")
           ' <<<"$all")
@@ -250,7 +250,6 @@ jobs:
                   - title: "Total Applications"
                     value: "${{ needs.collect-results.outputs.success_count }}"
                     short: true
-                footer: "Eureka CI/CD"
               - color: "good"
                 mrkdwn_in: ["fields"]
                 text: ${{ toJSON(steps.prepare-multiline.outputs.updated_applications) }}
