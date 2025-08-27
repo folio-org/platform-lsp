@@ -110,8 +110,8 @@ jobs:
           echo "::notice::Descriptor verified. $FILE found with $existing_count existing app(s)"
           jq -r '.[]' <<<"$existing_apps" | sed 's/^/  - /'
           
-          echo "applications=$existing_apps" >> "$GITHUB_OUTPUT"
-          echo "application_count=$existing_count" >> "$GITHUB_OUTPUT"
+          echo "applications=$(jq -c '.[0:2]' <<<$existing_apps)" >> "$GITHUB_OUTPUT" # TODO: Switch back to the $existing_apps
+          echo "application_count=$(jq -r 'length' <<<$limited_apps)" >> "$GITHUB_OUTPUT" # TODO: Switch back to the $limited_apps
 
       - name: Upload Platform Descriptor
         if: ${{ !inputs.rely_on_FAR }}
@@ -186,6 +186,8 @@ jobs:
             ] 
             | join("\n")
           ' <<<"$all")
+          
+          echo "::notice::updated_applications: $updated_applications" #TODO: Remove this line after debugging
           
           echo "::notice::Results Summary - Success: $success_count, Failures: $failure_count"
           
