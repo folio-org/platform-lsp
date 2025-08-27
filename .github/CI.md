@@ -41,9 +41,14 @@ The snapshot flow handles the continuous integration of daily development work, 
 
 **Key Processes**:
 - **Module CI**: Backend, edge and UI/Stripes module builds
-- **Application Sync**: Automatic application descriptor updates
-- **Platform Refresh**: Continuous platform state updates
+- **Application Sync**: Automatic application descriptor updates via orchestrated workflows
+- **Platform Refresh**: Continuous platform state updates with parallel processing
 - **Version Management**: SNAPSHOT version increments and build IDs
+- **Orchestrated Updates**: Platform-LSP coordinates updates across 31+ application repositories
+
+**Key Workflows**:
+- **`apps-snapshot-update.yml`**: Platform-LSP orchestrator for application snapshot updates
+- **`app-update.yml`**: Individual application update workflow (kitfox-github)
 
 **Documentation**: [📖 Detailed Snapshot Flow Guide](docs/snapshot-flow.md)
 
