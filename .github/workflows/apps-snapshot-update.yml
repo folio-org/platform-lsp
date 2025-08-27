@@ -172,7 +172,7 @@ jobs:
 
           success_count=$(jq '[.[] | select(.status=="success")] | length' <<<"$all")
           failure_count=$(jq '[.[] | select(.status!="success")] | length' <<<"$all")
-          updated_count=$(jq '[.[] | select(.updated=="true")] | length' <<<"$all")
+          updated_count=$(jq '[.[] | select(.updated==true)] | length' <<<"$all")
           failed_apps=$(jq -r '[.[] | select(.status!="success") | .application] | join(", ")' <<<"$all")
           failed_apps_reason=$(jq -r '
             [.[] | select(.status!="success") | "\(.application): \(.failure_reason // "unknown")"]
@@ -181,7 +181,7 @@ jobs:
           
           updated_applications=$(jq -r --arg base "${GITHUB_SERVER_URL}" --arg owner "${{ github.repository_owner }}" '
             [.[] 
-              | select(.updated=="true") 
+              | select(.updated==true) 
               | "<\($base)/\($owner)/\(.application)/commit/\(.commit_sha)|\(.application) (\(.updated_cnt))>" 
             ] 
             | join("\n")
