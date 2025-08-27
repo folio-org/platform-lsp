@@ -182,16 +182,10 @@ jobs:
           updated_applications=$(jq -r --arg base "${GITHUB_SERVER_URL}" --arg owner "${{ github.repository_owner }}" '
             [.[] 
               | select(.updated==true) 
-              | "\(.application) (\(.updated_cnt))>" 
+              | "<\($base)/\($owner)/\(.application)/commit/\(.commit_sha)|\(.application) (\(.updated_cnt))>" 
             ] 
             | join("\n")
           ' <<<"$all")
-
-          echo "::notice::updated_count: $updated_count"
-          
-          # <\($base)/\($owner)/\(.application)/commit/\(.commit_sha)|
-          
-          echo "::notice::updated_applications: $updated_applications" #TODO: Remove this line after debugging
           
           echo "::notice::Results Summary - Success: $success_count, Failures: $failure_count"
           
