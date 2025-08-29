@@ -10,7 +10,7 @@ The `platform-lsp` repository maintains the **definitive state** of the FOLIO Eu
 
 The FOLIO Eureka deployment represents a sophisticated microservices architecture with enhanced features compared to traditional FOLIO deployments:
 
-### Core Infrastructure Components
+### Core Components
 
 **Eureka-Specific Components (Stateful/Daemon Sets):**
 - **🔐 Keycloak**: Authentication and authorization service (Stateful-set)
@@ -20,7 +20,7 @@ The FOLIO Eureka deployment represents a sophisticated microservices architectur
 - **🔗 mgr-tenant-entitlements**: Tenant permission management
 - **🔧 folio-module-sidecar**: Service discovery and proxy sidecars
 
-**Platform Services:**
+**Infrastructure Services:**
 - **🗄️ PostgreSQL**: Primary data storage with multiple databases (Stateful-set)
 - **🔍 OpenSearch**: Search and analytics engine (Stateful-set)
 - **📨 Kafka**: Event streaming and messaging platform (Stateful-set)
@@ -64,7 +64,7 @@ The `platform-descriptor.json` is the **core artifact** defining the complete pl
 }
 ```
 
-### Eureka Infrastructure Components
+### Eureka Components
 ```json
 "eureka-components": [
   {"name": "folio-kong", "version": "3.10.0-SNAPSHOT.16"},
