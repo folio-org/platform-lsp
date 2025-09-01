@@ -36,7 +36,7 @@ permissions:
   contents: write
 
 env:
-  DOWNSTREAM_WF_BRANCH: master
+  DOWNSTREAM_WF_BRANCH: RANCHER-2523-test
 
 jobs:
   validate-actor:
