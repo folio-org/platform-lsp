@@ -1739,10 +1739,10 @@
     lodash "^4.17.11"
     prop-types "^15.6.0"
 
-"@folio/inventory@13.0.9":
-  version "13.0.9"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory/-/inventory-13.0.9.tgz#1654b06416fd731f8fbac1ca70739c981017ac84"
-  integrity sha512-uYVsGJ9+DKhOYTbjiHR1mG1ElA6q08+m/PPWiz00+gldO4o7FGzmQDOgJzBgcFpURohwqCQ8uwbih3xGgqBQxA==
+"@folio/inventory@13.0.10":
+  version "13.0.10"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory/-/inventory-13.0.10.tgz#71429b9660f37618b786f8514bd4029f9ddb35c2"
+  integrity sha512-Fquso2NL0ZtLcJk4hc2j6f6dFxYi+pNA30mWVmcfwUJTwZXfcU+S2qU9fEiTVeuL52yT9oTotDScC7r0gnazMQ==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.3.2"
