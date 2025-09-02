@@ -40,6 +40,8 @@ compare_versions() {
     
     if [ -z "$latest_info" ]; then
         echo "❌ $app_name: Unable to fetch latest version (current: $current_version)"
+        # Still add current app id to validation list even if we can't fetch latest
+        app_ids+=("${app_name}-${current_version}")
         return 1
     fi
     
