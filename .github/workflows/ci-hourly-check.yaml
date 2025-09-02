@@ -42,20 +42,34 @@ jobs:
           FAR_URL: ${{ vars.FAR_URL }}
         run: |
           echo "Running application version check..."
+          # Capture output and exit code
+          set +e  # Don't exit on error
           ./scripts/check-apps.sh 2>&1 | tee /tmp/check-apps-output.log
-        continue-on-error: true
+          exit_code=$?
+          set -e  # Re-enable exit on error
+          
+          # Store the exit code for later use
+          echo "SCRIPT_EXIT_CODE=${exit_code}" >> $GITHUB_OUTPUT
+          
+          # Exit with the original code to fail the step if script failed
+          exit $exit_code
 
       - name: Capture error details
-        if: failure()
+        if: always()
         id: error-details
         run: |
-          echo "FAILED_STEP=Check and Update Application Versions" >> $GITHUB_OUTPUT
-          if [ -f /tmp/check-apps-output.log ]; then
-            # Get the last 10 lines of output for error context
-            ERROR_DETAILS=$(tail -n 10 /tmp/check-apps-output.log | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
-            echo "ERROR_DETAILS=${ERROR_DETAILS}" >> $GITHUB_OUTPUT
+          if [ "${{ steps.check-apps.outputs.SCRIPT_EXIT_CODE }}" != "0" ]; then
+            echo "FAILED_STEP=Check and Update Application Versions" >> $GITHUB_OUTPUT
+            if [ -f /tmp/check-apps-output.log ]; then
+              # Get the last 10 lines of output for error context
+              ERROR_DETAILS=$(tail -n 10 /tmp/check-apps-output.log | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+              echo "ERROR_DETAILS=${ERROR_DETAILS}" >> $GITHUB_OUTPUT
+            else
+              echo "ERROR_DETAILS=No error log available" >> $GITHUB_OUTPUT
+            fi
           else
-            echo "ERROR_DETAILS=No error log available" >> $GITHUB_OUTPUT
+            echo "FAILED_STEP=" >> $GITHUB_OUTPUT
+            echo "ERROR_DETAILS=" >> $GITHUB_OUTPUT
           fi
 
       - name: Notify on Failure
