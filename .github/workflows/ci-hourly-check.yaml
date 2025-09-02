@@ -45,7 +45,7 @@ jobs:
           # Capture output and exit code
           set +e  # Don't exit on error
           ./scripts/check-apps.sh 2>&1 | tee /tmp/check-apps-output.log
-          exit_code=$?
+          exit_code=${PIPESTATUS[0]}  # Get exit code of the script, not tee
           set -e  # Re-enable exit on error
           
           # Store the exit code for later use
