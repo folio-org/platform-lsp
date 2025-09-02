@@ -72,6 +72,7 @@ total_apps=0
 up_to_date=0
 outdated=0
 failed=0
+validation_exit_code=0
 app_ids=()
 updates_needed=()
 
