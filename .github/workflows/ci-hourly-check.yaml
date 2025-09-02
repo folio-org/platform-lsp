@@ -6,9 +6,11 @@ on:
   push:
     branches:
       - snapshot
+      - RANCHER-2322
   pull_request:
     branches:
       - snapshot
+      - RANCHER-2322
 
 jobs:
   check-and-update:
