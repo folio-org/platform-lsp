@@ -32,17 +32,17 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100000000000001"
+        "version": "2.0.24"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.0.0-SNAPSHOT.100000000000003"
+        "version": "2.1.40"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100000000000001"
+        "version": "1.0.22"
       },
       {
         "name": "app-agreements",
@@ -50,15 +50,15 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100000000000001"
+        "version": "1.0.7"
       },
       {
         "name": "app-consortia",
-        "version": "1.4.0-SNAPSHOT.100000000000001"
+        "version": "1.2.1"
       },
       {
         "name": "app-consortia-manager",
-        "version": "1.3.0-SNAPSHOT.100000000000001"
+        "version": "1.1.1"
       },
       {
         "name": "app-dashboard",
@@ -66,7 +66,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.3.0-SNAPSHOT.100000000000001"
+        "version": "1.1.4"
       },
       {
         "name": "app-ebsconet",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.0-SNAPSHOT.100000000000001"
+        "version": "2.0.9"
       },
       {
         "name": "app-eholdings",
@@ -82,11 +82,11 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100000000000001"
+        "version": "2.0.3"
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100000000000001"
+        "version": "1.0.11"
       },
       {
         "name": "app-gobi",
@@ -102,7 +102,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100000000000001"
+        "version": "1.1.6"
       },
       {
         "name": "app-lists",
@@ -118,11 +118,11 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100000000000001"
+        "version": "1.0.2"
       },
       {
         "name": "app-reading-room",
-        "version": "1.3.0-SNAPSHOT.100000000000001"
+        "version": "2.0.2"
       },
       {
         "name": "app-reporting",
