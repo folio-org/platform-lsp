@@ -21,7 +21,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: snapshot
+          ref: RANCHER-2322
 
       - name: Setup dependencies
         run: |
