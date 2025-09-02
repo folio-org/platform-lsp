@@ -135,7 +135,7 @@ if [ ${#app_ids[@]} -gt 0 ]; then
     # Construct JSON payload
     json_payload=$(printf '%s\n' "${app_ids[@]}" | jq -R . | jq -s '{applicationIds: .}')
     
-    echo "Sending validation request to ${FAR_URL}/validate-interfaces"
+    echo "Sending validation request to ${FAR_URL}/applications/validate-interfaces"
     echo "Payload:"
     echo "$json_payload" | jq .
     echo ""
@@ -144,7 +144,7 @@ if [ ${#app_ids[@]} -gt 0 ]; then
     validation_response=$(curl -s -X POST \
         -H "Content-Type: application/json" \
         -d "$json_payload" \
-        "${FAR_URL}/validate-interfaces")
+        "${FAR_URL}/applications/validate-interfaces")
     
     echo "Validation response:"
     echo "$validation_response" | jq .
