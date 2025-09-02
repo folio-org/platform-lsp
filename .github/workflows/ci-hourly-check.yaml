@@ -37,9 +37,26 @@ jobs:
         run: chmod +x scripts/check-apps.sh
 
       - name: Check and Update Application Versions
+        id: check-apps
         env:
           FAR_URL: ${{ vars.FAR_URL }}
-        run: ./scripts/check-apps.sh
+        run: |
+          echo "Running application version check..."
+          ./scripts/check-apps.sh 2>&1 | tee /tmp/check-apps-output.log
+        continue-on-error: true
+
+      - name: Capture error details
+        if: failure()
+        id: error-details
+        run: |
+          echo "FAILED_STEP=Check and Update Application Versions" >> $GITHUB_OUTPUT
+          if [ -f /tmp/check-apps-output.log ]; then
+            # Get the last 10 lines of output for error context
+            ERROR_DETAILS=$(tail -n 10 /tmp/check-apps-output.log | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+            echo "ERROR_DETAILS=${ERROR_DETAILS}" >> $GITHUB_OUTPUT
+          else
+            echo "ERROR_DETAILS=No error log available" >> $GITHUB_OUTPUT
+          fi
 
       - name: Notify on Failure
         if: failure()
@@ -50,22 +67,30 @@ jobs:
           errors: true
           payload: |
             channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
-            text: "LSP Hourly Check and Update FAILED"
+            text: "🚨 LSP Hourly Check and Update FAILED"
             blocks:
               - type: section
                 text:
                   type: mrkdwn
-                  text: "*LSP Hourly Check and Update FAILED <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+                  text: "*🚨 LSP Hourly Check and Update FAILED <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+              - type: section
+                fields:
+                  - type: mrkdwn
+                    text: "*Branch:*\n<${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}|${{ github.ref_name }}>"
+                  - type: mrkdwn
+                    text: "*Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
+                  - type: mrkdwn
+                    text: "*Failed Step:*\n${{ steps.error-details.outputs.FAILED_STEP || 'Unknown step' }}"
+                  - type: mrkdwn
+                    text: "*Triggered by:*\n${{ github.actor }}"
+              - type: section
+                text:
+                  type: mrkdwn
+                  text: "*Error Details:*\n```${{ steps.error-details.outputs.ERROR_DETAILS || 'No error details available' }}```"
             attachments:
               - color: "danger"
-                fields:
-                  - title: "Branch"
-                    value: "<${{ github.server_url }}/${{ github.repository }}/tree/snapshot|snapshot>"
-                    short: true
-                  - title: "Workflow"
-                    value: "LSP Hourly Check and Update"
-                    short: true
-                footer: "Eureka CI/CD"
+                footer: "Eureka CI/CD • ${{ github.workflow }}"
+                ts: "${{ github.event.head_commit.timestamp }}"
 
       - name: Notify on Success
         if: success()
@@ -76,19 +101,23 @@ jobs:
           errors: true
           payload: |
             channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
-            text: "LSP Hourly Check and Update SUCCESS"
+            text: "✅ LSP Hourly Check and Update SUCCESS"
             blocks:
               - type: section
                 text:
                   type: mrkdwn
-                  text: "*LSP Hourly Check and Update SUCCESS <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+                  text: "*✅ LSP Hourly Check and Update SUCCESS <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+              - type: section
+                fields:
+                  - type: mrkdwn
+                    text: "*Branch:*\n<${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}|${{ github.ref_name }}>"
+                  - type: mrkdwn
+                    text: "*Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
+                  - type: mrkdwn
+                    text: "*Triggered by:*\n${{ github.actor }}"
+                  - type: mrkdwn
+                    text: "*Duration:*\n${{ job.status }}"
             attachments:
               - color: "good"
-                fields:
-                  - title: "Branch"
-                    value: "<${{ github.server_url }}/${{ github.repository }}/tree/snapshot|snapshot>"
-                    short: true
-                  - title: "Workflow"
-                    value: "LSP Hourly Check and Update"
-                    short: true
-                footer: "Eureka CI/CD"
+                footer: "Eureka CI/CD • ${{ github.workflow }}"
+                ts: "${{ github.event.head_commit.timestamp }}"
