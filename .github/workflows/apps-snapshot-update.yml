@@ -226,14 +226,26 @@ jobs:
             echo ""
             echo "### 📊 Overall Statistics"
             echo "- **Total Applications**: $TOTAL_APPS"
-            echo "- **Successfully Processed**: $SUCCESS_COUNT"
-            echo "- **Updated Applications**: $UPDATED_COUNT"
-            echo "- **Failed Applications**: $FAILURE_COUNT"
             echo "- **Triggered by**: ${{ github.actor }}"
             echo "- **Run Number**: ${{ github.run_number }}"
             echo ""
             
-            if [[ "${{ needs.update-applications.result }}" == "success" ]]; then
+            # Check if this is a dry run first
+            if [[ "${{ inputs.dry_run }}" == "true" ]]; then
+              echo "### 🏃 Dry Run Mode"
+              echo ""
+              echo "This was a dry run to validate the update process."
+              echo "- Module updates were checked but not committed"
+              echo "- No actual changes were made to any applications"
+              echo "- Result statistics are not collected in dry run mode"
+              echo ""
+              echo "Set \`dry_run=false\` to apply changes and see detailed results."
+              echo ""
+            elif [[ "${{ needs.update-applications.result }}" == "success" ]]; then
+              echo "- **Successfully Processed**: $SUCCESS_COUNT"
+              echo "- **Updated Applications**: $UPDATED_COUNT"
+              echo "- **Failed Applications**: $FAILURE_COUNT"
+              echo ""
               echo "### ✅ All Applications Processed Successfully"
               echo ""
               
@@ -263,6 +275,10 @@ jobs:
               echo ""
               
             else
+              echo "- **Successfully Processed**: $SUCCESS_COUNT"
+              echo "- **Updated Applications**: $UPDATED_COUNT"
+              echo "- **Failed Applications**: $FAILURE_COUNT"
+              echo ""
               echo "### ⚠️ Some Applications Failed to Update"
               echo ""
               
@@ -299,13 +315,6 @@ jobs:
               echo "- Verify module registry accessibility"
               echo "- Ensure GitHub App has proper permissions for all repositories"
               echo "- Review any authentication or network issues"
-              echo ""
-            fi
-            
-            if [[ "${{ inputs.dry_run }}" == "true" ]]; then
-              echo "### 🏃 Dry Run Mode"
-              echo "This was a dry run - no actual changes were made to any applications."
-              echo "Set \`dry_run=false\` to apply changes."
               echo ""
             fi
             
