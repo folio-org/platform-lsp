@@ -1,0 +1,92 @@
+name: LSP Hourly Check and Update
+on:
+  # schedule:
+  #   - cron: '0 * * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - snapshot
+  pull_request:
+    branches:
+      - snapshot
+
+jobs:
+  check-and-update:
+    runs-on: ubuntu-latest
+    # environment: your-environment-name  # Uncomment and set your environment name to use environment variables
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: snapshot
+
+      - name: Setup dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq curl
+
+      - name: Setup Git Configuration
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Make script executable
+        run: chmod +x scripts/check-apps.sh
+
+      - name: Check and Update Application Versions
+        env:
+          FAR_URL: ${{ vars.FAR_URL }}
+        run: ./scripts/check-apps.sh
+
+      - name: Notify on Failure
+        if: failure()
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+          errors: true
+          payload: |
+            channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
+            text: "LSP Hourly Check and Update FAILED"
+            blocks:
+              - type: section
+                text:
+                  type: mrkdwn
+                  text: "*LSP Hourly Check and Update FAILED <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+            attachments:
+              - color: "danger"
+                fields:
+                  - title: "Branch"
+                    value: "<${{ github.server_url }}/${{ github.repository }}/tree/snapshot|snapshot>"
+                    short: true
+                  - title: "Workflow"
+                    value: "LSP Hourly Check and Update"
+                    short: true
+                footer: "Eureka CI/CD"
+
+      - name: Notify on Success
+        if: success()
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+          errors: true
+          payload: |
+            channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
+            text: "LSP Hourly Check and Update SUCCESS"
+            blocks:
+              - type: section
+                text:
+                  type: mrkdwn
+                  text: "*LSP Hourly Check and Update SUCCESS <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+            attachments:
+              - color: "good"
+                fields:
+                  - title: "Branch"
+                    value: "<${{ github.server_url }}/${{ github.repository }}/tree/snapshot|snapshot>"
+                    short: true
+                  - title: "Workflow"
+                    value: "LSP Hourly Check and Update"
+                    short: true
+                footer: "Eureka CI/CD"
