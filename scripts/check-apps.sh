@@ -2,9 +2,6 @@
 
 set -e
 
-# Base URL for FAR registry
-FAR_BASE_URL="https://far-test.ci.folio.org/applications"
-
 # Check if platform-descriptor.json exists
 if [ ! -f "platform-descriptor.json" ]; then
     echo "Error: platform-descriptor.json not found"
@@ -14,7 +11,7 @@ fi
 # Function to get latest version from FAR API
 get_latest_version() {
     local app_name="$1"
-    local url="${FAR_BASE_URL}?limit=500&appName=${app_name}&preRelease=0&latest=1"
+    local url="${FAR_URL}?limit=500&appName=${app_name}&preRelease=0&latest=1"
 
     echo "Checking latest version for: $app_name" >&2
     
@@ -67,7 +64,7 @@ compare_versions() {
 }
 
 echo "=== Checking application versions against FAR registry ==="
-echo "FAR Base URL: $FAR_BASE_URL"
+echo "FAR Base URL: $FAR_URL"
 echo ""
 
 # Initialize counters and app IDs array
@@ -138,7 +135,7 @@ if [ ${#app_ids[@]} -gt 0 ]; then
     # Construct JSON payload
     json_payload=$(printf '%s\n' "${app_ids[@]}" | jq -R . | jq -s '{applicationIds: .}')
     
-    echo "Sending validation request to ${FAR_BASE_URL}/validate-interfaces"
+    echo "Sending validation request to ${FAR_URL}/validate-interfaces"
     echo "Payload:"
     echo "$json_payload" | jq .
     echo ""
@@ -147,7 +144,7 @@ if [ ${#app_ids[@]} -gt 0 ]; then
     validation_response=$(curl -s -X POST \
         -H "Content-Type: application/json" \
         -d "$json_payload" \
-        "${FAR_BASE_URL}/validate-interfaces")
+        "${FAR_URL}/validate-interfaces")
     
     echo "Validation response:"
     echo "$validation_response" | jq .
