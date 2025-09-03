@@ -250,7 +250,8 @@ Registry        App Descriptor     Platform Descriptor
 
 ### Apps Snapshot Update Orchestrator (`apps-snapshot-update.yml`)
 
-**Location**: `platform-lsp/.github/workflows/apps-snapshot-update.yml`
+**Location**: `platform-lsp/.github/workflows/apps-snapshot-update.yml`  
+**Documentation**: [📚 Detailed Workflow Documentation](apps-snapshot-update.md)
 
 **Key Components**:
 
@@ -312,6 +313,7 @@ slack_notification:
 
 ### Workflow Implementation
 - [`apps-snapshot-update.yml`](../workflows/apps-snapshot-update.yml) - Platform-LSP application orchestrator
+- [Apps Snapshot Update Documentation](apps-snapshot-update.md) - Detailed orchestrator workflow documentation
 - [`app-update.yml`](https://github.com/folio-org/kitfox-github/blob/master/.github/workflows/app-update.yml) - Individual application update workflow
 
 ### External References
@@ -322,4 +324,4 @@ slack_notification:
 
 **Status**: Production Active  
 **Maintained by**: Kitfox Team DevOps  
-**Last Updated**: August 2025
+**Last Updated**: September 2025
