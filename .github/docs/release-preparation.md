@@ -160,7 +160,7 @@ The implementation uses a **proven distributed workflow architecture** with clea
 - uses: folio-org/kitfox-github/.github/actions/orchestrate-external-workflow@master
   with:
     repository: folio-org/${{ matrix.application }}
-    workflow_file: app-release-preparation-orchestrator.yml
+    workflow_file: release-preparation.yml
     workflow_parameters: |
       previous_release_branch: ${{ inputs.previous_release_branch }}
       new_release_branch: ${{ inputs.new_release_branch }}
@@ -348,14 +348,14 @@ app-three"
 **Solution**: Generate unique dispatch IDs for reliable workflow tracking
 ```bash
 dispatch_id=$(uuidgen)
-gh workflow run app-release-preparation-orchestrator.yml \
+gh workflow run release-preparation.yml \
   --repo "folio-org/$APP_NAME" \
   --ref master \
   -f dispatch_id="$dispatch_id"
 
 # Poll for workflow using dispatch_id
 run_id=$(gh run list \
-  --workflow app-release-preparation-orchestrator.yml \
+  --workflow release-preparation.yml \
   --repo "folio-org/$APP_NAME" \
   --json databaseId,displayTitle \
   --jq "map(select(.displayTitle | contains(\"$dispatch_id\")))[0].databaseId")
