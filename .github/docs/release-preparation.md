@@ -179,12 +179,12 @@ The implementation uses a **proven distributed workflow architecture** with clea
 
 **Reusable Workflows** (folio-org/kitfox-github):
 
-#### 1. app-release-preparation.yml
+#### 1. release-preparation.yml
 - **Purpose**: Individual application release branch preparation
 - **Features**: Branch creation, version updates, descriptor modifications
 - **Integration**: Called by all 31 application repositories
 
-#### 2. app-release-preparation-notification.yml
+#### 2. release-preparation-notification.yml
 - **Purpose**: Standardized Slack notification system
 - **Features**: Success/failure reporting with detailed information
 - **Integration**: Called by all application workflows for consistent messaging
@@ -491,7 +491,7 @@ The release preparation process relies heavily on the shared infrastructure prov
 - [Kitfox GitHub Infrastructure](https://github.com/folio-org/kitfox-github)
 - [Universal Action: validate-team-membership](https://github.com/folio-org/kitfox-github/tree/master/.github/actions/validate-team-membership)
 - [Universal Action: orchestrate-external-workflow](https://github.com/folio-org/kitfox-github/tree/master/.github/actions/orchestrate-external-workflow)
-- [Reusable Workflow: app-release-preparation](https://github.com/folio-org/kitfox-github/blob/master/.github/workflows/app-release-preparation.yml)
+- [Reusable Workflow: release-preparation](https://github.com/folio-org/kitfox-github/blob/master/.github/workflows/release-preparation.yml)
 
 ---
 
