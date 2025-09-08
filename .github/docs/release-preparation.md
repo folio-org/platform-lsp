@@ -160,7 +160,7 @@ The implementation uses a **proven distributed workflow architecture** with clea
 - uses: folio-org/kitfox-github/.github/actions/orchestrate-external-workflow@master
   with:
     repository: folio-org/${{ matrix.application }}
-    workflow_file: app-release-preparation.yml
+    workflow_file: release-preparation.yml
     workflow_parameters: |
       previous_release_branch: ${{ inputs.previous_release_branch }}
       new_release_branch: ${{ inputs.new_release_branch }}
@@ -179,12 +179,12 @@ The implementation uses a **proven distributed workflow architecture** with clea
 
 **Reusable Workflows** (folio-org/kitfox-github):
 
-#### 1. app-release-preparation.yml
+#### 1. release-preparation.yml
 - **Purpose**: Individual application release branch preparation
 - **Features**: Branch creation, version updates, descriptor modifications
 - **Integration**: Called by all 31 application repositories
 
-#### 2. app-release-preparation-notification.yml
+#### 2. release-preparation-notification.yml
 - **Purpose**: Standardized Slack notification system
 - **Features**: Success/failure reporting with detailed information
 - **Integration**: Called by all application workflows for consistent messaging
@@ -348,14 +348,14 @@ app-three"
 **Solution**: Generate unique dispatch IDs for reliable workflow tracking
 ```bash
 dispatch_id=$(uuidgen)
-gh workflow run app-release-preparation.yml \
+gh workflow run release-preparation.yml \
   --repo "folio-org/$APP_NAME" \
   --ref master \
   -f dispatch_id="$dispatch_id"
 
 # Poll for workflow using dispatch_id
 run_id=$(gh run list \
-  --workflow app-release-preparation.yml \
+  --workflow release-preparation.yml \
   --repo "folio-org/$APP_NAME" \
   --json databaseId,displayTitle \
   --jq "map(select(.displayTitle | contains(\"$dispatch_id\")))[0].databaseId")
@@ -487,11 +487,11 @@ The release preparation process relies heavily on the shared infrastructure prov
 - **[Application Notifications](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/app-notification.md)** - Slack notification standards
 
 ### Implementation References
-- [Release Preparation Workflow](../workflows/release-preparation.yml)
+- [Release Preparation Workflow](../workflows/release-preparation-orchestrator.yml)
 - [Kitfox GitHub Infrastructure](https://github.com/folio-org/kitfox-github)
 - [Universal Action: validate-team-membership](https://github.com/folio-org/kitfox-github/tree/master/.github/actions/validate-team-membership)
 - [Universal Action: orchestrate-external-workflow](https://github.com/folio-org/kitfox-github/tree/master/.github/actions/orchestrate-external-workflow)
-- [Reusable Workflow: app-release-preparation](https://github.com/folio-org/kitfox-github/blob/master/.github/workflows/app-release-preparation.yml)
+- [Reusable Workflow: release-preparation](https://github.com/folio-org/kitfox-github/blob/master/.github/workflows/release-preparation.yml)
 
 ---
 
