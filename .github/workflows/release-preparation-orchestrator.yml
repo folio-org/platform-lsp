@@ -237,7 +237,7 @@ jobs:
         uses: folio-org/kitfox-github/.github/actions/orchestrate-external-workflow@master
         with:
           repository: folio-org/${{ matrix.application }}
-          workflow_file: app-release-preparation.yml
+          workflow_file: release-preparation.yml
           workflow_branch: ${{ env.DOWNSTREAM_WF_BRANCH }}
           workflow_parameters: |
             previous_release_branch: ${{ inputs.previous_release_branch }}
@@ -273,7 +273,7 @@ jobs:
         uses: folio-org/kitfox-github/.github/actions/orchestrate-external-workflow@master
         with:
           repository: folio-org/${{ matrix.application }}
-          workflow_file: app-release-preparation.yml
+          workflow_file: release-preparation.yml
           workflow_branch: ${{ env.DOWNSTREAM_WF_BRANCH }}
           workflow_parameters: |
             previous_release_branch: ${{ inputs.previous_release_branch }}
