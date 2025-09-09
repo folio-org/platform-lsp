@@ -2554,10 +2554,10 @@
     prop-types "^15.5.10"
     redux-form "^8.3.0"
 
-"@folio/stripes-inventory-components@2.0.6":
-  version "2.0.6"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-inventory-components/-/stripes-inventory-components-2.0.6.tgz#10c14bc3f1211eb8011a116fa8f94fc94c74ae21"
-  integrity sha512-jQa3fV7voPIj5RIOT6rW1GyfPI5hwr/v+fVRpiWpflu/QwjKWVYUB+skVx/iTQXeZpx2iS0C2y10hzGS070x2w==
+"@folio/stripes-inventory-components@2.0.7":
+  version "2.0.7"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-inventory-components/-/stripes-inventory-components-2.0.7.tgz#72e2eeef6d45672fdad94fc348fc038aabefd938"
+  integrity sha512-H5SuoZMwMl9XG+rjqZfvAxljG0KJQcM4lz4up4/UhDq+MeWV6jdN/os09OcPLn/WmxjfX5ZLGfNIViQEiw/Wdw==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     history "^4.10.0"
