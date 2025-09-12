@@ -1,0 +1,85 @@
+name: Update Eureka Components
+description: Resolve newer component versions from GitHub releases (respecting scope/order) when Docker images exist.
+
+inputs:
+  components:
+    description: JSON array of component objects, e.g. [{"name":"folio-kong","version":"3.9.1"}]
+    required: true
+  filter-scope:
+    description: SemVer scope to consider (major|minor|patch)
+    required: false
+    default: patch
+    type: choice
+    options:
+      - major
+      - minor
+      - patch
+  sort-order:
+    description: Sort order for candidate versions within scope (asc|desc)
+    required: false
+    default: asc
+    type: choice
+    options:
+      - asc
+      - desc
+  github-token:
+    description: GitHub token with at least read access (defaults to workflow GITHUB_TOKEN)
+    required: false
+    default: ${{ github.token }}
+  docker-username:
+    description: Docker Hub username (optional for authenticated lookups)
+    required: false
+  docker-password:
+    description: Docker Hub password (optional for authenticated lookups)
+    required: false
+  log-level:
+    description: Level of logging verbosity (INFO, DEBUG, WARNING, ERROR)
+    required: false
+    default: INFO
+
+outputs:
+  updated-components:
+    description: JSON array with updated component versions
+    value: ${{ steps.update.outputs.updated-components }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+        cache-dependency-path: ${{ github.action_path }}/requirements.txt
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        set -euo pipefail
+        echo "Installing dependencies..."
+        python -m pip install --disable-pip-version-check --no-cache-dir -r "${GITHUB_ACTION_PATH}/requirements.txt"
+
+    - id: update
+      name: Run update script
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        DOCKER_USERNAME: ${{ inputs.docker-username }}
+        DOCKER_PASSWORD: ${{ inputs.docker-password }}
+        PYTHONUNBUFFERED: "1"
+        LOG_LEVEL: ${{ inputs.log-level }}
+        COMPONENTS_JSON: ${{ inputs.components }}
+        FILTER_SCOPE: ${{ inputs.filter-scope }}
+        SORT_ORDER: ${{ inputs.sort-order }}
+      run: |
+        set -euo pipefail
+        echo "Running component update script..."
+        # Write components to temporary file to avoid command line length issues
+        TEMP_JSON_FILE=$(mktemp)
+        echo "$COMPONENTS_JSON" > "$TEMP_JSON_FILE"
+        python "${GITHUB_ACTION_PATH}/update-eureka-components.py" --filter-scope "$FILTER_SCOPE" --sort-order "$SORT_ORDER" --data "$(cat $TEMP_JSON_FILE)"
+        rm -f "$TEMP_JSON_FILE"
+
+branding:
+  icon: refresh-cw
+  color: blue

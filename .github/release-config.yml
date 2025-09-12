@@ -1,0 +1,10 @@
+scan_config:
+  enabled: true
+  update_branch_format: release-update/{0}
+  labels:
+    - release-update
+  pr_reviewers:
+    - folio-org/kitfox
+
+release_branches:
+ - R1-1994

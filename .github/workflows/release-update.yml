@@ -1,0 +1,73 @@
+name: Release update (Reusable)
+
+run-name: ${{ inputs.release_branch }} release update
+
+on:
+  workflow_call:
+    inputs:
+      release_branch:
+        description: 'Release branch to scan'
+        required: true
+        type: string
+      update_branch:
+        description: 'Update branch name for this release branch'
+        required: true
+        type: string
+      dry_run:
+        description: 'Perform dry run without creating PRs'
+        required: false
+        type: boolean
+        default: false
+      pr_reviewers:
+        description: 'Comma-separated list of reviewers'
+        required: false
+        type: string
+        default: ''
+      pr_labels:
+        description: 'Comma-separated list of labels'
+        required: false
+        type: string
+        default: ''
+    outputs:
+      scan_result:
+        description: 'Result of the scan (success/failure/skipped)'
+        value: ${{ jobs.scan.result }}
+      updated:
+        description: 'Whether updates were found'
+        value: ${{ jobs.scan.outputs.updated }}
+      pr_created:
+        description: 'Whether a PR was created'
+        value: ${{ jobs.scan.outputs.pr_created }}
+      pr_url:
+        description: 'URL of the created PR'
+        value: ${{ jobs.scan.outputs.pr_url }}
+      workflow_status:
+        description: 'Overall workflow status'
+        value: ${{ jobs.scan.outputs.workflow_status }}
+      failure_reason:
+        description: 'Reason for workflow failure if any'
+        value: ${{ jobs.scan.outputs.failure_reason }}
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: release-scan-${{ github.repository }}-${{ inputs.release_branch }}
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    name: Scan Branch
+    uses: ./.github/workflows/release-update-flow.yml
+    with:
+      app_name: ${{ github.event.repository.name }}
+      repo: ${{ github.repository }}
+      release_branch: ${{ inputs.release_branch }}
+      update_branch: ${{ inputs.update_branch }}
+      workflow_run_number: ${{ github.run_number }}
+      dry_run: ${{ inputs.dry_run }}
+      pr_reviewers: ${{ inputs.pr_reviewers }}
+      pr_labels: ${{ inputs.pr_labels }}
+    secrets: inherit

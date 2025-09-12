@@ -1,0 +1,127 @@
+name: Update Applications
+description: Update application versions by consulting the FOLIO Application Registry (FAR) respecting semver scope rules.
+
+inputs:
+  applications:
+    description: >-
+      JSON: either an array of {"name":"app","version":"x.y.z"} or grouped object
+      {"required":[...],"optional":[...],"<group>":[...]}
+    required: true
+  far-base-url:
+    description: FAR base URL
+    required: false
+    default: https://far.ci.folio.org
+  filter-scope:
+    description: SemVer scope to consider (major|minor|patch)
+    required: false
+    default: patch
+    type: choice
+    options:
+      - major
+      - minor
+      - patch
+  sort-order:
+    description: Sort order for candidate versions within scope (asc|desc)
+    required: false
+    default: asc
+    type: choice
+    options:
+      - asc
+      - desc
+  far-limit:
+    description: FAR query limit (max records)
+    required: false
+    default: '500'
+  far-latest:
+    description: FAR 'latest' query parameter (server side)
+    required: false
+    default: '50'
+  far-pre-release:
+    description: Include pre-release versions (true|false)
+    required: false
+    default: 'false'
+    type: choice
+    options:
+      - 'true'
+      - 'false'
+  request-timeout:
+    description: HTTP request timeout (seconds)
+    required: false
+    default: '10.0'
+  max-retries:
+    description: Maximum number of HTTP request retries
+    required: false
+    default: '3'
+  retry-backoff:
+    description: Base backoff time in seconds for retries
+    required: false
+    default: '1.0'
+  log-level:
+    description: Level of logging verbosity (INFO, DEBUG, WARNING, ERROR)
+    required: false
+    default: INFO
+
+outputs:
+  updated-applications:
+    description: JSON (shape matches input) with possibly updated versions
+    value: ${{ steps.update.outputs.updated-applications }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        check-latest: true
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        set -euo pipefail
+        echo "Installing dependencies..."
+        python -m pip install --disable-pip-version-check --no-cache-dir -r "${{ github.action_path }}/requirements.txt"
+        # Create cache directories to ensure they exist for future runs
+        mkdir -p ~/.cache/pip
+
+    - id: update
+      name: Run update script
+      shell: bash
+      env:
+        APPLICATIONS_JSON: ${{ inputs.applications }}
+        FAR_BASE_URL: ${{ inputs.far-base-url }}
+        FILTER_SCOPE: ${{ inputs.filter-scope }}
+        SORT_ORDER: ${{ inputs.sort-order }}
+        FAR_LIMIT: ${{ inputs.far-limit }}
+        FAR_LATEST: ${{ inputs.far-latest }}
+        FAR_PRE_RELEASE: ${{ inputs.far-pre-release }}
+        REQUEST_TIMEOUT: ${{ inputs.request-timeout }}
+        MAX_RETRIES: ${{ inputs.max-retries }}
+        RETRY_BACKOFF: ${{ inputs.retry-backoff }}
+        PYTHONUNBUFFERED: "1"
+        LOG_LEVEL: ${{ inputs.log-level }}
+      run: |
+        set -euo pipefail
+        echo "Running application update script..."
+
+        # Log to GitHub step summary if available
+        if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+          echo "## Update Applications" >> $GITHUB_STEP_SUMMARY
+          echo "- Using FAR Base URL: $FAR_BASE_URL" >> $GITHUB_STEP_SUMMARY
+          echo "- Filter scope: $FILTER_SCOPE" >> $GITHUB_STEP_SUMMARY
+          echo "- Sort order: $SORT_ORDER" >> $GITHUB_STEP_SUMMARY
+          echo "- Include pre-release versions: $FAR_PRE_RELEASE" >> $GITHUB_STEP_SUMMARY
+          echo "- Log level: $LOG_LEVEL" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        # Write applications to temporary file to avoid command line length issues
+        TEMP_JSON_FILE=$(mktemp)
+        echo "$APPLICATIONS_JSON" > "$TEMP_JSON_FILE"
+
+        # Run the script and capture its output
+        python "${GITHUB_ACTION_PATH}/update-applications.py" --filter-scope "$FILTER_SCOPE" --data "$(cat $TEMP_JSON_FILE)"
+        rm -f "$TEMP_JSON_FILE"
+
+branding:
+  icon: layers
+  color: green

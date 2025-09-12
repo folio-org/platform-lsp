@@ -1,0 +1,282 @@
+name: Release update (Flow)
+
+on:
+  workflow_call:
+    inputs:
+      app_name:
+        description: 'Application name'
+        required: true
+        type: string
+      repo:
+        description: 'Application repository name (org/repo format)'
+        required: true
+        type: string
+      release_branch:
+        description: 'Release branch to scan (e.g., R1-2025)'
+        required: true
+        type: string
+      update_branch:
+        description: 'Update branch name for this release branch'
+        required: true
+        type: string
+      workflow_run_number:
+        description: 'GitHub run number for display'
+        required: true
+        type: string
+      dry_run:
+        description: 'Perform dry run without creating PRs'
+        required: false
+        type: boolean
+        default: false
+      pr_reviewers:
+        description: 'Comma-separated list of reviewers (users or teams with org/ prefix)'
+        required: false
+        type: string
+        default: ''
+      pr_labels:
+        description: 'Comma-separated list of labels to add to PR'
+        required: false
+        type: string
+        default: ''
+    outputs:
+      pr_created:
+        description: 'Whether a PR was created or updated'
+        value: ${{ jobs.manage-pr.outputs.pr_created || jobs.manage-pr.outputs.pr_updated }}
+      pr_number:
+        description: 'PR number if created or updated'
+        value: ${{ jobs.manage-pr.outputs.pr_number }}
+      pr_url:
+        description: 'PR URL if created or updated'
+        value: ${{ jobs.manage-pr.outputs.pr_url }}
+      successful_reviewers:
+        description: 'Successfully added reviewers'
+        value: ${{ jobs.manage-pr.outputs.successful_reviewers }}
+      failed_reviewers:
+        description: 'Failed to add reviewers'
+        value: ${{ jobs.manage-pr.outputs.failed_reviewers }}
+      updated:
+        description: 'Whether the application was updated'
+        value: ${{ jobs.update-application.outputs.updated }}
+      updated_modules:
+        description: 'List of updated modules'
+        value: ${{ jobs.update-application.outputs.updated_modules }}
+      new_version:
+        description: 'New version of the application'
+        value: ${{ jobs.update-application.outputs.new_version }}
+      updates_cnt:
+        description: 'Number of updates'
+        value: ${{ jobs.update-application.outputs.updates_cnt }}
+      workflow_status:
+        description: 'Overall workflow status'
+        value: ${{ jobs.determine-source-branch.result == 'failure' && 'failure' || (jobs.update-application.result == 'failure' && 'failure' || (jobs.commit-changes.result == 'failure' && 'failure' || (jobs.manage-pr.result == 'failure' && 'failure' || 'success'))) }}
+      failure_reason:
+        description: 'Reason for workflow failure if any'
+        value: ${{ jobs.determine-source-branch.result == 'failure' && 'Failed to determine source branch' || (jobs.update-application.result == 'failure' && 'Failed to update application modules' || (jobs.update-application.result == 'skipped' && 'Update application job was skipped' || (jobs.commit-changes.result == 'failure' && 'Failed to commit changes to branch' || (jobs.manage-pr.result == 'failure' && 'Failed to manage pull request' || '')))) }}
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+env:
+  APP_NAME: ${{ inputs.app_name }}
+  STATE_FILE: "platform-descriptor.json"
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  determine-source-branch:
+    name: Determine Source Branch and PR Status
+    runs-on: ubuntu-latest
+    outputs:
+      source_branch: ${{ steps.determine-branch.outputs.source_branch }}
+      update_branch_exists: ${{ steps.determine-branch.outputs.update_branch_exists }}
+      pr_exists: ${{ steps.check-pr.outputs.pr_exists }}
+      pr_number: ${{ steps.check-pr.outputs.pr_number }}
+      pr_url: ${{ steps.check-pr.outputs.pr_url }}
+    steps:
+      - name: Determine which branch to scan
+        id: determine-branch
+        env:
+          REPO: ${{ inputs.repo }}
+          RELEASE_BRANCH: ${{ inputs.release_branch }}
+          UPDATE_BRANCH: ${{ inputs.update_branch }}
+        run: |
+          set -eo pipefail
+
+          echo "::notice::Checking if update branch exists: $UPDATE_BRANCH"
+
+          if gh api "repos/$REPO/branches/$UPDATE_BRANCH" >/dev/null 2>&1; then
+            echo "::notice::Update branch exists, will scan: $UPDATE_BRANCH"
+            echo "source_branch=$UPDATE_BRANCH" >> "$GITHUB_OUTPUT"
+            echo "update_branch_exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::Update branch does not exist, will scan: $RELEASE_BRANCH"
+            echo "source_branch=$RELEASE_BRANCH" >> "$GITHUB_OUTPUT"
+            echo "update_branch_exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check for existing PR
+        id: check-pr
+        if: steps.determine-branch.outputs.update_branch_exists == 'true'
+        env:
+          REPO: ${{ inputs.repo }}
+          BASE_BRANCH: ${{ inputs.release_branch }}
+          HEAD_BRANCH: ${{ inputs.update_branch }}
+        run: |
+          set -eo pipefail
+
+          echo "::notice::Checking for existing PR from $HEAD_BRANCH to $BASE_BRANCH"
+
+          pr_json=$(gh pr list \
+            --repo "$REPO" \
+            --base "$BASE_BRANCH" \
+            --head "$HEAD_BRANCH" \
+            --json number,url \
+            --jq '.[0]' || echo '{}')
+
+          if [ "$pr_json" != "{}" ] && [ -n "$pr_json" ] && [ "$(echo "$pr_json" | jq -r '.url // ""')" != "" ]; then
+            pr_number=$(echo "$pr_json" | jq -r '.number // ""')
+            pr_url=$(echo "$pr_json" | jq -r '.url // ""')
+            echo "::notice::Found existing PR #$pr_number: $pr_url"
+            echo "pr_exists=true" >> "$GITHUB_OUTPUT"
+            echo "pr_number=$pr_number" >> "$GITHUB_OUTPUT"
+            echo "pr_url=$pr_url" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::No existing PR found"
+            echo "pr_exists=false" >> "$GITHUB_OUTPUT"
+            echo "pr_number=" >> "$GITHUB_OUTPUT"
+            echo "pr_url=" >> "$GITHUB_OUTPUT"
+          fi
+
+  update-platform:
+    name: Fetch Platform Descriptor
+    needs: determine-source-branch
+    runs-on: ubuntu-latest
+    outputs:
+      updated: ${{ steps.update-descriptor.outputs.updated }}
+      updated_components: ${{ steps.update-descriptor.outputs.updated_components }}
+      updated_applications: ${{ steps.update-descriptor.outputs.updated_applications }}
+    steps:
+      - name: Checkout Platform Repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repo }}
+          ref: ${{ inputs.branch }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install gh CLI # TODO: Remove before merging if using a self-hosted runner with gh pre-installed
+        run: |
+          sudo apt update
+          sudo apt install gh
+
+      - name: Fetch descriptor file
+        id: fetch-descriptor
+        env:
+          REPO: ${{ inputs.repo }}
+          SOURCE_BRANCH: ${{ needs.determine-source-branch.outputs.source_branch }}
+          STATE_FILE: ${{ env.STATE_FILE }}
+        run: |
+          set -eo pipefail
+          echo "::notice::Fetching descriptor file from branch: $SOURCE_BRANCH"
+          gh api "repos/$REPO/contents/$STATE_FILE?ref=$SOURCE_BRANCH" -H "Accept: application/vnd.github.v3.raw" > "$STATE_FILE"
+          if [ ! -s "$STATE_FILE" ]; then
+            echo "::error::Descriptor file '$STATE_FILE' is empty or not found in branch '$SOURCE_BRANCH'"
+            exit 1
+          fi
+
+          # Validate JSON structure and extract eureka-components safely
+          if ! jq -e 'has("eureka-components")' "$STATE_FILE" > /dev/null; then
+            echo "::error::Descriptor file does not contain 'eureka-components' field"
+            echo "File content:"
+            cat "$STATE_FILE"
+            exit 1
+          fi
+
+          # Extract eureka-components as JSON and escape for GitHub Actions
+          EUREKA_COMPONENTS=$(jq -c '.["eureka-components"]' "$STATE_FILE")
+          echo "eureka_components<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$EUREKA_COMPONENTS" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+          # Extract applications as JSON and escape for GitHub Actions
+          APPLICATIONS=$(jq -c '.applications' "$STATE_FILE")
+          echo "applications<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$APPLICATIONS" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+          echo "::notice::Successfully extracted eureka-components from descriptor file"
+
+      - name: Update Eureka Components
+        id: update-eureka-components
+        uses: ./.github/actions/update-eureka-components
+        with:
+          components: ${{ steps.fetch-descriptor.outputs.eureka_components }}
+
+      - name: Update Applications
+        id: update-applications
+        uses: ./.github/actions/update-applications
+        with:
+          applications: ${{ steps.fetch-descriptor.outputs.applications }}
+
+      - name: Update Descriptor File
+        id: update-descriptor
+        run: |
+          set -eo pipefail
+
+          # Get updated components and applications
+          UPDATED_EUREKA_COMPONENTS='${{ steps.update-eureka-components.outputs.updated-components }}'
+          UPDATED_APPLICATIONS='${{ steps.update-applications.outputs.updated-applications }}'
+
+          # Initialize updated flag
+          UPDATED=false
+
+          echo "::notice::Checking for updated eureka components and applications"
+          # Compare original and updated components
+          if [ "$UPDATED_EUREKA_COMPONENTS" != "$(jq -c '.["eureka-components"]' "$STATE_FILE")" ]; then
+            echo "::notice::Eureka components have been updated"
+            UPDATED=true
+
+            # Update the eureka-components in the descriptor file
+            jq --argjson components "$UPDATED_EUREKA_COMPONENTS" '. ["eureka-components"] = $components' "$STATE_FILE" > "${STATE_FILE}.tmp"
+            mv "${STATE_FILE}.tmp" "$STATE_FILE"
+          fi
+
+          # Compare original and updated applications
+          if [ "$UPDATED_APPLICATIONS" != "$(jq -c '.applications' "$STATE_FILE")" ]; then
+            echo "::notice::Applications have been updated"
+            UPDATED=true
+
+            # Update the applications in the descriptor file
+            jq --argjson applications "$UPDATED_APPLICATIONS" '.applications = $applications' "$STATE_FILE" > "${STATE_FILE}.tmp"
+            mv "${STATE_FILE}.tmp" "$STATE_FILE"
+          fi
+
+          # Output information about updates
+          echo "updated=$UPDATED" >> "$GITHUB_OUTPUT"
+          echo "updated_eureka_components=$UPDATED_EUREKA_COMPONENTS" >> "$GITHUB_OUTPUT"
+          echo "updated_applications=$UPDATED_APPLICATIONS" >> "$GITHUB_OUTPUT"
+
+          if [ "$UPDATED" = "true" ]; then
+            echo "::notice::Descriptor file has been updated with new versions"
+            # Print a summary of changes for logging purposes
+            echo "Updated descriptor file with the following changes:"
+            echo "- Eureka Components updated: $UPDATED_EUREKA_COMPONENTS"
+            echo "- Applications updated: $UPDATED_APPLICATIONS"
+
+            # Add details to GitHub step summary if available
+            if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+              echo "## Descriptor File Updates" >> $GITHUB_STEP_SUMMARY
+              echo "- **Eureka Components updated:** $UPDATED_EUREKA_COMPONENTS" >> $GITHUB_STEP_SUMMARY
+              echo "- **Applications updated:** $UPDATED_APPLICATIONS" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "::notice::No updates needed for descriptor file"
+          fi
+
+      - name: Upload Descriptor Artifact
+        if: steps.update-descriptor.outputs.updated == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: "platform-lsp-descriptor-update"
+          path: ${{ env.STATE_FILE }}
+          retention-days: 1
