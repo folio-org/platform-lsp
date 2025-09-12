@@ -1,0 +1,500 @@
+name: Platform Version Scan
+
+on:
+  schedule:
+    # Run every hour
+    - cron: '0 * * * *'
+
+  workflow_dispatch:
+    inputs:
+      reviewers:
+        description: 'Comma-separated list of GitHub handles for PR reviewers'
+        required: false
+        default: 'devops-team'
+        type: string
+      run_for_branch:
+        description: 'Override matrix to run for specific release branch only'
+        required: false
+        type: string
+
+  # Optional: Enable for ad-hoc runs when descriptor changes
+  # push:
+  #   paths:
+  #     - 'platform-descriptor.yaml'
+
+env:
+  # Constants
+  DEFAULT_DESCRIPTOR_PATH: 'platform-descriptor.yaml'
+  DEFAULT_REVIEWERS: 'devops-team'
+  WORKING_BRANCH_PREFIX: 'chore/descriptor-bump'
+  COMMIT_MESSAGE_PREFIX: 'chore: bump platform descriptor'
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
+  checks: read
+
+concurrency:
+  group: platform-scan-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    name: Scan for version updates
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      components_changed: ${{ steps.compare.outputs.components_changed }}
+      apps_changed: ${{ steps.compare.outputs.apps_changed }}
+      any_changes: ${{ steps.compare.outputs.any_changes }}
+      new_versions_json: ${{ steps.compare.outputs.new_versions_json }}
+      descriptor_path: ${{ steps.setup.outputs.descriptor_path }}
+
+    steps:
+      - name: Setup workflow parameters
+        id: setup
+        shell: bash -euxo pipefail {0}
+        run: |
+          DESCRIPTOR_PATH="${{ inputs.descriptor_path || env.DEFAULT_DESCRIPTOR_PATH }}"
+          echo "descriptor_path=${DESCRIPTOR_PATH}" >> $GITHUB_OUTPUT
+          echo "Using descriptor path: ${DESCRIPTOR_PATH}"
+
+      - name: Checkout repository (sparse)
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            ${{ steps.setup.outputs.descriptor_path }}
+            .github
+          sparse-checkout-cone-mode: false
+
+      - name: Read current platform descriptor
+        id: current
+        shell: bash -euxo pipefail {0}
+        run: |
+          # TODO: Parse platform descriptor and extract current versions
+          # Expected outputs: mgr_versions, kond_version, keycloak_version, app_versions
+          echo "Reading current versions from ${{ steps.setup.outputs.descriptor_path }}"
+
+          # Placeholder - implement descriptor parsing
+          echo "eureka-components={}" >> $GITHUB_OUTPUT
+          echo "app_versions={}" >> $GITHUB_OUTPUT
+
+          echo "Current versions extracted from descriptor"
+
+      - name: Fetch latest mgr-* component versions
+        id: fetch-mgr
+        shell: bash -euxo pipefail {0}
+        run: |
+          # TODO: Implement mgr-* component version fetching
+          # This should query the appropriate repositories/registries for latest mgr-* versions
+          echo "Fetching latest mgr-* component versions..."
+
+          # Placeholder - implement mgr component version fetching
+          # Should set: latest_mgr_versions (JSON)
+          echo "latest_mgr_versions={}" >> $GITHUB_OUTPUT
+
+          echo "Latest mgr-* versions fetched"
+
+      - name: Fetch latest kond version
+        id: fetch-kond
+        shell: bash -euxo pipefail {0}
+        run: |
+          # TODO: Implement kond version fetching
+          # Query kond repository for latest release
+          echo "Fetching latest kond version..."
+
+          # Placeholder - implement kond version fetching
+          echo "latest_kond_version=unknown" >> $GITHUB_OUTPUT
+
+          echo "Latest kond version fetched"
+
+      - name: Fetch latest keycloak version
+        id: fetch-keycloak
+        shell: bash -euxo pipefail {0}
+        run: |
+          # TODO: Implement keycloak version fetching
+          # Query official keycloak releases
+          echo "Fetching latest keycloak version..."
+
+          # Placeholder - implement keycloak version fetching
+          echo "latest_keycloak_version=unknown" >> $GITHUB_OUTPUT
+
+          echo "Latest keycloak version fetched"
+
+      - name: Fetch latest application versions
+        id: fetch-apps
+        shell: bash -euxo pipefail {0}
+        run: |
+          # TODO: Implement application version fetching
+          # Query application repositories for latest versions
+          echo "Fetching latest application versions..."
+
+          # Placeholder - implement application version fetching
+          # Should set: latest_app_versions (JSON)
+          echo "latest_app_versions={}" >> $GITHUB_OUTPUT
+
+          echo "Latest application versions fetched"
+
+      - name: Compare versions and detect changes
+        id: compare
+        shell: bash -euxo pipefail {0}
+        run: |
+          # TODO: Implement version comparison logic
+          # Compare current vs latest versions for all components
+          echo "Comparing current vs latest versions..."
+
+          # Placeholder - implement version comparison
+          # This should compare:
+          # - ${{ steps.current.outputs.mgr_versions }} vs ${{ steps.fetch-mgr.outputs.latest_mgr_versions }}
+          # - ${{ steps.current.outputs.kond_version }} vs ${{ steps.fetch-kond.outputs.latest_kond_version }}
+          # - ${{ steps.current.outputs.keycloak_version }} vs ${{ steps.fetch-keycloak.outputs.latest_keycloak_version }}
+          # - ${{ steps.current.outputs.app_versions }} vs ${{ steps.fetch-apps.outputs.latest_app_versions }}
+
+          # For demo purposes, set no changes detected
+          COMPONENTS_CHANGED="false"
+          APPS_CHANGED="false"
+          ANY_CHANGES="false"
+          NEW_VERSIONS="{}"
+
+          # Set outputs
+          echo "components_changed=${COMPONENTS_CHANGED}" >> $GITHUB_OUTPUT
+          echo "apps_changed=${APPS_CHANGED}" >> $GITHUB_OUTPUT
+          echo "any_changes=${ANY_CHANGES}" >> $GITHUB_OUTPUT
+          echo "new_versions_json=${NEW_VERSIONS}" >> $GITHUB_OUTPUT
+
+          # Log summary
+          echo "## Version Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "- Components changed: ${COMPONENTS_CHANGED}" >> $GITHUB_STEP_SUMMARY
+          echo "- Applications changed: ${APPS_CHANGED}" >> $GITHUB_STEP_SUMMARY
+          echo "- Any changes detected: ${ANY_CHANGES}" >> $GITHUB_STEP_SUMMARY
+
+          if [[ "${ANY_CHANGES}" == "false" ]]; then
+            echo "✅ No version updates needed - all components are up to date"
+            echo "- No version updates needed - all components are up to date" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "🔄 Version updates detected - will proceed with PR creation/update"
+            echo "- Version updates detected - will proceed with PR creation/update" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`json" >> $GITHUB_STEP_SUMMARY
+            echo "${NEW_VERSIONS}" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  prepare-pr:
+    name: Prepare PR for ${{ matrix.release }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: scan
+    if: needs.scan.outputs.any_changes == 'true'
+    strategy:
+      matrix:
+        release: ${{ fromJson(inputs.run_for_branch && format('["{0}"]', inputs.run_for_branch) || '["Rx-202y", "Rx-202y-1"]') }}
+    outputs:
+      pr_exists: ${{ steps.check-pr.outputs.pr_exists }}
+      pr_number: ${{ steps.check-pr.outputs.pr_number }}
+
+    concurrency:
+      group: platform-scan-${{ matrix.release }}
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.release }}
+
+      - name: Setup working branch name
+        id: branch
+        shell: bash -euxo pipefail {0}
+        run: |
+          WORKING_BRANCH="${{ env.WORKING_BRANCH_PREFIX }}-${{ matrix.release }}"
+          echo "working_branch=${WORKING_BRANCH}" >> $GITHUB_OUTPUT
+          echo "Working branch: ${WORKING_BRANCH}"
+
+      - name: Check if PR already exists
+        id: check-pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const workingBranch = '${{ steps.branch.outputs.working_branch }}';
+            const targetBranch = '${{ matrix.release }}';
+
+            try {
+              const { data: pulls } = await github.rest.pulls.list({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                head: `${context.repo.owner}:${workingBranch}`,
+                base: targetBranch,
+                state: 'open'
+              });
+
+              if (pulls.length > 0) {
+                const pr = pulls[0];
+                core.setOutput('pr_exists', 'true');
+                core.setOutput('pr_number', pr.number.toString());
+                console.log(`Found existing PR #${pr.number}: ${pr.title}`);
+              } else {
+                core.setOutput('pr_exists', 'false');
+                core.setOutput('pr_number', '');
+                console.log('No existing PR found');
+              }
+            } catch (error) {
+              console.log('Error checking for existing PR:', error.message);
+              core.setOutput('pr_exists', 'false');
+              core.setOutput('pr_number', '');
+            }
+
+  update-pr:
+    name: Update existing PR for ${{ matrix.release }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [scan, prepare-pr]
+    if: needs.prepare-pr.outputs.pr_exists == 'true'
+    strategy:
+      matrix:
+        release: ${{ fromJson(inputs.run_for_branch && format('["{0}"]', inputs.run_for_branch) || '["Rx-202y", "Rx-202y-1"]') }}
+
+    concurrency:
+      group: platform-scan-${{ matrix.release }}
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout working branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.WORKING_BRANCH_PREFIX }}-${{ matrix.release }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update platform descriptor
+        id: update
+        shell: bash -euxo pipefail {0}
+        run: |
+          # TODO: Implement descriptor update logic
+          # Use new_versions_json from scan job to update the descriptor
+          echo "Updating platform descriptor with new versions..."
+          echo '${{ needs.scan.outputs.new_versions_json }}' > new_versions.json
+
+          # Placeholder - implement descriptor updating
+          # This should:
+          # 1. Parse new_versions.json
+          # 2. Update ${{ needs.scan.outputs.descriptor_path }} with new versions
+          # 3. Increment the descriptor version (semantic versioning)
+
+          echo "Platform descriptor updated successfully"
+
+      - name: Increment descriptor version
+        id: version
+        shell: bash -euxo pipefail {0}
+        run: |
+          # TODO: Implement semantic version increment
+          # Read current version from descriptor and increment appropriately
+          echo "Incrementing platform descriptor version..."
+
+          # Placeholder - implement version increment logic
+          NEW_VERSION="x.y.z"  # Calculate based on current version
+          echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+
+          echo "New descriptor version: ${NEW_VERSION}"
+
+      - name: Commit changes
+        shell: bash -euxo pipefail {0}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+          if git diff --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          git add ${{ needs.scan.outputs.descriptor_path }}
+          git commit -m "${{ env.COMMIT_MESSAGE_PREFIX }} for ${{ matrix.release }}"
+          git push origin HEAD
+
+      - name: Update PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = '${{ needs.prepare-pr.outputs.pr_number }}';
+            const newVersions = JSON.parse('${{ needs.scan.outputs.new_versions_json }}');
+
+            // TODO: Generate comprehensive PR body with version changes
+            const prBody = `
+            ## Platform Descriptor Update for ${{ matrix.release }}
+
+            This PR updates the platform descriptor with the latest component versions.
+
+            ### Changes Detected
+            - Components changed: ${{ needs.scan.outputs.components_changed }}
+            - Applications changed: ${{ needs.scan.outputs.apps_changed }}
+
+            ### Version Updates
+            \`\`\`json
+            ${JSON.stringify(newVersions, null, 2)}
+            \`\`\`
+
+            ### New Descriptor Version
+            ${{ steps.version.outputs.new_version }}
+
+            ---
+            *This PR was automatically updated by the platform scan workflow.*
+            `;
+
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: parseInt(prNumber),
+              body: prBody
+            });
+
+            console.log(`Updated PR #${prNumber}`);
+
+  create-pr:
+    name: Create new PR for ${{ matrix.release }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [scan, prepare-pr]
+    if: needs.prepare-pr.outputs.pr_exists == 'false'
+    strategy:
+      matrix:
+        release: ${{ fromJson(inputs.run_for_branch && format('["{0}"]', inputs.run_for_branch) || '["Rx-202y", "Rx-202y-1"]') }}
+
+    concurrency:
+      group: platform-scan-${{ matrix.release }}
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout target branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.release }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create working branch
+        shell: bash -euxo pipefail {0}
+        run: |
+          WORKING_BRANCH="${{ env.WORKING_BRANCH_PREFIX }}-${{ matrix.release }}"
+          git checkout -b "${WORKING_BRANCH}"
+          echo "Created working branch: ${WORKING_BRANCH}"
+
+      - name: Update platform descriptor
+        id: update
+        shell: bash -euxo pipefail {0}
+        run: |
+          # TODO: Implement descriptor update logic
+          # Use new_versions_json from scan job to update the descriptor
+          echo "Updating platform descriptor with new versions..."
+          echo '${{ needs.scan.outputs.new_versions_json }}' > new_versions.json
+
+          # Placeholder - implement descriptor updating
+          # This should:
+          # 1. Parse new_versions.json
+          # 2. Update ${{ needs.scan.outputs.descriptor_path }} with new versions
+          # 3. Increment the descriptor version (semantic versioning)
+
+          echo "Platform descriptor updated successfully"
+
+      - name: Increment descriptor version
+        id: version
+        shell: bash -euxo pipefail {0}
+        run: |
+          # TODO: Implement semantic version increment
+          # Read current version from descriptor and increment appropriately
+          echo "Incrementing platform descriptor version..."
+
+          # Placeholder - implement version increment logic
+          NEW_VERSION="x.y.z"  # Calculate based on current version
+          echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+
+          echo "New descriptor version: ${NEW_VERSION}"
+
+      - name: Commit and push changes
+        shell: bash -euxo pipefail {0}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+          if git diff --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          git add ${{ needs.scan.outputs.descriptor_path }}
+          git commit -m "${{ env.COMMIT_MESSAGE_PREFIX }} for ${{ matrix.release }}"
+          git push origin HEAD
+
+      - name: Create PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const workingBranch = '${{ env.WORKING_BRANCH_PREFIX }}-${{ matrix.release }}';
+            const targetBranch = '${{ matrix.release }}';
+            const newVersions = JSON.parse('${{ needs.scan.outputs.new_versions_json }}');
+            const reviewers = '${{ inputs.reviewers || env.DEFAULT_REVIEWERS }}'.split(',').map(r => r.trim());
+
+            // TODO: Generate comprehensive PR body with version changes
+            const prBody = `
+            ## Platform Descriptor Update for ${{ matrix.release }}
+
+            This PR updates the platform descriptor with the latest component versions.
+
+            ### Changes Detected
+            - Components changed: ${{ needs.scan.outputs.components_changed }}
+            - Applications changed: ${{ needs.scan.outputs.apps_changed }}
+
+            ### Version Updates
+            \`\`\`json
+            ${JSON.stringify(newVersions, null, 2)}
+            \`\`\`
+
+            ### New Descriptor Version
+            ${{ steps.version.outputs.new_version }}
+
+            ---
+            *This PR was automatically created by the platform scan workflow.*
+            `;
+
+            const { data: pr } = await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `chore: bump platform descriptor for ${targetBranch}`,
+              head: workingBranch,
+              base: targetBranch,
+              body: prBody
+            });
+
+            // Add labels
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              labels: ['release', 'ci', 'automated']
+            });
+
+            // Add reviewers if specified
+            if (reviewers.length > 0 && reviewers[0] !== '') {
+              try {
+                await github.rest.pulls.requestReviewers({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pr.number,
+                  reviewers: reviewers
+                });
+              } catch (error) {
+                console.log('Note: Could not add reviewers:', error.message);
+              }
+            }
+
+            console.log(`Created PR #${pr.number}: ${pr.title}`);
+
+            // Add to step summary
+            core.summary
+              .addHeading('PR Created Successfully')
+              .addTable([
+                [{data: 'Property', header: true}, {data: 'Value', header: true}],
+                ['PR Number', `#${pr.number}`],
+                ['Title', pr.title],
+                ['Branch', `${workingBranch} → ${targetBranch}`],
+                ['URL', pr.html_url]
+              ])
+              .write();
