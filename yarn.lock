@@ -2083,10 +2083,10 @@
     prop-types "^15.6.0"
     redux-form "^8.3.7"
 
-"@folio/plugin-find-instance@9.0.1":
-  version "9.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-find-instance/-/plugin-find-instance-9.0.1.tgz#3aaf7500c1a6e3f3f6358f274cdb16db5087b225"
-  integrity sha512-WCmilUobRBh1ywdDvXOVKLZbjLyVDRughkpWKgo507Fm0pLaHzUqQgjRBt/nPnAT9ozGRFLsp7aPevS5Imef2A==
+"@folio/plugin-find-instance@9.0.2":
+  version "9.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-find-instance/-/plugin-find-instance-9.0.2.tgz#406a2e6ff825d50d43dc96316a164a8eb74f0a8c"
+  integrity sha512-gDtGeOiIQeGQ/Iliz/L1a+uMw57mxEwFNLY9W7TWJzCkRmFZzWDnvKGHgtA3Fea+N5PqksdokZoClbL8u4WgDw==
   dependencies:
     classnames "^2.2.6"
     history "^4.10.0"
@@ -2372,10 +2372,10 @@
     react-virtualized-auto-sizer "^1.0.6"
     redux-form "^8.3.0"
 
-"@folio/stripes-authority-components@6.0.2":
-  version "6.0.2"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-authority-components/-/stripes-authority-components-6.0.2.tgz#3196511dec2056843f9049d573d86be7e18f3784"
-  integrity sha512-+k/zUwM5/pHdXG61FbDqHz7VRUevwVHOO3l7YtIWzDwnGqaD3OZZTNNVkPhRyQwc07qGt/mlAa14MmvfesQK6w==
+"@folio/stripes-authority-components@6.0.3":
+  version "6.0.3"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-authority-components/-/stripes-authority-components-6.0.3.tgz#732bd942803d6176da06b00582e8955209a54172"
+  integrity sha512-1pEs84wyz0KsYh6faZinabmady5sje8wNvTR0I+x6IJJCUvtyolf+u3A9Mjg1hwsovXgPlsyY6EF9IMQT8fWdQ==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     "@rehooks/local-storage" "^2.4.4"
@@ -2554,10 +2554,10 @@
     prop-types "^15.5.10"
     redux-form "^8.3.0"
 
-"@folio/stripes-inventory-components@2.0.7":
-  version "2.0.7"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-inventory-components/-/stripes-inventory-components-2.0.7.tgz#72e2eeef6d45672fdad94fc348fc038aabefd938"
-  integrity sha512-H5SuoZMwMl9XG+rjqZfvAxljG0KJQcM4lz4up4/UhDq+MeWV6jdN/os09OcPLn/WmxjfX5ZLGfNIViQEiw/Wdw==
+"@folio/stripes-inventory-components@2.0.8":
+  version "2.0.8"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-inventory-components/-/stripes-inventory-components-2.0.8.tgz#3e8273bb4edb26c205f650dd8ff48591b13595ae"
+  integrity sha512-jdxRpYAlHls5xCGbUpVpGka0ckA12jDzuLndFQVb0sWi/Fy0Hs/anPSl72yNyTqOfdrJJR3FVBX5IYCfW6MDGg==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     history "^4.10.0"
@@ -2779,10 +2779,10 @@
     react-final-form-arrays "^3.1.1"
     redux-form "^8.0.0"
 
-"@folio/users@12.1.11":
-  version "12.1.11"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/users/-/users-12.1.11.tgz#e2057de89fc7d5a20f0e65d45c912d097cedb9f5"
-  integrity sha512-WoY3DlcbN6QscscbeTTvHZaQW2y5fztz6op+vUuegCvrH9ghavGfLOaKGII+QxfaIo3d8KPpyeo1SVPl1QeduA==
+"@folio/users@12.1.13":
+  version "12.1.13"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/users/-/users-12.1.13.tgz#9dcc030ac5b9524a273926e3fdbafcd13b1e5370"
+  integrity sha512-Tl+gGOfZX42QhpRNzJW4SQDSe6jBdp01+YObepFyQUb9EVWPtVb/Zdiz6/uHk6s3o3zc/YjubJGfxnp/cJqaZA==
   dependencies:
     compressorjs "^1.2.1"
     dompurify "^3.2.0"
