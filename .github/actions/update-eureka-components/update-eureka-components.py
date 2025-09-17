@@ -9,7 +9,7 @@ import requests
 GITHUB_API_URL = "https://api.github.com"
 ORG_NAME = "folio-org"
 
-FILTER_BY = "minor"  # must be one of ["major", "minor", "patch"]
+FILTER_BY = "patch"  # must be one of ["major", "minor", "patch"]
 SORT_BY = "asc"     # must be one of ["asc", "desc"]
 
 def process_components(components: List[Dict[str, str]]) -> None:
@@ -97,6 +97,11 @@ def filter_and_sort_versions(versions: list, base_version: str) -> list:
     Filter and sort a list of semver version strings by FILTER_BY and SORT_BY globals,
     keeping only those matching the relevant part of base_version.
 
+    FILTER_BY logic:
+    - "major": all tags (no filtering)
+    - "minor": all tags with the same major (e.g. 3.x.y)
+    - "patch": all tags with the same major and minor (e.g. 3.1.x)
+
     Args:
         versions: List of semver strings (e.g. ["3.0.1", "3.1.0", ...])
         base_version: The version string to filter by (e.g. "3.1.0")
@@ -115,12 +120,11 @@ def filter_and_sort_versions(versions: list, base_version: str) -> list:
     for v in versions:
         semver = parse_semver(v)
         if FILTER_BY == "major":
+            filtered.append(v)
+        elif FILTER_BY == "minor":
             if semver[0] == base_semver[0]:
                 filtered.append(v)
-        elif FILTER_BY == "minor":
-            if semver[0] == base_semver[0] and semver[1] == base_semver[1]:
-                filtered.append(v)
-        else:  # patch
+        elif FILTER_BY == "patch":
             if semver[0] == base_semver[0] and semver[1] == base_semver[1]:
                 filtered.append(v)
     filtered.sort(key=parse_semver, reverse=(SORT_BY == "desc"))
