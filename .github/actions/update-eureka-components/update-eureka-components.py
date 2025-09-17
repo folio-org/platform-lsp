@@ -36,7 +36,13 @@ def process_components(components: List[Dict[str, str]]) -> None:
 
         print(f"Processing component: {name} (version: {version})")
 
-        # Add your component processing logic here
+        # Get and print plain list of release tags for the component's repository
+        try:
+            releases = get_repo_releases(name)
+            print(f"  Release tags for {name}: {releases}")
+        except Exception as e:
+            print(f"  Could not fetch releases: {e}")
+
         _update_component(name, version)
 
 
@@ -55,12 +61,12 @@ def _update_component(name: str, version: str) -> None:
 
 def get_repo_releases(repo_name: str) -> list:
     """
-    Get a list of releases for a repository in the folio-org organization using GitHub REST API.
+    Get a plain list of release tag names (semver only, no 'v' prefix) for a repository in the folio-org organization using GitHub REST API.
 
     Args:
         repo_name: Name of the repository
     Returns:
-        List of releases (each as dict with tag_name, name, published_at)
+        List of release tag names (e.g. ["3.0.1", "3.0.2"])
     Raises:
         Exception if repo not found or API error
     """
@@ -78,14 +84,10 @@ def get_repo_releases(repo_name: str) -> list:
     if releases_resp.status_code != 200:
         raise Exception(f"Failed to fetch releases for '{repo_name}'.")
     releases = releases_resp.json()
-    result = []
-    for rel in releases:
-        result.append({
-            "tag_name": rel.get("tag_name"),
-            "name": rel.get("name"),
-            "published_at": rel.get("published_at")
-        })
-    return result
+    tags = [rel.get("tag_name") for rel in releases if rel.get("tag_name")]
+    # Remove leading 'v' or 'V' from tag names if present
+    plain_tags = [tag[1:] if tag and (tag.startswith("v") or tag.startswith("V")) and len(tag) > 1 else tag for tag in tags]
+    return plain_tags
 
 
 if __name__ == "__main__":
