@@ -5,12 +5,19 @@ Update Eureka components script.
 
 from typing import List, Dict
 import requests
+import os
+from dotenv import load_dotenv
 
 GITHUB_API_URL = "https://api.github.com"
 ORG_NAME = "folio-org"
 
-FILTER_BY = "patch"  # must be one of ["major", "minor", "patch"]
+FILTER_BY = "major"  # must be one of ["major", "minor", "patch"]
 SORT_BY = "asc"     # must be one of ["asc", "desc"]
+
+# Load environment variables from .env file
+load_dotenv()
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+
 
 def process_components(components: List[Dict[str, str]]) -> None:
     """
@@ -74,7 +81,12 @@ def get_repo_releases(repo_name: str) -> list:
     """
     repo_url = f"{GITHUB_API_URL}/repos/{ORG_NAME}/{repo_name}"
     releases_url = f"{repo_url}/releases"
-    headers = {"Accept": "application/vnd.github+json"}
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "Authorization": f"Bearer {GITHUB_TOKEN}" if GITHUB_TOKEN else None
+    }
+    # Remove None values from headers
+    headers = {k: v for k, v in headers.items() if v is not None}
 
     # Check if repo exists
     repo_resp = requests.get(repo_url, headers=headers)
@@ -129,6 +141,17 @@ def filter_and_sort_versions(versions: list, base_version: str) -> list:
                 filtered.append(v)
     filtered.sort(key=parse_semver, reverse=(SORT_BY == "desc"))
     return filtered
+
+
+def is_update_needed(current_version: str, latest_version: str) -> bool:
+    """
+    Compare current_version and latest_version (semver strings).
+    Returns True if latest_version is greater than current_version, else False.
+    """
+    def parse_semver(ver):
+        parts = ver.split(".")
+        return tuple(int(p) if p.isdigit() else 0 for p in parts[:3])
+    return parse_semver(latest_version) > parse_semver(current_version)
 
 
 if __name__ == "__main__":
