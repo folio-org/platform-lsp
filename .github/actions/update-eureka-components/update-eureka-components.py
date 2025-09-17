@@ -9,6 +9,8 @@ import requests
 GITHUB_API_URL = "https://api.github.com"
 ORG_NAME = "folio-org"
 
+FILTER_BY = "patch"  # must be one of ["major", "minor", "patch"]
+SORT_BY = "asc"     # must be one of ["asc", "desc"]
 
 def process_components(components: List[Dict[str, str]]) -> None:
     """
@@ -88,6 +90,43 @@ def get_repo_releases(repo_name: str) -> list:
     # Remove leading 'v' or 'V' from tag names if present
     plain_tags = [tag[1:] if tag and (tag.startswith("v") or tag.startswith("V")) and len(tag) > 1 else tag for tag in tags]
     return plain_tags
+
+
+def filter_and_sort_versions(versions: list) -> list:
+    """
+    Filter and sort a list of semver version strings by FILTER_BY and SORT_BY globals.
+
+    Args:
+        versions: List of semver strings (e.g. ["3.0.1", "3.1.0", ...])
+
+    Returns:
+        Filtered and sorted list of versions.
+    """
+    if not versions:
+        return []
+
+    def parse_semver(ver):
+        parts = ver.split(".")
+        return tuple(int(p) if p.isdigit() else 0 for p in parts[:3])
+
+    # Remove duplicates by FILTER_BY
+    seen = set()
+    filtered = []
+    for v in versions:
+        semver = parse_semver(v)
+        if FILTER_BY == "major":
+            key = (semver[0],)
+        elif FILTER_BY == "minor":
+            key = (semver[0], semver[1])
+        else:  # patch
+            key = semver
+        if key not in seen:
+            seen.add(key)
+            filtered.append(v)
+
+    # Sort
+    filtered.sort(key=parse_semver, reverse=(SORT_BY == "desc"))
+    return filtered
 
 
 if __name__ == "__main__":
