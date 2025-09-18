@@ -203,13 +203,6 @@ def update_components(components: List[Dict[str, str]]) -> List[Dict[str, str]]:
   return components
 
 # ---------------------------------------------------------------------------
-# Backward compatibility wrapper (legacy name)
-# ---------------------------------------------------------------------------
-
-def process_components(components: List[Dict[str, str]]) -> List[Dict[str, str]]:  # pragma: no cover - thin wrapper
-  return update_components(components)
-
-# ---------------------------------------------------------------------------
 # Entry point (demo usage)
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
