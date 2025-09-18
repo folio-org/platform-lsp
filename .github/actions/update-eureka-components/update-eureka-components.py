@@ -18,6 +18,8 @@ SORT_BY = "asc"     # must be one of ["asc", "desc"]
 # Load environment variables from .env file
 load_dotenv()
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+DOCKER_USERNAME = os.getenv("DOCKER_USERNAME")
+DOCKER_PASSWORD = os.getenv("DOCKER_PASSWORD")
 
 
 def process_components(components: List[Dict[str, str]]) -> None:
@@ -125,15 +127,36 @@ def check_docker_image_exists(name: str, version: str) -> bool:
     Check if a Docker image exists in DockerHub for the folioorg organization.
 
     Args:
-        name: Name of the repository/image
+
         version: Version tag to check
     Returns:
         True if the image exists, False otherwise
     """
     url = f"https://hub.docker.com/v2/repositories/{DOCKER_HUB_ORG}/{name}/tags/{version}"
     response = requests.get(url)
-    return response.status_code == 200
+    # First try to get a token for authentication
+    token = None
+    if DOCKER_USERNAME and DOCKER_PASSWORD:
+        auth_url = "https://hub.docker.com/v2/users/login/"
+        auth_data = {
+            "username": DOCKER_USERNAME,
+            "password": DOCKER_PASSWORD
+        }
+        try:
+            auth_response = requests.post(auth_url, json=auth_data)
+            if auth_response.status_code == 200:
+                token = auth_response.json().get("token")
+        except Exception as e:
+            print(f"  Warning: Failed to authenticate with Docker Hub: {e}")
 
+    # Set headers with token if available
+    headers = {}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+
+    # Check if the image exists
+    return response.status_code == 200
+    response = requests.get(url, headers=headers)
 
 def filter_and_sort_versions(versions: list, base_version: str) -> list:
     """
