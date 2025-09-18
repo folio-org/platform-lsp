@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 
 GITHUB_API_URL = "https://api.github.com"
 ORG_NAME = "folio-org"
+DOCKER_HUB_ORG = "folioorg"
 
 FILTER_BY = "patch"  # must be one of ["major", "minor", "patch"]
 SORT_BY = "asc"     # must be one of ["asc", "desc"]
@@ -54,7 +55,13 @@ def process_components(components: List[Dict[str, str]]) -> None:
                 update_needed = is_update_needed(version, latest_version)
                 print(f"  Latest version: {latest_version}. Update needed: {update_needed}")
                 if update_needed:
-                    _update_component(name, latest_version)
+                    # Check if Docker image exists
+                    docker_image_exists = check_docker_image_exists(name, latest_version)
+                    print(f"  Docker image for {name}:{latest_version} exists: {docker_image_exists}")
+                    if docker_image_exists:
+                        _update_component(name, latest_version)
+                    else:
+                        print(f"  - Cannot update {name} to {latest_version}: Docker image not found.")
                 else:
                     print(f"  - {name} is up to date.")
             else:
@@ -111,6 +118,21 @@ def get_repo_releases(repo_name: str) -> list:
     # Remove leading 'v' or 'V' from tag names if present
     plain_tags = [tag[1:] if tag and (tag.startswith("v") or tag.startswith("V")) and len(tag) > 1 else tag for tag in tags]
     return plain_tags
+
+
+def check_docker_image_exists(name: str, version: str) -> bool:
+    """
+    Check if a Docker image exists in DockerHub for the folioorg organization.
+
+    Args:
+        name: Name of the repository/image
+        version: Version tag to check
+    Returns:
+        True if the image exists, False otherwise
+    """
+    url = f"https://hub.docker.com/v2/repositories/{DOCKER_HUB_ORG}/{name}/tags/{version}"
+    response = requests.get(url)
+    return response.status_code == 200
 
 
 def filter_and_sort_versions(versions: list, base_version: str) -> list:
