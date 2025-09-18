@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 GITHUB_API_URL = "https://api.github.com"
 ORG_NAME = "folio-org"
 
-FILTER_BY = "major"  # must be one of ["major", "minor", "patch"]
+FILTER_BY = "patch"  # must be one of ["major", "minor", "patch"]
 SORT_BY = "asc"     # must be one of ["asc", "desc"]
 
 # Load environment variables from .env file
@@ -49,10 +49,19 @@ def process_components(components: List[Dict[str, str]]) -> None:
             releases = get_repo_releases(name)
             filtered_releases = filter_and_sort_versions(releases, version)
             print(f"  Filtered/sorted release tags for {name}: {filtered_releases}")
+            if filtered_releases:
+                latest_version = filtered_releases[-1] if SORT_BY == "asc" else filtered_releases[0]
+                update_needed = is_update_needed(version, latest_version)
+                print(f"  Latest version: {latest_version}. Update needed: {update_needed}")
+                if update_needed:
+                    _update_component(name, latest_version)
+                else:
+                    print(f"  - {name} is up to date.")
+            else:
+                print(f"  No filtered releases found for {name}.")
         except Exception as e:
             print(f"  Could not fetch releases: {e}")
-
-        _update_component(name, version)
+            _update_component(name, version)
 
 
 def _update_component(name: str, version: str) -> None:
