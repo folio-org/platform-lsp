@@ -44,19 +44,9 @@ DATA = {
 def fetch_versions(app_name: str, limit: int = 500, pre_release: bool = False, latest: int = 20, timeout: float = 10.0) -> List[str]:
     """Return a list of available version strings for the given application name.
 
-    Parameters:
-        app_name: Application name, e.g. 'app-platform-minimal'.
-        limit: Maximum number of records FAR should return.
-        pre_release: Include pre-release versions when True.
-        latest: FAR-specific parameter indicating how many latest versions to consider.
-        timeout: Network timeout in seconds.
-
-    Returns:
-        List of version strings (may be empty if none found or on recoverable errors).
-
-    Error handling:
-        - Network/HTTP errors return an empty list (KISS) after writing a message to stderr.
-        - Unexpected JSON structure returns empty list.
+    Extraction logic now explicitly targets JSON path: $.applicationDescriptors.*.version
+    (i.e. look for top-level key 'applicationDescriptors' containing a list of objects that
+    each have a 'version' field). Falls back to previous heuristics if absent.
     """
     params = {
         "limit": str(limit),
@@ -65,7 +55,6 @@ def fetch_versions(app_name: str, limit: int = 500, pre_release: bool = False, l
         "latest": str(latest),
     }
     url = f"{BASE_URL}/applications?{urllib.parse.urlencode(params)}"
-    print(url)
 
     try:
         with urllib.request.urlopen(url, timeout=timeout) as resp:
@@ -81,24 +70,30 @@ def fetch_versions(app_name: str, limit: int = 500, pre_release: bool = False, l
         print(f"fetch_versions: request failed: {e}", file=sys.stderr)
         return []
 
-    # Heuristic extraction: FAR response format may evolve. We look for common patterns.
     versions: List[str] = []
 
-    # If payload is a list of objects containing 'version'.
-    if isinstance(payload, list):
-        for item in payload:
-            if isinstance(item, dict) and "version" in item:
-                versions.append(str(item["version"]))
-    # If payload is a dict containing 'applications' list.
-    elif isinstance(payload, dict):
-        apps = payload.get("applications")
-        if isinstance(apps, list):
-            for item in apps:
+    # Primary: $.applicationDescriptors.*.version
+    if isinstance(payload, dict):
+        descriptors = payload.get("applicationDescriptors")
+        if isinstance(descriptors, list):
+            for item in descriptors:
                 if isinstance(item, dict) and "version" in item:
                     versions.append(str(item["version"]))
-        # Fallback: maybe dict directly has version field.
-        elif "version" in payload:
-            versions.append(str(payload["version"]))
+
+    # Fallbacks (retain prior heuristic behavior if primary produced nothing)
+    if not versions:
+        if isinstance(payload, list):
+            for item in payload:
+                if isinstance(item, dict) and "version" in item:
+                    versions.append(str(item["version"]))
+        elif isinstance(payload, dict):
+            apps = payload.get("applications")
+            if isinstance(apps, list):
+                for item in apps:
+                    if isinstance(item, dict) and "version" in item:
+                        versions.append(str(item["version"]))
+            elif "version" in payload:
+                versions.append(str(payload["version"]))
 
     return versions
 
@@ -108,7 +103,6 @@ def main() -> None:
         for app in items:
             print(f"{group}\t{app.get('name')}\t{app.get('version')}")
             versions = fetch_versions(app.get('name'))
-            print(versions)
             print(f"available\t{app.get('name')}\t{','.join(versions) if versions else '<none>'}")
 
 if __name__ == "__main__":
