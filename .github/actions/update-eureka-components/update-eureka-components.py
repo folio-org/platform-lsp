@@ -127,13 +127,11 @@ def check_docker_image_exists(name: str, version: str) -> bool:
     Check if a Docker image exists in DockerHub for the folioorg organization.
 
     Args:
-
+        name: Name of the repository/image
         version: Version tag to check
     Returns:
         True if the image exists, False otherwise
     """
-    url = f"https://hub.docker.com/v2/repositories/{DOCKER_HUB_ORG}/{name}/tags/{version}"
-    response = requests.get(url)
     # First try to get a token for authentication
     token = None
     if DOCKER_USERNAME and DOCKER_PASSWORD:
@@ -155,8 +153,9 @@ def check_docker_image_exists(name: str, version: str) -> bool:
         headers["Authorization"] = f"Bearer {token}"
 
     # Check if the image exists
-    return response.status_code == 200
+    url = f"https://hub.docker.com/v2/repositories/{DOCKER_HUB_ORG}/{name}/tags/{version}"
     response = requests.get(url, headers=headers)
+    return response.status_code == 200
 
 def filter_and_sort_versions(versions: list, base_version: str) -> list:
     """
