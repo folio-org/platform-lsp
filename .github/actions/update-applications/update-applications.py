@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Print a mock list of applications (hard-coded example) and provide a helper to
-fetch available versions for a given application name from the FOLIO Application Registry.
+"""Print a mock list of applications (hard-coded example) and provide helpers to
+fetch available versions & update application entries based on available versions.
 
-KISS: Existing behavior (printing mock data) unchanged. Added function `fetch_versions`.
-Output format for printing: <group> <name> <version> (tab separated)
+KISS focus.
 """
 
 from __future__ import annotations
@@ -16,7 +15,7 @@ import urllib.request
 import os
 from typing import List, Tuple, Optional, Sequence, Dict
 
-import requests  # lightweight HTTP client for Docker Hub helper functions
+import requests  # HTTP client for Docker Hub helper functions
 
 # Global base address for the FOLIO Application Registry (FAR)
 BASE_URL = "https://far-test.ci.folio.org"
@@ -26,29 +25,7 @@ DOCKER_HUB_ORG = "folioorg"
 DOCKER_USERNAME = os.getenv("DOCKER_USERNAME")
 DOCKER_PASSWORD = os.getenv("DOCKER_PASSWORD")
 
-DATA = {
-    "required": [
-        {"name": "app-platform-minimal", "version": "2.0.19"},
-        {"name": "app-platform-complete", "version": "2.1.40"},
-    ],
-    "optional": [
-        {"name": "app-acquisitions", "version": "1.0.17"},
-        {"name": "app-bulk-edit", "version": "1.0.7"},
-        {"name": "app-consortia", "version": "1.2.1"},
-        {"name": "app-dcb", "version": "1.1.4"},
-        {"name": "app-edge-complete", "version": "2.0.9"},
-        {"name": "app-erm-usage", "version": "2.0.3"},
-        {"name": "app-fqm", "version": "1.0.11"},
-        {"name": "app-marc-migrations", "version": "2.0.1"},
-        {"name": "app-oai-pmh", "version": "1.0.2"},
-        {"name": "app-inn-reach", "version": "1.0.0"},
-        {"name": "app-linked-data", "version": "1.1.6"},
-        {"name": "app-reading-room", "version": "2.0.2"},
-        {"name": "app-consortia-manager", "version": "1.1.1"},
-    ],
-}
-
-# --- Copied helper functions from update-eureka-components (trimmed for KISS) ---
+# --- Helper functions (semver, filtering, docker image checks) ---
 
 def parse_semver(version: str) -> Tuple[int, int, int]:
     parts = (version or "0").split(".")
@@ -125,15 +102,13 @@ def decide_update(current_version: str, candidate_versions: Sequence[str], sort_
     newest = candidate_versions[0] if sort_order == "desc" else candidate_versions[-1]
     return newest if is_newer(current_version, newest) else None
 
-# --- End copied helpers ---
-
+# --- FAR version retrieval ---
 
 def fetch_versions(app_name: str, limit: int = 500, pre_release: bool = False, latest: int = 20, timeout: float = 10.0) -> List[str]:
-    """Return a list of available version strings for the given application name.
+    """Return list of versions for app_name.
 
-    Extraction logic now explicitly targets JSON path: $.applicationDescriptors.*.version
-    (i.e. look for top-level key 'applicationDescriptors' containing a list of objects that
-    each have a 'version' field). Falls back to previous heuristics if absent.
+    Primary extraction path: $.applicationDescriptors.*.version
+    Fallback to heuristic keys if absent.
     """
     params = {
         "limit": str(limit),
@@ -146,28 +121,24 @@ def fetch_versions(app_name: str, limit: int = 500, pre_release: bool = False, l
     try:
         with urllib.request.urlopen(url, timeout=timeout) as resp:
             if resp.status != 200:
-                print(f"fetch_versions: HTTP {resp.status} for {url}", file=sys.stderr)
+                print(f"fetch_versions: HTTP {resp.status} for {app_name}", file=sys.stderr)
                 return []
             try:
                 payload = json.loads(resp.read().decode("utf-8"))
             except json.JSONDecodeError as e:
-                print(f"fetch_versions: invalid JSON: {e}", file=sys.stderr)
+                print(f"fetch_versions: invalid JSON for {app_name}: {e}", file=sys.stderr)
                 return []
     except urllib.error.URLError as e:
-        print(f"fetch_versions: request failed: {e}", file=sys.stderr)
+        print(f"fetch_versions: request failed for {app_name}: {e}", file=sys.stderr)
         return []
 
     versions: List[str] = []
-
-    # Primary: $.applicationDescriptors.*.version
     if isinstance(payload, dict):
         descriptors = payload.get("applicationDescriptors")
         if isinstance(descriptors, list):
             for item in descriptors:
                 if isinstance(item, dict) and "version" in item:
                     versions.append(str(item["version"]))
-
-    # Fallbacks (retain prior heuristic behavior if primary produced nothing)
     if not versions:
         if isinstance(payload, list):
             for item in payload:
@@ -181,16 +152,89 @@ def fetch_versions(app_name: str, limit: int = 500, pre_release: bool = False, l
                         versions.append(str(item["version"]))
             elif "version" in payload:
                 versions.append(str(payload["version"]))
-
     return versions
 
+# --- New: update_applications logic (modeled after update-eureka-components) ---
+
+def update_applications(applications: List[Dict[str, str]], scope: str = "patch", sort_order: str = "asc", require_docker: bool = False) -> List[Dict[str, str]]:
+    """Update application version entries in-place when a newer version is available.
+
+    Args:
+        applications: list of {"name": str, "version": str}
+        scope: semver scope (major|minor|patch) controlling which newer versions are considered
+        sort_order: asc or desc ordering when selecting candidate versions
+        require_docker: if True, only update when corresponding docker image tag exists
+
+    Returns:
+        The same list (mutated) for convenience.
+    """
+    if not applications:
+        print("No applications provided")
+        return applications
+
+    session = requests.Session() if require_docker else None
+
+    print(f"Processing {len(applications)} applications (scope={scope}, order={sort_order}, require_docker={require_docker})")
+
+    for app in applications:
+        name = app.get("name", "<unknown>")
+        cur = app.get("version", "0.0.0")
+        print(f"- {name}: current={cur}")
+        try:
+            all_versions = fetch_versions(name)
+        except Exception as exc:  # noqa: BLE001
+            print(f"  fetch error: {exc}; skipping")
+            continue
+        if not all_versions:
+            print("  no versions found")
+            continue
+        filtered = filter_versions(all_versions, cur, scope=scope, sort_order=sort_order)
+        if not filtered:
+            print("  no candidate versions in scope")
+            continue
+        new_version = decide_update(cur, filtered, sort_order=sort_order)
+        if not new_version:
+            print("  up to date")
+            continue
+        if require_docker and not docker_image_exists(name, new_version, session=session):
+            print(f"  docker image missing for {name}:{new_version}; skipping")
+            continue
+        app["version"] = new_version
+        print(f"  updated -> {new_version}")
+    return applications
+
+# --- Entry point ---
 
 def main() -> None:
-    for group, items in DATA.items():
-        for app in items:
-            print(f"{group}\t{app.get('name')}\t{app.get('version')}")
-            versions = fetch_versions(app.get('name'))
-            print(f"available\t{app.get('name')}\t{','.join(versions) if versions else '<none>'}")
+    # Sample components (was DATA). Flattened for update routine.
+    sample_components = [
+        {"name": "app-platform-minimal", "version": "2.0.19"},
+        {"name": "app-platform-complete", "version": "2.1.40"},
+        {"name": "app-acquisitions", "version": "1.0.17"},
+        {"name": "app-bulk-edit", "version": "1.0.7"},
+        {"name": "app-consortia", "version": "1.2.1"},
+        {"name": "app-dcb", "version": "1.1.4"},
+        {"name": "app-edge-complete", "version": "2.0.9"},
+        {"name": "app-erm-usage", "version": "2.0.3"},
+        {"name": "app-fqm", "version": "1.0.11"},
+        {"name": "app-marc-migrations", "version": "2.0.1"},
+        {"name": "app-oai-pmh", "version": "1.0.2"},
+        {"name": "app-inn-reach", "version": "1.0.0"},
+        {"name": "app-linked-data", "version": "1.1.6"},
+        {"name": "app-reading-room", "version": "2.0.2"},
+        {"name": "app-consortia-manager", "version": "1.1.1"},
+    ]
+
+    print("Original applications:")
+    for c in sample_components:
+        print(f"  {c['name']}: {c['version']}")
+
+    print("\nUpdating...\n")
+    update_applications(sample_components, scope=os.getenv("FILTER_SCOPE", "patch"), sort_order=os.getenv("SORT_ORDER", "asc"), require_docker=False)
+
+    print("\nUpdated applications:")
+    for c in sample_components:
+        print(f"  {c['name']}: {c['version']}")
 
 if __name__ == "__main__":
     main()
