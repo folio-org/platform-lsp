@@ -22,27 +22,20 @@ DOCKER_USERNAME = os.getenv("DOCKER_USERNAME")
 DOCKER_PASSWORD = os.getenv("DOCKER_PASSWORD")
 
 
-def process_components(components: List[Dict[str, str]]) -> None:
+def process_components(components: List[Dict[str, str]]) -> List[Dict[str, str]]:
   """
   Process a list of components with name and version.
 
-  Args:
-      components: List of dictionaries containing 'name' and 'version' keys
-
-  Example:
-      components = [
-          {"name": "folio-kong", "version": "3.9.1"},
-          {"name": "folio-keycloak", "version": "26.1.3"}
-      ]
-      process_components(components)
+  If an update is needed and the corresponding Docker image exists,
+  replace the version in the original list. Return the updated list.
   """
   if not components:
     print("No components to process")
-    return
+    return components
 
   print(f"Processing {len(components)} components...")
 
-  for component in components:
+  for idx, component in enumerate(components):
     name = component.get("name", "unknown")
     version = component.get("version", "unknown")
 
@@ -57,11 +50,13 @@ def process_components(components: List[Dict[str, str]]) -> None:
         update_needed = is_update_needed(version, latest_version)
         print(f"  Latest version: {latest_version}. Update needed: {update_needed}")
         if update_needed:
-          # Check if Docker image exists
           docker_image_exists = check_docker_image_exists(name, latest_version)
           print(f"  Docker image for {name}:{latest_version} exists: {docker_image_exists}")
           if docker_image_exists:
             _update_component(name, latest_version)
+            # Update the original components list in-place
+            components[idx]["version"] = latest_version
+            print(f"  - Updated local entry for {name} to {latest_version}")
           else:
             print(f"  - Cannot update {name} to {latest_version}: Docker image not found.")
         else:
@@ -71,6 +66,8 @@ def process_components(components: List[Dict[str, str]]) -> None:
     except Exception as e:
       print(f"  Could not fetch releases: {e}")
       _update_component(name, version)
+
+  return components
 
 
 def _update_component(name: str, version: str) -> None:
@@ -222,4 +219,17 @@ if __name__ == "__main__":
     {"name": "mgr-tenant-entitlements", "version": "3.1.0"}
   ]
 
-  process_components(sample_components)
+
+  print("Original components:")
+  for c in sample_components:
+    print(f" - {c.get('name')}: {c.get('version')}")
+
+  print("=" * 40)
+
+  updated = process_components(sample_components)
+
+  print("=" * 40)
+
+  print("Updated components:")
+  for c in updated:
+    print(f" - {c.get('name')}: {c.get('version')}")
