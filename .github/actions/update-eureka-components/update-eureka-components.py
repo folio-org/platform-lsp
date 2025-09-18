@@ -1,235 +1,266 @@
 #!/usr/bin/env python3
 """
 Update Eureka components script.
+
+Refactored for clarity (KISS + clean code):
+- Centralized constants validation
+- Single semver parsing / comparison helpers
+- Clear function naming and docstrings
+- Separation of concerns (fetch, filter, decide, apply)
+- Lightweight structured logging helper
+- Backward compatibility: process_components kept as alias
 """
 
-from typing import List, Dict
-import requests
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import List, Dict, Iterable, Sequence, Tuple, Optional
 import os
+import requests
 from dotenv import load_dotenv
 
+# ---------------------------------------------------------------------------
+# Configuration constants
+# ---------------------------------------------------------------------------
 GITHUB_API_URL = "https://api.github.com"
 ORG_NAME = "folio-org"
 DOCKER_HUB_ORG = "folioorg"
 
-FILTER_BY = "patch"  # must be one of ["major", "minor", "patch"]
-SORT_BY = "asc"  # must be one of ["asc", "desc"]
+# Scope of update consideration: major / minor / patch
+FILTER_SCOPE = os.getenv("FILTER_SCOPE", "patch").lower()
+# Sort order when evaluating versions within filtered scope
+SORT_ORDER = os.getenv("SORT_ORDER", "asc").lower()  # asc or desc
 
-# Load environment variables from .env file
+_VALID_FILTER_SCOPES = {"major", "minor", "patch"}
+_VALID_SORT_ORDERS = {"asc", "desc"}
+
+if FILTER_SCOPE not in _VALID_FILTER_SCOPES:
+  raise ValueError(f"Invalid FILTER_SCOPE='{FILTER_SCOPE}'. Allowed: {_VALID_FILTER_SCOPES}")
+if SORT_ORDER not in _VALID_SORT_ORDERS:
+  raise ValueError(f"Invalid SORT_ORDER='{SORT_ORDER}'. Allowed: {_VALID_SORT_ORDERS}")
+
+# Load environment variables from .env file (optional local usage)
 load_dotenv()
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 DOCKER_USERNAME = os.getenv("DOCKER_USERNAME")
 DOCKER_PASSWORD = os.getenv("DOCKER_PASSWORD")
 
+# ---------------------------------------------------------------------------
+# Data model
+# ---------------------------------------------------------------------------
+@dataclass
+class Component:
+  name: str
+  version: str
 
-def process_components(components: List[Dict[str, str]]) -> List[Dict[str, str]]:
-  """
-  Process a list of components with name and version.
+  @classmethod
+  def from_mapping(cls, data: Dict[str, str]) -> "Component":
+    return cls(name=data.get("name", "unknown"), version=data.get("version", "unknown"))
 
-  If an update is needed and the corresponding Docker image exists,
-  replace the version in the original list. Return the updated list.
-  """
-  if not components:
-    print("No components to process")
-    return components
+  def to_mapping(self) -> Dict[str, str]:
+    return {"name": self.name, "version": self.version}
 
-  print(f"Processing {len(components)} components...")
+# ---------------------------------------------------------------------------
+# Logging helper
+# ---------------------------------------------------------------------------
 
-  for idx, component in enumerate(components):
-    name = component.get("name", "unknown")
-    version = component.get("version", "unknown")
+def log(msg: str) -> None:
+  print(msg)
 
-    print(f"Processing component: {name} (version: {version})")
+# ---------------------------------------------------------------------------
+# Semver helpers (minimal – numeric only, non-numeric parts treated as 0)
+# ---------------------------------------------------------------------------
 
+def parse_semver(version: str) -> Tuple[int, int, int]:
+  parts = (version or "0").split(".")
+  nums: List[int] = []
+  for p in parts[:3]:
     try:
-      releases = get_repo_releases(name)
-      filtered_releases = filter_and_sort_versions(releases, version)
-      print(f"  Filtered/sorted release tags for {name}: {filtered_releases}")
-      if filtered_releases:
-        latest_version = filtered_releases[-1] if SORT_BY == "asc" else filtered_releases[0]
-        update_needed = is_update_needed(version, latest_version)
-        print(f"  Latest version: {latest_version}. Update needed: {update_needed}")
-        if update_needed:
-          docker_image_exists = check_docker_image_exists(name, latest_version)
-          print(f"  Docker image for {name}:{latest_version} exists: {docker_image_exists}")
-          if docker_image_exists:
-            _update_component(name, latest_version)
-            # Update the original components list in-place
-            components[idx]["version"] = latest_version
-            print(f"  - Updated local entry for {name} to {latest_version}")
-          else:
-            print(f"  - Cannot update {name} to {latest_version}: Docker image not found.")
-        else:
-          print(f"  - {name} is up to date.")
-      else:
-        print(f"  No filtered releases found for {name}.")
-    except Exception as e:
-      print(f"  Could not fetch releases: {e}")
-      _update_component(name, version)
-
-  return components
+      nums.append(int(p))
+    except ValueError:
+      nums.append(0)
+  while len(nums) < 3:
+    nums.append(0)
+  return tuple(nums)  # type: ignore
 
 
-def _update_component(name: str, version: str) -> None:
-  """
-  Update a single component.
+def is_newer(a: str, b: str) -> bool:
+  """Return True if version b is newer (greater) than version a."""
+  return parse_semver(b) > parse_semver(a)
 
-  Args:
-      name: Component name
-      version: Component version
-  """
-  # Placeholder for actual update logic
-  # This is where you would add the specific logic for updating each component
-  print(f"  - Updating {name} to version {version}")
+# ---------------------------------------------------------------------------
+# External service interactions
+# ---------------------------------------------------------------------------
+
+def build_github_headers() -> Dict[str, str]:
+  headers = {"Accept": "application/vnd.github+json"}
+  if GITHUB_TOKEN:
+    headers["Authorization"] = f"Bearer {GITHUB_TOKEN}"
+  return headers
 
 
-def get_repo_releases(repo_name: str) -> list:
-  """
-  Get a plain list of release tag names (semver only, no 'v' prefix) for a repository in the folio-org organization using GitHub REST API.
-
-  Args:
-      repo_name: Name of the repository
-  Returns:
-      List of release tag names (e.g. ["3.0.1", "3.0.2"])
-  Raises:
-      Exception if repo not found or API error
-  """
-  repo_url = f"{GITHUB_API_URL}/repos/{ORG_NAME}/{repo_name}"
+def fetch_repo_release_tags(repo: str, session: Optional[requests.Session] = None) -> List[str]:
+  """Return plain (no leading 'v') tag names for releases in org repository."""
+  sess = session or requests.Session()
+  repo_url = f"{GITHUB_API_URL}/repos/{ORG_NAME}/{repo}"
   releases_url = f"{repo_url}/releases"
-  headers = {
-    "Accept": "application/vnd.github+json",
-    "Authorization": f"Bearer {GITHUB_TOKEN}" if GITHUB_TOKEN else None
-  }
-  # Remove None values from headers
-  headers = {k: v for k, v in headers.items() if v is not None}
+  headers = build_github_headers()
 
-  # Check if repo exists
-  repo_resp = requests.get(repo_url, headers=headers)
+  repo_resp = sess.get(repo_url, headers=headers)
   if repo_resp.status_code != 200:
-    raise Exception(f"Repository '{repo_name}' not found in '{ORG_NAME}' organization.")
+    raise RuntimeError(f"Repository '{repo}' not found in '{ORG_NAME}'.")
 
-  # Get releases
-  releases_resp = requests.get(releases_url, headers=headers)
-  if releases_resp.status_code != 200:
-    raise Exception(f"Failed to fetch releases for '{repo_name}'.")
-  releases = releases_resp.json()
-  tags = [rel.get("tag_name") for rel in releases if rel.get("tag_name")]
-  # Remove leading 'v' or 'V' from tag names if present
-  plain_tags = [tag[1:] if tag and (tag.startswith("v") or tag.startswith("V")) and len(tag) > 1 else tag for tag in
-                tags]
-  return plain_tags
+  rel_resp = sess.get(releases_url, headers=headers)
+  if rel_resp.status_code != 200:
+    raise RuntimeError(f"Failed to fetch releases for '{repo}' (status {rel_resp.status_code}).")
+
+  releases = rel_resp.json() or []
+  tags = [r.get("tag_name") for r in releases if r.get("tag_name")]
+  # Strip leading v/V
+  cleaned = [t[1:] if t and t[0] in ("v", "V") and len(t) > 1 else t for t in tags]
+  return cleaned
 
 
-def check_docker_image_exists(name: str, version: str) -> bool:
-  """
-  Check if a Docker image exists in DockerHub for the folioorg organization.
-
-  Args:
-      name: Name of the repository/image
-      version: Version tag to check
-  Returns:
-      True if the image exists, False otherwise
-  """
-  # First try to get a token for authentication
-  token = None
-  if DOCKER_USERNAME and DOCKER_PASSWORD:
-    auth_url = "https://hub.docker.com/v2/users/login/"
-    auth_data = {
+def docker_hub_auth_token(session: requests.Session) -> Optional[str]:
+  if not (DOCKER_USERNAME and DOCKER_PASSWORD):
+    return None
+  try:
+    resp = session.post("https://hub.docker.com/v2/users/login/", json={
       "username": DOCKER_USERNAME,
       "password": DOCKER_PASSWORD
-    }
-    try:
-      auth_response = requests.post(auth_url, json=auth_data)
-      if auth_response.status_code == 200:
-        token = auth_response.json().get("token")
-    except Exception as e:
-      print(f"  Warning: Failed to authenticate with Docker Hub: {e}")
+    })
+    if resp.status_code == 200:
+      return resp.json().get("token")
+  except Exception as exc:  # noqa: BLE001
+    log(f"  Warning: Docker Hub auth failed: {exc}")
+  return None
 
-  # Set headers with token if available
-  headers = {}
+
+def docker_image_exists(image: str, version: str, session: Optional[requests.Session] = None) -> bool:
+  sess = session or requests.Session()
+  headers: Dict[str, str] = {}
+  token = docker_hub_auth_token(sess)
   if token:
     headers["Authorization"] = f"Bearer {token}"
+  url = f"https://hub.docker.com/v2/repositories/{DOCKER_HUB_ORG}/{image}/tags/{version}"
+  try:
+    resp = sess.get(url, headers=headers)
+    return resp.status_code == 200
+  except Exception as exc:  # noqa: BLE001
+    log(f"  Warning: Docker Hub request failed: {exc}")
+    return False
 
-  # Check if the image exists
-  url = f"https://hub.docker.com/v2/repositories/{DOCKER_HUB_ORG}/{name}/tags/{version}"
-  response = requests.get(url, headers=headers)
-  return response.status_code == 200
+# ---------------------------------------------------------------------------
+# Version filtering logic
+# ---------------------------------------------------------------------------
 
-
-def filter_and_sort_versions(versions: list, base_version: str) -> list:
-  """
-  Filter and sort a list of semver version strings by FILTER_BY and SORT_BY globals,
-  keeping only those matching the relevant part of base_version.
-
-  FILTER_BY logic:
-  - "major": all tags (no filtering)
-  - "minor": all tags with the same major (e.g. 3.x.y)
-  - "patch": all tags with the same major and minor (e.g. 3.1.x)
-
-  Args:
-      versions: List of semver strings (e.g. ["3.0.1", "3.1.0", ...])
-      base_version: The version string to filter by (e.g. "3.1.0")
-  Returns:
-      Filtered and sorted list of versions.
-  """
+def filter_versions(versions: Sequence[str], base_version: str) -> List[str]:
+  """Filter versions by configured FILTER_SCOPE relative to base_version."""
   if not versions or not base_version:
     return []
-
-  def parse_semver(ver):
-    parts = ver.split(".")
-    return tuple(int(p) if p.isdigit() else 0 for p in parts[:3])
-
-  base_semver = parse_semver(base_version)
-  filtered = []
+  base = parse_semver(base_version)
+  result: List[str] = []
   for v in versions:
-    semver = parse_semver(v)
-    if FILTER_BY == "major":
-      filtered.append(v)
-    elif FILTER_BY == "minor":
-      if semver[0] == base_semver[0]:
-        filtered.append(v)
-    elif FILTER_BY == "patch":
-      if semver[0] == base_semver[0] and semver[1] == base_semver[1]:
-        filtered.append(v)
-  filtered.sort(key=parse_semver, reverse=(SORT_BY == "desc"))
-  return filtered
+    sem = parse_semver(v)
+    if FILTER_SCOPE == "major":
+      pass  # all included
+    elif FILTER_SCOPE == "minor":
+      if sem[0] != base[0]:
+        continue
+    elif FILTER_SCOPE == "patch":
+      if not (sem[0] == base[0] and sem[1] == base[1]):
+        continue
+    result.append(v)
+  result.sort(key=lambda x: parse_semver(x), reverse=(SORT_ORDER == "desc"))
+  return result
+
+# ---------------------------------------------------------------------------
+# Core update logic
+# ---------------------------------------------------------------------------
+
+def decide_update(current_version: str, candidate_versions: Sequence[str]) -> Optional[str]:
+  """Return the best newer version (according to sort order) or None if no update."""
+  if not candidate_versions:
+    return None
+  newest = candidate_versions[0] if SORT_ORDER == "desc" else candidate_versions[-1]
+  return newest if is_newer(current_version, newest) else None
 
 
-def is_update_needed(current_version: str, latest_version: str) -> bool:
+def apply_component_update(component: Component, new_version: str) -> None:
+  """Placeholder for real update side-effects."""
+  log(f"  - Applying update {component.name}: {component.version} -> {new_version}")
+  # Real implementation would go here (e.g., patching files, committing changes, etc.)
+
+
+def update_components(raw_components: List[Dict[str, str]]) -> List[Dict[str, str]]:
   """
-  Compare current_version and latest_version (semver strings).
-  Returns True if latest_version is greater than current_version, else False.
+  Update component versions in-place when a newer release (with existing Docker image) is found.
+  Returns the same list (mutated) for convenience.
   """
+  if not raw_components:
+    log("No components to process")
+    return raw_components
 
-  def parse_semver(ver):
-    parts = ver.split(".")
-    return tuple(int(p) if p.isdigit() else 0 for p in parts[:3])
+  components = [Component.from_mapping(c) for c in raw_components]
+  log(f"Processing {len(components)} components (scope={FILTER_SCOPE}, order={SORT_ORDER})...")
 
-  return parse_semver(latest_version) > parse_semver(current_version)
+  session = requests.Session()
 
+  for comp, mapping in zip(components, raw_components):
+    log(f"Processing: {comp.name} (current: {comp.version})")
+    try:
+      all_tags = fetch_repo_release_tags(comp.name, session=session)
+    except Exception as exc:  # noqa: BLE001
+      log(f"  Error fetching releases: {exc}. Skipping update logic (keeping current version).")
+      continue
 
+    filtered = filter_versions(all_tags, comp.version)
+    log(f"  Filtered versions: {filtered}")
+    new_version = decide_update(comp.version, filtered)
+
+    if not new_version:
+      log("  - Up to date")
+      continue
+
+    if not docker_image_exists(comp.name, new_version, session=session):
+      log(f"  - Docker image missing for {comp.name}:{new_version}; skipping.")
+      continue
+
+    apply_component_update(comp, new_version)
+    comp.version = new_version
+    mapping["version"] = new_version  # reflect change in original structure
+    log(f"  - Updated local mapping to {new_version}")
+
+  return raw_components
+
+# ---------------------------------------------------------------------------
+# Backward compatibility wrapper (legacy name)
+# ---------------------------------------------------------------------------
+
+def process_components(components: List[Dict[str, str]]) -> List[Dict[str, str]]:  # pragma: no cover - thin wrapper
+  return update_components(components)
+
+# ---------------------------------------------------------------------------
+# Entry point (demo usage)
+# ---------------------------------------------------------------------------
 if __name__ == "__main__":
-  # Example usage
   sample_components = [
     {"name": "folio-kong", "version": "3.9.1"},
     {"name": "folio-keycloak", "version": "26.1.3"},
     {"name": "folio-module-sidecar", "version": "3.0.7"},
     {"name": "mgr-applications", "version": "3.0.1"},
     {"name": "mgr-tenants", "version": "3.0.1"},
-    {"name": "mgr-tenant-entitlements", "version": "3.1.0"}
+    {"name": "mgr-tenant-entitlements", "version": "3.1.0"},
   ]
 
-
-  print("Original components:")
+  log("Original components:")
   for c in sample_components:
-    print(f" - {c.get('name')}: {c.get('version')}")
+    log(f" - {c['name']}: {c['version']}")
 
-  print("=" * 40)
+  log("=" * 40)
+  updated = update_components(sample_components)
+  log("=" * 40)
 
-  updated = process_components(sample_components)
-
-  print("=" * 40)
-
-  print("Updated components:")
+  log("Updated components:")
   for c in updated:
-    print(f" - {c.get('name')}: {c.get('version')}")
+    log(f" - {c['name']}: {c['version']}")
