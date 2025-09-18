@@ -3,8 +3,6 @@
 Update Eureka components script.
 """
 
-from __future__ import annotations
-
 from typing import List, Dict, Sequence, Tuple, Optional
 import os
 import requests
