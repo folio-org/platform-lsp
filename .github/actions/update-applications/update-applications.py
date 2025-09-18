@@ -2,7 +2,7 @@
 """Print a mock list of applications (hard-coded example) and provide helpers to
 fetch available versions & update application entries based on available versions.
 
-KISS focus.
+KISS focus. Docker image existence checks removed.
 """
 
 from __future__ import annotations
@@ -15,17 +15,10 @@ import urllib.request
 import os
 from typing import List, Tuple, Optional, Sequence, Dict
 
-import requests  # HTTP client for Docker Hub helper functions
-
 # Global base address for the FOLIO Application Registry (FAR)
 BASE_URL = "https://far-test.ci.folio.org"
 
-# Docker Hub org (aligned with update-eureka-components script)
-DOCKER_HUB_ORG = "folioorg"
-DOCKER_USERNAME = os.getenv("DOCKER_USERNAME")
-DOCKER_PASSWORD = os.getenv("DOCKER_PASSWORD")
-
-# --- Helper functions (semver, filtering, docker image checks) ---
+# --- Helper functions (semver, filtering) ---
 
 def parse_semver(version: str) -> Tuple[int, int, int]:
     parts = (version or "0").split(".")
@@ -64,36 +57,6 @@ def filter_versions(versions: Sequence[str], base_version: str, scope: str = "pa
         result.append(v)
     result.sort(key=lambda x: parse_semver(x), reverse=(sort_order == "desc"))
     return result
-
-
-def docker_hub_auth_token(session: requests.Session) -> Optional[str]:
-    if not (DOCKER_USERNAME and DOCKER_PASSWORD):
-        return None
-    try:
-        resp = session.post("https://hub.docker.com/v2/users/login/", json={
-            "username": DOCKER_USERNAME,
-            "password": DOCKER_PASSWORD,
-        })
-        if resp.status_code == 200:
-            return resp.json().get("token")
-    except Exception as exc:  # noqa: BLE001
-        print(f"docker_hub_auth_token: auth failed: {exc}")
-    return None
-
-
-def docker_image_exists(image: str, version: str, session: Optional[requests.Session] = None) -> bool:
-    sess = session or requests.Session()
-    headers: Dict[str, str] = {}
-    token = docker_hub_auth_token(sess)
-    if token:
-        headers["Authorization"] = f"Bearer {token}"
-    url = f"https://hub.docker.com/v2/repositories/{DOCKER_HUB_ORG}/{image}/tags/{version}"
-    try:
-        resp = sess.get(url, headers=headers)
-        return resp.status_code == 200
-    except Exception as exc:  # noqa: BLE001
-        print(f"docker_image_exists: request failed: {exc}")
-        return False
 
 
 def decide_update(current_version: str, candidate_versions: Sequence[str], sort_order: str = "asc") -> Optional[str]:
@@ -154,16 +117,15 @@ def fetch_versions(app_name: str, limit: int = 500, pre_release: bool = False, l
                 versions.append(str(payload["version"]))
     return versions
 
-# --- New: update_applications logic (modeled after update-eureka-components) ---
+# --- update_applications logic ---
 
-def update_applications(applications: List[Dict[str, str]], scope: str = "patch", sort_order: str = "asc", require_docker: bool = False) -> List[Dict[str, str]]:
-    """Update application version entries in-place when a newer version is available.
+def update_applications(applications: List[Dict[str, str]], scope: str = "patch", sort_order: str = "asc") -> List[Dict[str, str]]:
+    """Update application versions in-place when a newer version is available.
 
     Args:
         applications: list of {"name": str, "version": str}
         scope: semver scope (major|minor|patch) controlling which newer versions are considered
         sort_order: asc or desc ordering when selecting candidate versions
-        require_docker: if True, only update when corresponding docker image tag exists
 
     Returns:
         The same list (mutated) for convenience.
@@ -172,9 +134,7 @@ def update_applications(applications: List[Dict[str, str]], scope: str = "patch"
         print("No applications provided")
         return applications
 
-    session = requests.Session() if require_docker else None
-
-    print(f"Processing {len(applications)} applications (scope={scope}, order={sort_order}, require_docker={require_docker})")
+    print(f"Processing {len(applications)} applications (scope={scope}, order={sort_order})")
 
     for app in applications:
         name = app.get("name", "<unknown>")
@@ -196,45 +156,88 @@ def update_applications(applications: List[Dict[str, str]], scope: str = "patch"
         if not new_version:
             print("  up to date")
             continue
-        if require_docker and not docker_image_exists(name, new_version, session=session):
-            print(f"  docker image missing for {name}:{new_version}; skipping")
-            continue
         app["version"] = new_version
         print(f"  updated -> {new_version}")
     return applications
 
 # --- Entry point ---
-
-def main() -> None:
-    # Sample components (was DATA). Flattened for update routine.
-    sample_components = [
-        {"name": "app-platform-minimal", "version": "2.0.19"},
-        {"name": "app-platform-complete", "version": "2.1.40"},
-        {"name": "app-acquisitions", "version": "1.0.17"},
-        {"name": "app-bulk-edit", "version": "1.0.7"},
-        {"name": "app-consortia", "version": "1.2.1"},
-        {"name": "app-dcb", "version": "1.1.4"},
-        {"name": "app-edge-complete", "version": "2.0.9"},
-        {"name": "app-erm-usage", "version": "2.0.3"},
-        {"name": "app-fqm", "version": "1.0.11"},
-        {"name": "app-marc-migrations", "version": "2.0.1"},
-        {"name": "app-oai-pmh", "version": "1.0.2"},
-        {"name": "app-inn-reach", "version": "1.0.0"},
-        {"name": "app-linked-data", "version": "1.1.6"},
-        {"name": "app-reading-room", "version": "2.0.2"},
-        {"name": "app-consortia-manager", "version": "1.1.1"},
-    ]
-
-    print("Original applications:")
-    for c in sample_components:
-        print(f"  {c['name']}: {c['version']}")
-
-    print("\nUpdating...\n")
-    update_applications(sample_components, scope=os.getenv("FILTER_SCOPE", "patch"), sort_order=os.getenv("SORT_ORDER", "asc"), require_docker=False)
-
-    print("\nUpdated applications:")
-    for c in sample_components:
-        print(f"  {c['name']}: {c['version']}")
-
 if __name__ == "__main__":
-    main()
+  sample_components = [
+    {
+      "required": [
+        {
+          "name": "app-platform-minimal",
+          "version": "2.0.19"
+        },
+        {
+          "name": "app-platform-complete",
+          "version": "2.1.40"
+        }
+      ],
+      "optional": [
+        {
+          "name": "app-acquisitions",
+          "version": "1.0.17"
+        },
+        {
+          "name": "app-bulk-edit",
+          "version": "1.0.7"
+        },
+        {
+          "name": "app-consortia",
+          "version": "1.2.1"
+        },
+        {
+          "name": "app-dcb",
+          "version": "1.1.4"
+        },
+        {
+          "name": "app-edge-complete",
+          "version": "2.0.9"
+        },
+        {
+          "name": "app-erm-usage",
+          "version": "2.0.3"
+        },
+        {
+          "name": "app-fqm",
+          "version": "1.0.11"
+        },
+        {
+          "name": "app-marc-migrations",
+          "version": "2.0.1"
+        },
+        {
+          "name": "app-oai-pmh",
+          "version": "1.0.2"
+        },
+        {
+          "name": "app-inn-reach",
+          "version": "1.0.0"
+        },
+        {
+          "name": "app-linked-data",
+          "version": "1.1.6"
+        },
+        {
+          "name": "app-reading-room",
+          "version": "2.0.2"
+        },
+        {
+          "name": "app-consortia-manager",
+          "version": "1.1.1"
+        }
+      ]
+    }
+  ]
+
+  print("Original applications:")
+  for c in sample_components:
+    print(f"  {c['name']}: {c['version']}")
+
+  print("\nUpdating...\n")
+  update_applications(sample_components, scope=os.getenv("FILTER_SCOPE", "patch"), sort_order=os.getenv("SORT_ORDER", "asc"))
+
+  print("\nUpdated applications:")
+  for c in sample_components:
+    print(f"  {c['name']}: {c['version']}")
