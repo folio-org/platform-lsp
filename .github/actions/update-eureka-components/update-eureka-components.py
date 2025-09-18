@@ -9,12 +9,12 @@ Refactored for clarity (KISS + clean code):
 - Separation of concerns (fetch, filter, decide, apply)
 - Lightweight structured logging helper
 - Backward compatibility: process_components kept as alias
+- (Simplified) Removed Component dataclass to avoid extra abstraction
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import List, Dict, Iterable, Sequence, Tuple, Optional
+from typing import List, Dict, Sequence, Tuple, Optional
 import os
 import requests
 from dotenv import load_dotenv
@@ -44,21 +44,6 @@ load_dotenv()
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 DOCKER_USERNAME = os.getenv("DOCKER_USERNAME")
 DOCKER_PASSWORD = os.getenv("DOCKER_PASSWORD")
-
-# ---------------------------------------------------------------------------
-# Data model
-# ---------------------------------------------------------------------------
-@dataclass
-class Component:
-  name: str
-  version: str
-
-  @classmethod
-  def from_mapping(cls, data: Dict[str, str]) -> "Component":
-    return cls(name=data.get("name", "unknown"), version=data.get("version", "unknown"))
-
-  def to_mapping(self) -> Dict[str, str]:
-    return {"name": self.name, "version": self.version}
 
 # ---------------------------------------------------------------------------
 # Logging helper
@@ -186,52 +171,52 @@ def decide_update(current_version: str, candidate_versions: Sequence[str]) -> Op
   return newest if is_newer(current_version, newest) else None
 
 
-def apply_component_update(component: Component, new_version: str) -> None:
+def apply_component_update(name: str, old_version: str, new_version: str) -> None:
   """Placeholder for real update side-effects."""
-  log(f"  - Applying update {component.name}: {component.version} -> {new_version}")
+  log(f"  - Applying update {name}: {old_version} -> {new_version}")
   # Real implementation would go here (e.g., patching files, committing changes, etc.)
 
 
-def update_components(raw_components: List[Dict[str, str]]) -> List[Dict[str, str]]:
+def update_components(components: List[Dict[str, str]]) -> List[Dict[str, str]]:
   """
   Update component versions in-place when a newer release (with existing Docker image) is found.
   Returns the same list (mutated) for convenience.
   """
-  if not raw_components:
+  if not components:
     log("No components to process")
-    return raw_components
+    return components
 
-  components = [Component.from_mapping(c) for c in raw_components]
   log(f"Processing {len(components)} components (scope={FILTER_SCOPE}, order={SORT_ORDER})...")
 
   session = requests.Session()
 
-  for comp, mapping in zip(components, raw_components):
-    log(f"Processing: {comp.name} (current: {comp.version})")
+  for comp in components:
+    name = comp.get("name", "unknown")
+    current_version = comp.get("version", "0.0.0")
+    log(f"Processing: {name} (current: {current_version})")
     try:
-      all_tags = fetch_repo_release_tags(comp.name, session=session)
+      all_tags = fetch_repo_release_tags(name, session=session)
     except Exception as exc:  # noqa: BLE001
       log(f"  Error fetching releases: {exc}. Skipping update logic (keeping current version).")
       continue
 
-    filtered = filter_versions(all_tags, comp.version)
+    filtered = filter_versions(all_tags, current_version)
     log(f"  Filtered versions: {filtered}")
-    new_version = decide_update(comp.version, filtered)
+    new_version = decide_update(current_version, filtered)
 
     if not new_version:
       log("  - Up to date")
       continue
 
-    if not docker_image_exists(comp.name, new_version, session=session):
-      log(f"  - Docker image missing for {comp.name}:{new_version}; skipping.")
+    if not docker_image_exists(name, new_version, session=session):
+      log(f"  - Docker image missing for {name}:{new_version}; skipping.")
       continue
 
-    apply_component_update(comp, new_version)
-    comp.version = new_version
-    mapping["version"] = new_version  # reflect change in original structure
+    apply_component_update(name, current_version, new_version)
+    comp["version"] = new_version
     log(f"  - Updated local mapping to {new_version}")
 
-  return raw_components
+  return components
 
 # ---------------------------------------------------------------------------
 # Backward compatibility wrapper (legacy name)
