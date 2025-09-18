@@ -1,15 +1,6 @@
 #!/usr/bin/env python3
 """
 Update Eureka components script.
-
-Refactored for clarity (KISS + clean code):
-- Centralized constants validation
-- Single semver parsing / comparison helpers
-- Clear function naming and docstrings
-- Separation of concerns (fetch, filter, decide, apply)
-- Lightweight structured logging helper
-- Backward compatibility: process_components kept as alias
-- (Simplified) Removed Component dataclass to avoid extra abstraction
 """
 
 from __future__ import annotations
@@ -44,13 +35,6 @@ load_dotenv()
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 DOCKER_USERNAME = os.getenv("DOCKER_USERNAME")
 DOCKER_PASSWORD = os.getenv("DOCKER_PASSWORD")
-
-# ---------------------------------------------------------------------------
-# Logging helper
-# ---------------------------------------------------------------------------
-
-def log(msg: str) -> None:
-  print(msg)
 
 # ---------------------------------------------------------------------------
 # Semver helpers (minimal – numeric only, non-numeric parts treated as 0)
@@ -117,7 +101,7 @@ def docker_hub_auth_token(session: requests.Session) -> Optional[str]:
     if resp.status_code == 200:
       return resp.json().get("token")
   except Exception as exc:  # noqa: BLE001
-    log(f"  Warning: Docker Hub auth failed: {exc}")
+    print(f"  Warning: Docker Hub auth failed: {exc}")
   return None
 
 
@@ -132,7 +116,7 @@ def docker_image_exists(image: str, version: str, session: Optional[requests.Ses
     resp = sess.get(url, headers=headers)
     return resp.status_code == 200
   except Exception as exc:  # noqa: BLE001
-    log(f"  Warning: Docker Hub request failed: {exc}")
+    print(f"  Warning: Docker Hub request failed: {exc}")
     return False
 
 # ---------------------------------------------------------------------------
@@ -173,7 +157,7 @@ def decide_update(current_version: str, candidate_versions: Sequence[str]) -> Op
 
 def apply_component_update(name: str, old_version: str, new_version: str) -> None:
   """Placeholder for real update side-effects."""
-  log(f"  - Applying update {name}: {old_version} -> {new_version}")
+  print(f"  - Applying update {name}: {old_version} -> {new_version}")
   # Real implementation would go here (e.g., patching files, committing changes, etc.)
 
 
@@ -183,38 +167,38 @@ def update_components(components: List[Dict[str, str]]) -> List[Dict[str, str]]:
   Returns the same list (mutated) for convenience.
   """
   if not components:
-    log("No components to process")
+    print("No components to process")
     return components
 
-  log(f"Processing {len(components)} components (scope={FILTER_SCOPE}, order={SORT_ORDER})...")
+  print(f"Processing {len(components)} components (scope={FILTER_SCOPE}, order={SORT_ORDER})...")
 
   session = requests.Session()
 
   for comp in components:
     name = comp.get("name", "unknown")
     current_version = comp.get("version", "0.0.0")
-    log(f"Processing: {name} (current: {current_version})")
+    print(f"Processing: {name} (current: {current_version})")
     try:
       all_tags = fetch_repo_release_tags(name, session=session)
     except Exception as exc:  # noqa: BLE001
-      log(f"  Error fetching releases: {exc}. Skipping update logic (keeping current version).")
+      print(f"  Error fetching releases: {exc}. Skipping update logic (keeping current version).")
       continue
 
     filtered = filter_versions(all_tags, current_version)
-    log(f"  Filtered versions: {filtered}")
+    print(f"  Filtered versions: {filtered}")
     new_version = decide_update(current_version, filtered)
 
     if not new_version:
-      log("  - Up to date")
+      print("  - Up to date")
       continue
 
     if not docker_image_exists(name, new_version, session=session):
-      log(f"  - Docker image missing for {name}:{new_version}; skipping.")
+      print(f"  - Docker image missing for {name}:{new_version}; skipping.")
       continue
 
     apply_component_update(name, current_version, new_version)
     comp["version"] = new_version
-    log(f"  - Updated local mapping to {new_version}")
+    print(f"  - Updated local mapping to {new_version}")
 
   return components
 
@@ -238,14 +222,14 @@ if __name__ == "__main__":
     {"name": "mgr-tenant-entitlements", "version": "3.1.0"},
   ]
 
-  log("Original components:")
+  print("Original components:")
   for c in sample_components:
-    log(f" - {c['name']}: {c['version']}")
+    print(f" - {c['name']}: {c['version']}")
 
-  log("=" * 40)
+  print("=" * 40)
   updated = update_components(sample_components)
-  log("=" * 40)
+  print("=" * 40)
 
-  log("Updated components:")
+  print("Updated components:")
   for c in updated:
-    log(f" - {c['name']}: {c['version']}")
+    print(f" - {c['name']}: {c['version']}")
