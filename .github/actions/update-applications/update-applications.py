@@ -3,6 +3,7 @@
 fetch available versions & update application entries based on available versions.
 
 KISS focus. Docker image existence checks removed.
+Supports grouped structure with keys 'required' and 'optional'.
 """
 
 from __future__ import annotations
@@ -13,7 +14,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import os
-from typing import List, Tuple, Optional, Sequence, Dict
+from typing import List, Tuple, Optional, Sequence, Dict, Iterable
 
 # Global base address for the FOLIO Application Registry (FAR)
 BASE_URL = "https://far-test.ci.folio.org"
@@ -160,84 +161,53 @@ def update_applications(applications: List[Dict[str, str]], scope: str = "patch"
         print(f"  updated -> {new_version}")
     return applications
 
+# --- helpers for grouped structure ---
+
+def collect_grouped_apps(grouped: Dict[str, List[Dict[str, str]]], groups: Iterable[str] = ("required", "optional")) -> List[Dict[str, str]]:
+    collected: List[Dict[str, str]] = []
+    for g in groups:
+        items = grouped.get(g, [])
+        if isinstance(items, list):
+            collected.extend(items)
+    return collected
+
+
+def print_grouped(grouped: Dict[str, List[Dict[str, str]]]) -> None:
+    for g, items in grouped.items():
+        print(f"{g}:")
+        for app in items:
+            print(f"  {app.get('name')}: {app.get('version')}")
+
 # --- Entry point ---
 if __name__ == "__main__":
-  sample_components = [
-    {
-      "required": [
-        {
-          "name": "app-platform-minimal",
-          "version": "2.0.19"
-        },
-        {
-          "name": "app-platform-complete",
-          "version": "2.1.40"
-        }
-      ],
-      "optional": [
-        {
-          "name": "app-acquisitions",
-          "version": "1.0.17"
-        },
-        {
-          "name": "app-bulk-edit",
-          "version": "1.0.7"
-        },
-        {
-          "name": "app-consortia",
-          "version": "1.2.1"
-        },
-        {
-          "name": "app-dcb",
-          "version": "1.1.4"
-        },
-        {
-          "name": "app-edge-complete",
-          "version": "2.0.9"
-        },
-        {
-          "name": "app-erm-usage",
-          "version": "2.0.3"
-        },
-        {
-          "name": "app-fqm",
-          "version": "1.0.11"
-        },
-        {
-          "name": "app-marc-migrations",
-          "version": "2.0.1"
-        },
-        {
-          "name": "app-oai-pmh",
-          "version": "1.0.2"
-        },
-        {
-          "name": "app-inn-reach",
-          "version": "1.0.0"
-        },
-        {
-          "name": "app-linked-data",
-          "version": "1.1.6"
-        },
-        {
-          "name": "app-reading-room",
-          "version": "2.0.2"
-        },
-        {
-          "name": "app-consortia-manager",
-          "version": "1.1.1"
-        }
-      ]
+    sample_components = {
+        "required": [
+            {"name": "app-platform-minimal", "version": "2.0.19"},
+            {"name": "app-platform-complete", "version": "2.1.40"},
+        ],
+        "optional": [
+            {"name": "app-acquisitions", "version": "1.0.17"},
+            {"name": "app-bulk-edit", "version": "1.0.7"},
+            {"name": "app-consortia", "version": "1.2.1"},
+            {"name": "app-dcb", "version": "1.1.4"},
+            {"name": "app-edge-complete", "version": "2.0.9"},
+            {"name": "app-erm-usage", "version": "2.0.3"},
+            {"name": "app-fqm", "version": "1.0.11"},
+            {"name": "app-marc-migrations", "version": "2.0.1"},
+            {"name": "app-oai-pmh", "version": "1.0.2"},
+            {"name": "app-inn-reach", "version": "1.0.0"},
+            {"name": "app-linked-data", "version": "1.1.6"},
+            {"name": "app-reading-room", "version": "2.0.2"},
+            {"name": "app-consortia-manager", "version": "1.1.1"},
+        ],
     }
-  ]
 
-  print("Original applications:")
-  for c in sample_components:
-    print(f"  {c['name']}: {c['version']}")
+    print("Original applications:")
+    print_grouped(sample_components)
 
-  print("\nUpdating...\n")
-  update_applications(sample_components, scope=os.getenv("FILTER_SCOPE", "patch"), sort_order=os.getenv("SORT_ORDER", "asc"))
+    print("\nUpdating...\n")
+    flat = collect_grouped_apps(sample_components)
+    update_applications(flat, scope=os.getenv("FILTER_SCOPE", "patch"), sort_order=os.getenv("SORT_ORDER", "asc"))
 
-  print("\nUpdated applications:")
-  for c in sample_components:
-    print(f"  {c['name']}: {c['version']}")
+    print("\nUpdated applications:")
+    print_grouped(sample_components)
