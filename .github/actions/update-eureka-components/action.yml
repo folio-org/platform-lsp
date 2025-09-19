@@ -1,0 +1,81 @@
+name: Update Eureka Components
+description: Resolve newer component versions from GitHub releases (respecting scope/order) when Docker images exist.
+
+inputs:
+  components:
+    description: JSON array of component objects, e.g. [{"name":"folio-kong","version":"3.9.1"}]
+    required: true
+  filter-scope:
+    description: SemVer scope to consider (major|minor|patch)
+    required: false
+    default: patch
+  sort-order:
+    description: Sort order for candidate versions within scope (asc|desc)
+    required: false
+    default: asc
+  github-token:
+    description: GitHub token with at least read access (defaults to workflow GITHUB_TOKEN)
+    required: false
+    default: ${{ github.token }}
+  docker-username:
+    description: Docker Hub username (optional for authenticated lookups)
+    required: false
+  docker-password:
+    description: Docker Hub password (optional for authenticated lookups)
+    required: false
+
+outputs:
+  updated-components:
+    description: JSON array with updated component versions
+    value: ${{ steps.update.outputs.updated-components }}
+
+runs:
+  using: composite
+  steps:
+    - name: Validate input JSON
+      shell: bash
+      run: |
+        set -euo pipefail
+        printf '%s' '${{ inputs.components }}' | python - <<'PY'
+import json, sys
+raw = sys.stdin.read()
+try:
+    data = json.loads(raw)
+except Exception as e:  # noqa
+    raise SystemExit(f"Invalid JSON for 'components': {e}")
+if not isinstance(data, list):
+    raise SystemExit("'components' must be a JSON array")
+for i, item in enumerate(data):
+    if not isinstance(item, dict) or 'name' not in item or 'version' not in item:
+        raise SystemExit(f"Item {i} invalid: each entry needs 'name' and 'version'")
+PY
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        check-latest: true
+    - name: Install dependencies
+      shell: bash
+      run: |
+        set -euo pipefail
+        pip install --disable-pip-version-check --no-cache-dir requests python-dotenv
+    - id: update
+      name: Run update script
+      shell: bash
+      env:
+        FILTER_SCOPE: ${{ inputs['filter-scope'] }}
+        SORT_ORDER: ${{ inputs['sort-order'] }}
+        GITHUB_TOKEN: ${{ inputs['github-token'] }}
+        DOCKER_USERNAME: ${{ inputs['docker-username'] }}
+        DOCKER_PASSWORD: ${{ inputs['docker-password'] }}
+        COMPONENTS_JSON: ${{ inputs.components }}
+      run: |
+        set -euo pipefail
+        python "${GITHUB_ACTION_PATH}/update-eureka-components.py"
+        # Ensure an output key exists even if script wrote nothing
+        grep -q '^updated-components=' "$GITHUB_OUTPUT" || echo 'updated-components=[]' >> "$GITHUB_OUTPUT"
+
+branding:
+  icon: refresh-cw
+  color: blue
+

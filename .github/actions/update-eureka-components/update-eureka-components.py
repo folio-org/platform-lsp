@@ -7,6 +7,8 @@ from typing import List, Dict, Sequence, Tuple, Optional
 import os
 import requests
 from dotenv import load_dotenv
+import json
+import sys
 
 # ---------------------------------------------------------------------------
 # Configuration constants
@@ -204,23 +206,51 @@ def update_components(components: List[Dict[str, str]]) -> List[Dict[str, str]]:
 # Entry point (demo usage)
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
-  sample_components = [
-    {"name": "folio-kong", "version": "3.9.1"},
-    {"name": "folio-keycloak", "version": "26.1.3"},
-    {"name": "folio-module-sidecar", "version": "3.0.7"},
-    {"name": "mgr-applications", "version": "3.0.1"},
-    {"name": "mgr-tenants", "version": "3.0.1"},
-    {"name": "mgr-tenant-entitlements", "version": "3.1.0"},
-  ]
+  components_json = os.getenv("COMPONENTS_JSON")
+  if components_json:
+    try:
+      data = json.loads(components_json)
+      if not isinstance(data, list):
+        raise ValueError("COMPONENTS_JSON must be a JSON array of objects with name/version")
+      for idx, item in enumerate(data):
+        if not isinstance(item, dict) or "name" not in item or "version" not in item:
+          raise ValueError(f"Item at index {idx} must be an object with 'name' and 'version'")
+    except Exception as exc:  # noqa: BLE001
+      print(f"Invalid COMPONENTS_JSON: {exc}", file=sys.stderr)
+      sys.exit(1)
 
-  print("Original components:")
-  for c in sample_components:
-    print(f" - {c['name']}: {c['version']}")
+    updated = update_components(data)
+    serialized = json.dumps(updated, separators=(",", ":"), sort_keys=True)
 
-  print("=" * 40)
-  updated = update_components(sample_components)
-  print("=" * 40)
+    gh_output = os.getenv("GITHUB_OUTPUT")
+    if gh_output:
+      try:
+        with open(gh_output, "a", encoding="utf-8") as fh:
+          fh.write(f"updated-components={serialized}\n")
+      except Exception as exc:  # noqa: BLE001
+        print(f"Warning: failed writing GITHUB_OUTPUT: {exc}", file=sys.stderr)
 
-  print("Updated components:")
-  for c in updated:
-    print(f" - {c['name']}: {c['version']}")
+    # Also print to stdout for logging / capture
+    print(serialized)
+  else:
+    # Fallback demo mode (original sample) if no input provided
+    sample_components = [
+      {"name": "folio-kong", "version": "3.9.1"},
+      {"name": "folio-keycloak", "version": "26.1.3"},
+      {"name": "folio-module-sidecar", "version": "3.0.7"},
+      {"name": "mgr-applications", "version": "3.0.1"},
+      {"name": "mgr-tenants", "version": "3.0.1"},
+      {"name": "mgr-tenant-entitlements", "version": "3.1.0"},
+    ]
+
+    print("Original components:")
+    for c in sample_components:
+      print(f" - {c['name']}: {c['version']}")
+
+    print("=" * 40)
+    updated = update_components(sample_components)
+    print("=" * 40)
+
+    print("Updated components:")
+    for c in updated:
+      print(f" - {c['name']}: {c['version']}")
