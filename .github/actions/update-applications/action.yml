@@ -35,6 +35,14 @@ inputs:
     description: HTTP request timeout (seconds)
     required: false
     default: '10.0'
+  max-retries:
+    description: Maximum number of HTTP request retries
+    required: false
+    default: '3'
+  retry-backoff:
+    description: Base backoff time in seconds for retries
+    required: false
+    default: '1.0'
 
 outputs:
   updated-applications:
@@ -49,41 +57,76 @@ runs:
       run: |
         set -euo pipefail
         python - <<'PY'
-import json, sys
+import json, sys, os
+
+# Write to GitHub Actions summary when in GitHub
+def write_summary(message):
+    step_summary = os.environ.get('GITHUB_STEP_SUMMARY')
+    if step_summary:
+        with open(step_summary, 'a') as f:
+            f.write(f"{message}\n")
+
 raw = '''${{ inputs.applications }}'''
 if not raw.strip():
+    write_summary("❌ Error: applications input is empty")
     raise SystemExit('applications input is empty')
 try:
     data = json.loads(raw)
 except Exception as e:  # noqa
+    write_summary(f"❌ Error: Invalid JSON for applications: {e}")
     raise SystemExit(f'Invalid JSON for applications: {e}')
+
 # Accept dict (grouped) or list (flat)
 if isinstance(data, dict):
+    app_count = 0
     for k, v in data.items():
         if not isinstance(v, list):
+            write_summary(f"❌ Error: Group {k} must be a list")
             raise SystemExit(f'Group {k} must be a list')
         for i, item in enumerate(v):
             if not isinstance(item, dict) or 'name' not in item or 'version' not in item:
+                write_summary(f"❌ Error: Invalid item {k}[{i}] (need name & version)")
                 raise SystemExit(f'Invalid item {k}[{i}] (need name & version)')
+            app_count += 1
+    write_summary(f"✅ Valid grouped applications JSON with {app_count} total apps across {len(data)} groups")
 elif isinstance(data, list):
     for i, item in enumerate(data):
         if not isinstance(item, dict) or 'name' not in item or 'version' not in item:
+            write_summary(f"❌ Error: Invalid item index {i} (need name & version)")
             raise SystemExit(f'Invalid item index {i} (need name & version)')
+    write_summary(f"✅ Valid flat applications JSON with {len(data)} apps")
 else:
+    write_summary("❌ Error: applications must be object (grouped) or array (flat)")
     raise SystemExit('applications must be object (grouped) or array (flat)')
+
+# Validate scope and order
+scope = '''${{ inputs.filter-scope }}'''.lower()
+if scope not in ['major', 'minor', 'patch']:
+    write_summary(f"❌ Error: Invalid filter-scope: {scope}. Must be one of: major, minor, patch")
+    raise SystemExit(f'Invalid filter-scope: {scope}')
+
+order = '''${{ inputs.sort-order }}'''.lower()
+if order not in ['asc', 'desc']:
+    write_summary(f"❌ Error: Invalid sort-order: {order}. Must be one of: asc, desc")
+    raise SystemExit(f'Invalid sort-order: {order}')
 PY
 
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
+        cache: 'pip'
         check-latest: true
+        cache-dependency-path: |
+          ${{ github.action_path }}/requirements.txt
 
     - name: Install dependencies
       shell: bash
       run: |
         set -euo pipefail
-        pip install --disable-pip-version-check --no-cache-dir requests
+        # Create a simple requirements file for pip
+        echo "requests>=2.28.0,<3.0.0" > "${{ github.action_path }}/requirements.txt"
+        python -m pip install --disable-pip-version-check --no-cache-dir -r "${{ github.action_path }}/requirements.txt"
 
     - id: update
       name: Run update script
@@ -97,10 +140,47 @@ PY
         FAR_LATEST: ${{ inputs.far-latest }}
         FAR_PRE_RELEASE: ${{ inputs.far-pre-release }}
         REQUEST_TIMEOUT: ${{ inputs.request-timeout }}
+        MAX_RETRIES: ${{ inputs.max-retries }}
+        RETRY_BACKOFF: ${{ inputs.retry-backoff }}
       run: |
         set -euo pipefail
-        python "${GITHUB_ACTION_PATH}/update-applications.py"
-        grep -q '^updated-applications=' "$GITHUB_OUTPUT" || echo 'updated-applications=[]' >> "$GITHUB_OUTPUT"
+
+        # Log to GitHub step summary if available
+        if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+          echo "## Update Applications" >> $GITHUB_STEP_SUMMARY
+          echo "- Using FAR Base URL: $FAR_BASE_URL" >> $GITHUB_STEP_SUMMARY
+          echo "- Filter scope: $FILTER_SCOPE" >> $GITHUB_STEP_SUMMARY
+          echo "- Sort order: $SORT_ORDER" >> $GITHUB_STEP_SUMMARY
+          echo "- Include pre-release versions: $FAR_PRE_RELEASE" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        # Make the script executable if needed
+        chmod +x "${GITHUB_ACTION_PATH}/update-applications.py"
+
+        # Run the script and capture its output
+        output=$(python "${GITHUB_ACTION_PATH}/update-applications.py")
+        exit_code=$?
+
+        # Check if successful
+        if [[ $exit_code -ne 0 ]]; then
+          echo "::error::Failed to update applications" >&2
+          if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+            echo "❌ Failed to update applications" >> $GITHUB_STEP_SUMMARY
+          fi
+          exit $exit_code
+        fi
+
+        # Check if we need to add the output
+        if ! grep -q '^updated-applications=' "$GITHUB_OUTPUT" 2>/dev/null; then
+          # Get the last line which should be the JSON output
+          json_output=$(echo "$output" | tail -n 1)
+          echo "updated-applications=$json_output" >> "$GITHUB_OUTPUT"
+
+          # Log to GitHub step summary if available
+          if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+            echo "✅ Applications updated successfully" >> $GITHUB_STEP_SUMMARY
+          fi
+        fi
 
 branding:
   icon: layers

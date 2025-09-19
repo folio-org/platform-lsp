@@ -3,11 +3,13 @@
 Update application versions based on entries in the FOLIO Application Registry (FAR).
 """
 
-from typing import List, Tuple, Optional, Sequence, Dict, Iterable
+from typing import List, Tuple, Optional, Sequence, Dict, Iterable, Any, Union, cast
 import os
 import sys
+import time
 import requests
 import json
+from functools import lru_cache
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -19,6 +21,8 @@ FAR_LIMIT = int(os.getenv("FAR_LIMIT", "500"))              # max records to req
 FAR_LATEST = int(os.getenv("FAR_LATEST", "50"))             # FAR 'latest' param (server-side filter)
 FAR_PRE_RELEASE = os.getenv("FAR_PRE_RELEASE", "false").lower() in {"1", "true", "yes"}
 REQUEST_TIMEOUT = float(os.getenv("REQUEST_TIMEOUT", "10.0"))
+MAX_RETRIES = int(os.getenv("MAX_RETRIES", "3"))            # HTTP request retries
+RETRY_BACKOFF = float(os.getenv("RETRY_BACKOFF", "1.0"))    # Base backoff time in seconds
 
 _VALID_FILTER_SCOPES = {"major", "minor", "patch"}
 _VALID_SORT_ORDERS = {"asc", "desc"}
@@ -33,6 +37,10 @@ if SORT_ORDER not in _VALID_SORT_ORDERS:
 # ---------------------------------------------------------------------------
 
 def parse_semver(version: str) -> Tuple[int, int, int]:
+    """Parse semantic version string into a tuple of (major, minor, patch) integers.
+
+    Non-numeric segments are treated as 0.
+    """
     parts = (version or "0").split(".")
     nums: List[int] = []
     for p in parts[:3]:
@@ -46,17 +54,58 @@ def parse_semver(version: str) -> Tuple[int, int, int]:
 
 
 def is_newer(current: str, candidate: str) -> bool:
+    """Compare two version strings and return True if candidate is newer than current."""
     return parse_semver(candidate) > parse_semver(current)
 
 # ---------------------------------------------------------------------------
 # FAR version retrieval
 # ---------------------------------------------------------------------------
 
+def make_request_with_retries(url: str, params: Dict[str, str]) -> Optional[Dict[str, Any]]:
+    """Make an HTTP request with retries and exponential backoff."""
+    retry_count = 0
+    while retry_count <= MAX_RETRIES:
+        try:
+            resp = requests.get(url, params=params, timeout=REQUEST_TIMEOUT)
+            resp.raise_for_status()
+            return resp.json()
+        except requests.exceptions.HTTPError as exc:
+            if exc.response is not None and 500 <= exc.response.status_code < 600:
+                # Server error, retry
+                pass
+            elif exc.response is not None and exc.response.status_code == 429:
+                # Rate limited, retry
+                pass
+            else:
+                # Other HTTP error, don't retry
+                print(f"HTTP error: {exc}", file=sys.stderr)
+                return None
+        except (requests.exceptions.RequestException, ValueError) as exc:
+            # Network or JSON decode error
+            print(f"Request error: {exc}", file=sys.stderr)
+            if retry_count >= MAX_RETRIES:
+                return None
+
+        # Calculate backoff with jitter
+        backoff = RETRY_BACKOFF * (2 ** retry_count) * (0.5 + 0.5 * (hash(url) % 100) / 100.0)
+        backoff = min(backoff, 30.0)  # Cap at 30 seconds
+        retry_count += 1
+
+        if retry_count <= MAX_RETRIES:
+            print(f"Retrying in {backoff:.2f}s (attempt {retry_count}/{MAX_RETRIES})", file=sys.stderr)
+            time.sleep(backoff)
+
+    return None
+
+
+@lru_cache(maxsize=128)
 def fetch_app_versions(app_name: str) -> List[str]:
     """Return list of version strings for a given application name.
 
     FAR primary path: payload.applicationDescriptors[].version
     Fallbacks try a few common structures.
+
+    Results are cached to reduce redundant API calls.
     """
     params = {
         "limit": str(FAR_LIMIT),
@@ -66,20 +115,8 @@ def fetch_app_versions(app_name: str) -> List[str]:
     }
     url = f"{FAR_BASE_URL}/applications"
 
-    try:
-        resp = requests.get(url, params=params, timeout=REQUEST_TIMEOUT)
-    except requests.RequestException as exc:  # network-level
-        print(f"fetch_app_versions: request failed for {app_name}: {exc}", file=sys.stderr)
-        return []
-
-    if resp.status_code != 200:
-        print(f"fetch_app_versions: HTTP {resp.status_code} for {app_name}", file=sys.stderr)
-        return []
-
-    try:
-        payload = resp.json()
-    except ValueError as exc:  # JSON decode
-        print(f"fetch_app_versions: invalid JSON for {app_name}: {exc}", file=sys.stderr)
+    payload = make_request_with_retries(url, params)
+    if payload is None:
         return []
 
     versions: List[str] = []
@@ -114,6 +151,10 @@ def fetch_app_versions(app_name: str) -> List[str]:
 # ---------------------------------------------------------------------------
 
 def filter_versions(versions: Sequence[str], base_version: str) -> List[str]:
+    """Filter versions based on the configured scope (major, minor, patch).
+
+    Returns a sorted list of versions that match the scope constraints.
+    """
     if not versions or not base_version:
         return []
     base = parse_semver(base_version)
@@ -121,19 +162,23 @@ def filter_versions(versions: Sequence[str], base_version: str) -> List[str]:
     for v in versions:
         sem = parse_semver(v)
         if FILTER_SCOPE == "major":
-            pass
+            pass  # Accept all versions
         elif FILTER_SCOPE == "minor":
             if sem[0] != base[0]:
-                continue
+                continue  # Skip versions with different major component
         elif FILTER_SCOPE == "patch":
             if not (sem[0] == base[0] and sem[1] == base[1]):
-                continue
+                continue  # Skip versions with different major or minor components
         result.append(v)
     result.sort(key=lambda x: parse_semver(x), reverse=(SORT_ORDER == "desc"))
     return result
 
 
 def decide_update(current_version: str, candidate_versions: Sequence[str]) -> Optional[str]:
+    """Decide whether to update based on current version and filtered candidates.
+
+    Returns the selected new version or None if no update is needed.
+    """
     if not candidate_versions:
         return None
     chosen = candidate_versions[0] if SORT_ORDER == "desc" else candidate_versions[-1]
@@ -162,7 +207,7 @@ def update_applications(applications: List[Dict[str, str]]) -> List[Dict[str, st
         try:
             all_versions = fetch_app_versions(name)
         except Exception as exc:  # noqa: BLE001 (defensive catch, should be rare)
-            print(f"  fetch error: {exc}; skipping")
+            print(f"  fetch error: {exc}; skipping", file=sys.stderr)
             continue
         if not all_versions:
             print("  no versions found")
@@ -185,6 +230,7 @@ def update_applications(applications: List[Dict[str, str]]) -> List[Dict[str, st
 # ---------------------------------------------------------------------------
 
 def collect_grouped_apps(grouped: Dict[str, List[Dict[str, str]]], groups: Iterable[str] = ("required", "optional")) -> List[Dict[str, str]]:
+    """Collect applications from specified groups into a flat list."""
     collected: List[Dict[str, str]] = []
     for g in groups:
         items = grouped.get(g, [])
@@ -194,61 +240,73 @@ def collect_grouped_apps(grouped: Dict[str, List[Dict[str, str]]], groups: Itera
 
 
 def print_grouped(grouped: Dict[str, List[Dict[str, str]]]) -> None:
+    """Print a grouped application structure in a readable format."""
     for g, items in grouped.items():
         print(f"{g}:")
         for app in items:
             print(f"  {app.get('name')}: {app.get('version')}")
 
 # ---------------------------------------------------------------------------
-# Demo entry point
+# Process applications from JSON
+# ---------------------------------------------------------------------------
+
+def process_applications_json(applications_json: str) -> Union[Dict[str, List[Dict[str, str]]], List[Dict[str, str]], None]:
+    """Process applications JSON input and return the updated structure.
+
+    Returns None if processing fails.
+    """
+    try:
+        payload = json.loads(applications_json)
+    except json.JSONDecodeError as exc:
+        print(f"Invalid APPLICATIONS_JSON: {exc}", file=sys.stderr)
+        return None
+
+    original_grouped = False
+    grouped: Dict[str, List[Dict[str, str]]] = {}
+    flat: List[Dict[str, str]] = []
+
+    if isinstance(payload, dict):
+        # assume grouped structure
+        for key, val in payload.items():
+            if not isinstance(val, list):
+                print(f"Group '{key}' must be a list", file=sys.stderr)
+                return None
+            group_items: List[Dict[str, str]] = []
+            for idx, item in enumerate(val):
+                if not (isinstance(item, dict) and 'name' in item and 'version' in item):
+                    print(f"Invalid item at {key}[{idx}] (needs name & version)", file=sys.stderr)
+                    return None
+                group_items.append({"name": str(item['name']), "version": str(item['version'])})
+            grouped[key] = group_items
+            flat.extend(group_items)
+        original_grouped = True
+    elif isinstance(payload, list):
+        for idx, item in enumerate(payload):
+            if not (isinstance(item, dict) and 'name' in item and 'version' in item):
+                print(f"Invalid item at index {idx} (needs name & version)", file=sys.stderr)
+                return None
+            flat.append({"name": str(item['name']), "version": str(item['version'])})
+    else:
+        print("APPLICATIONS_JSON must be either a JSON object (grouped) or array (flat)", file=sys.stderr)
+        return None
+
+    update_applications(flat)
+
+    # Return in the original shape
+    if original_grouped:
+        return grouped
+    return flat
+
+# ---------------------------------------------------------------------------
+# Main entry point
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
     applications_json = os.getenv("APPLICATIONS_JSON")
     if applications_json:
-        # Accept either a grouped object {"required":[...],"optional":[...] } or a flat array
-        try:
-            payload = json.loads(applications_json)
-        except Exception as exc:  # noqa: BLE001
-            print(f"Invalid APPLICATIONS_JSON: {exc}", file=sys.stderr)
+        output_obj = process_applications_json(applications_json)
+
+        if output_obj is None:
             sys.exit(1)
-
-        original_grouped = False
-        grouped: Dict[str, List[Dict[str, str]]] = {}
-        flat: List[Dict[str, str]] = []
-
-        if isinstance(payload, dict):
-            # assume grouped structure
-            for key, val in payload.items():
-                if not isinstance(val, list):
-                    print(f"Group '{key}' must be a list", file=sys.stderr)
-                    sys.exit(1)
-                group_items: List[Dict[str, str]] = []
-                for idx, item in enumerate(val):
-                    if not (isinstance(item, dict) and 'name' in item and 'version' in item):
-                        print(f"Invalid item at {key}[{idx}] (needs name & version)", file=sys.stderr)
-                        sys.exit(1)
-                    group_items.append({"name": str(item['name']), "version": str(item['version'])})
-                grouped[key] = group_items
-                flat.extend(group_items)
-            original_grouped = True
-        elif isinstance(payload, list):
-            for idx, item in enumerate(payload):
-                if not (isinstance(item, dict) and 'name' in item and 'version' in item):
-                    print(f"Invalid item at index {idx} (needs name & version)", file=sys.stderr)
-                    sys.exit(1)
-                flat.append({"name": str(item['name']), "version": str(item['version'])})
-        else:
-            print("APPLICATIONS_JSON must be either a JSON object (grouped) or array (flat)", file=sys.stderr)
-            sys.exit(1)
-
-        update_applications(flat)
-
-        # Reconstruct output preserving original shape
-        if original_grouped:
-            # grouped already mutated through references in flat list
-            output_obj = grouped
-        else:
-            output_obj = flat
 
         serialized = json.dumps(output_obj, separators=(',', ':'), sort_keys=True)
 
