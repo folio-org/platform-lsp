@@ -7,6 +7,7 @@ from typing import List, Tuple, Optional, Sequence, Dict, Iterable
 import os
 import sys
 import requests
+import json
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -202,34 +203,94 @@ def print_grouped(grouped: Dict[str, List[Dict[str, str]]]) -> None:
 # Demo entry point
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
-    sample_components = {
-        "required": [
-            {"name": "app-platform-minimal", "version": "2.0.19"},
-            {"name": "app-platform-complete", "version": "2.1.40"},
-        ],
-        "optional": [
-            {"name": "app-acquisitions", "version": "1.0.17"},
-            {"name": "app-bulk-edit", "version": "1.0.7"},
-            {"name": "app-consortia", "version": "1.2.1"},
-            {"name": "app-dcb", "version": "1.1.4"},
-            {"name": "app-edge-complete", "version": "2.0.9"},
-            {"name": "app-erm-usage", "version": "2.0.3"},
-            {"name": "app-fqm", "version": "1.0.11"},
-            {"name": "app-marc-migrations", "version": "2.0.1"},
-            {"name": "app-oai-pmh", "version": "1.0.2"},
-            {"name": "app-inn-reach", "version": "1.0.0"},
-            {"name": "app-linked-data", "version": "1.1.6"},
-            {"name": "app-reading-room", "version": "2.0.2"},
-            {"name": "app-consortia-manager", "version": "1.1.1"},
-        ],
-    }
+    applications_json = os.getenv("APPLICATIONS_JSON")
+    if applications_json:
+        # Accept either a grouped object {"required":[...],"optional":[...] } or a flat array
+        try:
+            payload = json.loads(applications_json)
+        except Exception as exc:  # noqa: BLE001
+            print(f"Invalid APPLICATIONS_JSON: {exc}", file=sys.stderr)
+            sys.exit(1)
 
-    print("Original applications:")
-    print_grouped(sample_components)
+        original_grouped = False
+        grouped: Dict[str, List[Dict[str, str]]] = {}
+        flat: List[Dict[str, str]] = []
 
-    print("\nUpdating...\n")
-    flat = collect_grouped_apps(sample_components)
-    update_applications(flat)
+        if isinstance(payload, dict):
+            # assume grouped structure
+            for key, val in payload.items():
+                if not isinstance(val, list):
+                    print(f"Group '{key}' must be a list", file=sys.stderr)
+                    sys.exit(1)
+                group_items: List[Dict[str, str]] = []
+                for idx, item in enumerate(val):
+                    if not (isinstance(item, dict) and 'name' in item and 'version' in item):
+                        print(f"Invalid item at {key}[{idx}] (needs name & version)", file=sys.stderr)
+                        sys.exit(1)
+                    group_items.append({"name": str(item['name']), "version": str(item['version'])})
+                grouped[key] = group_items
+                flat.extend(group_items)
+            original_grouped = True
+        elif isinstance(payload, list):
+            for idx, item in enumerate(payload):
+                if not (isinstance(item, dict) and 'name' in item and 'version' in item):
+                    print(f"Invalid item at index {idx} (needs name & version)", file=sys.stderr)
+                    sys.exit(1)
+                flat.append({"name": str(item['name']), "version": str(item['version'])})
+        else:
+            print("APPLICATIONS_JSON must be either a JSON object (grouped) or array (flat)", file=sys.stderr)
+            sys.exit(1)
 
-    print("\nUpdated applications:")
-    print_grouped(sample_components)
+        update_applications(flat)
+
+        # Reconstruct output preserving original shape
+        if original_grouped:
+            # grouped already mutated through references in flat list
+            output_obj = grouped
+        else:
+            output_obj = flat
+
+        serialized = json.dumps(output_obj, separators=(',', ':'), sort_keys=True)
+
+        gh_output = os.getenv("GITHUB_OUTPUT")
+        if gh_output:
+            try:
+                with open(gh_output, 'a', encoding='utf-8') as fh:
+                    fh.write(f"updated-applications={serialized}\n")
+            except Exception as exc:  # noqa: BLE001
+                print(f"Warning: failed to write GITHUB_OUTPUT: {exc}", file=sys.stderr)
+
+        print(serialized)
+    else:
+        # Demo fallback (original behavior)
+        sample_components = {
+            "required": [
+                {"name": "app-platform-minimal", "version": "2.0.19"},
+                {"name": "app-platform-complete", "version": "2.1.40"},
+            ],
+            "optional": [
+                {"name": "app-acquisitions", "version": "1.0.17"},
+                {"name": "app-bulk-edit", "version": "1.0.7"},
+                {"name": "app-consortia", "version": "1.2.1"},
+                {"name": "app-dcb", "version": "1.1.4"},
+                {"name": "app-edge-complete", "version": "2.0.9"},
+                {"name": "app-erm-usage", "version": "2.0.3"},
+                {"name": "app-fqm", "version": "1.0.11"},
+                {"name": "app-marc-migrations", "version": "2.0.1"},
+                {"name": "app-oai-pmh", "version": "1.0.2"},
+                {"name": "app-inn-reach", "version": "1.0.0"},
+                {"name": "app-linked-data", "version": "1.1.6"},
+                {"name": "app-reading-room", "version": "2.0.2"},
+                {"name": "app-consortia-manager", "version": "1.1.1"},
+            ],
+        }
+
+        print("Original applications:")
+        print_grouped(sample_components)
+
+        print("\nUpdating...\n")
+        flat_demo = collect_grouped_apps(sample_components)
+        update_applications(flat_demo)
+
+        print("\nUpdated applications:")
+        print_grouped(sample_components)

@@ -1,0 +1,107 @@
+name: Update Applications
+description: Update application versions by consulting the FOLIO Application Registry (FAR) respecting semver scope rules.
+
+inputs:
+  applications:
+    description: >-
+      JSON: either an array of {"name":"app","version":"x.y.z"} or grouped object
+      {"required":[...],"optional":[...],"<group>":[...]}
+    required: true
+  far-base-url:
+    description: FAR base URL
+    required: false
+    default: https://far-test.ci.folio.org
+  filter-scope:
+    description: SemVer scope to consider (major|minor|patch)
+    required: false
+    default: patch
+  sort-order:
+    description: Sort order for candidate versions (asc|desc)
+    required: false
+    default: asc
+  far-limit:
+    description: FAR query limit (max records)
+    required: false
+    default: '500'
+  far-latest:
+    description: FAR 'latest' query parameter (server side)
+    required: false
+    default: '50'
+  far-pre-release:
+    description: Include pre-release versions (true|false)
+    required: false
+    default: 'false'
+  request-timeout:
+    description: HTTP request timeout (seconds)
+    required: false
+    default: '10.0'
+
+outputs:
+  updated-applications:
+    description: JSON (shape matches input) with possibly updated versions
+    value: ${{ steps.update.outputs.updated-applications }}
+
+runs:
+  using: composite
+  steps:
+    - name: Validate input JSON
+      shell: bash
+      run: |
+        set -euo pipefail
+        python - <<'PY'
+import json, sys
+raw = '''${{ inputs.applications }}'''
+if not raw.strip():
+    raise SystemExit('applications input is empty')
+try:
+    data = json.loads(raw)
+except Exception as e:  # noqa
+    raise SystemExit(f'Invalid JSON for applications: {e}')
+# Accept dict (grouped) or list (flat)
+if isinstance(data, dict):
+    for k, v in data.items():
+        if not isinstance(v, list):
+            raise SystemExit(f'Group {k} must be a list')
+        for i, item in enumerate(v):
+            if not isinstance(item, dict) or 'name' not in item or 'version' not in item:
+                raise SystemExit(f'Invalid item {k}[{i}] (need name & version)')
+elif isinstance(data, list):
+    for i, item in enumerate(data):
+        if not isinstance(item, dict) or 'name' not in item or 'version' not in item:
+            raise SystemExit(f'Invalid item index {i} (need name & version)')
+else:
+    raise SystemExit('applications must be object (grouped) or array (flat)')
+PY
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        check-latest: true
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        set -euo pipefail
+        pip install --disable-pip-version-check --no-cache-dir requests
+
+    - id: update
+      name: Run update script
+      shell: bash
+      env:
+        APPLICATIONS_JSON: ${{ inputs.applications }}
+        FAR_BASE_URL: ${{ inputs.far-base-url }}
+        FILTER_SCOPE: ${{ inputs.filter-scope }}
+        SORT_ORDER: ${{ inputs.sort-order }}
+        FAR_LIMIT: ${{ inputs.far-limit }}
+        FAR_LATEST: ${{ inputs.far-latest }}
+        FAR_PRE_RELEASE: ${{ inputs.far-pre-release }}
+        REQUEST_TIMEOUT: ${{ inputs.request-timeout }}
+      run: |
+        set -euo pipefail
+        python "${GITHUB_ACTION_PATH}/update-applications.py"
+        grep -q '^updated-applications=' "$GITHUB_OUTPUT" || echo 'updated-applications=[]' >> "$GITHUB_OUTPUT"
+
+branding:
+  icon: layers
+  color: green
