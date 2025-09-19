@@ -9,10 +9,19 @@ inputs:
     description: SemVer scope to consider (major|minor|patch)
     required: false
     default: patch
+    type: choice
+    options:
+      - major
+      - minor
+      - patch
   sort-order:
     description: Sort order for candidate versions within scope (asc|desc)
     required: false
     default: asc
+    type: choice
+    options:
+      - asc
+      - desc
   github-token:
     description: GitHub token with at least read access (defaults to workflow GITHUB_TOKEN)
     required: false
@@ -23,6 +32,10 @@ inputs:
   docker-password:
     description: Docker Hub password (optional for authenticated lookups)
     required: false
+  log-level:
+    description: Level of logging verbosity (INFO, DEBUG, WARNING, ERROR)
+    required: false
+    default: INFO
 
 outputs:
   updated-components:
@@ -36,6 +49,7 @@ runs:
       shell: bash
       run: |
         set -euo pipefail
+        echo "Validating input JSON structure..."
         printf '%s' '${{ inputs.components }}' | python - <<'PY'
 import json, sys
 raw = sys.stdin.read()
@@ -48,34 +62,51 @@ if not isinstance(data, list):
 for i, item in enumerate(data):
     if not isinstance(item, dict) or 'name' not in item or 'version' not in item:
         raise SystemExit(f"Item {i} invalid: each entry needs 'name' and 'version'")
+print(f"✓ Successfully validated {len(data)} components")
 PY
+
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
-        check-latest: true
+        cache: 'pip'
+        cache-dependency-path: ${{ github.action_path }}/requirements.txt
+
+    - name: Create requirements file
+      shell: bash
+      run: |
+        cat > "${GITHUB_ACTION_PATH}/requirements.txt" << 'EOF'
+requests>=2.31.0,<3.0.0
+python-dotenv>=1.0.0,<2.0.0
+EOF
+
     - name: Install dependencies
       shell: bash
       run: |
         set -euo pipefail
-        pip install --disable-pip-version-check --no-cache-dir requests python-dotenv
+        echo "Installing dependencies..."
+        python -m pip install --disable-pip-version-check --no-cache-dir -r "${GITHUB_ACTION_PATH}/requirements.txt"
+
     - id: update
       name: Run update script
       shell: bash
       env:
-        FILTER_SCOPE: ${{ inputs['filter-scope'] }}
-        SORT_ORDER: ${{ inputs['sort-order'] }}
-        GITHUB_TOKEN: ${{ inputs['github-token'] }}
-        DOCKER_USERNAME: ${{ inputs['docker-username'] }}
-        DOCKER_PASSWORD: ${{ inputs['docker-password'] }}
+        FILTER_SCOPE: ${{ inputs.filter-scope }}
+        SORT_ORDER: ${{ inputs.sort-order }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        DOCKER_USERNAME: ${{ inputs.docker-username }}
+        DOCKER_PASSWORD: ${{ inputs.docker-password }}
         COMPONENTS_JSON: ${{ inputs.components }}
+        PYTHONUNBUFFERED: "1"
+        LOG_LEVEL: ${{ inputs.log-level }}
       run: |
         set -euo pipefail
+        echo "Running component update script..."
         python "${GITHUB_ACTION_PATH}/update-eureka-components.py"
         # Ensure an output key exists even if script wrote nothing
         grep -q '^updated-components=' "$GITHUB_OUTPUT" || echo 'updated-components=[]' >> "$GITHUB_OUTPUT"
+        echo "Component update completed"
 
 branding:
   icon: refresh-cw
   color: blue
-
