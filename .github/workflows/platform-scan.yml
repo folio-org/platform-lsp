@@ -16,6 +16,15 @@ on:
         description: 'Override matrix to run for specific release branch only'
         required: false
         type: string
+      filter_scope:
+        description: 'SemVer scope to consider (major|minor|patch)'
+        required: false
+        default: 'patch'
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
 
   # Optional: Enable for ad-hoc runs when descriptor changes
   # push:
@@ -72,29 +81,47 @@ jobs:
         id: current
         shell: bash -euxo pipefail {0}
         run: |
-          # TODO: Parse platform descriptor and extract current versions
-          # Expected outputs: mgr_versions, kond_version, keycloak_version, app_versions
+          # Extract current versions from the platform descriptor
           echo "Reading current versions from ${{ steps.setup.outputs.descriptor_path }}"
 
-          # Placeholder - implement descriptor parsing
-          echo "eureka-components={}" >> $GITHUB_OUTPUT
-          echo "app_versions={}" >> $GITHUB_OUTPUT
+          # Parse YAML and extract components and applications
+          if [ ! -f "${{ steps.setup.outputs.descriptor_path }}" ]; then
+            echo "Error: Descriptor file not found at ${{ steps.setup.outputs.descriptor_path }}"
+            exit 1
+          fi
+
+          # Install yq if needed
+          if ! command -v yq &> /dev/null; then
+            echo "Installing yq..."
+            wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+            chmod +x /usr/local/bin/yq
+          fi
+
+          # Extract eureka components
+          EUREKA_COMPONENTS=$(yq -o=json '.components.eureka' ${{ steps.setup.outputs.descriptor_path }})
+          echo "eureka_components=${EUREKA_COMPONENTS}" >> $GITHUB_OUTPUT
+
+          # Extract applications
+          APPLICATIONS=$(yq -o=json '.applications' ${{ steps.setup.outputs.descriptor_path }})
+          echo "applications=${APPLICATIONS}" >> $GITHUB_OUTPUT
+
+          # Extract kond version if present
+          KOND_VERSION=$(yq -o=json '.components.kond.version' ${{ steps.setup.outputs.descriptor_path }})
+          echo "kond_version=${KOND_VERSION}" >> $GITHUB_OUTPUT
+
+          # Extract keycloak version if present
+          KEYCLOAK_VERSION=$(yq -o=json '.components.keycloak.version' ${{ steps.setup.outputs.descriptor_path }})
+          echo "keycloak_version=${KEYCLOAK_VERSION}" >> $GITHUB_OUTPUT
 
           echo "Current versions extracted from descriptor"
 
-      - name: Fetch latest mgr-* component versions
-        id: fetch-mgr
-        shell: bash -euxo pipefail {0}
-        run: |
-          # TODO: Implement mgr-* component version fetching
-          # This should query the appropriate repositories/registries for latest mgr-* versions
-          echo "Fetching latest mgr-* component versions..."
-
-          # Placeholder - implement mgr component version fetching
-          # Should set: latest_mgr_versions (JSON)
-          echo "latest_mgr_versions={}" >> $GITHUB_OUTPUT
-
-          echo "Latest mgr-* versions fetched"
+      - name: Fetch latest eureka component versions
+        id: fetch-eureka
+        uses: ./.github/actions/update-eureka-components
+        with:
+          components: ${{ steps.current.outputs.eureka_components }}
+          filter-scope: ${{ inputs.filter_scope || 'patch' }}
+          sort-order: 'asc'
 
       - name: Fetch latest kond version
         id: fetch-kond
@@ -105,7 +132,7 @@ jobs:
           echo "Fetching latest kond version..."
 
           # Placeholder - implement kond version fetching
-          echo "latest_kond_version=unknown" >> $GITHUB_OUTPUT
+          echo "latest_kond_version=${{ steps.current.outputs.kond_version }}" >> $GITHUB_OUTPUT
 
           echo "Latest kond version fetched"
 
@@ -118,50 +145,73 @@ jobs:
           echo "Fetching latest keycloak version..."
 
           # Placeholder - implement keycloak version fetching
-          echo "latest_keycloak_version=unknown" >> $GITHUB_OUTPUT
+          echo "latest_keycloak_version=${{ steps.current.outputs.keycloak_version }}" >> $GITHUB_OUTPUT
 
           echo "Latest keycloak version fetched"
 
       - name: Fetch latest application versions
         id: fetch-apps
-        shell: bash -euxo pipefail {0}
-        run: |
-          # TODO: Implement application version fetching
-          # Query application repositories for latest versions
-          echo "Fetching latest application versions..."
-
-          # Placeholder - implement application version fetching
-          # Should set: latest_app_versions (JSON)
-          echo "latest_app_versions={}" >> $GITHUB_OUTPUT
-
-          echo "Latest application versions fetched"
+        uses: ./.github/actions/update-applications
+        with:
+          applications: ${{ steps.current.outputs.applications }}
+          filter-scope: ${{ inputs.filter_scope || 'patch' }}
+          sort-order: 'asc'
 
       - name: Compare versions and detect changes
         id: compare
         shell: bash -euxo pipefail {0}
         run: |
-          # TODO: Implement version comparison logic
           # Compare current vs latest versions for all components
           echo "Comparing current vs latest versions..."
 
-          # Placeholder - implement version comparison
-          # This should compare:
-          # - ${{ steps.current.outputs.mgr_versions }} vs ${{ steps.fetch-mgr.outputs.latest_mgr_versions }}
-          # - ${{ steps.current.outputs.kond_version }} vs ${{ steps.fetch-kond.outputs.latest_kond_version }}
-          # - ${{ steps.current.outputs.keycloak_version }} vs ${{ steps.fetch-keycloak.outputs.latest_keycloak_version }}
-          # - ${{ steps.current.outputs.app_versions }} vs ${{ steps.fetch-apps.outputs.latest_app_versions }}
+          # Compare eureka components
+          CURRENT_EUREKA=$(echo '${{ steps.current.outputs.eureka_components }}' | jq -c .)
+          UPDATED_EUREKA=$(echo '${{ steps.fetch-eureka.outputs.updated-components }}' | jq -c .)
 
-          # For demo purposes, set no changes detected
-          COMPONENTS_CHANGED="false"
-          APPS_CHANGED="false"
-          ANY_CHANGES="false"
-          NEW_VERSIONS="{}"
+          # Compare applications
+          CURRENT_APPS=$(echo '${{ steps.current.outputs.applications }}' | jq -c .)
+          UPDATED_APPS=$(echo '${{ steps.fetch-apps.outputs.updated-applications }}' | jq -c .)
+
+          # Check if components changed
+          if [ "$CURRENT_EUREKA" == "$UPDATED_EUREKA" ]; then
+            COMPONENTS_CHANGED="false"
+          else
+            COMPONENTS_CHANGED="true"
+          fi
+
+          # Check if applications changed
+          if [ "$CURRENT_APPS" == "$UPDATED_APPS" ]; then
+            APPS_CHANGED="false"
+          else
+            APPS_CHANGED="true"
+          fi
+
+          # Check if any changes
+          if [ "$COMPONENTS_CHANGED" == "true" ] || [ "$APPS_CHANGED" == "true" ]; then
+            ANY_CHANGES="true"
+          else
+            ANY_CHANGES="false"
+          fi
+
+          # Create new versions JSON for PR
+          NEW_VERSIONS=$(cat << EOF
+          {
+            "eureka_components": $UPDATED_EUREKA,
+            "applications": $UPDATED_APPS,
+            "kond_version": "${{ steps.fetch-kond.outputs.latest_kond_version }}",
+            "keycloak_version": "${{ steps.fetch-keycloak.outputs.latest_keycloak_version }}"
+          }
+          EOF
+          )
+
+          # Escape the JSON for GitHub Actions output
+          NEW_VERSIONS_ESCAPED=$(echo "$NEW_VERSIONS" | jq -c . | sed 's/"/\\"/g')
 
           # Set outputs
           echo "components_changed=${COMPONENTS_CHANGED}" >> $GITHUB_OUTPUT
           echo "apps_changed=${APPS_CHANGED}" >> $GITHUB_OUTPUT
           echo "any_changes=${ANY_CHANGES}" >> $GITHUB_OUTPUT
-          echo "new_versions_json=${NEW_VERSIONS}" >> $GITHUB_OUTPUT
+          echo "new_versions_json=${NEW_VERSIONS_ESCAPED}" >> $GITHUB_OUTPUT
 
           # Log summary
           echo "## Version Scan Results" >> $GITHUB_STEP_SUMMARY
@@ -176,7 +226,7 @@ jobs:
             echo "🔄 Version updates detected - will proceed with PR creation/update"
             echo "- Version updates detected - will proceed with PR creation/update" >> $GITHUB_STEP_SUMMARY
             echo "\`\`\`json" >> $GITHUB_STEP_SUMMARY
-            echo "${NEW_VERSIONS}" >> $GITHUB_STEP_SUMMARY
+            echo "$NEW_VERSIONS" | jq . >> $GITHUB_STEP_SUMMARY
             echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           fi
 
