@@ -7,4 +7,4 @@ scan_config:
     - folio-org/kitfox
 
 release_branches:
-#  - R2-2024
+ - R1-1994
