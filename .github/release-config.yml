@@ -1,5 +1,5 @@
 scan_config:
-  enabled: false
+  enabled: true
   update_branch_format: release-update/{0}
   labels:
     - release-update
