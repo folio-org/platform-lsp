@@ -312,7 +312,7 @@ slack_notification:
 - [Eureka CI Overview](../CI.md)
 
 ### Workflow Implementation
-- [`apps-snapshot-update.yml`](../workflows/apps-snapshot-update.yml) - Platform-LSP application orchestrator
+- [`apps-snapshot-update.yml`](../workflows/snapshot-update-orchestrator.yml) - Platform-LSP application orchestrator
 - [Apps Snapshot Update Documentation](apps-snapshot-update.md) - Detailed orchestrator workflow documentation
 - [`app-update.yml`](https://github.com/folio-org/kitfox-github/blob/master/.github/workflows/app-update.yml) - Individual application update workflow
 
