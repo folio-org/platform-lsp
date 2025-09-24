@@ -19,7 +19,7 @@ on:
         description: 'Update branch name for this release branch'
         required: true
         type: string
-      workflow_run_number:
+      workflow_run_number: # NOTE: Currently unused inside this workflow (kept for backward compatibility / callers)
         description: 'GitHub run number for display'
         required: true
         type: string
@@ -78,9 +78,19 @@ permissions:
   pull-requests: write
   issues: write
 
+# Prevent overlapping runs for the same repo / release branch
+concurrency:
+  group: release-update-${{ inputs.repo }}-${{ inputs.release_branch }}
+  cancel-in-progress: false
+
+# Consistent shell usage & safer defaults
+defaults:
+  run:
+    shell: bash
+
 env:
   APP_NAME: ${{ inputs.app_name }}
-  STATE_FILE: "platform-descriptor.json"
+  STATE_FILE: platform-descriptor.json
   GH_TOKEN: ${{ github.token }}
 
 jobs:
@@ -101,10 +111,8 @@ jobs:
           RELEASE_BRANCH: ${{ inputs.release_branch }}
           UPDATE_BRANCH: ${{ inputs.update_branch }}
         run: |
-          set -eo pipefail
-
+          set -euo pipefail
           echo "::notice::Checking if update branch exists: $UPDATE_BRANCH"
-
           if gh api "repos/$REPO/branches/$UPDATE_BRANCH" >/dev/null 2>&1; then
             echo "::notice::Update branch exists, will scan: $UPDATE_BRANCH"
             echo "source_branch=$UPDATE_BRANCH" >> "$GITHUB_OUTPUT"
@@ -123,17 +131,14 @@ jobs:
           BASE_BRANCH: ${{ inputs.release_branch }}
           HEAD_BRANCH: ${{ inputs.update_branch }}
         run: |
-          set -eo pipefail
-
+          set -euo pipefail
           echo "::notice::Checking for existing PR from $HEAD_BRANCH to $BASE_BRANCH"
-
           pr_json=$(gh pr list \
             --repo "$REPO" \
             --base "$BASE_BRANCH" \
             --head "$HEAD_BRANCH" \
             --json number,url \
             --jq '.[0]' || echo '{}')
-
           if [ "$pr_json" != "{}" ] && [ -n "$pr_json" ] && [ "$(echo "$pr_json" | jq -r '.url // ""')" != "" ]; then
             pr_number=$(echo "$pr_json" | jq -r '.number // ""')
             pr_url=$(echo "$pr_json" | jq -r '.url // ""')
@@ -148,8 +153,9 @@ jobs:
             echo "pr_url=" >> "$GITHUB_OUTPUT"
           fi
 
-  update-platform:
-    name: Fetch Platform Descriptor
+  # Renamed from update-platform to update-application to align with workflow outputs
+  update-application:
+    name: Fetch & Update Platform Descriptor
     needs: determine-source-branch
     runs-on: ubuntu-latest
     outputs:
@@ -161,13 +167,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ${{ inputs.repo }}
-          ref: ${{ inputs.branch }}
+          ref: ${{ needs.determine-source-branch.outputs.source_branch }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
 
-      - name: Install gh CLI # TODO: Remove before merging if using a self-hosted runner with gh pre-installed
-        run: |
-          sudo apt update
-          sudo apt install gh
+      # gh CLI is pre-installed on ubuntu-latest runners; retained comment for self-hosted scenarios.
+      - name: Ensure gh CLI (self-hosted only)
+#         if: runner.os != 'Linux' # adjust as needed for self-hosted matrices
+        run: sudo apt-get update && sudo apt-get install -y gh
 
       - name: Fetch descriptor file
         id: fetch-descriptor
@@ -176,35 +183,32 @@ jobs:
           SOURCE_BRANCH: ${{ needs.determine-source-branch.outputs.source_branch }}
           STATE_FILE: ${{ env.STATE_FILE }}
         run: |
-          set -eo pipefail
+          set -euo pipefail
           echo "::notice::Fetching descriptor file from branch: $SOURCE_BRANCH"
           gh api "repos/$REPO/contents/$STATE_FILE?ref=$SOURCE_BRANCH" -H "Accept: application/vnd.github.v3.raw" > "$STATE_FILE"
           if [ ! -s "$STATE_FILE" ]; then
             echo "::error::Descriptor file '$STATE_FILE' is empty or not found in branch '$SOURCE_BRANCH'"
             exit 1
           fi
-
-          # Validate JSON structure and extract eureka-components safely
           if ! jq -e 'has("eureka-components")' "$STATE_FILE" > /dev/null; then
             echo "::error::Descriptor file does not contain 'eureka-components' field"
-            echo "File content:"
-            cat "$STATE_FILE"
+            echo "File content:" && cat "$STATE_FILE"
             exit 1
           fi
-
-          # Extract eureka-components as JSON and escape for GitHub Actions
+          # Correct jq syntax for key with dash characters
           EUREKA_COMPONENTS=$(jq -c '.["eureka-components"]' "$STATE_FILE")
-          echo "eureka_components<<EOF" >> "$GITHUB_OUTPUT"
-          echo "$EUREKA_COMPONENTS" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
-
-          # Extract applications as JSON and escape for GitHub Actions
+          {
+            echo "eureka_components<<EOF"
+            echo "$EUREKA_COMPONENTS"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
           APPLICATIONS=$(jq -c '.applications' "$STATE_FILE")
-          echo "applications<<EOF" >> "$GITHUB_OUTPUT"
-          echo "$APPLICATIONS" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
-
-          echo "::notice::Successfully extracted eureka-components from descriptor file"
+          {
+            echo "applications<<EOF"
+            echo "$APPLICATIONS"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          echo "::notice::Successfully extracted eureka-components and applications from descriptor file"
 
       - name: Update Eureka Components
         id: update-eureka-components
@@ -221,53 +225,35 @@ jobs:
       - name: Update Descriptor File
         id: update-descriptor
         run: |
-          set -eo pipefail
-
-          # Get updated components and applications
+          set -euo pipefail
           UPDATED_EUREKA_COMPONENTS='${{ steps.update-eureka-components.outputs.updated-components }}'
           UPDATED_APPLICATIONS='${{ steps.update-applications.outputs.updated-applications }}'
-
-          # Initialize updated flag
           UPDATED=false
-
           echo "::notice::Checking for updated eureka components and applications"
-          # Compare original and updated components
+          # Use correct jq syntax for comparison
           if [ "$UPDATED_EUREKA_COMPONENTS" != "$(jq -c '.["eureka-components"]' "$STATE_FILE")" ]; then
             echo "::notice::Eureka components have been updated"
             UPDATED=true
-
-            # Update the eureka-components in the descriptor file
             jq --argjson components "$UPDATED_EUREKA_COMPONENTS" '. ["eureka-components"] = $components' "$STATE_FILE" > "${STATE_FILE}.tmp"
             mv "${STATE_FILE}.tmp" "$STATE_FILE"
           fi
-
-          # Compare original and updated applications
           if [ "$UPDATED_APPLICATIONS" != "$(jq -c '.applications' "$STATE_FILE")" ]; then
             echo "::notice::Applications have been updated"
             UPDATED=true
-
-            # Update the applications in the descriptor file
             jq --argjson applications "$UPDATED_APPLICATIONS" '.applications = $applications' "$STATE_FILE" > "${STATE_FILE}.tmp"
             mv "${STATE_FILE}.tmp" "$STATE_FILE"
           fi
-
-          # Output information about updates
           echo "updated=$UPDATED" >> "$GITHUB_OUTPUT"
           echo "updated_eureka_components=$UPDATED_EUREKA_COMPONENTS" >> "$GITHUB_OUTPUT"
           echo "updated_applications=$UPDATED_APPLICATIONS" >> "$GITHUB_OUTPUT"
-
-          if [ "$UPDATED" = "true" ]; then
+          if [ "$UPDATED" = true ]; then
             echo "::notice::Descriptor file has been updated with new versions"
-            # Print a summary of changes for logging purposes
-            echo "Updated descriptor file with the following changes:"
-            echo "- Eureka Components updated: $UPDATED_EUREKA_COMPONENTS"
-            echo "- Applications updated: $UPDATED_APPLICATIONS"
-
-            # Add details to GitHub step summary if available
             if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
-              echo "## Descriptor File Updates" >> $GITHUB_STEP_SUMMARY
-              echo "- **Eureka Components updated:** $UPDATED_EUREKA_COMPONENTS" >> $GITHUB_STEP_SUMMARY
-              echo "- **Applications updated:** $UPDATED_APPLICATIONS" >> $GITHUB_STEP_SUMMARY
+              {
+                echo "## Descriptor File Updates";
+                echo "- **Eureka Components updated:** $UPDATED_EUREKA_COMPONENTS";
+                echo "- **Applications updated:** $UPDATED_APPLICATIONS";
+              } >> "$GITHUB_STEP_SUMMARY"
             fi
           else
             echo "::notice::No updates needed for descriptor file"
@@ -277,6 +263,6 @@ jobs:
         if: steps.update-descriptor.outputs.updated == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: "platform-lsp-descriptor-update"
+          name: platform-lsp-descriptor-update
           path: ${{ env.STATE_FILE }}
           retention-days: 1
