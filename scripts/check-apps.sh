@@ -204,11 +204,12 @@ Interface validation: PASSED"
                 # Commit the changes
                 git commit -m "$commit_message"
                 
-                # Push to snapshot branch
-                echo "Pushing changes to snapshot branch..."
-                git push origin snapshot
+                # Push to current branch
+                current_branch=$(git branch --show-current)
+                echo "Pushing changes to $current_branch branch..."
+                git push origin "$current_branch"
                 
-                echo "✅ Successfully committed and pushed changes to snapshot branch!"
+                echo "✅ Successfully committed and pushed changes to $current_branch branch!"
             else
                 echo "⚠️  Not in a git repository - skipping commit and push"
             fi
