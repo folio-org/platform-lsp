@@ -4,6 +4,12 @@ on:
     - cron: '0 * * * *'
     
   workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to run against'
+        required: false
+        default: 'snapshot'
+        type: string
 
 jobs:
   check-and-update:
@@ -14,7 +20,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: snapshot
+          ref: ${{ inputs.branch || 'snapshot' }}
 
       - name: Setup dependencies
         run: |
@@ -97,7 +103,6 @@ jobs:
             attachments:
               - color: "danger"
                 footer: "Eureka CI/CD • ${{ github.workflow }}"
-                ts: "${{ github.event.head_commit.timestamp }}"
 
       - name: Notify on Success
         if: success()
@@ -127,4 +132,3 @@ jobs:
             attachments:
               - color: "good"
                 footer: "Eureka CI/CD • ${{ github.workflow }}"
-                ts: "${{ github.event.head_commit.timestamp }}"
