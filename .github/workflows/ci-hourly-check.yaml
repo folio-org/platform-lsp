@@ -2,26 +2,26 @@
 name: LSP Hourly Check and Update
 on:
   schedule:
-    - cron: '0 * * * *'
-    
+    - cron: "0 * * * *"
+
   workflow_dispatch:
     inputs:
       branch:
-        description: 'Branch to run against'
+        description: "Branch to run against"
         required: false
-        default: 'snapshot'
+        default: "snapshot"
         type: string
 
 jobs:
   check-and-update:
     runs-on: ubuntu-latest
     # environment: your-environment-name  # Uncomment and set your environment name to use environment variables
-    
+
     steps:
       - name: Record start time
         id: start-time
         run: echo "start=$(date +%s)" >> $GITHUB_OUTPUT
-      
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
@@ -55,10 +55,10 @@ jobs:
           ./scripts/check-apps.sh 2>&1 | tee /tmp/check-apps-output.log
           exit_code=${PIPESTATUS[0]}  # Get exit code of the script, not tee
           set -e  # Re-enable exit on error
-          
+
           # Store the exit code for later use
           echo "SCRIPT_EXIT_CODE=${exit_code}" >> $GITHUB_OUTPUT
-          
+
           # Exit with the original code to fail the step if script failed
           exit $exit_code
 
