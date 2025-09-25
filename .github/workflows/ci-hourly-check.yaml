@@ -18,6 +18,10 @@ jobs:
     # environment: your-environment-name  # Uncomment and set your environment name to use environment variables
     
     steps:
+      - name: Record start time
+        id: start-time
+        run: echo "start=$(date +%s)" >> $GITHUB_OUTPUT
+      
       - name: Checkout code
         uses: actions/checkout@v4
         with:
@@ -105,6 +109,21 @@ jobs:
               - color: "danger"
                 footer: "Eureka CI/CD • ${{ github.workflow }}"
 
+      - name: Calculate duration
+        if: success()
+        id: duration
+        run: |
+          end_time=$(date +%s)
+          start_time=${{ steps.start-time.outputs.start }}
+          duration=$((end_time - start_time))
+          minutes=$((duration / 60))
+          seconds=$((duration % 60))
+          if [ $minutes -gt 0 ]; then
+            echo "duration=${minutes}m ${seconds}s" >> $GITHUB_OUTPUT
+          else
+            echo "duration=${seconds}s" >> $GITHUB_OUTPUT
+          fi
+
       - name: Notify on Success
         if: success()
         uses: slackapi/slack-github-action@v2.1.1
@@ -127,9 +146,9 @@ jobs:
                   - type: mrkdwn
                     text: "*Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
                   - type: mrkdwn
-                    text: "*Triggered by:*\n${{ github.event_name == 'schedule' && 'Scheduled (cron)' || github.actor }}"
+                    text: "*Duration:*\n${{ steps.duration.outputs.duration }}"
                   - type: mrkdwn
-                    text: "*Duration:*\n${{ github.run_duration }}"
+                    text: "*Triggered by:*\n${{ github.event_name == 'schedule' && 'Scheduled (cron)' || github.actor }}"
             attachments:
               - color: "good"
                 footer: "Eureka CI/CD • ${{ github.workflow }}"
