@@ -224,12 +224,17 @@ else
 fi
 
 # Exit with appropriate code
-if [ $outdated -gt 0 ] || [ $failed -gt 0 ] || [ $validation_exit_code -ne 0 ]; then
+# Only exit with failure if there were actual failures (not just updates needed)
+if [ $failed -gt 0 ] || [ $validation_exit_code -ne 0 ]; then
     echo ""
-    echo "❌ Some applications need attention!"
+    echo "❌ Some applications failed to process!"
     exit 1
 else
     echo ""
-    echo "✅ All applications are up to date and interfaces are valid!"
+    if [ $outdated -gt 0 ]; then
+        echo "✅ Successfully updated $outdated applications and validated interfaces!"
+    else
+        echo "✅ All applications are up to date and interfaces are valid!"
+    fi
     exit 0
 fi
