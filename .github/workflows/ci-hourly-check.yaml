@@ -1,3 +1,4 @@
+# Hourly application version check and update workflow
 name: LSP Hourly Check and Update
 on:
   schedule:
