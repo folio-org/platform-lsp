@@ -128,7 +128,7 @@ jobs:
                     text: "*Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
                   - type: mrkdwn
                     text: "*Triggered by:*\n${{ github.event_name == 'schedule' && 'Scheduled (cron)' || github.actor }}"
-                    - type: mrkdwn
+                  - type: mrkdwn
                     text: "*Duration:*\n${{ github.run_duration }}"
             attachments:
               - color: "good"
