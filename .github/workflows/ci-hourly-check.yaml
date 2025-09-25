@@ -27,6 +27,10 @@ jobs:
         with:
           ref: ${{ inputs.branch || 'snapshot' }}
 
+      - name: Get checked out commit SHA
+        id: checkout-sha
+        run: echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+
       - name: Setup dependencies
         run: |
           sudo apt-get update
@@ -146,7 +150,7 @@ jobs:
                   - type: mrkdwn
                     text: "*Checked out:*\n<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.branch || 'snapshot' }}|${{ inputs.branch || 'snapshot' }}>"
                   - type: mrkdwn
-                    text: "*Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
+                    text: "*Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ steps.checkout-sha.outputs.sha }}|${{ steps.checkout-sha.outputs.sha }}>"
                   - type: mrkdwn
                     text: "*Duration:*\n${{ steps.duration.outputs.duration }}"
                   - type: mrkdwn
