@@ -147,6 +147,10 @@
       {
         "name": "app-service-interaction",
         "version": "1.0.0-SNAPSHOT.100100000000001"
+      },
+      {
+        "name": "app-serials-management",
+        "version": "1.0.0-SNAPSHOT.100000000000001"
       }
     ]
   },
