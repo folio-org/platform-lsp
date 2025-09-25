@@ -11,7 +11,7 @@ fi
 # Function to get latest version from FAR API
 get_latest_version() {
     local app_name="$1"
-    local url="${FAR_URL}/applications?limit=500&appName=${app_name}&preRelease=1&latest=1"
+    local url="${FAR_URL}/applications?limit=500&appName=${app_name}&preRelease=only&latest=1"
 
     echo "Checking latest version for: $app_name" >&2
     
