@@ -55,13 +55,13 @@ on:
         description: 'Failed to add reviewers'
         value: ${{ jobs.manage-pr.outputs.failed_reviewers }}
       updated:
-        description: 'Whether the application was updated'
+        description: 'Whether the platform was updated'
         value: ${{ jobs.update-application.outputs.updated }}
       updated_modules:
         description: 'List of updated modules'
         value: ${{ jobs.update-application.outputs.updated_modules }}
       new_version:
-        description: 'New version of the application'
+        description: 'New version of the platform'
         value: ${{ jobs.update-application.outputs.new_version }}
       updates_cnt:
         description: 'Number of updates'
@@ -71,7 +71,7 @@ on:
         value: ${{ jobs.determine-source-branch.result == 'failure' && 'failure' || (jobs.update-application.result == 'failure' && 'failure' || (jobs.commit-changes.result == 'failure' && 'failure' || (jobs.manage-pr.result == 'failure' && 'failure' || 'success'))) }}
       failure_reason:
         description: 'Reason for workflow failure if any'
-        value: ${{ jobs.determine-source-branch.result == 'failure' && 'Failed to determine source branch' || (jobs.update-application.result == 'failure' && 'Failed to update application modules' || (jobs.update-application.result == 'skipped' && 'Update application job was skipped' || (jobs.commit-changes.result == 'failure' && 'Failed to commit changes to branch' || (jobs.manage-pr.result == 'failure' && 'Failed to manage pull request' || '')))) }}
+        value: ${{ jobs.determine-source-branch.result == 'failure' && 'Failed to determine source branch' || (jobs.update-application.result == 'failure' && 'Failed to update platform modules' || (jobs.update-application.result == 'skipped' && 'Update platform job was skipped' || (jobs.commit-changes.result == 'failure' && 'Failed to commit changes to branch' || (jobs.manage-pr.result == 'failure' && 'Failed to manage pull request' || '')))) }}
 
 permissions:
   contents: write
@@ -160,8 +160,11 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       updated: ${{ steps.update-descriptor.outputs.updated }}
-      updated_components: ${{ steps.update-descriptor.outputs.updated_components }}
+      updated_components: ${{ steps.update-descriptor.outputs.updated_eureka_components }}
       updated_applications: ${{ steps.update-descriptor.outputs.updated_applications }}
+      updated_modules: ${{ steps.update-descriptor.outputs.updated_modules }}
+      new_version: ${{ steps.update-descriptor.outputs.new_version }}
+      updates_cnt: ${{ steps.update-descriptor.outputs.updates_cnt }}
     steps:
       - name: Checkout Platform Repository
         uses: actions/checkout@v4
@@ -246,13 +249,49 @@ jobs:
           echo "updated=$UPDATED" >> "$GITHUB_OUTPUT"
           echo "updated_eureka_components=$UPDATED_EUREKA_COMPONENTS" >> "$GITHUB_OUTPUT"
           echo "updated_applications=$UPDATED_APPLICATIONS" >> "$GITHUB_OUTPUT"
+          
+          # Extract updated modules information
+          UPDATED_MODULES=""
+          NEW_VERSION=""
+          UPDATES_CNT=0
+          
           if [ "$UPDATED" = true ]; then
+            # Extract updated modules from eureka components and applications
+            UPDATED_MODULES=$(jq -r '.[] | select(.updated == true) | .name + ": " + .version' <<< "$UPDATED_EUREKA_COMPONENTS" 2>/dev/null || echo "")
+            APP_UPDATES=$(jq -r '.[] | select(.updated == true) | .name + ": " + .version' <<< "$UPDATED_APPLICATIONS" 2>/dev/null || echo "")
+            
+            if [ -n "$APP_UPDATES" ]; then
+              if [ -n "$UPDATED_MODULES" ]; then
+                UPDATED_MODULES="$UPDATED_MODULES\n$APP_UPDATES"
+              else
+                UPDATED_MODULES="$APP_UPDATES"
+              fi
+            fi
+            
+            # Count updates
+            UPDATES_CNT=$(echo "$UPDATED_MODULES" | grep -c ":" || echo "0")
+            
+            # Get new version (platform version)
+            NEW_VERSION="$(date +%Y.%m.%d).${GITHUB_RUN_NUMBER:-0}"
+            
+            echo "updated_modules<<EOF" >> "$GITHUB_OUTPUT"
+            echo "$UPDATED_MODULES" >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+            echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+            echo "updates_cnt=$UPDATES_CNT" >> "$GITHUB_OUTPUT"
+            
             echo "::notice::Descriptor file has been updated with new versions"
             if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
               {
                 echo "## Descriptor File Updates";
                 echo "- **Eureka Components updated:** $UPDATED_EUREKA_COMPONENTS";
                 echo "- **Applications updated:** $UPDATED_APPLICATIONS";
+                echo "- **Total updates:** $UPDATES_CNT";
+                echo "- **New version:** $NEW_VERSION";
+                echo "### Updated Modules:";
+                echo '```';
+                echo "$UPDATED_MODULES";
+                echo '```';
               } >> "$GITHUB_STEP_SUMMARY"
             fi
           else
@@ -266,3 +305,176 @@ jobs:
           name: platform-lsp-descriptor-update
           path: ${{ env.STATE_FILE }}
           retention-days: 1
+
+  commit-changes:
+    name: Commit and Push Changes
+    needs: [determine-source-branch, update-application]
+    if: needs.update-application.outputs.updated == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      commit_sha: ${{ steps.commit-changes.outputs.commit_sha }}
+      failure_reason: ${{ steps.commit-changes.outputs.failure_reason || steps.push-changes.outputs.failure_reason || '' }}
+    steps:
+      - name: Checkout Platform Repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repo }}
+          ref: ${{ needs.determine-source-branch.outputs.source_branch }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Configure Git
+        env:
+          USER_NAME: 'github-actions[bot]'
+          USER_EMAIL: '41898282+github-actions[bot]@users.noreply.github.com'
+        run: |
+          set -euo pipefail
+          
+          git config --global user.name "$USER_NAME"
+          git config --global user.email "$USER_EMAIL"
+          echo "::notice::Git configured for automated commits"
+
+      - name: Switch to Target Branch
+        id: switch-branch
+        if: needs.determine-source-branch.outputs.update_branch_exists != 'true'
+        env:
+          SOURCE_BRANCH: ${{ needs.determine-source-branch.outputs.source_branch }}
+          TARGET_BRANCH: ${{ inputs.update_branch }}
+        run: |
+          set -euo pipefail
+
+          echo "::notice::Switching to branch '$TARGET_BRANCH' (from source '$SOURCE_BRANCH')"
+
+          git rev-parse --verify $TARGET_BRANCH >/dev/null 2>&1 || git switch -c $TARGET_BRANCH
+          git switch $TARGET_BRANCH
+          
+          echo "::notice::Successfully switched to branch '$TARGET_BRANCH'"
+
+      - name: Download Platform Update Files
+        uses: actions/download-artifact@v4
+        with:
+          name: platform-lsp-descriptor-update
+          path: .
+
+      - name: Commit Changes
+        id: commit-changes
+        env:
+          COMMIT_MESSAGE: |
+            Update platform modules to ${{ needs.update-application.outputs.new_version }}
+            
+            Updated modules:
+            ${{ needs.update-application.outputs.updated_modules }}
+        run: |
+          set -euo pipefail
+
+          echo "::group::Stage changes for commit"
+          git status
+          echo "::endgroup::"
+          
+          git add . 2>/dev/null || true
+
+          if git diff --cached --quiet; then
+            echo "::error::No changes to commit"
+            echo "failure_reason=No changes to commit" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+
+          commit_msg_file=$(mktemp)
+          echo "$COMMIT_MESSAGE" > "$commit_msg_file"
+          
+          git commit -F "$commit_msg_file"
+          rm -f "$commit_msg_file"
+          
+          commit_sha=$(git rev-parse HEAD)
+          
+          echo "::notice::Successfully committed changes #$commit_sha"
+          echo "commit_sha=$commit_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Push Changes
+        id: push-changes
+        if: inputs.dry_run == false
+        env:
+          BRANCH_NAME: ${{ inputs.update_branch }}
+        run: |
+          set -euo pipefail
+
+          echo "::notice::Pushing changes to branch '$BRANCH_NAME'"
+          if ! output=$(git push -u origin "$BRANCH_NAME" 2>&1); then
+            echo "::error::Failed to push changes to '$BRANCH_NAME'"
+            echo "::error::$output"
+            echo "failure_reason=Failed to push changes" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+          echo "::notice::Successfully pushed changes to '$BRANCH_NAME'"
+
+  manage-pr:
+    name: Manage Pull Request
+    needs: [determine-source-branch, update-application, commit-changes]
+    if: |
+      always() && 
+      !inputs.dry_run && 
+      !cancelled() && 
+      needs.update-application.result == 'success'
+    runs-on: ubuntu-latest
+    outputs:
+      pr_created: ${{ steps.create-pr.outputs.pr_created == 'true' }}
+      pr_updated: ${{ steps.update-pr.outputs.pr_updated == 'true' }}
+      pr_number: ${{ steps.create-pr.outputs.pr_number || steps.update-pr.outputs.pr_number || needs.determine-source-branch.outputs.pr_number || '' }}
+      pr_url: ${{ steps.create-pr.outputs.pr_url || steps.update-pr.outputs.pr_url || needs.determine-source-branch.outputs.pr_url || '' }}
+      successful_reviewers: ${{ steps.create-pr.outputs.successful_reviewers || steps.update-pr.outputs.successful_reviewers || '' }}
+      failed_reviewers: ${{ steps.create-pr.outputs.failed_reviewers || steps.update-pr.outputs.failed_reviewers || '' }}
+    steps:
+      - name: Create PR if needed
+        id: create-pr
+        if: |
+          needs.determine-source-branch.outputs.pr_exists != 'true' && 
+          (needs.update-application.outputs.updated == 'true' || 
+           needs.determine-source-branch.outputs.update_branch_exists == 'true')
+        uses: folio-org/kitfox-github/.github/actions/create-pr@master
+        with:
+          repo: ${{ inputs.repo }}
+          base_branch: ${{ inputs.release_branch }}
+          head_branch: ${{ inputs.update_branch }}
+          pr_title: "Release: Update platform to ${{ needs.update-application.outputs.new_version || 'No updates' }}"
+          pr_body: |
+            ## Automated Platform Module Updates for Release
+
+            **New Version:** ${{ needs.update-application.outputs.new_version || 'No version change' }}
+            **Total modules updated:** ${{ needs.update-application.outputs.updates_cnt || '0' }}
+
+            ### Updated Modules:
+            ```
+            ${{ needs.update-application.outputs.updated_modules || 'No modules updated' }}
+            ```
+
+            This PR was automatically generated by the release scan workflow.
+          pr_labels: ${{ inputs.pr_labels }}
+          pr_reviewers: ${{ inputs.pr_reviewers }}
+          github_token: ${{ github.token }}
+
+      - name: Update existing PR if needed
+        id: update-pr
+        if: |
+          needs.determine-source-branch.outputs.pr_exists == 'true' && 
+          needs.update-application.outputs.updated == 'true'
+        uses: folio-org/kitfox-github/.github/actions/update-pr@master
+        with:
+          repo: ${{ inputs.repo }}
+          pr_number: ${{ needs.determine-source-branch.outputs.pr_number }}
+          pr_title: "Release: Update platform to ${{ needs.update-application.outputs.new_version }}"
+          pr_body: |
+            ## Automated Platform Module Updates for Release
+
+            **New Version:** ${{ needs.update-application.outputs.new_version }}
+            **Total modules updated:** ${{ needs.update-application.outputs.updates_cnt }}
+
+            ### Updated Modules:
+            ```
+            ${{ needs.update-application.outputs.updated_modules }}
+            ```
+
+            This PR was automatically generated by the release scan workflow.
+          pr_labels: ${{ inputs.pr_labels }}
+          pr_reviewers: ${{ inputs.pr_reviewers }}
+          github_token: ${{ github.token }}
+
