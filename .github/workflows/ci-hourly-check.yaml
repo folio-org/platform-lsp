@@ -4,12 +4,6 @@ on:
 #    - cron: '0 * * * *'
     
   workflow_dispatch:
-  push:
-    branches:
-      - snapshot
-  pull_request:
-    branches:
-      - snapshot
 
 jobs:
   check-and-update:
@@ -94,8 +88,8 @@ jobs:
                     text: "*Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
                   - type: mrkdwn
                     text: "*Failed Step:*\n${{ steps.error-details.outputs.FAILED_STEP || 'Unknown step' }}"
-                  - type: mrkdwn
-                    text: "*Triggered by:*\n${{ github.actor }}"
+                    - type: mrkdwn
+                    text: "*Triggered by:*\n${{ github.event_name == 'schedule' && 'Scheduled (cron)' || github.actor }}"
               - type: section
                 text:
                   type: mrkdwn
