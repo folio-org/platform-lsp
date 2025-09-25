@@ -1,0 +1,137 @@
+# Hourly application version check and update workflow
+name: LSP Hourly Check and Update
+on:
+  schedule:
+    - cron: '0 * * * *'
+    
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to run against'
+        required: false
+        default: 'snapshot'
+        type: string
+
+jobs:
+  check-and-update:
+    runs-on: ubuntu-latest
+    # environment: your-environment-name  # Uncomment and set your environment name to use environment variables
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch || 'snapshot' }}
+
+      - name: Setup dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq curl
+
+      - name: Setup Git Configuration
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Make script executable
+        run: chmod +x scripts/check-apps.sh
+
+      - name: Check and Update Application Versions
+        id: check-apps
+        env:
+          FAR_URL: ${{ vars.FAR_URL }}
+        run: |
+          echo "Running application version check..."
+          # Capture output and exit code
+          set +e  # Don't exit on error
+          ./scripts/check-apps.sh 2>&1 | tee /tmp/check-apps-output.log
+          exit_code=${PIPESTATUS[0]}  # Get exit code of the script, not tee
+          set -e  # Re-enable exit on error
+          
+          # Store the exit code for later use
+          echo "SCRIPT_EXIT_CODE=${exit_code}" >> $GITHUB_OUTPUT
+          
+          # Exit with the original code to fail the step if script failed
+          exit $exit_code
+
+      - name: Capture error details
+        if: always()
+        id: error-details
+        run: |
+          if [ "${{ steps.check-apps.outputs.SCRIPT_EXIT_CODE }}" != "0" ]; then
+            echo "FAILED_STEP=Check and Update Application Versions" >> $GITHUB_OUTPUT
+            if [ -f /tmp/check-apps-output.log ]; then
+              # Get the last 10 lines of output for error context
+              ERROR_DETAILS=$(tail -n 10 /tmp/check-apps-output.log | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+              echo "ERROR_DETAILS=${ERROR_DETAILS}" >> $GITHUB_OUTPUT
+            else
+              echo "ERROR_DETAILS=No error log available" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "FAILED_STEP=" >> $GITHUB_OUTPUT
+            echo "ERROR_DETAILS=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Notify on Failure
+        if: failure()
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+          errors: true
+          payload: |
+            channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
+            text: "🚨 LSP Hourly Check and Update FAILED"
+            blocks:
+              - type: section
+                text:
+                  type: mrkdwn
+                  text: "*🚨 LSP Hourly Check and Update FAILED <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+              - type: section
+                fields:
+                  - type: mrkdwn
+                    text: "*Branch:*\n<${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}|${{ github.ref_name }}>"
+                  - type: mrkdwn
+                    text: "*Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
+                  - type: mrkdwn
+                    text: "*Failed Step:*\n${{ steps.error-details.outputs.FAILED_STEP || 'Unknown step' }}"
+                  - type: mrkdwn
+                    text: "*Triggered by:*\n${{ github.event_name == 'schedule' && 'Scheduled (cron)' || github.actor }}"
+              - type: section
+                text:
+                  type: mrkdwn
+                  text: "*Error Details:*\n```${{ steps.error-details.outputs.ERROR_DETAILS || 'No error details available' }}```"
+            attachments:
+              - color: "danger"
+                footer: "Eureka CI/CD • ${{ github.workflow }}"
+
+      - name: Notify on Success
+        if: success()
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+          errors: true
+          payload: |
+            channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
+            text: "✅ LSP Hourly Check and Update SUCCESS"
+            blocks:
+              - type: section
+                text:
+                  type: mrkdwn
+                  text: "*✅ LSP Hourly Check and Update SUCCESS <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+              - type: section
+                fields:
+                  - type: mrkdwn
+                    text: "*Branch:*\n<${{ github.server_url }}/${{ github.repository }}/tree/snapshot|snapshot>"
+                  - type: mrkdwn
+                    text: "*Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
+                  - type: mrkdwn
+                    text: "*Triggered by:*\n${{ github.event_name == 'schedule' && 'Scheduled (cron)' || github.actor }}"
+                  - type: mrkdwn
+                    text: "*Duration:*\n${{ job.status }}"
+                  - type: mrkdwn
+                    text: "*Duration:*\n${{ job.status }}"
+            attachments:
+              - color: "good"
+                footer: "Eureka CI/CD • ${{ github.workflow }}"
