@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.0.1-SNAPSHOT.100100000000491"
+        "version": "3.0.1-SNAPSHOT.100100000000498"
       }
     ],
     "optional": [
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.0.0-SNAPSHOT.100100000000107"
+        "version": "1.0.0-SNAPSHOT.100100000000495"
       },
       {
         "name": "app-erm-usage",
