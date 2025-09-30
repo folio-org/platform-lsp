@@ -36,13 +36,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.0.1-SNAPSHOT.100100000000571"
+        "version": "3.0.1-SNAPSHOT.100100000000575"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100100000000296"
+        "version": "1.2.0-SNAPSHOT.100100000000588"
       },
       {
         "name": "app-agreements",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.0-SNAPSHOT.100100000000039"
+        "version": "2.2.0-SNAPSHOT.100100000000581"
       },
       {
         "name": "app-eholdings",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "1.1.0-SNAPSHOT.100100000000500"
+        "version": "1.1.0-SNAPSHOT.100100000000569"
       },
       {
         "name": "app-licenses",
