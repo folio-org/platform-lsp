@@ -39,10 +39,9 @@ jobs:
       pr_labels: ${{ steps.get-config.outputs.pr_labels }}
       matrix_includes: ${{ steps.build-matrix.outputs.includes }}
     steps:
-      - name: Install gh CLI # TODO: Remove before merging if using a self-hosted runner with gh pre-installed
-        run: |
-          sudo apt update
-          sudo apt install gh
+      - name: Ensure gh CLI # TODO: Remove before merging if using a self-hosted runner with gh pre-installed
+        run: sudo apt-get update && sudo apt-get install -y gh
+
       - name: Get Release Configuration
         id: get-config
         uses: folio-org/kitfox-github/.github/actions/get-release-config@master

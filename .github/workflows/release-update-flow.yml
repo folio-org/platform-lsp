@@ -175,7 +175,7 @@ jobs:
           fetch-depth: 1
 
       # gh CLI is pre-installed on ubuntu-latest runners; retained comment for self-hosted scenarios.
-      - name: Ensure gh CLI (self-hosted only)
+      - name: Ensure gh CLI
 #         if: runner.os != 'Linux' # adjust as needed for self-hosted matrices
         run: sudo apt-get update && sudo apt-get install -y gh
 
@@ -211,6 +211,7 @@ jobs:
             echo "$APPLICATIONS"
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
+
           echo "::notice::Successfully extracted eureka-components and applications from descriptor file"
 
       - name: Update Eureka Components
@@ -308,104 +309,14 @@ jobs:
 
   commit-changes:
     name: Commit and Push Changes
-    needs: [determine-source-branch, update-application]
-    if: needs.update-application.outputs.updated == 'true'
-    runs-on: ubuntu-latest
-    outputs:
-      commit_sha: ${{ steps.commit-changes.outputs.commit_sha }}
-      failure_reason: ${{ steps.commit-changes.outputs.failure_reason || steps.push-changes.outputs.failure_reason || '' }}
-    steps:
-      - name: Checkout Platform Repository
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ inputs.repo }}
-          ref: ${{ needs.determine-source-branch.outputs.source_branch }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
-
-      - name: Configure Git
-        env:
-          USER_NAME: 'github-actions[bot]'
-          USER_EMAIL: '41898282+github-actions[bot]@users.noreply.github.com'
-        run: |
-          set -euo pipefail
-          
-          git config --global user.name "$USER_NAME"
-          git config --global user.email "$USER_EMAIL"
-          echo "::notice::Git configured for automated commits"
-
-      - name: Switch to Target Branch
-        id: switch-branch
-        if: needs.determine-source-branch.outputs.update_branch_exists != 'true'
-        env:
-          SOURCE_BRANCH: ${{ needs.determine-source-branch.outputs.source_branch }}
-          TARGET_BRANCH: ${{ inputs.update_branch }}
-        run: |
-          set -euo pipefail
-
-          echo "::notice::Switching to branch '$TARGET_BRANCH' (from source '$SOURCE_BRANCH')"
-
-          git rev-parse --verify $TARGET_BRANCH >/dev/null 2>&1 || git switch -c $TARGET_BRANCH
-          git switch $TARGET_BRANCH
-          
-          echo "::notice::Successfully switched to branch '$TARGET_BRANCH'"
-
-      - name: Download Platform Update Files
-        uses: actions/download-artifact@v4
-        with:
-          name: platform-lsp-descriptor-update
-          path: .
-
-      - name: Commit Changes
-        id: commit-changes
-        env:
-          COMMIT_MESSAGE: |
-            Update platform modules to ${{ needs.update-application.outputs.new_version }}
-            
-            Updated modules:
-            ${{ needs.update-application.outputs.updated_modules }}
-        run: |
-          set -euo pipefail
-
-          echo "::group::Stage changes for commit"
-          git status
-          echo "::endgroup::"
-          
-          git add . 2>/dev/null || true
-
-          if git diff --cached --quiet; then
-            echo "::error::No changes to commit"
-            echo "failure_reason=No changes to commit" >> "$GITHUB_OUTPUT"
-            exit 1
-          fi
-
-          commit_msg_file=$(mktemp)
-          echo "$COMMIT_MESSAGE" > "$commit_msg_file"
-          
-          git commit -F "$commit_msg_file"
-          rm -f "$commit_msg_file"
-          
-          commit_sha=$(git rev-parse HEAD)
-          
-          echo "::notice::Successfully committed changes #$commit_sha"
-          echo "commit_sha=$commit_sha" >> "$GITHUB_OUTPUT"
-
-      - name: Push Changes
-        id: push-changes
-        if: inputs.dry_run == false
-        env:
-          BRANCH_NAME: ${{ inputs.update_branch }}
-        run: |
-          set -euo pipefail
-
-          echo "::notice::Pushing changes to branch '$BRANCH_NAME'"
-          if ! output=$(git push -u origin "$BRANCH_NAME" 2>&1); then
-            echo "::error::Failed to push changes to '$BRANCH_NAME'"
-            echo "::error::$output"
-            echo "failure_reason=Failed to push changes" >> "$GITHUB_OUTPUT"
-            exit 1
-          fi
-          echo "::notice::Successfully pushed changes to '$BRANCH_NAME'"
+    needs: [determine-source-branch, update-descriptor]
+    if: always() && needs.update-descriptor.outputs.updated == 'true'
+    uses: folio-org/kitfox-github/.github/workflows/commit-application-changes.yml@RANCHER-2324
+    with:
+      app_name: ${{ inputs.app_name }}
+      repo: ${{ inputs.repo }}
+      branch: ${{ inputs.update_branch }}
+      commit_message: |
 
   manage-pr:
     name: Manage Pull Request

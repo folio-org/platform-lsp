@@ -3,29 +3,22 @@ description: Resolve newer component versions from GitHub releases (respecting s
 
 inputs:
   components:
-    description: JSON array of component objects, e.g. [{"name":"folio-kong","version":"3.9.1"}]
+    description: >
+      JSON array of component objects, e.g.
+      [{"name":"folio-kong","version":"3.9.1"}]
     required: true
   filter-scope:
     description: SemVer scope to consider (major|minor|patch)
     required: false
     default: patch
-    type: choice
-    options:
-      - major
-      - minor
-      - patch
   sort-order:
     description: Sort order for candidate versions within scope (asc|desc)
     required: false
     default: asc
-    type: choice
-    options:
-      - asc
-      - desc
   github-token:
     description: GitHub token with at least read access (defaults to workflow GITHUB_TOKEN)
     required: false
-    default: ${{ github.token }}
+    default: "${{ github.token }}"
   docker-username:
     description: Docker Hub username (optional for authenticated lookups)
     required: false
@@ -40,17 +33,22 @@ inputs:
 outputs:
   updated-components:
     description: JSON array with updated component versions
-    value: ${{ steps.update.outputs.updated-components }}
+    value: "${{ steps.update.outputs.updated-components }}"
 
 runs:
   using: composite
   steps:
+    - name: Debug components
+      run: |
+        echo "Components: ${{ inputs.components }}"
+        echo "Github action path: ${{ github.action_path }}"
+
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
-        cache: 'pip'
-        cache-dependency-path: ${{ github.action_path }}/requirements.txt
+        python-version: "3.11"
+        cache: pip
+        # cache-dependency-path: "${{ github.action_path }}/requirements.txt"
 
     - name: Install dependencies
       shell: bash
@@ -63,21 +61,23 @@ runs:
       name: Run update script
       shell: bash
       env:
-        GITHUB_TOKEN: ${{ inputs.github-token }}
-        DOCKER_USERNAME: ${{ inputs.docker-username }}
-        DOCKER_PASSWORD: ${{ inputs.docker-password }}
+        GITHUB_TOKEN: "${{ inputs.github-token }}"
+        DOCKER_USERNAME: "${{ inputs.docker-username }}"
+        DOCKER_PASSWORD: "${{ inputs.docker-password }}"
         PYTHONUNBUFFERED: "1"
-        LOG_LEVEL: ${{ inputs.log-level }}
-        COMPONENTS_JSON: ${{ inputs.components }}
-        FILTER_SCOPE: ${{ inputs.filter-scope }}
-        SORT_ORDER: ${{ inputs.sort-order }}
+        LOG_LEVEL: "${{ inputs.log-level }}"
+        COMPONENTS_JSON: "${{ inputs.components }}"
+        FILTER_SCOPE: "${{ inputs.filter-scope }}"
+        SORT_ORDER: "${{ inputs.sort-order }}"
       run: |
         set -euo pipefail
         echo "Running component update script..."
-        # Write components to temporary file to avoid command line length issues
-        TEMP_JSON_FILE=$(mktemp)
-        echo "$COMPONENTS_JSON" > "$TEMP_JSON_FILE"
-        python "${GITHUB_ACTION_PATH}/update-eureka-components.py" --filter-scope "$FILTER_SCOPE" --sort-order "$SORT_ORDER" --data "$(cat $TEMP_JSON_FILE)"
+        TEMP_JSON_FILE="$(mktemp)"
+        printf '%s' "$COMPONENTS_JSON" > "$TEMP_JSON_FILE"
+        python "${GITHUB_ACTION_PATH}/update-eureka-components.py" \
+          --filter-scope "$FILTER_SCOPE" \
+          --sort-order "$SORT_ORDER" \
+          --data "$(cat "$TEMP_JSON_FILE")"
         rm -f "$TEMP_JSON_FILE"
 
 branding:
