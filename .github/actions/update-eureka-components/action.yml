@@ -38,12 +38,6 @@ outputs:
 runs:
   using: composite
   steps:
-    - name: Debug components
-      shell: bash
-      run: |
-        echo "Components: ${{ inputs.components }}"
-        echo "Github action path: ${{ github.action_path }}"
-
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
