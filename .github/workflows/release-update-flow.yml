@@ -55,23 +55,32 @@ on:
         description: 'Failed to add reviewers'
         value: ${{ jobs.manage-pr.outputs.failed_reviewers }}
       updated:
-        description: 'Whether the platform was updated'
+        description: 'Whether the platform descriptor was updated'
         value: ${{ jobs.update-application.outputs.updated }}
-      updated_modules:
-        description: 'List of updated modules'
-        value: ${{ jobs.update-application.outputs.updated_modules }}
+      previous_version:
+        description: 'Previous platform version'
+        value: ${{ jobs.update-application.outputs.previous_version }}
       new_version:
-        description: 'New version of the platform'
+        description: 'New platform version if updated'
         value: ${{ jobs.update-application.outputs.new_version }}
       updates_cnt:
-        description: 'Number of updates'
+        description: 'Number of updated applications in the platform descriptor'
         value: ${{ jobs.update-application.outputs.updates_cnt }}
+      updated_modules:
+        description: 'List of updated Eureka components and applications'
+        value: ${{ jobs.update-application.outputs.updated_modules }}
+      platform_descriptor_file:
+        description: 'Generated platform descriptor file path'
+        value: ${{ jobs.update-application.outputs.platform_descriptor_file }}
+      platform_descriptor_file_name:
+        description: 'Name of updated platform descriptor file'
+        value: ${{ jobs.update-application.outputs.platform_descriptor_file_name }}
       workflow_status:
         description: 'Overall workflow status'
         value: ${{ jobs.determine-source-branch.result == 'failure' && 'failure' || (jobs.update-application.result == 'failure' && 'failure' || (jobs.commit-changes.result == 'failure' && 'failure' || (jobs.manage-pr.result == 'failure' && 'failure' || 'success'))) }}
       failure_reason:
         description: 'Reason for workflow failure if any'
-        value: ${{ jobs.determine-source-branch.result == 'failure' && 'Failed to determine source branch' || (jobs.update-application.result == 'failure' && 'Failed to update platform modules' || (jobs.update-application.result == 'skipped' && 'Update platform job was skipped' || (jobs.commit-changes.result == 'failure' && 'Failed to commit changes to branch' || (jobs.manage-pr.result == 'failure' && 'Failed to manage pull request' || '')))) }}
+        value: ${{ jobs.update-application.outputs.failure_reason || (jobs.determine-source-branch.result == 'failure' && 'Failed to determine source branch' || (jobs.update-application.result == 'failure' && 'Failed to update platform modules' || (jobs.update-application.result == 'skipped' && 'Update platform job was skipped' || (jobs.commit-changes.result == 'failure' && 'Failed to commit changes to branch' || (jobs.manage-pr.result == 'failure' && 'Failed to manage pull request' || ''))))) }}
 
 permissions:
   contents: write
@@ -163,8 +172,12 @@ jobs:
       updated_components: ${{ steps.update-descriptor.outputs.updated_eureka_components }}
       updated_applications: ${{ steps.update-descriptor.outputs.updated_applications }}
       updated_modules: ${{ steps.update-descriptor.outputs.updated_modules }}
+      previous_version: ${{ steps.update-descriptor.outputs.previous_version }}
       new_version: ${{ steps.update-descriptor.outputs.new_version }}
       updates_cnt: ${{ steps.update-descriptor.outputs.updates_cnt }}
+      platform_descriptor_file: ${{ steps.update-descriptor.outputs.platform_descriptor_file }}
+      platform_descriptor_file_name: ${{ steps.update-descriptor.outputs.platform_descriptor_file_name }}
+      failure_reason: ${{ steps.update-descriptor.outputs.failure_reason }}
     steps:
       - name: Checkout Platform Repository
         uses: actions/checkout@v4
@@ -233,7 +246,21 @@ jobs:
           UPDATED_EUREKA_COMPONENTS='${{ steps.update-eureka-components.outputs.updated-components }}'
           UPDATED_APPLICATIONS='${{ steps.update-applications.outputs.updated-applications }}'
           UPDATED=false
+          FAILURE_REASON=""
+          
           echo "::notice::Checking for updated eureka components and applications"
+          
+          # Extract previous version
+          PREVIOUS_VERSION=$(jq -r '.version // "unknown"' "$STATE_FILE")
+          echo "::notice::Current platform version is $PREVIOUS_VERSION"
+          echo "previous_version=$PREVIOUS_VERSION" >> "$GITHUB_OUTPUT"
+          
+          # Set descriptor file paths
+          DESCRIPTOR_FILE_PATH="$PWD/$STATE_FILE"
+          DESCRIPTOR_FILE_NAME="$STATE_FILE"
+          echo "platform_descriptor_file=$DESCRIPTOR_FILE_PATH" >> "$GITHUB_OUTPUT"
+          echo "platform_descriptor_file_name=$DESCRIPTOR_FILE_NAME" >> "$GITHUB_OUTPUT"
+          
           # Use correct jq syntax for comparison
           if [ "$UPDATED_EUREKA_COMPONENTS" != "$(jq -c '.["eureka-components"]' "$STATE_FILE")" ]; then
             echo "::notice::Eureka components have been updated"
@@ -247,6 +274,7 @@ jobs:
             jq --argjson applications "$UPDATED_APPLICATIONS" '.applications = $applications' "$STATE_FILE" > "${STATE_FILE}.tmp"
             mv "${STATE_FILE}.tmp" "$STATE_FILE"
           fi
+          
           echo "updated=$UPDATED" >> "$GITHUB_OUTPUT"
           echo "updated_eureka_components=$UPDATED_EUREKA_COMPONENTS" >> "$GITHUB_OUTPUT"
           echo "updated_applications=$UPDATED_APPLICATIONS" >> "$GITHUB_OUTPUT"
@@ -275,6 +303,9 @@ jobs:
             # Get new version (platform version)
             NEW_VERSION="$(date +%Y.%m.%d).${GITHUB_RUN_NUMBER:-0}"
             
+            # Update platform version in descriptor file
+            jq --arg version "$NEW_VERSION" '.version = $version' "$STATE_FILE" > "${STATE_FILE}.tmp" && mv "${STATE_FILE}.tmp" "$STATE_FILE"
+            
             echo "updated_modules<<EOF" >> "$GITHUB_OUTPUT"
             echo "$UPDATED_MODULES" >> "$GITHUB_OUTPUT"
             echo "EOF" >> "$GITHUB_OUTPUT"
@@ -285,10 +316,11 @@ jobs:
             if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
               {
                 echo "## Descriptor File Updates";
+                echo "- **Previous version:** $PREVIOUS_VERSION";
+                echo "- **New version:** $NEW_VERSION";
                 echo "- **Eureka Components updated:** $UPDATED_EUREKA_COMPONENTS";
                 echo "- **Applications updated:** $UPDATED_APPLICATIONS";
                 echo "- **Total updates:** $UPDATES_CNT";
-                echo "- **New version:** $NEW_VERSION";
                 echo "### Updated Modules:";
                 echo '```';
                 echo "$UPDATED_MODULES";
@@ -297,7 +329,12 @@ jobs:
             fi
           else
             echo "::notice::No updates needed for descriptor file"
+            echo "new_version=$PREVIOUS_VERSION" >> "$GITHUB_OUTPUT"
+            echo "updates_cnt=0" >> "$GITHUB_OUTPUT"
           fi
+          
+          # Set failure reason if any
+          echo "failure_reason=$FAILURE_REASON" >> "$GITHUB_OUTPUT"
 
       - name: Upload Descriptor Artifact
         if: steps.update-descriptor.outputs.updated == 'true'
@@ -309,15 +346,15 @@ jobs:
 
   commit-changes:
     name: Commit and Push Changes
-    needs: [determine-source-branch, update-descriptor]
-    if: always() && needs.update-descriptor.outputs.updated == 'true'
+    needs: [determine-source-branch, update-application]
+    if: always() && needs.update-application.outputs.updated == 'true'
     uses: folio-org/kitfox-github/.github/workflows/commit-application-changes.yml@RANCHER-2324
     with:
       app_name: ${{ inputs.app_name }}
       repo: ${{ inputs.repo }}
       branch: ${{ inputs.update_branch }}
-      commit_message: |
-
+      commit_message: "Update platform modules for release"
+      
   manage-pr:
     name: Manage Pull Request
     needs: [determine-source-branch, update-application, commit-changes]
