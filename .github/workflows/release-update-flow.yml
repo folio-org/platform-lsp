@@ -229,13 +229,13 @@ jobs:
 
       - name: Update Eureka Components
         id: update-eureka-components
-        uses: ./.github/actions/update-eureka-components
+        uses: folio-org/platform-lsp/.github/actions/update-eureka-components@RANCHER-2324
         with:
           components: ${{ steps.fetch-descriptor.outputs.eureka_components }}
 
       - name: Update Applications
         id: update-applications
-        uses: ./.github/actions/update-applications
+        uses: folio-org/platform-lsp/.github/actions/update-applications@RANCHER-2324
         with:
           applications: ${{ steps.fetch-descriptor.outputs.applications }}
 
@@ -318,9 +318,8 @@ jobs:
                 echo "## Descriptor File Updates";
                 echo "- **Previous version:** $PREVIOUS_VERSION";
                 echo "- **New version:** $NEW_VERSION";
-                echo "- **Eureka Components updated:** $UPDATED_EUREKA_COMPONENTS";
-                echo "- **Applications updated:** $UPDATED_APPLICATIONS";
                 echo "- **Total updates:** $UPDATES_CNT";
+                echo "";
                 echo "### Updated Modules:";
                 echo '```';
                 echo "$UPDATED_MODULES";
@@ -354,7 +353,7 @@ jobs:
       repo: ${{ inputs.repo }}
       branch: ${{ inputs.update_branch }}
       commit_message: "Update platform modules for release"
-      
+
   manage-pr:
     name: Manage Pull Request
     needs: [determine-source-branch, update-application, commit-changes]
