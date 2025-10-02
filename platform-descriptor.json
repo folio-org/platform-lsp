@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100100000000636"
+        "version": "1.2.0-SNAPSHOT.100100000000728"
       },
       {
         "name": "app-agreements",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100100000000710"
+        "version": "1.2.0-SNAPSHOT.100100000000720"
       },
       {
         "name": "app-reading-room",
