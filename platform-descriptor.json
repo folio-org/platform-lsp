@@ -50,7 +50,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100100000000777"
+        "version": "1.2.0-SNAPSHOT.100100000000799"
       },
       {
         "name": "app-consortia",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100100000000785"
+        "version": "1.2.0-SNAPSHOT.100100000000794"
       },
       {
         "name": "app-gobi",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.1.0-SNAPSHOT.100100000000741"
+        "version": "1.1.0-SNAPSHOT.100100000000807"
       },
       {
         "name": "app-mosaic",
