@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100100000000851"
+        "version": "2.1.0-SNAPSHOT.100100000000960"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.0.1-SNAPSHOT.100100000000881"
+        "version": "3.0.1-SNAPSHOT.100100000000963"
       }
     ],
     "optional": [
@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100100000000861"
+        "version": "1.0.0-SNAPSHOT.100100000000973"
       },
       {
         "name": "app-bulk-edit",
