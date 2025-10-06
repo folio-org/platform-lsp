@@ -26,6 +26,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch || 'snapshot' }}
+          fetch-depth: 0 # Fetch all history to ensure we get the latest
+
+      - name: Ensure latest commit
+        run: |
+          git fetch origin ${{ inputs.branch || 'snapshot' }}
+          git reset --hard origin/${{ inputs.branch || 'snapshot' }}
 
       - name: Get checked out commit SHA
         id: checkout-sha
