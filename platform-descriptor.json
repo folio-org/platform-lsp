@@ -32,21 +32,21 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100100000000969"
+        "version": "2.1.0-SNAPSHOT.100100000000977"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.0.1-SNAPSHOT.100100000000963"
+        "version": "3.0.1-SNAPSHOT.100100000000979"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100100000000979"
+        "version": "1.2.0-SNAPSHOT.100100000001000"
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100100000000988"
+        "version": "1.0.0-SNAPSHOT.100100000000991"
       },
       {
         "name": "app-bulk-edit",
