@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.0.1-SNAPSHOT.100100000001044"
+        "version": "3.0.1-SNAPSHOT.100100000001047"
       }
     ],
     "optional": [
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100100000001048"
+        "version": "1.2.0-SNAPSHOT.100100000001053"
       },
       {
         "name": "app-gobi",
@@ -102,11 +102,11 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100100000001020"
+        "version": "1.1.0-SNAPSHOT.100100000001068"
       },
       {
         "name": "app-lists",
-        "version": "1.1.0-SNAPSHOT.100100000000869"
+        "version": "1.1.0-SNAPSHOT.100100000001068"
       },
       {
         "name": "app-mosaic",
