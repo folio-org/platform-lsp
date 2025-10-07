@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100100000001046"
+        "version": "1.0.0-SNAPSHOT.100100000001062"
       },
       {
         "name": "app-bulk-edit",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100100000001053"
+        "version": "1.2.0-SNAPSHOT.100100000001054"
       },
       {
         "name": "app-gobi",
