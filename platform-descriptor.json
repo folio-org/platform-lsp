@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100100000001046"
+        "version": "1.2.0-SNAPSHOT.100100000001053"
       },
       {
         "name": "app-agreements",
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-ebsconet",
-        "version": "1.1.0-SNAPSHOT.100100000001039"
+        "version": "1.1.0-SNAPSHOT.100100000001047"
       },
       {
         "name": "app-edge-complete",
