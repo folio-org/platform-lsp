@@ -151,6 +151,8 @@ jobs:
       failed_apps_reason: ${{ steps.gather-failures.outputs.failed_apps_reason }}
       success_count: ${{ steps.gather-failures.outputs.success_count }}
       failure_count: ${{ steps.gather-failures.outputs.failure_count }}
+      skipped_count: ${{ steps.gather-failures.outputs.skipped_count }}
+      skipped_apps: ${{ steps.gather-failures.outputs.skipped_apps }}
       updated_count: ${{ steps.gather-failures.outputs.updated_count }}
       updated_applications: ${{ steps.gather-failures.outputs.updated_applications }}
     steps:
@@ -165,33 +167,39 @@ jobs:
         id: gather-failures
         run: |
           set -eo pipefail
-          
+
           echo "::notice::Analyzing application results"
 
           all=$(jq -s '.' /tmp/all-results/*.json)
 
           success_count=$(jq '[.[] | select(.status=="success")] | length' <<<"$all")
-          failure_count=$(jq '[.[] | select(.status!="success")] | length' <<<"$all")
+          failure_count=$(jq '[.[] | select(.status=="failed")] | length' <<<"$all")
+          skipped_count=$(jq '[.[] | select(.status=="skipped")] | length' <<<"$all")
           updated_count=$(jq '[.[] | select(.updated==true)] | length' <<<"$all")
-          failed_apps=$(jq -r '[.[] | select(.status!="success") | .application] | join(", ")' <<<"$all")
+
+          failed_apps=$(jq -r '[.[] | select(.status=="failed") | .application] | join(", ")' <<<"$all")
           failed_apps_reason=$(jq -r '
-            [.[] | select(.status!="success") | "\(.application): \(.failure_reason // "unknown")"]
+            [.[] | select(.status=="failed") | "\(.application): \(.failure_reason // "unknown")"]
             | join("\n")
           ' <<<"$all")
-          
+
+          skipped_apps=$(jq -r '[.[] | select(.status=="skipped") | .application] | join(", ")' <<<"$all")
+
           updated_applications=$(jq -r --arg base "${GITHUB_SERVER_URL}" --arg owner "${{ github.repository_owner }}" '
-            [.[] 
-              | select(.updated==true) 
-              | "<\($base)/\($owner)/\(.application)/commit/\(.commit_sha)|\(.application) (\(.updated_cnt))>" 
-            ] 
+            [.[]
+              | select(.updated==true)
+              | "<\($base)/\($owner)/\(.application)/commit/\(.commit_sha)|\(.application) (\(.updated_cnt))>"
+            ]
             | join("\n")
           ' <<<"$all")
-          
-          echo "::notice::Results Summary - Success: $success_count, Failures: $failure_count"
-          
+
+          echo "::notice::Results Summary - Success: $success_count, Failures: $failure_count, Skipped: $skipped_count"
+
           echo "failed_apps=$failed_apps" >> "$GITHUB_OUTPUT"
           echo "success_count=$success_count" >> "$GITHUB_OUTPUT"
-          echo "failure_count=$failure_count" >> "$GITHUB_OUTPUT" 
+          echo "failure_count=$failure_count" >> "$GITHUB_OUTPUT"
+          echo "skipped_count=$skipped_count" >> "$GITHUB_OUTPUT"
+          echo "skipped_apps=$skipped_apps" >> "$GITHUB_OUTPUT"
           echo "updated_count=$updated_count" >> "$GITHUB_OUTPUT"
           {
             echo "failed_apps_reason<<EOF"
@@ -239,7 +247,7 @@ jobs:
           errors: false
           payload: |
             channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
-            text: "Snapshot Applications Update SUCCESS"            
+            text: "Snapshot Applications Update SUCCESS"
             blocks:
               - type: section
                 text:
@@ -248,10 +256,10 @@ jobs:
             attachments:
               - color: "good"
                 fields:
-                  - title: "Updated Applications"
-                    value: "${{ needs.collect-results.outputs.updated_count }}"
+                  - title: "Updated / Skipped"
+                    value: "${{ needs.collect-results.outputs.updated_count }} / ${{ needs.collect-results.outputs.skipped_count }}"
                     short: true
-                  - title: "Total Applications"
+                  - title: "Successfully Processed"
                     value: "${{ needs.collect-results.outputs.success_count }}"
                     short: true
               - color: "good"
@@ -279,11 +287,11 @@ jobs:
             attachments:
               - color: "danger"
                 fields:
+                  - title: "Failed / Skipped"
+                    value: "${{ needs.collect-results.outputs.failure_count }} / ${{ needs.collect-results.outputs.skipped_count }}"
+                    short: true
                   - title: "Successfully Processed"
                     value: "${{ needs.collect-results.outputs.success_count }}"
-                    short: true
-                  - title: "Failed"
-                    value: "${{ needs.collect-results.outputs.failure_count }}"
                     short: true
               - color: "danger"
                 mrkdwn_in: ["fields"]
@@ -302,8 +310,10 @@ jobs:
           TOTAL_APPS: ${{ needs.get-applications.outputs.application_count }}
           SUCCESS_COUNT: ${{ needs.collect-results.outputs.success_count || '0' }}
           FAILURE_COUNT: ${{ needs.collect-results.outputs.failure_count || '0' }}
+          SKIPPED_COUNT: ${{ needs.collect-results.outputs.skipped_count || '0' }}
           UPDATED_COUNT: ${{ needs.collect-results.outputs.updated_count || '0' }}
           FAILED_APPS: ${{ needs.collect-results.outputs.failed_apps }}
+          SKIPPED_APPS: ${{ needs.collect-results.outputs.skipped_apps }}
           FAILED_REASONS: ${{ needs.collect-results.outputs.failed_apps_reason }}
           UPDATED_APPS: ${{ needs.collect-results.outputs.updated_applications }}
           SLACK_NOTIF_OUTCOME: ${{ needs.slack_notification.outputs.notification_outcome }}
@@ -337,6 +347,7 @@ jobs:
             elif [[ "${{ needs.update-applications.result }}" == "success" ]]; then
               echo "- **Successfully Processed**: $SUCCESS_COUNT"
               echo "- **Updated Applications**: $UPDATED_COUNT"
+              echo "- **Skipped Applications**: $SKIPPED_COUNT"
               echo "- **Failed Applications**: $FAILURE_COUNT"
               echo ""
               echo "### ✅ All Applications Processed Successfully"
@@ -370,6 +381,7 @@ jobs:
             else
               echo "- **Successfully Processed**: $SUCCESS_COUNT"
               echo "- **Updated Applications**: $UPDATED_COUNT"
+              echo "- **Skipped Applications**: $SKIPPED_COUNT"
               echo "- **Failed Applications**: $FAILURE_COUNT"
               echo ""
               echo "### ⚠️ Some Applications Failed to Update"
