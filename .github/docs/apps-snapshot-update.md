@@ -303,7 +303,7 @@ Solution: Verify GitHub App installation on repository
 
 - **[Snapshot Flow](snapshot-flow.md)**: Overall snapshot CI/CD architecture
 - **[Release Preparation](release-preparation.md)**: Release branch workflow
-- **[Application Update](../../kitfox-github/.github/docs/app-update.md)**: Individual app workflow
+- **[Snapshot Update Flow](../../kitfox-github/.github/docs/snapshot-update-flow.md)**: Individual app workflow
 - **[Platform Descriptor](../../../README.md)**: Platform configuration
 
 ---

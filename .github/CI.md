@@ -47,8 +47,8 @@ The snapshot flow handles the continuous integration of daily development work, 
 - **Orchestrated Updates**: Platform-LSP coordinates updates across 31+ application repositories
 
 **Key Workflows**:
-- **`apps-snapshot-update.yml`**: Platform-LSP orchestrator for application snapshot updates
-- **`app-update.yml`**: Individual application update workflow (kitfox-github)
+- **`snapshot-update-orchestrator.yml`**: Platform-LSP orchestrator for application snapshot updates
+- **`snapshot-update-flow.yml`**: Individual application update workflow (kitfox-github)
 
 **Documentation**: [📖 Detailed Snapshot Flow Guide](docs/snapshot-flow.md)
 

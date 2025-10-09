@@ -100,7 +100,7 @@ The Snapshot Flow handles continuous integration of ongoing development (snapsho
    - Upload platform descriptor as artifact for downstream workflows
 3. **Parallel Application Updates**:
    - **Matrix Strategy**: Process all applications concurrently (max 5 parallel)
-   - **Individual Workflows**: Each application triggers `app-update.yml` from kitfox-github
+   - **Individual Workflows**: Each application triggers `snapshot-update-flow.yml` from kitfox-github
    - **Fail-Safe Processing**: Continue processing other apps even if some fail
    - **Parameters**: 
      - `descriptor_build_offset`: Version offset for application artifacts
@@ -279,7 +279,7 @@ update-applications:
       application: ${{ fromJson(needs.get-applications.outputs.applications) }}
     fail-fast: false
     max-parallel: 5
-  # Calls kitfox-github/.github/workflows/app-update.yml for each application
+  # Calls kitfox-github/.github/workflows/snapshot-update-flow.yml for each application
 ```
 
 #### 4. Result Aggregation
@@ -314,7 +314,7 @@ slack_notification:
 ### Workflow Implementation
 - [`apps-snapshot-update.yml`](../workflows/snapshot-update-orchestrator.yml) - Platform-LSP application orchestrator
 - [Apps Snapshot Update Documentation](apps-snapshot-update.md) - Detailed orchestrator workflow documentation
-- [`app-update.yml`](https://github.com/folio-org/kitfox-github/blob/master/.github/workflows/app-update.yml) - Individual application update workflow
+- [`snapshot-update-flow.yml`](https://github.com/folio-org/kitfox-github/blob/master/.github/workflows/snapshot-update-flow.yml) - Individual application update workflow
 
 ### External References
 - [Eureka CI Flow [Snapshot]](https://folio-org.atlassian.net/wiki/spaces/FOLIJET/pages/887193724/CI+flow+snapshot)
