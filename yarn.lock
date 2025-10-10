@@ -1409,10 +1409,10 @@
     react-final-form-arrays "^3.1.4"
     utility-types "^3.10.0"
 
-"@folio/checkin@11.0.1":
-  version "11.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/checkin/-/checkin-11.0.1.tgz#50da7ba0fcdee5b024101a42aa6259eeb884f930"
-  integrity sha512-aLOwDVgM7IX7dm1K/IgNKKuOEADug/kD0Hds88UIuX4YeIw9Z9e8o4hOQxwen4mIUl/WTsy12tFkUdwfrQ5LyA==
+"@folio/checkin@11.0.2":
+  version "11.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/checkin/-/checkin-11.0.2.tgz#5ec958005e043e75f57166c4012f1d14137fa5bf"
+  integrity sha512-aY1uIjBLJhn8i/avaSwTrxrV5kvw+jRAwdUTxgB3TZD3tsy3bq/nSoaJpkWn4fhI1XnUk/DX3rVAzqe6Em2gFQ==
   dependencies:
     dateformat "^2.0.0"
     dompurify "^3.0.9"
@@ -1460,10 +1460,10 @@
   optionalDependencies:
     "@folio/plugin-find-user" "^8.0.0"
 
-"@folio/circulation@11.0.1":
-  version "11.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/circulation/-/circulation-11.0.1.tgz#c29fde3f96a872bfb940a6bca4ad887be5f3660a"
-  integrity sha512-llyXCJLYYTDFDSJR2BBKOygrC0bzZrE4MUlK2nQyF5fc/kekypnMN+aVBcM02da9VeQRTkdZFbNKubD+t4RQlw==
+"@folio/circulation@11.0.2":
+  version "11.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/circulation/-/circulation-11.0.2.tgz#1db4b51f6d43d34ae01f48a6138875ccd12ce3c7"
+  integrity sha512-KDZsCmVhpMw0DWUzjReOcE5cz/k0siBon0VrES8TIx5M5uCpSrY3j3C6gRF2kR2xTfqIKJawJGzf/FOQkJvH/A==
   dependencies:
     "@folio/stripes-template-editor" "^3.2.0"
     codemirror "^5.61.1"
@@ -2786,10 +2786,10 @@
     react-final-form-arrays "^3.1.1"
     redux-form "^8.0.0"
 
-"@folio/users@12.1.13":
-  version "12.1.13"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/users/-/users-12.1.13.tgz#9dcc030ac5b9524a273926e3fdbafcd13b1e5370"
-  integrity sha512-Tl+gGOfZX42QhpRNzJW4SQDSe6jBdp01+YObepFyQUb9EVWPtVb/Zdiz6/uHk6s3o3zc/YjubJGfxnp/cJqaZA==
+"@folio/users@12.1.14":
+  version "12.1.14"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/users/-/users-12.1.14.tgz#01a391828932830f0756229f8496328a7ed5cde0"
+  integrity sha512-RpBHV96bsTN351rATnhfFfnACvrk/ob4d52uU/gxhYys5e1frJDMMO39k2Ot5OvLF9Jv5cj8iEu5kEKQKGYxOA==
   dependencies:
     compressorjs "^1.2.1"
     dompurify "^3.2.0"
