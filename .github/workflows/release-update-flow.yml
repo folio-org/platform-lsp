@@ -167,7 +167,7 @@ jobs:
 
   # Renamed from update-platform to update-application to align with workflow outputs
   update-application:
-    name: Fetch & Update Platform Descriptor
+    name: Read & Update Platform Descriptor
     needs: determine-source-branch
     runs-on: ubuntu-latest
     outputs:
@@ -195,32 +195,39 @@ jobs:
 #         if: runner.os != 'Linux' # adjust as needed for self-hosted matrices
         run: sudo apt-get update && sudo apt-get install -y gh
 
-      - name: Fetch descriptor file
-        id: fetch-descriptor
+      - name: Read descriptor file
+        id: read-descriptor
         env:
           REPO: ${{ inputs.repo }}
           SOURCE_BRANCH: ${{ needs.determine-source-branch.outputs.source_branch }}
           STATE_FILE: ${{ env.STATE_FILE }}
         run: |
           set -euo pipefail
-          echo "::notice::Fetching descriptor file from branch: $SOURCE_BRANCH"
+          echo "::notice::Reading descriptor file from branch: $SOURCE_BRANCH"
+
           gh api "repos/$REPO/contents/$STATE_FILE?ref=$SOURCE_BRANCH" -H "Accept: application/vnd.github.v3.raw" > "$STATE_FILE"
           if [ ! -s "$STATE_FILE" ]; then
             echo "::error::Descriptor file '$STATE_FILE' is empty or not found in branch '$SOURCE_BRANCH'"
             exit 1
           fi
+
           if ! jq -e 'has("eureka-components")' "$STATE_FILE" > /dev/null; then
             echo "::error::Descriptor file does not contain 'eureka-components' field"
             echo "File content:" && cat "$STATE_FILE"
             exit 1
           fi
-          # Correct jq syntax for key with dash characters
           EUREKA_COMPONENTS=$(jq -c '.["eureka-components"]' "$STATE_FILE")
           {
             echo "eureka_components<<EOF"
             echo "$EUREKA_COMPONENTS"
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
+
+          if ! jq -e 'has("applications")' "$STATE_FILE" > /dev/null; then
+            echo "::error::Descriptor file does not contain 'applications' field"
+            echo "File content:" && cat "$STATE_FILE"
+            exit 1
+          fi
           APPLICATIONS=$(jq -c '.applications' "$STATE_FILE")
           {
             echo "applications<<EOF"
@@ -234,26 +241,26 @@ jobs:
         id: update-eureka-components
         uses: folio-org/platform-lsp/.github/actions/update-eureka-components@RANCHER-2324
         with:
-          components: ${{ steps.fetch-descriptor.outputs.eureka_components }}
+          components: ${{ steps.read-descriptor.outputs.eureka_components }}
 
       - name: Update Applications
         id: update-applications
         uses: folio-org/platform-lsp/.github/actions/update-applications@RANCHER-2324
         with:
-          applications: ${{ steps.fetch-descriptor.outputs.applications }}
+          applications: ${{ steps.read-descriptor.outputs.applications }}
 
       - name: Update Descriptor File
         id: update-descriptor
+        env:
+          UPDATED_EUREKA_COMPONENTS: ${{ steps.update-eureka-components.outputs.updated-components }}
+          UPDATED_APPLICATIONS: ${{ steps.update-applications.outputs.updated-applications }}
+          UPDATED: false
+          FAILURE_REASON: ''
         run: |
           set -euo pipefail
           # set -x
-          UPDATED_EUREKA_COMPONENTS='${{ steps.update-eureka-components.outputs.updated-components }}'
-          UPDATED_APPLICATIONS='${{ steps.update-applications.outputs.updated-applications }}'
-          UPDATED=false
-          FAILURE_REASON=""
-          
           echo "::notice::Checking for updated eureka components and applications"
-          
+
           # Extract previous version and set file paths (outputs)
           PREVIOUS_VERSION=$(jq -r '.version // "unknown"' "$STATE_FILE")
           echo "::notice::Current platform version is $PREVIOUS_VERSION"
@@ -262,7 +269,7 @@ jobs:
             echo "platform_descriptor_file=$PWD/$STATE_FILE"
             echo "platform_descriptor_file_name=$STATE_FILE"
           } >> "$GITHUB_OUTPUT"
-          
+
           CURRENT_EUREKA_COMPONENTS=$(jq -c '.["eureka-components"]' "$STATE_FILE")
           CURRENT_APPLICATIONS=$(jq -c '.applications' "$STATE_FILE")
 
@@ -328,8 +335,6 @@ jobs:
             echo "updates_cnt=$UPDATES_CNT" >> "$GITHUB_OUTPUT"
           fi
 
-          
-          
           # if [ "$UPDATED" = true ]; then
           #   # Extract and identify what changed between current and updated components
           #   echo "::notice::Analyzing changes in eureka components and applications"
