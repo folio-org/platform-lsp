@@ -64,8 +64,15 @@ The release preparation process coordinates the creation of release branches, ve
 - **Branch Orchestration**: Automated creation of release branches across 31+ repositories
 - **Version Coordination**: Alignment of component and application versions
 - **Distributed Workflows**: Parallel processing with comprehensive monitoring
+- **Release Maintenance**: Continuous updates to release branches with compatible module versions
 
-**Documentation**: [📖 Detailed Release Preparation Guide](docs/release-preparation.md)
+**Key Workflows**:
+- **`release-preparation.yml`**: Initial release branch creation orchestrator
+- **`release-update-orchestrator.yml`**: Ongoing release branch maintenance orchestrator
+
+**Documentation**:
+- [📖 Detailed Release Preparation Guide](docs/release-preparation.md)
+- [📖 Release Update Orchestrator Guide](docs/release-update-orchestrator.md)
 
 ---
 
@@ -149,6 +156,7 @@ The platform-lsp implements a **proven distributed workflow architecture**:
 ### Primary Documentation
 - [🔄 Snapshot Flow Documentation](docs/snapshot-flow.md)
 - [📋 Release Preparation Documentation](docs/release-preparation.md)
+- [📋 Release Update Orchestrator Documentation](docs/release-update-orchestrator.md)
 - [🚀 Release Flow Documentation](docs/release-flow.md)
 
 ### Implementation References
