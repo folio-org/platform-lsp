@@ -1,5 +1,7 @@
 name: Platform scan for release
 
+run-name: Release update scheduler ${{ github.event_name == 'workflow_dispatch' && '[manual]' || '' }}
+
 on:
   schedule:
     # Run every hour
@@ -18,15 +20,14 @@ on:
   #   paths:
   #     - 'platform-descriptor.json'
 
-permissions:
-  contents: write
-  pull-requests: write
-  actions: read
-  checks: read
-
 concurrency:
   group: platform-scan-${{ github.ref }}
   cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
 
 jobs:
   get-config:
@@ -47,6 +48,7 @@ jobs:
         uses: folio-org/kitfox-github/.github/actions/get-release-config@master
         with:
           repo: ${{ github.repository }}
+          branch: ${{ github.ref_name }}
           github_token: ${{ github.token }}
 
       - name: Build Matrix Includes
@@ -58,6 +60,7 @@ jobs:
 
           echo "includes=$INCLUDES" >> "$GITHUB_OUTPUT"
           echo "::notice::Matrix includes: $INCLUDES"
+
   update-branches:
     name: Update ${{ matrix.branch }}
     needs: get-config
@@ -76,4 +79,3 @@ jobs:
       pr_reviewers: ${{ needs.get-config.outputs.pr_reviewers }}
       pr_labels: ${{ needs.get-config.outputs.pr_labels }}
     secrets: inherit
-

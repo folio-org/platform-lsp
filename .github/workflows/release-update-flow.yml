@@ -19,7 +19,7 @@ on:
         description: 'Update branch name for this release branch'
         required: true
         type: string
-      workflow_run_number: # NOTE: Currently unused inside this workflow (kept for backward compatibility / callers)
+      workflow_run_number:
         description: 'GitHub run number for display'
         required: true
         type: string
@@ -57,6 +57,9 @@ on:
       updated:
         description: 'Whether the platform descriptor was updated'
         value: ${{ jobs.update-application.outputs.updated }}
+      updated_modules:
+        description: 'List of updated Eureka components and applications'
+        value: ${{ jobs.update-application.outputs.updated_modules }}
       previous_version:
         description: 'Previous platform version'
         value: ${{ jobs.update-application.outputs.previous_version }}
@@ -64,11 +67,8 @@ on:
         description: 'New platform version if updated'
         value: ${{ jobs.update-application.outputs.new_version }}
       updates_cnt:
-        description: 'Number of updated applications in the platform descriptor'
+        description: 'Number of updates'
         value: ${{ jobs.update-application.outputs.updates_cnt }}
-      updated_modules:
-        description: 'List of updated Eureka components and applications'
-        value: ${{ jobs.update-application.outputs.updated_modules }}
       platform_descriptor_file:
         description: 'Generated platform descriptor file path'
         value: ${{ jobs.update-application.outputs.platform_descriptor_file }}
@@ -80,7 +80,7 @@ on:
         value: ${{ jobs.determine-source-branch.result == 'failure' && 'failure' || (jobs.update-application.result == 'failure' && 'failure' || (jobs.commit-changes.result == 'failure' && 'failure' || (jobs.manage-pr.result == 'failure' && 'failure' || 'success'))) }}
       failure_reason:
         description: 'Reason for workflow failure if any'
-        value: ${{ jobs.update-application.outputs.failure_reason || (jobs.determine-source-branch.result == 'failure' && 'Failed to determine source branch' || (jobs.update-application.result == 'failure' && 'Failed to update platform modules' || (jobs.update-application.result == 'skipped' && 'Update platform job was skipped' || (jobs.commit-changes.result == 'failure' && 'Failed to commit changes to branch' || (jobs.manage-pr.result == 'failure' && 'Failed to manage pull request' || ''))))) }}
+        value: ${{ jobs.determine-source-branch.result == 'failure' && 'Failed to determine source branch' || (jobs.update-application.result == 'failure' && 'Failed to update application modules' || (jobs.update-application.result == 'skipped' && 'Update application job was skipped' || (jobs.commit-changes.result == 'failure' && 'Failed to commit changes to branch' || (jobs.manage-pr.result == 'failure' && 'Failed to manage pull request' || '')))) }}
 
 permissions:
   contents: write
@@ -122,6 +122,7 @@ jobs:
         run: |
           set -euo pipefail
           echo "::notice::Checking if update branch exists: $UPDATE_BRANCH"
+
           if gh api "repos/$REPO/branches/$UPDATE_BRANCH" >/dev/null 2>&1; then
             echo "::notice::Update branch exists, will scan: $UPDATE_BRANCH"
             echo "source_branch=$UPDATE_BRANCH" >> "$GITHUB_OUTPUT"
@@ -142,12 +143,14 @@ jobs:
         run: |
           set -euo pipefail
           echo "::notice::Checking for existing PR from $HEAD_BRANCH to $BASE_BRANCH"
+
           pr_json=$(gh pr list \
             --repo "$REPO" \
             --base "$BASE_BRANCH" \
             --head "$HEAD_BRANCH" \
             --json number,url \
             --jq '.[0]' || echo '{}')
+
           if [ "$pr_json" != "{}" ] && [ -n "$pr_json" ] && [ "$(echo "$pr_json" | jq -r '.url // ""')" != "" ]; then
             pr_number=$(echo "$pr_json" | jq -r '.number // ""')
             pr_url=$(echo "$pr_json" | jq -r '.url // ""')
@@ -242,8 +245,8 @@ jobs:
       - name: Update Descriptor File
         id: update-descriptor
         run: |
-          # set -eo pipefail
-          set -x
+          set -euo pipefail
+          # set -x
           UPDATED_EUREKA_COMPONENTS='${{ steps.update-eureka-components.outputs.updated-components }}'
           UPDATED_APPLICATIONS='${{ steps.update-applications.outputs.updated-applications }}'
           UPDATED=false
@@ -262,48 +265,110 @@ jobs:
           
           CURRENT_EUREKA_COMPONENTS=$(jq -c '.["eureka-components"]' "$STATE_FILE")
           CURRENT_APPLICATIONS=$(jq -c '.applications' "$STATE_FILE")
-          
+
           # Check if components or applications changed
           if [ "$UPDATED_EUREKA_COMPONENTS" != "$CURRENT_EUREKA_COMPONENTS" ] || [ "$UPDATED_APPLICATIONS" != "$CURRENT_APPLICATIONS" ]; then
             UPDATED=true
 
             echo "::debug::Eureka components have been updated"
-            
+
             # Update both components in a single jq operation
             jq --argjson components "$UPDATED_EUREKA_COMPONENTS" \
                --argjson applications "$UPDATED_APPLICATIONS" \
-               '. ["eureka-components"] = $components | .applications = $applications' \
+               '.["eureka-components"] = $components | .applications = $applications' \
                "$STATE_FILE" > "${STATE_FILE}.tmp" && mv "${STATE_FILE}.tmp" "$STATE_FILE"
-            
+
             # Log what was updated
-            [ "$UPDATED_EUREKA_COMPONENTS" != "$CURRENT_EUREKA" ] && echo "::notice::Eureka components have been updated"
-            [ "$UPDATED_APPLICATIONS" != "$CURRENT_APPS" ] && echo "::notice::Applications have been updated"
+            [ "$UPDATED_EUREKA_COMPONENTS" != "$CURRENT_EUREKA_COMPONENTS" ] && echo "::notice::Eureka components have been updated"
+            [ "$UPDATED_APPLICATIONS" != "$CURRENT_APPLICATIONS" ] && echo "::notice::Applications have been updated"
+             cat "$STATE_FILE"
+             # Output updated components for downstream steps
+            {
+              echo "updated=$UPDATED"
+              echo "updated_eureka_components=$UPDATED_EUREKA_COMPONENTS"
+              echo "updated_applications=$UPDATED_APPLICATIONS"
+            } >> "$GITHUB_OUTPUT"
           fi
-          
-          # Output updated components for downstream steps
-          {
-            echo "updated=$UPDATED"
-            echo "updated_eureka_components=$UPDATED_EUREKA_COMPONENTS"
-            echo "updated_applications=$UPDATED_APPLICATIONS"
-          } >> "$GITHUB_OUTPUT"
-          
+
           if [ "$UPDATED" = true ]; then
+            compare_lists() {
+              local current="$1" updated="$2"
 
-            #Diff json CURRENT_EUREKA_COMPONENTS and UPDATED_EUREKA_COMPONENTS
-            diff_eureka_components=$(jq -c '.["eureka-components"]' "$STATE_FILE" | diff -u - "$UPDATED_EUREKA_COMPONENTS")
-            echo "::debug::Diff eureka components: $diff_eureka_components"
+              jq -n --argjson OLD "$current" --argjson NEW "$updated" '
+                def to_map: map({key:.name, value:.version}) | from_entries;
+                ($OLD|to_map) as $O | ($NEW|to_map) as $N |
+                [ ($O|keys[]) as $k
+                  | select(($N|has($k)) and ($O[$k] != $N[$k]))
+                  | { name: $k, change: { old: $O[$k], new: $N[$k] } }
+                ]
+              '
+            }
 
-            #Diff json CURRENT_APPLICATIONS and UPDATED_APPLICATIONS
-            diff_applications=$(jq -c '.applications' "$STATE_FILE" | diff -u - "$UPDATED_APPLICATIONS")
-            echo "::debug::Diff applications: $diff_applications"
+            components=$(compare_lists "$CURRENT_EUREKA_COMPONENTS" "$UPDATED_EUREKA_COMPONENTS")
 
-          #   # Extract and combine updated modules in a single operation
+            required_applications=$(compare_lists \
+              "$(jq -c '.required' <<< $CURRENT_APPLICATIONS)" \
+              "$(jq -c '.required' <<< $UPDATED_APPLICATIONS)")
+
+            optional_applications=$(compare_lists \
+              "$(jq -c '.optional' <<< $CURRENT_APPLICATIONS)" \
+              "$(jq -c '.optional' <<< $UPDATED_APPLICATIONS)")
+
+            UPDATED_REPORT="$(jq -n --argjson a "$components" \
+              --argjson b "$required_applications" \
+              --argjson c "$optional_applications" '$a+$b+$c')"
+
+            UPDATES_CNT=$(jq 'length' <<< "$UPDATED_REPORT")
+
+            {
+              echo "updated_report<<EOF"
+              echo "$UPDATED_REPORT"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+            echo "updates_cnt=$UPDATES_CNT" >> "$GITHUB_OUTPUT"
+          fi
+
+          
+          
+          # if [ "$UPDATED" = true ]; then
+          #   # Extract and identify what changed between current and updated components
+          #   echo "::notice::Analyzing changes in eureka components and applications"
+            
+          #   # Find changed Eureka components
           #   UPDATED_MODULES=$(jq -r '
-          #     [
-          #       (($eureka | .[] | select(.updated == true) | .name + ": " + .version) // empty),
-          #       (($apps | .[] | select(.updated == true) | .name + ": " + .version) // empty)
-          #     ] | join("\n")
-          #   ' --argjson eureka "$UPDATED_EUREKA_COMPONENTS" --argjson apps "$UPDATED_APPLICATIONS")
+          #     # Function to compare components by name and version
+          #     def compare_components($curr; $updated):
+          #       # Get all component names from both arrays
+          #       ($curr | [.[] | .name] | unique) + ($updated | [.[] | .name] | unique) | unique as $all_names |
+          #       # For each name, check if it exists in both arrays and compare versions
+          #       $all_names[] | 
+          #         . as $name |
+          #         ($curr | .[] | select(.name == $name) // null) as $curr_comp |
+          #         ($updated | .[] | select(.name == $name) // null) as $upd_comp |
+                  
+          #         if $curr_comp == null and $upd_comp != null then
+          #           # New component added
+          #           $name + ": " + $upd_comp.version + " (added)"
+          #         elif $curr_comp != null and $upd_comp == null then
+          #           # Component removed
+          #           $name + ": " + $curr_comp.version + " (removed)"
+          #         elif $curr_comp.version != $upd_comp.version then
+          #           # Version changed
+          #           $name + ": " + $curr_comp.version + " → " + $upd_comp.version
+          #         else
+          #           empty
+          #         end
+          #     ;
+              
+          #     # Compare Eureka components
+          #     compare_components($current_eureka; $updated_eureka),
+              
+          #     # Compare Applications
+          #     compare_components($current_apps; $updated_apps)
+          #   ' --argjson current_eureka "$CURRENT_EUREKA_COMPONENTS" \
+          #     --argjson updated_eureka "$UPDATED_EUREKA_COMPONENTS" \
+          #     --argjson current_apps "$CURRENT_APPLICATIONS" \
+          #     --argjson updated_apps "$UPDATED_APPLICATIONS")
             
           #   # Count updates more reliably
           #   UPDATES_CNT=$(echo "$UPDATED_MODULES" | grep -c ":" || echo "0")
@@ -337,21 +402,21 @@ jobs:
           #       echo '```';
           #     } >> "$GITHUB_STEP_SUMMARY"
           #   fi
-          else
-            echo "::notice::No updates needed for descriptor file"
-            echo "new_version=$PREVIOUS_VERSION" >> "$GITHUB_OUTPUT"
-            echo "updates_cnt=0" >> "$GITHUB_OUTPUT"
-          fi
+          # else
+          #   echo "::notice::No updates needed for descriptor file"
+          #   echo "new_version=$PREVIOUS_VERSION" >> "$GITHUB_OUTPUT"
+          #   echo "updates_cnt=0" >> "$GITHUB_OUTPUT"
+          # fi
           
           echo "failure_reason=$FAILURE_REASON" >> "$GITHUB_OUTPUT"
 
-  #     - name: Upload Descriptor Artifact
-  #       if: steps.update-descriptor.outputs.updated == 'true'
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: platform-lsp-descriptor-update
-  #         path: ${{ env.STATE_FILE }}
-  #         retention-days: 1
+      - name: Upload Descriptor Artifact
+        if: steps.update-descriptor.outputs.updated == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: platform-lsp-descriptor-update
+          path: ${{ env.STATE_FILE }}
+          retention-days: 1
 
   # commit-changes:
   #   name: Commit and Push Changes
