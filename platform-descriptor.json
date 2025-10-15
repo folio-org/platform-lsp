@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.0.1-SNAPSHOT.100100000001572"
+        "version": "3.0.1-SNAPSHOT.100100000001577"
       }
     ],
     "optional": [
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100100000001248"
+        "version": "1.2.0-SNAPSHOT.100100000001605"
       },
       {
         "name": "app-consortia",
@@ -82,11 +82,11 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100100000000972"
+        "version": "2.2.0-SNAPSHOT.100100000001578"
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100100000001581"
+        "version": "1.2.0-SNAPSHOT.100100000001585"
       },
       {
         "name": "app-gobi",
