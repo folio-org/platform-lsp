@@ -279,19 +279,27 @@ jobs:
 
             echo "::debug::Eureka components have been updated"
 
-            # Update both components in a single jq operation
-            jq --argjson components "$UPDATED_EUREKA_COMPONENTS" \
-               --argjson applications "$UPDATED_APPLICATIONS" \
-               '.["eureka-components"] = $components | .applications = $applications' \
-               "$STATE_FILE" > "${STATE_FILE}.tmp" && mv "${STATE_FILE}.tmp" "$STATE_FILE"
+            if [[ "$PREVIOUS_VERSION" =~ ^(R[0-9]+-[0-9]+)\.([0-9]+)$ ]]; then
+              BASE_VERSION="${BASH_REMATCH[1]}"
+              PATCH_VERSION="${BASH_REMATCH[2]}"
+              NEW_VERSION="${BASE_VERSION}.$((PATCH_VERSION + 1))"
+            fi
+
+
+            # Update version and both components in a single jq operation
+            jq --argjson version "$NEW_VERSION" \
+              --argjson components "$UPDATED_EUREKA_COMPONENTS" \
+              --argjson applications "$UPDATED_APPLICATIONS" \
+              '.version = $version | .["eureka-components"] = $components | .applications = $applications' \
+              "$STATE_FILE" > "${STATE_FILE}.tmp" && mv "${STATE_FILE}.tmp" "$STATE_FILE"
 
             # Log what was updated
             [ "$UPDATED_EUREKA_COMPONENTS" != "$CURRENT_EUREKA_COMPONENTS" ] && echo "::notice::Eureka components have been updated"
             [ "$UPDATED_APPLICATIONS" != "$CURRENT_APPLICATIONS" ] && echo "::notice::Applications have been updated"
-             cat "$STATE_FILE"
              # Output updated components for downstream steps
             {
               echo "updated=$UPDATED"
+              echo "new_version=$NEW_VERSION"
               echo "updated_eureka_components=$UPDATED_EUREKA_COMPONENTS"
               echo "updated_applications=$UPDATED_APPLICATIONS"
             } >> "$GITHUB_OUTPUT"
@@ -332,88 +340,34 @@ jobs:
               echo "$UPDATED_REPORT"
               echo "EOF"
             } >> "$GITHUB_OUTPUT"
+
             echo "updates_cnt=$UPDATES_CNT" >> "$GITHUB_OUTPUT"
           fi
-
-          # if [ "$UPDATED" = true ]; then
-          #   # Extract and identify what changed between current and updated components
-          #   echo "::notice::Analyzing changes in eureka components and applications"
             
-          #   # Find changed Eureka components
-          #   UPDATED_MODULES=$(jq -r '
-          #     # Function to compare components by name and version
-          #     def compare_components($curr; $updated):
-          #       # Get all component names from both arrays
-          #       ($curr | [.[] | .name] | unique) + ($updated | [.[] | .name] | unique) | unique as $all_names |
-          #       # For each name, check if it exists in both arrays and compare versions
-          #       $all_names[] | 
-          #         . as $name |
-          #         ($curr | .[] | select(.name == $name) // null) as $curr_comp |
-          #         ($updated | .[] | select(.name == $name) // null) as $upd_comp |
-                  
-          #         if $curr_comp == null and $upd_comp != null then
-          #           # New component added
-          #           $name + ": " + $upd_comp.version + " (added)"
-          #         elif $curr_comp != null and $upd_comp == null then
-          #           # Component removed
-          #           $name + ": " + $curr_comp.version + " (removed)"
-          #         elif $curr_comp.version != $upd_comp.version then
-          #           # Version changed
-          #           $name + ": " + $curr_comp.version + " → " + $upd_comp.version
-          #         else
-          #           empty
-          #         end
-          #     ;
-              
-          #     # Compare Eureka components
-          #     compare_components($current_eureka; $updated_eureka),
-              
-          #     # Compare Applications
-          #     compare_components($current_apps; $updated_apps)
-          #   ' --argjson current_eureka "$CURRENT_EUREKA_COMPONENTS" \
-          #     --argjson updated_eureka "$UPDATED_EUREKA_COMPONENTS" \
-          #     --argjson current_apps "$CURRENT_APPLICATIONS" \
-          #     --argjson updated_apps "$UPDATED_APPLICATIONS")
-            
-          #   # Count updates more reliably
-          #   UPDATES_CNT=$(echo "$UPDATED_MODULES" | grep -c ":" || echo "0")
-            
-          #   # Generate new version and update descriptor
-          #   NEW_VERSION="$(date +%Y.%m.%d).${GITHUB_RUN_NUMBER:-0}"
-          #   jq --arg version "$NEW_VERSION" '.version = $version' "$STATE_FILE" > "${STATE_FILE}.tmp" && mv "${STATE_FILE}.tmp" "$STATE_FILE"
-            
-          #   # Output results
-          #   {
-          #     echo "updated_modules<<EOF"
-          #     echo "$UPDATED_MODULES"
-          #     echo "EOF"
-          #     echo "new_version=$NEW_VERSION"
-          #     echo "updates_cnt=$UPDATES_CNT"
-          #   } >> "$GITHUB_OUTPUT"
-            
-          #   echo "::notice::Descriptor file has been updated with new versions"
-            
-          #   # Update step summary if available
-          #   if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
-          #     {
-          #       echo "## Descriptor File Updates";
-          #       echo "- **Previous version:** $PREVIOUS_VERSION";
-          #       echo "- **New version:** $NEW_VERSION";
-          #       echo "- **Total updates:** $UPDATES_CNT";
-          #       echo "";
-          #       echo "### Updated Modules:";
-          #       echo '```';
-          #       echo "$UPDATED_MODULES";
-          #       echo '```';
-          #     } >> "$GITHUB_STEP_SUMMARY"
-          #   fi
-          # else
-          #   echo "::notice::No updates needed for descriptor file"
-          #   echo "new_version=$PREVIOUS_VERSION" >> "$GITHUB_OUTPUT"
-          #   echo "updates_cnt=0" >> "$GITHUB_OUTPUT"
-          # fi
+          # Update step summary if available
+          if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+            {
+              echo "## Descriptor File Updates";
+              if [ "$UPDATED" = true ]; then
+                echo "- **Previous version:** $PREVIOUS_VERSION";
+                echo "- **New version:** $NEW_VERSION";
+                echo "- **Total updates:** $UPDATES_CNT";
+                echo "";
+                echo "### Updated Modules:";
+                echo '```';
+                echo "$UPDATED_REPORT" | jq -r '.[] | "- " + .name + ": " + .change.old + " -> " + .change.new';
+                echo '```';
+              else
+                echo "No updates were necessary for the descriptor file.";
+              fi
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
           
           echo "failure_reason=$FAILURE_REASON" >> "$GITHUB_OUTPUT"
+
+          # Debug output print of updated descriptor
+          echo "::debug::Updated descriptor file content:"
+          cat "$STATE_FILE"
 
       - name: Upload Descriptor Artifact
         if: steps.update-descriptor.outputs.updated == 'true'
