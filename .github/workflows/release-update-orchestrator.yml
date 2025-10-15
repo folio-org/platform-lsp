@@ -1,0 +1,14 @@
+name: Release update orchestrator
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform_branch:
+        description: 'Platform branch to get application list from (e.g., R1-2025)'
+        required: true
+        type: string
+      dry_run:
+        description: 'Perform dry run without creating PRs'
+        required: false
+        type: boolean
+        default: false
