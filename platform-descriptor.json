@@ -36,13 +36,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.0.1-SNAPSHOT.100100000001603"
+        "version": "3.0.1-SNAPSHOT.100100000001613"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100100000001637"
+        "version": "1.2.0-SNAPSHOT.100100000001647"
       },
       {
         "name": "app-agreements",
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100100000001605"
+        "version": "1.2.0-SNAPSHOT.100100000001639"
       },
       {
         "name": "app-consortia",
@@ -86,11 +86,11 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100100000001585"
+        "version": "1.2.0-SNAPSHOT.100100000001618"
       },
       {
         "name": "app-gobi",
-        "version": "1.1.0-SNAPSHOT.100100000001038"
+        "version": "1.1.0-SNAPSHOT.100100000001639"
       },
       {
         "name": "app-inn-reach",
@@ -98,7 +98,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100100000000001"
+        "version": "1.0.0-SNAPSHOT.100100000001607"
       },
       {
         "name": "app-linked-data",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.1.0-SNAPSHOT.100100000001489"
+        "version": "1.1.0-SNAPSHOT.100100000001646"
       },
       {
         "name": "app-mosaic",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-oa",
-        "version": "1.0.0-SNAPSHOT.100100000000860"
+        "version": "1.0.0-SNAPSHOT.100100000001636"
       },
       {
         "name": "app-oai-pmh",
