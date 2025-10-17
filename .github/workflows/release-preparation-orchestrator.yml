@@ -284,8 +284,8 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
 
-      - name: Verify Application Workflow Result
-        id: verify-app-branch
+      - name: Collect Application Version
+        id: collect-app-version
         uses: folio-org/kitfox-github/.github/actions/collect-app-version@master
         with:
           app_name: folio-org/${{ matrix.application }}
@@ -299,13 +299,13 @@ jobs:
           APP_NAME: ${{ matrix.application }}
           VERSION: >-
             ${{ 
-                steps.verify-app-branch.outcome == 'success' && steps.verify-app-branch.outputs.version ||
+                steps.collect-app-version.outcome == 'success' && steps.collect-app-version.outputs.version ||
                 'unknown'
             }}
           STATUS: >-
             ${{ 
                 steps.orchestrate-app-workflow.outcome == 'failure' && 'workflow_failed' ||
-                steps.verify-app-branch.outcome == 'failure' && 'verify_failed' ||
+                steps.collect-app-version.outcome == 'failure' && 'verify_failed' ||
                 'success'
             }}
         run: |
