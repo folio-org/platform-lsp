@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.0.1-SNAPSHOT.100100000001662"
+        "version": "3.0.1-SNAPSHOT.100100000001709"
       }
     ],
     "optional": [
@@ -134,7 +134,7 @@
       },
       {
         "name": "app-requests-mediated",
-        "version": "1.2.0-SNAPSHOT.100100000000734"
+        "version": "1.2.0-SNAPSHOT.100100000001745"
       },
       {
         "name": "app-requests-mediated-ui",
