@@ -1,0 +1,15 @@
+update_config:
+  enabled: true
+  update_branch_format: "version-update/{0}"
+  labels:
+    - version-update
+  pr_reviewers:
+    - folio-org/kitfox
+
+branches:
+  - snapshot
+      enabled: true
+      need_pr: false
+#  - R2-2024
+#      enabled: true
+#      need_pr: true
