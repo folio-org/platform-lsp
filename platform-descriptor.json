@@ -126,11 +126,11 @@
       },
       {
         "name": "app-reporting",
-        "version": "1.3.0-SNAPSHOT.100100000001647"
+        "version": "1.3.0-SNAPSHOT.100100000001759"
       },
       {
         "name": "app-requests-ecs",
-        "version": "1.3.0-SNAPSHOT.100100000000711"
+        "version": "1.3.0-SNAPSHOT.100100000001740"
       },
       {
         "name": "app-requests-mediated",
