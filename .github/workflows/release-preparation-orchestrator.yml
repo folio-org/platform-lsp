@@ -37,6 +37,10 @@ permissions:
 
 env:
   DOWNSTREAM_WF_BRANCH: master
+  PLATFORM_TEMPLATE_FILE: 'platform.template.json'
+  PLATFORM_STATE_FILE: 'platform-descriptor.json'
+  UPDATE_CONFIG_FILE: 'update-config.yml'
+  UPDATE_CONFIG_TEMPLATE_PATH: '.github/templates/update-config.yml.template'
 
 jobs:
   validate-actor:
@@ -86,6 +90,7 @@ jobs:
     outputs:
       applications: ${{ steps.merge-applications.outputs.applications }}
       application_count: ${{ steps.merge-applications.outputs.application_count }}
+      default_branch: ${{ steps.detect-default-branch.outputs.default_branch }}
     env:
       PREV_BRANCH: ${{ inputs.previous_release_branch }}
       NEW_BRANCH: ${{ inputs.new_release_branch }}
@@ -211,6 +216,20 @@ jobs:
 
           echo "applications=$merged_apps"      >> "$GITHUB_OUTPUT"
           echo "application_count=$total_count" >> "$GITHUB_OUTPUT"
+
+      - name: Detect Default Branch
+        id: detect-default-branch
+        run: |
+          set -eo pipefail
+
+          default_branch=$(gh api repos/${{ github.repository }} --jq .default_branch)
+          if [ -z "$default_branch" ]; then
+            echo "::error::Could not determine default branch for ${{ github.repository }}"
+            exit 1
+          fi
+
+          echo "::notice::Default branch is: $default_branch"
+          echo "default_branch=$default_branch" >> "$GITHUB_OUTPUT"
 
   check-applications:
     name: Check ${{ matrix.application }} Application
@@ -367,12 +386,10 @@ jobs:
           echo "failure_count=$failure_count" >> "$GITHUB_OUTPUT"
 
   prepare-platform:
-    name: Prepare Platform
+    name: Prepare Platform Template
     needs: [ initial-check, prepare-applications, collect-results ]
     runs-on: ubuntu-latest
-    if: always() && needs.prepare-applications.result == 'success' && inputs.dry_run != true
-    outputs:
-      commit_sha: ${{ steps.commit-platform-changes.outputs.commit_sha }}
+    if: always() && needs.prepare-applications.result == 'success'
     steps:
       - name: Checkout Platform Repository
         uses: actions/checkout@v4
@@ -385,25 +402,15 @@ jobs:
         with:
           path: /tmp/app-results
 
-      - name: Create Platform Release Branch
-        id: create-platform-branch
-        env:
-          SOURCE_BRANCH: ${{ inputs.previous_release_branch }}
-          TARGET_BRANCH: ${{ inputs.new_release_branch }}
+      - name: Update Platform Template
+        id: update-platform-template
         run: |
           set -eo pipefail
 
-          echo "::notice::Creating release branch '$TARGET_BRANCH' from '$SOURCE_BRANCH'"
-
-          git checkout "origin/$SOURCE_BRANCH"
-          git checkout -b "$TARGET_BRANCH"
-          
-          echo "::notice::Successfully created branch '$TARGET_BRANCH'"
-
-      - name: Update Platform Descriptor
-        id: update-platform-descriptor
-        run: |
-          set -eo pipefail
+          if [ ! -f "$PLATFORM_TEMPLATE_FILE" ]; then
+            echo "::error::$PLATFORM_TEMPLATE_FILE not found"
+            exit 1
+          fi
 
           echo "::notice::Dumping downloaded application result files"
           echo "::group::Application result artifacts"
@@ -412,9 +419,9 @@ jobs:
             cat "$f"
           done
           echo "::endgroup::"
-          
-          echo "::group::Updating platform descriptor with application versions"
-          cat platform-descriptor.json
+
+          echo "::group::Current platform template"
+          cat "$PLATFORM_TEMPLATE_FILE"
           echo "::endgroup::"
 
           tmp=$(mktemp)
@@ -427,109 +434,154 @@ jobs:
           cat "$results_file"
           echo "::endgroup::"
 
-          echo "::notice::Updating application versions"
+          echo "::notice::Updating application versions with ^VERSION constraints"
           jq --slurpfile results "$results_file" '
             reduce $results[0][] as $r (
               .;
               .applications.required |= map(
-                if .name == $r.application then .version = $r.version else . end
+                if .name == $r.application then .version = ("^" + $r.version) else . end
               )
               | .applications.optional |= map(
-                if .name == $r.application then .version = $r.version else . end
+                if .name == $r.application then .version = ("^" + $r.version) else . end
               )
             )
-          ' platform-descriptor.json > "$tmp"
-          
-          rm "$results_file" && mv "$tmp" platform-descriptor.json
-          
+          ' "$PLATFORM_TEMPLATE_FILE" > "$tmp"
+
+          rm "$results_file" && mv "$tmp" "$PLATFORM_TEMPLATE_FILE"
+
           echo "::group::Updated application versions"
-          cat platform-descriptor.json
+          cat "$PLATFORM_TEMPLATE_FILE"
           echo "::endgroup::"
 
           echo "::notice::Updating platform version and eureka-components"
           tmp2=$(mktemp)
           jq --arg newVer "${{ inputs.new_release_branch }}" '
             .version = $newVer                                    #update platform version to release branch
-            | ."eureka-components" 
-            |= map(.version = "<CHANGE_ME>")                      #placeholder all eureka-component versions
-          ' platform-descriptor.json > "$tmp2" \
-          && mv "$tmp2" platform-descriptor.json
+            | ."eureka-components" |= map(.version = "^VERSION")  #placeholder all eureka-component versions
+          ' "$PLATFORM_TEMPLATE_FILE" > "$tmp2" \
+          && mv "$tmp2" "$PLATFORM_TEMPLATE_FILE"
 
-          echo "::group::Updated platform descriptor"
-          cat platform-descriptor.json
+          echo "::group::Updated platform template"
+          cat "$PLATFORM_TEMPLATE_FILE"
           echo "::endgroup::"
 
-      - name: Configure Git
+      - name: Upload Platform Template
+        uses: actions/upload-artifact@v4
+        with:
+          name: platform-release-files
+          path: ${{ env.PLATFORM_TEMPLATE_FILE }}
+          retention-days: 1
+
+  update-platform-config:
+    name: Update Platform Configuration
+    needs: [initial-check, prepare-platform]
+    runs-on: ubuntu-latest
+    outputs:
+      config_updated: ${{ steps.update-config.outputs.updated }}
+
+    steps:
+      - name: Checkout Default Branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.initial-check.outputs.default_branch }}
+          fetch-depth: 1
+
+      - name: Get or Create Update Config
+        id: update-config
+        env:
+          NEW_BRANCH: ${{ inputs.new_release_branch }}
         run: |
           set -eo pipefail
-          
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          echo "::notice::Git configured for automated commits"          
 
-      - name: Commit Platform Changes
-        id: commit-platform-changes
-        run: |
-          set -eo pipefail
+          if [ -f "$UPDATE_CONFIG_FILE" ]; then
+            echo "::notice::$UPDATE_CONFIG_FILE exists"
+          else
+            echo "::notice::$UPDATE_CONFIG_FILE not found, creating from template"
 
-          echo "::group::Stage changes for commit"
-          git status
-          echo "::endgroup::"
+            git clone --depth 1 https://github.com/folio-org/platform-lsp.git /tmp/platform-lsp
 
-          git add platform-descriptor.json
+            template_path="/tmp/platform-lsp/$UPDATE_CONFIG_TEMPLATE_PATH"
+            if [ ! -f "$template_path" ]; then
+              echo "::error::Template not found at $template_path"
+              exit 1
+            fi
 
-          if git diff --cached --quiet; then
-            echo "::error::No changes to commit"
-            exit 1
+            cp "$template_path" "$UPDATE_CONFIG_FILE"
           fi
 
-          git commit -F - <<EOF
-          Prepare platform for release. Initial commit.
+          if yq eval ".branches[] | select(. == \"$NEW_BRANCH\" or .\"$NEW_BRANCH\")" "$UPDATE_CONFIG_FILE" | grep -q "$NEW_BRANCH"; then
+            echo "::notice::Branch $NEW_BRANCH already in config, no update needed"
+            echo "updated=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
 
-          Previous release: ${{ inputs.previous_release_branch }}
-          Applications processed: ${{ needs.initial-check.outputs.application_count }}
-          EOF
+          yq eval ".branches += [{\"$NEW_BRANCH\": {\"enabled\": true, \"need_pr\": true}}]" -i "$UPDATE_CONFIG_FILE"
 
-          commit_sha=$(git rev-parse HEAD)
-          echo "::notice::Successfully committed changes #$commit_sha"
-          echo "commit_sha=$commit_sha" >> "$GITHUB_OUTPUT"
+          echo "::group::Updated config"
+          cat "$UPDATE_CONFIG_FILE"
+          echo "::endgroup::"
 
-      - name: Push Platform Changes
-        id: push-platform-changes
-        env:
-          BRANCH_NAME: ${{ inputs.new_release_branch }}
-        run: |
-          set -eo pipefail
+          echo "updated=true" >> "$GITHUB_OUTPUT"
 
-          echo "::notice::Pushing changes to branch '$BRANCH_NAME'"
-          git push -u origin "$BRANCH_NAME"
-          echo "::notice::Successfully pushed changes to '$BRANCH_NAME'"
+      - name: Upload Config File
+        if: steps.update-config.outputs.updated == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: platform-config-file
+          path: ${{ env.UPDATE_CONFIG_FILE }}
+          retention-days: 1
 
-      - name: Workflow Summary
-        if: always()
-        env:          
-          IS_SUCCESS: ${{ steps.push-platform-changes.outcome == 'success' }}
-        run: |
-          set -eo pipefail
+  commit-platform-changes:
+    name: Commit Platform Release Branch
+    needs: [initial-check, prepare-platform]
+    if: needs.prepare-platform.result == 'success' && inputs.dry_run != true
+    uses: folio-org/kitfox-github/.github/workflows/commit-and-push-changes.yml@master
+    with:
+      repo: ${{ github.repository }}
+      branch: ${{ inputs.new_release_branch }}
+      source_branch: ${{ inputs.previous_release_branch }}
+      artifact_name: platform-release-files
+      commit_message: |
+        Prepare platform for release. Initial commit.
 
-          test "$IS_SUCCESS" = "true" && echo "::notice::Platform Release Preparation Summary" || echo "::error::Platform Release Preparation Summary"
-          echo ""
-          echo "Previous Release: ${{ inputs.previous_release_branch }}"
-          echo "New Release: ${{ inputs.new_release_branch }}"
-          echo "Applications processed: ${{ needs.initial-check.outputs.application_count }}"
-          test "$IS_SUCCESS" = "true" && echo "Commit: ${{ steps.commit-platform-changes.outputs.commit_sha }}"
-          echo ""
-          
+        Previous release: ${{ inputs.previous_release_branch }}
+        New release: ${{ inputs.new_release_branch }}
+        Applications processed: ${{ needs.initial-check.outputs.application_count }}
+
+        Application versions set to ^VERSION constraints.
+        Eureka component versions set to ^VERSION placeholder.
+      deleted_files: |
+        ${{ env.PLATFORM_STATE_FILE }}
+      dry_run: ${{ inputs.dry_run }}
+    secrets: inherit
+
+  commit-platform-config:
+    name: Commit Platform Config to Default Branch
+    needs: [initial-check, update-platform-config, commit-platform-changes]
+    if: needs.update-platform-config.outputs.config_updated == 'true' && needs.commit-platform-changes.result == 'success' && inputs.dry_run == false
+    uses: folio-org/kitfox-github/.github/workflows/commit-and-push-changes.yml@master
+    with:
+      repo: ${{ github.repository }}
+      branch: ${{ needs.initial-check.outputs.default_branch }}
+      artifact_name: platform-config-file
+      commit_message: |
+        Add ${{ inputs.new_release_branch }} to platform update configuration
+
+        Automatically added by release preparation workflow.
+      dry_run: ${{ inputs.dry_run }}
+    secrets: inherit
+
   slack_notification:
     name: Slack Notification
     runs-on: ubuntu-latest
-    needs: [ initial-check, check-applications, prepare-applications, collect-results, prepare-platform ]
+    needs: [ initial-check, check-applications, prepare-applications, collect-results, prepare-platform, commit-platform-changes, commit-platform-config ]
     if: always() && inputs.dry_run == false && needs.check-applications.result == 'success'
     env:
       IS_SUCCESS: >-
-        ${{ 
+        ${{
             needs.prepare-applications.result == 'failure' && 'false' ||
             needs.prepare-platform.result == 'failure' && 'false' ||
+            needs.commit-platform-changes.result == 'failure' && 'false' ||
             'true'
         }}
     steps:
@@ -561,7 +613,7 @@ jobs:
                     value: "${{ needs.initial-check.outputs.application_count }}"
                     short: true
                   - title: "Commit"
-                    value: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ needs.prepare-platform.outputs.commit_sha }}|${{ needs.prepare-platform.outputs.commit_sha }}>"
+                    value: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ needs.commit-platform-changes.outputs.commit_sha }}|${{ needs.commit-platform-changes.outputs.commit_sha }}>"
                     short: true
                 footer: "Eureka CI/CD"
 
