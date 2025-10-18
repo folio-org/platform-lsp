@@ -118,27 +118,39 @@ jobs:
 
 ### Distributed Workflow Architecture
 
-The implementation uses a **proven distributed workflow architecture** with clear separation of concerns:
+The implementation uses a **two-layer distributed workflow architecture**:
 
 #### Layer 1: Orchestrator (platform-lsp)
 - **Authorization**: Team validation and approval management
 - **Discovery**: Application list extraction and merging
-- **Orchestration**: Matrix coordination across all repositories
-- **Aggregation**: Result collection and comprehensive reporting
+- **Orchestration**: Matrix coordination calling `release-preparation-flow.yml` directly
+- **Aggregation**: Result collection from workflow artifacts
 - **Notification**: Platform-level success/failure reporting
 
 #### Layer 2: Reusable Workflows (kitfox-github)
+The orchestrator directly calls centralized workflows using `uses:` syntax in matrix jobs:
+
+**Two-Workflow Architecture**:
+1. **`release-preparation-flow.yml`** - Core logic workflow
+   - Template updates and version management
+   - Branch creation and configuration
+   - Result artifact upload for orchestrator collection
+   - Called directly by platform orchestrator in matrix jobs
+
+2. **`release-preparation.yml`** - Public wrapper workflow
+   - Calls `release-preparation-flow.yml` for core logic
+   - Adds integrated notifications (team + general channels)
+   - Provides workflow summary
+   - Used by applications for individual release preparation
+
+**Benefits**:
 - **Pure Functionality**: No authorization logic - just execution
-- **Universal Actions**: Shared composite actions for common operations
-- **Standardized Templates**: Consistent patterns across all applications
-- **Centralized Maintenance**: Single point of updates for shared logic
+- **Centralized Maintenance**: Single point to change approach when needed
+- **Matrix Compatibility**: Flow workflow can be called directly in matrix
+- **Artifact-Based Results**: Flow uploads results for orchestrator aggregation
+- **Approach Propagation**: Public wrapper ensures consistent pattern across applications
 
-> 📚 **Detailed Documentation**: See [kitfox-github Workflow Implementation Guide](https://github.com/folio-org/kitfox-github/blob/master/.github/README.md) for comprehensive technical documentation of all reusable components and patterns.
-
-#### Layer 3: Application Wrappers (app-* repositories)
-- **Local Orchestration**: Application-specific workflow coordination
-- **Parameter Passing**: Input forwarding to shared templates
-- **Individual Notifications**: Application-level success/failure reporting
+> 📚 **Detailed Documentation**: See [Release Preparation Workflow Guide](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/release-preparation.md) for comprehensive technical documentation of the workflow architecture and patterns.
 
 ### Universal Actions Implementation
 
@@ -155,19 +167,7 @@ The implementation uses a **proven distributed workflow architecture** with clea
     team: 'kitfox'
 ```
 
-#### 2. orchestrate-external-workflow
-```yaml
-- uses: folio-org/kitfox-github/.github/actions/orchestrate-external-workflow@master
-  with:
-    repository: folio-org/${{ matrix.application }}
-    workflow_file: release-preparation.yml
-    workflow_parameters: |
-      previous_release_branch: ${{ inputs.previous_release_branch }}
-      new_release_branch: ${{ inputs.new_release_branch }}
-      dry_run: ${{ inputs.dry_run }}
-```
-
-#### 3. collect-app-version
+#### 2. collect-app-version
 ```yaml
 - uses: folio-org/kitfox-github/.github/actions/collect-app-version@master
   with:
@@ -179,15 +179,15 @@ The implementation uses a **proven distributed workflow architecture** with clea
 
 **Reusable Workflows** (folio-org/kitfox-github):
 
-#### 1. release-preparation.yml
-- **Purpose**: Individual application release branch preparation
-- **Features**: Branch creation, version updates, descriptor modifications
-- **Integration**: Called by all 31 application repositories
+#### 1. release-preparation-flow.yml
+- **Purpose**: Core release preparation logic
+- **Features**: Template updates, version management, branch creation, result artifact upload
+- **Integration**: Called directly by platform orchestrator in matrix jobs
 
-#### 2. release-preparation-notification.yml
-- **Purpose**: Standardized Slack notification system
-- **Features**: Success/failure reporting with detailed information
-- **Integration**: Called by all application workflows for consistent messaging
+#### 2. release-preparation.yml
+- **Purpose**: Public wrapper with integrated notifications
+- **Features**: Calls flow workflow, sends Slack notifications (team + general), generates workflow summary
+- **Integration**: Called by individual application repositories for team-level workflows
 
 ## 🔄 Workflow Execution Flow
 
@@ -211,72 +211,74 @@ The implementation uses a **proven distributed workflow architecture** with clea
 #### Phase 2a: Validation (Check Applications)
 ```yaml
 check-applications:
+  name: Check ${{ matrix.application }} Application
   strategy:
     matrix:
       application: ${{ fromJson(needs.initial-check.outputs.applications) }}
     fail-fast: false    # Continue even if some apps fail
     max-parallel: 5     # Optimal resource utilization
-
-  steps:
-    - uses: folio-org/kitfox-github/.github/actions/orchestrate-external-workflow@master
-      with:
-        workflow_parameters: |
-          dry_run: true  # Always validate first
+  uses: folio-org/kitfox-github/.github/workflows/release-preparation-flow.yml@master
+  with:
+    app_name: ${{ matrix.application }}
+    repo: folio-org/${{ matrix.application }}
+    previous_release_branch: ${{ inputs.previous_release_branch }}
+    new_release_branch: ${{ inputs.new_release_branch }}
+    use_snapshot_fallback: ${{ inputs.use_snapshot_fallback }}
+    use_snapshot_version: ${{ inputs.use_snapshot_version }}
+    dry_run: true  # Always dry run for validation
+  secrets: inherit
 ```
 
 #### Phase 2b: Execution (Prepare Applications)
 ```yaml
 prepare-applications:
-  needs: [check-applications]
-  if: always() && needs.check-applications.result == 'success'
+  name: Prepare ${{ matrix.application }} Application
+  needs: [initial-check, check-applications]
+  if: always() && needs.check-applications.result == 'success' && inputs.dry_run != true
   strategy:
     matrix:
       application: ${{ fromJson(needs.initial-check.outputs.applications) }}
     fail-fast: false
     max-parallel: 5
-
-  steps:
-    - uses: folio-org/kitfox-github/.github/actions/orchestrate-external-workflow@master
-      with:
-        workflow_parameters: |
-          previous_release_branch: ${{ inputs.previous_release_branch }}
-          new_release_branch: ${{ inputs.new_release_branch }}
-          dry_run: ${{ inputs.dry_run }}
+  uses: folio-org/kitfox-github/.github/workflows/release-preparation-flow.yml@master
+  with:
+    app_name: ${{ matrix.application }}
+    repo: folio-org/${{ matrix.application }}
+    previous_release_branch: ${{ inputs.previous_release_branch }}
+    new_release_branch: ${{ inputs.new_release_branch }}
+    use_snapshot_fallback: ${{ inputs.use_snapshot_fallback }}
+    use_snapshot_version: ${{ inputs.use_snapshot_version }}
+    dry_run: ${{ inputs.dry_run }}  # Actual dry_run value
+  secrets: inherit
 ```
 
 ### Phase 3: Result Collection & Aggregation
 
 ```yaml
 collect-results:
-  needs: [prepare-applications]
-  if: always()
-  
+  needs: [initial-check, prepare-applications]
+  if: always() && needs.prepare-applications.result != 'skipped'
+
   steps:
-    - name: Download All Results
+    - name: Download All Application Results
       uses: actions/download-artifact@v4
       with:
-        pattern: "app-result-*"
+        pattern: "result-*"
+        path: /tmp/all-results
         merge-multiple: true
-        
-    - name: Aggregate Results with jq
+
+    - name: Gather Application Results
+      id: gather-failures
       run: |
-        success_count=0
-        failure_count=0
-        failed_apps=""
-        
-        for result_file in app-result-*.json; do
-          if jq -e '.success' "$result_file" >/dev/null; then
-            ((success_count++))
-          else
-            ((failure_count++))
-            app_name=$(jq -r '.app_name' "$result_file")
-            failed_apps="$failed_apps $app_name"
-          fi
-        done
-        
+        all=$(jq -s '.' /tmp/all-results/*.json)
+
+        success_count=$(jq '[.[] | select(.status=="success")] | length' <<<"$all")
+        failure_count=$(jq '[.[] | select(.status!="success")] | length' <<<"$all")
+        failed_apps=$(jq -r '[.[] | select(.status!="success") | .application] | join(", ")' <<<"$all")
+
+        echo "failed_apps=$failed_apps" >> "$GITHUB_OUTPUT"
         echo "success_count=$success_count" >> "$GITHUB_OUTPUT"
         echo "failure_count=$failure_count" >> "$GITHUB_OUTPUT"
-        echo "failed_apps=$failed_apps" >> "$GITHUB_OUTPUT"
 ```
 
 ### Phase 4: Platform Preparation
@@ -388,23 +390,27 @@ run_id=$(gh run list \
 
 **Solution**: Artifact-based result collection with `jq` aggregation
 ```yaml
-# Each matrix job uploads result artifact
+# Each matrix job uploads result artifact (from release-preparation-flow.yml)
 - name: Upload Result
   uses: actions/upload-artifact@v4
   with:
-    name: "app-result-${{ matrix.application }}"
-    path: "result.json"
+    name: "result-${{ inputs.app_name }}"
+    path: "/tmp/results/${{ inputs.app_name }}.json"
 
 # Aggregation job downloads and processes all results
 - name: Download All Results
   uses: actions/download-artifact@v4
   with:
-    pattern: "app-result-*"
+    pattern: "result-*"
+    path: /tmp/all-results
+    merge-multiple: true
 
-- name: Aggregate with jq
+- name: Aggregate Results
   run: |
-    jq -s 'map(select(.success)) | length' *.json  # Success count
-    jq -s 'map(select(.success | not) | .app_name) | join(" ")' *.json  # Failed apps
+    all=$(jq -s '.' /tmp/all-results/*.json)
+    success_count=$(jq '[.[] | select(.status=="success")] | length' <<<"$all")
+    failure_count=$(jq '[.[] | select(.status!="success")] | length' <<<"$all")
+    failed_apps=$(jq -r '[.[] | select(.status!="success") | .application] | join(", ")' <<<"$all")
 ```
 
 ## 📊 Monitoring and Observability
@@ -508,11 +514,11 @@ The release preparation process relies heavily on the shared infrastructure prov
 - **[Application Notifications](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/app-notification.md)** - Slack notification standards
 
 ### Implementation References
-- [Release Preparation Workflow](../workflows/release-preparation-orchestrator.yml)
-- [Kitfox GitHub Infrastructure](https://github.com/folio-org/kitfox-github)
-- [Universal Action: validate-team-membership](https://github.com/folio-org/kitfox-github/tree/master/.github/actions/validate-team-membership)
-- [Universal Action: orchestrate-external-workflow](https://github.com/folio-org/kitfox-github/tree/master/.github/actions/orchestrate-external-workflow)
-- [Reusable Workflow: release-preparation](https://github.com/folio-org/kitfox-github/blob/master/.github/workflows/release-preparation.yml)
+- [Release Preparation Orchestrator](../workflows/release-preparation-orchestrator.yml) - Platform-level orchestration workflow
+- [Kitfox GitHub Infrastructure](https://github.com/folio-org/kitfox-github) - Centralized reusable workflows and actions
+- [Universal Action: validate-team-membership](https://github.com/folio-org/kitfox-github/tree/master/.github/actions/validate-team-membership) - Team authorization
+- [Reusable Workflow: release-preparation-flow.yml](https://github.com/folio-org/kitfox-github/blob/master/.github/workflows/release-preparation-flow.yml) - Core logic workflow
+- [Reusable Workflow: release-preparation.yml](https://github.com/folio-org/kitfox-github/blob/master/.github/workflows/release-preparation.yml) - Public wrapper with notifications
 
 ---
 

@@ -30,13 +30,12 @@ on:
         description: 'Perform dry run without making changes'
         required: false
         type: boolean
-        default: false                
+        default: false
 
 permissions:
   contents: write
 
 env:
-  DOWNSTREAM_WF_BRANCH: master
   PLATFORM_TEMPLATE_FILE: 'platform.template.json'
   PLATFORM_STATE_FILE: 'platform-descriptor.json'
   UPDATE_CONFIG_FILE: 'update-config.yml'
@@ -66,7 +65,7 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
 
   approve-run:
-    name: Approve Run   
+    name: Approve Run
     needs: validate-actor
     runs-on: ubuntu-latest
     environment: Eureka CI
@@ -78,8 +77,8 @@ jobs:
             gh api \
               /repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/approvals \
               --jq \
-                '.[] 
-                | select(.environments[]?.name == "Eureka CI") 
+                '.[]
+                | select(.environments[]?.name == "Eureka CI")
                 | .user.login')"
 
   initial-check:
@@ -116,7 +115,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Verify Branches
         id: verify-branches
         run: |
@@ -133,7 +132,7 @@ jobs:
           fi
 
           echo "::notice::Previous release branch '$PREV_BRANCH' exists and new release branch '$NEW_BRANCH' does not exist"
-          
+
       - name: Checkout Previous Release branch
         uses: actions/checkout@v4
         with:
@@ -144,7 +143,7 @@ jobs:
         id: extract-applications
         run: |
           set -eo pipefail
-          
+
           if [ ! -f "$FILE" ]; then
             echo "::error::$FILE not found in $PREV_BRANCH"
             exit 1
@@ -157,9 +156,9 @@ jobs:
             echo "::error::Could not find any applications in $FILE, or the file is malformed."
             exit 1
           fi
-          
+
           echo "::notice::Descriptor verified. $FILE found in $PREV_BRANCH with $existing_count existing app(s)"
-          jq -r '.[]' <<<"$existing_apps" | sed 's/^/  - /'          
+          jq -r '.[]' <<<"$existing_apps" | sed 's/^/  - /'
           echo "applications=$existing_apps" >> "$GITHUB_OUTPUT"
           echo "application_count=$existing_count" >> "$GITHUB_OUTPUT"
 
@@ -179,11 +178,11 @@ jobs:
               | unique                        # dedupe
               | sort                          # stable order
             ')
-          
+
           new_count=$(jq 'length' <<<"$new_apps_json")
 
           echo "::notice::Found $new_count new application(s)"
-          jq -r '.[]' <<<"$new_apps_json" | sed 's/^/  - /'  
+          jq -r '.[]' <<<"$new_apps_json" | sed 's/^/  - /'
           echo "applications=$new_apps_json" >> "$GITHUB_OUTPUT"
           echo "application_count=$new_count" >> "$GITHUB_OUTPUT"
 
@@ -191,11 +190,11 @@ jobs:
         id: merge-applications
         env:
           EXISTING_APPS: ${{ steps.extract-applications.outputs.applications }}
-          NEW_APPS:      ${{ steps.parse-new-applications.outputs.applications }}        
+          NEW_APPS:      ${{ steps.parse-new-applications.outputs.applications }}
         run: |
           set -eo pipefail
           IFS=$'\n\t'
-          
+
           merged_apps=$(jq -c -n --argjson existing "$EXISTING_APPS" --argjson new "$NEW_APPS" '
               ( $existing + $new )                # concatenate
               | unique                            # remove dupes
@@ -235,119 +234,41 @@ jobs:
     name: Check ${{ matrix.application }} Application
     needs: initial-check
     if: always() && needs.initial-check.result == 'success'
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         application: ${{ fromJson(needs.initial-check.outputs.applications) }}
       fail-fast: false
       max-parallel: 5
-    
-    steps:
-      - name: Generate App Token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ vars.EUREKA_CI_APP_ID }}
-          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
-          owner: folio-org
-
-      - name: Trigger Application Release Preparation
-        id: orchestrate-app-workflow
-        uses: folio-org/kitfox-github/.github/actions/orchestrate-external-workflow@master
-        with:
-          repository: folio-org/${{ matrix.application }}
-          workflow_file: release-preparation.yml
-          workflow_branch: ${{ env.DOWNSTREAM_WF_BRANCH }}
-          workflow_parameters: |
-            previous_release_branch: ${{ inputs.previous_release_branch }}
-            new_release_branch: ${{ inputs.new_release_branch }}
-            use_snapshot_fallback: ${{ inputs.use_snapshot_fallback }}
-            use_snapshot_version: ${{ inputs.use_snapshot_version }}
-            dry_run: true
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+    uses: folio-org/kitfox-github/.github/workflows/release-preparation-flow.yml@master
+    with:
+      app_name: ${{ matrix.application }}
+      repo: folio-org/${{ matrix.application }}
+      previous_release_branch: ${{ inputs.previous_release_branch }}
+      new_release_branch: ${{ inputs.new_release_branch }}
+      use_snapshot_fallback: ${{ inputs.use_snapshot_fallback }}
+      use_snapshot_version: ${{ inputs.use_snapshot_version }}
+      dry_run: true
+    secrets: inherit
 
   prepare-applications:
     name: Prepare ${{ matrix.application }} Application
-    needs: [initial-check, check-applications ]
-    runs-on: ubuntu-latest
+    needs: [initial-check, check-applications]
     if: always() && needs.check-applications.result == 'success' && inputs.dry_run != true
     strategy:
       matrix:
         application: ${{ fromJson(needs.initial-check.outputs.applications) }}
       fail-fast: false
       max-parallel: 5
-
-    steps:
-      - name: Generate App Token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ vars.EUREKA_CI_APP_ID }}
-          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
-          owner: folio-org
-
-      - name: Trigger Application Release Preparation
-        id: orchestrate-app-workflow
-        uses: folio-org/kitfox-github/.github/actions/orchestrate-external-workflow@master
-        with:
-          repository: folio-org/${{ matrix.application }}
-          workflow_file: release-preparation.yml
-          workflow_branch: ${{ env.DOWNSTREAM_WF_BRANCH }}
-          workflow_parameters: |
-            previous_release_branch: ${{ inputs.previous_release_branch }}
-            new_release_branch: ${{ inputs.new_release_branch }}
-            use_snapshot_fallback: ${{ inputs.use_snapshot_fallback }}
-            use_snapshot_version: ${{ inputs.use_snapshot_version }}
-            dry_run: ${{ inputs.dry_run }}
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-
-      - name: Collect Application Version
-        id: collect-app-version
-        uses: folio-org/kitfox-github/.github/actions/collect-app-version@master
-        with:
-          app_name: folio-org/${{ matrix.application }}
-          branch: ${{ inputs.new_release_branch }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Prepare Output Artifact
-        id: prepare-artifact
-        if: always()
-        env:
-          APP_NAME: ${{ matrix.application }}
-          VERSION: >-
-            ${{ 
-                steps.collect-app-version.outcome == 'success' && steps.collect-app-version.outputs.version ||
-                'unknown'
-            }}
-          STATUS: >-
-            ${{ 
-                steps.orchestrate-app-workflow.outcome == 'failure' && 'workflow_failed' ||
-                steps.collect-app-version.outcome == 'failure' && 'verify_failed' ||
-                'success'
-            }}
-        run: |
-          set -eo pipefail
-
-          mkdir -p /tmp/results
-          cat > "/tmp/results/$APP_NAME.json" <<EOF
-          {
-            "application": "$APP_NAME",
-            "status": "$STATUS",
-            "version": "$VERSION"
-          }
-          EOF
-          
-          cat "/tmp/results/${{ matrix.application }}.json"
-
-      - name: Upload Application Result
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: "result-${{ matrix.application }}"
-          path: "/tmp/results/${{ matrix.application }}.json"
-          retention-days: 1
+    uses: folio-org/kitfox-github/.github/workflows/release-preparation-flow.yml@master
+    with:
+      app_name: ${{ matrix.application }}
+      repo: folio-org/${{ matrix.application }}
+      previous_release_branch: ${{ inputs.previous_release_branch }}
+      new_release_branch: ${{ inputs.new_release_branch }}
+      use_snapshot_fallback: ${{ inputs.use_snapshot_fallback }}
+      use_snapshot_version: ${{ inputs.use_snapshot_version }}
+      dry_run: ${{ inputs.dry_run }}
+    secrets: inherit
 
   collect-results:
     name: Collect Application Results
@@ -358,6 +279,7 @@ jobs:
       failed_apps: ${{ steps.gather-failures.outputs.failed_apps }}
       success_count: ${{ steps.gather-failures.outputs.success_count }}
       failure_count: ${{ steps.gather-failures.outputs.failure_count }}
+      prepared_apps: ${{ steps.gather-failures.outputs.prepared_apps }}
     steps:
       - name: Download All Application Results
         uses: actions/download-artifact@v4
@@ -370,7 +292,7 @@ jobs:
         id: gather-failures
         run: |
           set -eo pipefail
-          
+
           echo "::notice::Analyzing application results"
 
           all=$(jq -s '.' /tmp/all-results/*.json)
@@ -378,18 +300,33 @@ jobs:
           success_count=$(jq '[.[] | select(.status=="success")] | length' <<<"$all")
           failure_count=$(jq '[.[] | select(.status!="success")] | length' <<<"$all")
           failed_apps=$(jq -r '[.[] | select(.status!="success") | .application] | join(", ")' <<<"$all")
-          
+
+          prepared_apps=$(jq -r --arg base "${GITHUB_SERVER_URL}" --arg branch "${{ inputs.new_release_branch }}" '
+            [.[]
+              | select(.status=="success")
+              | "<\($base)/folio-org/\(.application)/tree/\($branch)|\(.application) (\(.version))>"
+            ]
+            | join("\n")
+          ' <<<"$all")
+
           echo "::notice::Results Summary - Success: $success_count, Failures: $failure_count"
-          
+
           echo "failed_apps=$failed_apps" >> "$GITHUB_OUTPUT"
           echo "success_count=$success_count" >> "$GITHUB_OUTPUT"
           echo "failure_count=$failure_count" >> "$GITHUB_OUTPUT"
+          {
+            echo "prepared_apps<<EOF"
+            printf '%s\n' "$prepared_apps"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
   prepare-platform:
     name: Prepare Platform Template
     needs: [ initial-check, prepare-applications, collect-results ]
     runs-on: ubuntu-latest
     if: always() && needs.prepare-applications.result == 'success'
+    outputs:
+      platform_version: ${{ steps.update-platform-template.outputs.platform_version }}
     steps:
       - name: Checkout Platform Repository
         uses: actions/checkout@v4
@@ -400,7 +337,9 @@ jobs:
       - name: Download Application Results
         uses: actions/download-artifact@v4
         with:
+          pattern: "result-*"
           path: /tmp/app-results
+          merge-multiple: true
 
       - name: Update Platform Template
         id: update-platform-template
@@ -414,7 +353,7 @@ jobs:
 
           echo "::notice::Dumping downloaded application result files"
           echo "::group::Application result artifacts"
-          for f in /tmp/app-results/*/*.json; do
+          for f in /tmp/app-results/*.json; do
             echo "─── $f ───"
             cat "$f"
           done
@@ -428,7 +367,7 @@ jobs:
           results_file=$(mktemp)
 
           echo "::notice::Let's combine all application results into a single flat array"
-          jq -s '.' /tmp/app-results/*/*.json > "$results_file"   # Combine all JSON files into a single array
+          jq -s '.' /tmp/app-results/*.json > "$results_file"   # Combine all JSON files into a single array
 
           echo "::group::Combined application results"
           cat "$results_file"
@@ -464,6 +403,8 @@ jobs:
           echo "::group::Updated platform template"
           cat "$PLATFORM_TEMPLATE_FILE"
           echo "::endgroup::"
+
+          echo "platform_version=${{ inputs.new_release_branch }}" >> "$GITHUB_OUTPUT"
 
       - name: Upload Platform Template
         uses: actions/upload-artifact@v4
@@ -584,7 +525,16 @@ jobs:
             needs.commit-platform-changes.result == 'failure' && 'false' ||
             'true'
         }}
+      PREPARED_APPS: ${{ needs.collect-results.outputs.prepared_apps }}
     steps:
+      - name: Prepare Multiline Strings
+        id: prepare-multiline
+        run: |
+          set -eo pipefail
+
+          echo "::notice::Build prepared applications info string"
+          echo "prepared_applications<<EOF"$'\n'"$PREPARED_APPS"$'\n'EOF >> "$GITHUB_OUTPUT"
+
       - name: Send SUCCESS Slack Notification
         if: env.IS_SUCCESS == 'true'
         uses: slackapi/slack-github-action@v2.1.1
@@ -594,7 +544,7 @@ jobs:
           errors: true
           payload: |
             channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
-            text: "Platform Release Preparation SUCCESS"            
+            text: "Platform Release Preparation SUCCESS"
             blocks:
               - type: section
                 text:
@@ -608,13 +558,16 @@ jobs:
                     short: true
                   - title: "Previous Release"
                     value: "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.previous_release_branch }}|${{ inputs.previous_release_branch }}>"
-                    short: true                    
+                    short: true
                   - title: "Applications Processed"
                     value: "${{ needs.initial-check.outputs.application_count }}"
                     short: true
                   - title: "Commit"
                     value: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ needs.commit-platform-changes.outputs.commit_sha }}|${{ needs.commit-platform-changes.outputs.commit_sha }}>"
                     short: true
+              - color: "good"
+                mrkdwn_in: ["text"]
+                text: ${{ toJSON(steps.prepare-multiline.outputs.prepared_applications) }}
                 footer: "Eureka CI/CD"
 
       - name: Send FAILED Slack Notification
@@ -637,7 +590,7 @@ jobs:
                   type: mrkdwn
                   text: >-
                     ${{
-                      needs.prepare-applications.result == 'failure' && 
+                      needs.prepare-applications.result == 'failure' &&
                         format(
                           'Reason: application preparation
                      Failed app(s): {0}',
