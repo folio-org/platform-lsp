@@ -223,7 +223,7 @@ jobs:
               | {
                   application: .application,
                   release_branch: .,
-                  update_branch: $update_map[.],
+                  update_branch: ($update_map[.] // ""),
                   pr_reviewers: $reviewers,
                   pr_labels: $labels
                 }
