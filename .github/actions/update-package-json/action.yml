@@ -80,8 +80,17 @@ runs:
             echo "EOF"
           } >> $GITHUB_OUTPUT
 
-          echo "updated-ui-report=$updated_ui_report" >> $GITHUB_OUTPUT
-          echo "not-found-ui-report=$not_found_ui_report" >> $GITHUB_OUTPUT
+          {
+            echo "updated-ui-report<<EOF"
+            echo "$updated_ui_report"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+          {
+            echo "not-found-ui-report<<EOF"
+            echo "$not_found_ui_report"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
           echo "updated-count=$updated_count" >> $GITHUB_OUTPUT
           echo "has-updates=$has_updates" >> $GITHUB_OUTPUT
 
