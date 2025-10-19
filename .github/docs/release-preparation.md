@@ -311,7 +311,7 @@ update-platform-config:
   steps:
     - name: Manage Update Config
       run: |
-        # Create/update update-config.yml on default branch
+        # Create/update .github/update-config.yml on default branch
         # Add new release branch to tracked branches with configuration:
         #   - enabled: true (always enabled for new release branches)
         #   - need_pr: <from input parameter> (default: true)
