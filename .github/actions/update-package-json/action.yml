@@ -9,15 +9,17 @@ inputs:
   ui-modules:
     description: 'List of UI modules as JSON string'
     required: true
-  output-file:
-    description: 'Output file path to save the structured JSON result'
-    required: true
-    default: 'package-update-result.json'
 
 outputs:
-  result-file:
-    description: 'Path to the generated result file'
-    value: ${{ inputs.output-file }}
+  package-json:
+    description: 'Updated package.json content as JSON string'
+    value: ${{ steps.update-deps.outputs.package-json }}
+  updated-ui-report:
+    description: 'List of updated UI modules with change details'
+    value: ${{ steps.update-deps.outputs.updated-ui-report }}
+  not-found-ui-report:
+    description: 'Object of UI modules not found in existing dependencies'
+    value: ${{ steps.update-deps.outputs.not-found-ui-report }}
   updated-count:
     description: 'Number of dependencies that were updated'
     value: ${{ steps.update-deps.outputs.updated-count }}
@@ -31,30 +33,36 @@ runs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9'
+        python-version: '3.x'
 
     - name: Update package.json dependencies
       id: update-deps
       shell: bash
+      env:
+        PACKAGE_JSON: ${{ inputs.package-json }}
+        UI_MODULES: ${{ inputs.ui-modules }}
       run: |
+        # Create a temporary file for the output
+        TMP_OUTPUT_FILE=$(mktemp -t package-update-result.json)
+
         # Make the script executable
         chmod +x "${{ github.action_path }}/update-package-json.py"
 
-        # Run the update script
+        # Run the update script with the temporary file
         python3 "${{ github.action_path }}/update-package-json.py" \
-          --package-json '${{ inputs.package-json }}' \
-          --ui-modules '${{ inputs.ui-modules }}' \
-          --output-file '${{ inputs.output-file }}'
+          --package-json '$PACKAGE_JSON' \
+          --ui-modules '$UI_MODULES' \
+          --output-file "$TMP_OUTPUT_FILE"
 
-        # Parse the result file to extract metadata for outputs
-        if [[ -f "${{ inputs.output-file }}" ]]; then
+        # Parse the result file using jq to extract all outputs
+        if [[ -f "$TMP_OUTPUT_FILE" ]]; then
+          # Extract individual components using jq
+          package_json=$(jq -r '.["package-json"]' "$TMP_OUTPUT_FILE")
+          updated_ui_report=$(jq -c '.["updated-ui-report"]' "$TMP_OUTPUT_FILE")
+          not_found_ui_report=$(jq -c '.["not-found-ui-report"]' "$TMP_OUTPUT_FILE")
+
           # Count updated modules
-          updated_count=$(python3 -c "
-import json
-with open('${{ inputs.output-file }}', 'r') as f:
-    data = json.load(f)
-print(len(data.get('updated-ui-report', [])))
-")
+          updated_count=$(jq '.["updated-ui-report"] | length' "$TMP_OUTPUT_FILE")
 
           # Check if any updates were made
           has_updates="false"
@@ -62,13 +70,23 @@ print(len(data.get('updated-ui-report', [])))
             has_updates="true"
           fi
 
-          # Set outputs
+          # Clean up temporary file after extracting all data
+          rm -f "$TMP_OUTPUT_FILE"
+
+          # Set all outputs using proper multiline handling for JSON content
+          {
+            echo "package-json<<EOF"
+            echo "$package_json"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+          echo "updated-ui-report=$updated_ui_report" >> $GITHUB_OUTPUT
+          echo "not-found-ui-report=$not_found_ui_report" >> $GITHUB_OUTPUT
           echo "updated-count=$updated_count" >> $GITHUB_OUTPUT
           echo "has-updates=$has_updates" >> $GITHUB_OUTPUT
 
           echo "✅ Successfully processed dependencies"
           echo "📊 Updated $updated_count dependencies"
-          echo "📄 Results saved to ${{ inputs.output-file }}"
         else
           echo "❌ Error: Output file not created"
           exit 1

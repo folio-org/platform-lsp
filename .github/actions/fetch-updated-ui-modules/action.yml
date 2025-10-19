@@ -39,35 +39,35 @@ runs:
         echo "::notice::Fetching UI modules from updated applications"
 
         # Create temporary files
-        APPLICATIONS_FILE=$(mktemp)
-        OUTPUT_FILE=$(mktemp)
+#         APPLICATIONS_FILE=$(mktemp)
+        TMP_OUTPUT_FILE=$(mktemp -t ui-modules-output.json)
 
         # Write applications data to file
-        echo "$APPLICATIONS_DATA" > "$APPLICATIONS_FILE"
+#         echo "$APPLICATIONS_DATA" > "$APPLICATIONS_FILE"
 
         # Run the Python script with output file
         cd "${{ github.action_path }}"
         python3 fetch-updated-ui-modules.py \
           --api-url "$FAR_URL" \
-          --modules "$APPLICATIONS_FILE" \
-          --output-file "$OUTPUT_FILE"
+          --modules "$APPLICATIONS_DATA" \
+          --output-file "$TMP_OUTPUT_FILE"
 
         # Check if output file was created successfully
-        if [[ ! -f "$OUTPUT_FILE" ]]; then
+        if [[ ! -f "$TMP_OUTPUT_FILE" ]]; then
           echo "::error::Output file was not created by the Python script"
           exit 1
         fi
 
         # Read the results from the output file
-        if ! UI_MODULES_JSON=$(jq -r '.ui_modules' "$OUTPUT_FILE" 2>/dev/null); then
+        if ! UI_MODULES_JSON=$(jq -r '.ui_modules' "$TMP_OUTPUT_FILE" 2>/dev/null); then
           echo "::error::Failed to read ui_modules from output file"
-          cat "$OUTPUT_FILE"
+          cat "$TMP_OUTPUT_FILE"
           exit 1
         fi
 
-        if ! UI_MODULES_COUNT=$(jq -r '.ui_modules_count' "$OUTPUT_FILE" 2>/dev/null); then
+        if ! UI_MODULES_COUNT=$(jq -r '.ui_modules_count' "$TMP_OUTPUT_FILE" 2>/dev/null); then
           echo "::error::Failed to read ui_modules_count from output file"
-          cat "$OUTPUT_FILE"
+          cat "$TMP_OUTPUT_FILE"
           exit 1
         fi
 
@@ -89,4 +89,4 @@ runs:
         echo "::notice::Successfully found $UI_MODULES_COUNT UI modules"
 
         # Clean up temporary files
-        rm -f "$APPLICATIONS_FILE" "$OUTPUT_FILE"
+        rm -f "$TMP_OUTPUT_FILE" #"$APPLICATIONS_FILE"
