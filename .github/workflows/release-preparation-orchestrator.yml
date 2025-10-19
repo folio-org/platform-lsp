@@ -26,11 +26,31 @@ on:
         required: false
         type: boolean
         default: false
+      branch_name:
+        description: 'Display name for the release branch (e.g., "FOLIO Sunflower Release")'
+        required: false
+        type: string
+        default: ''
+      branch_description:
+        description: 'Description for the release branch'
+        required: false
+        type: string
+        default: 'FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.'
+      need_pr:
+        description: 'Require PR for version updates on this branch'
+        required: false
+        type: boolean
+        default: true
+      prerelease_mode:
+        description: 'PreRelease mode for version updates ("false", "true", or "only")'
+        required: false
+        type: string
+        default: 'false'
       dry_run:
         description: 'Perform dry run without making changes'
         required: false
         type: boolean
-        default: false                
+        default: false           
 
 permissions:
   contents: write
