@@ -56,31 +56,31 @@ on:
         value: ${{ jobs.manage-pr.outputs.failed_reviewers }}
       updated:
         description: 'Whether the platform descriptor was updated'
-        value: ${{ jobs.update-application.outputs.updated }}
+        value: ${{ jobs.update-platform.outputs.updated }}
       updated_modules:
         description: 'List of updated Eureka components and applications'
-        value: ${{ jobs.update-application.outputs.updated_modules }}
+        value: ${{ jobs.update-platform.outputs.updated_modules }}
       previous_version:
         description: 'Previous platform version'
-        value: ${{ jobs.update-application.outputs.previous_version }}
+        value: ${{ jobs.update-platform.outputs.previous_version }}
       new_version:
         description: 'New platform version if updated'
-        value: ${{ jobs.update-application.outputs.new_version }}
+        value: ${{ jobs.update-platform.outputs.new_version }}
       updates_cnt:
         description: 'Number of updates'
-        value: ${{ jobs.update-application.outputs.updates_cnt }}
+        value: ${{ jobs.update-platform.outputs.updates_cnt }}
       platform_descriptor_file:
         description: 'Generated platform descriptor file path'
-        value: ${{ jobs.update-application.outputs.platform_descriptor_file }}
+        value: ${{ jobs.update-platform.outputs.platform_descriptor_file }}
       platform_descriptor_file_name:
         description: 'Name of updated platform descriptor file'
-        value: ${{ jobs.update-application.outputs.platform_descriptor_file_name }}
+        value: ${{ jobs.update-platform.outputs.platform_descriptor_file_name }}
       workflow_status:
         description: 'Overall workflow status'
-        value: ${{ jobs.determine-source-branch.result == 'failure' && 'failure' || (jobs.update-application.result == 'failure' && 'failure' || (jobs.commit-changes.result == 'failure' && 'failure' || (jobs.manage-pr.result == 'failure' && 'failure' || 'success'))) }}
+        value: ${{ jobs.determine-source-branch.result == 'failure' && 'failure' || (jobs.update-platform.result == 'failure' && 'failure' || (jobs.commit-changes.result == 'failure' && 'failure' || (jobs.manage-pr.result == 'failure' && 'failure' || 'success'))) }}
       failure_reason:
         description: 'Reason for workflow failure if any'
-        value: ${{ jobs.determine-source-branch.result == 'failure' && 'Failed to determine source branch' || (jobs.update-application.result == 'failure' && 'Failed to update application modules' || (jobs.update-application.result == 'skipped' && 'Update application job was skipped' || (jobs.commit-changes.result == 'failure' && 'Failed to commit changes to branch' || (jobs.manage-pr.result == 'failure' && 'Failed to manage pull request' || '')))) }}
+        value: ${{ jobs.determine-source-branch.result == 'failure' && 'Failed to determine source branch' || (jobs.update-platform.result == 'failure' && 'Failed to update application modules' || (jobs.update-platform.result == 'skipped' && 'Update application job was skipped' || (jobs.commit-changes.result == 'failure' && 'Failed to commit changes to branch' || (jobs.manage-pr.result == 'failure' && 'Failed to manage pull request' || '')))) }}
 
 permissions:
   contents: write
@@ -165,8 +165,8 @@ jobs:
             echo "pr_url=" >> "$GITHUB_OUTPUT"
           fi
 
-  # Renamed from update-platform to update-application to align with workflow outputs
-  update-application:
+  # Renamed from update-platform to update-platform to align with workflow outputs
+  update-platform:
     name: Read & Update Platform Descriptor
     needs: determine-source-branch
     runs-on: ubuntu-latest
@@ -192,7 +192,7 @@ jobs:
 
       # gh CLI is pre-installed on ubuntu-latest runners; retained comment for self-hosted scenarios.
       - name: Ensure gh CLI
-#         if: runner.os != 'Linux' # adjust as needed for self-hosted matrices
+        # if: runner.os != 'Linux' # adjust as needed for self-hosted matrices
         run: sudo apt-get update && sudo apt-get install -y gh
 
       - name: Read descriptor file
@@ -257,8 +257,8 @@ jobs:
           UPDATED: false
           FAILURE_REASON: ''
         run: |
-          set -euo pipefail
-          # set -x
+          # set -euo pipefail
+          set -x
           echo "::notice::Checking for updated eureka components and applications"
 
           # Extract previous version and set file paths (outputs)
@@ -286,8 +286,8 @@ jobs:
             fi
 
 
-            # Update version and both components in a single jq operation
-            jq --argjson version "$NEW_VERSION" \
+            # Update version and both components and applications in a single jq operation
+            jq --arg version "$NEW_VERSION" \
               --argjson components "$UPDATED_EUREKA_COMPONENTS" \
               --argjson applications "$UPDATED_APPLICATIONS" \
               '.version = $version | .["eureka-components"] = $components | .applications = $applications' \
@@ -343,7 +343,7 @@ jobs:
 
             echo "updates_cnt=$UPDATES_CNT" >> "$GITHUB_OUTPUT"
           fi
-            
+
           # Update step summary if available
           if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
             {
@@ -362,40 +362,57 @@ jobs:
               fi
             } >> "$GITHUB_STEP_SUMMARY"
           fi
-          
+
           echo "failure_reason=$FAILURE_REASON" >> "$GITHUB_OUTPUT"
 
           # Debug output print of updated descriptor
           echo "::debug::Updated descriptor file content:"
+          ls -al
           cat "$STATE_FILE"
+
+      - name: Fetch updated UI modules list
+        id: fetch-updated-ui-modules
+        if: steps.update-descriptor.outputs.updated == 'true'
+        env:
+          UPDATED_APPLICATIONS: ${{ steps.update-descriptor.outputs.updated_applications }}
+        run: |
+
 
       - name: Upload Descriptor Artifact
         if: steps.update-descriptor.outputs.updated == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: platform-lsp-descriptor-update
           path: ${{ env.STATE_FILE }}
           retention-days: 1
+  
+  commit-changes:
+    name: Commit and Push Changes
+    needs: [determine-source-branch, update-platform]
+    if: needs.update-platform.outputs.updated == 'true'
+    uses: folio-org/kitfox-github/.github/workflows/commit-and-push-changes.yml@master
+    with:
+      repo: ${{ inputs.repo }}
+      branch: ${{ inputs.update_branch }}
+      artifact_name: platform-lsp-descriptor-update
+      commit_message: |
+        Update platform to ${{ needs.update-platform.outputs.new_version }}.
 
-  # commit-changes:
-  #   name: Commit and Push Changes
-  #   needs: [determine-source-branch, update-application]
-  #   if: always() && needs.update-application.outputs.updated == 'true'
-  #   uses: folio-org/kitfox-github/.github/workflows/commit-application-changes.yml@RANCHER-2324
-  #   with:
-  #     app_name: ${{ inputs.app_name }}
-  #     repo: ${{ inputs.repo }}
-  #     branch: ${{ inputs.update_branch }}
-  #     commit_message: "Update platform modules for release"
+        Updated modules:
+        ${{ needs.update-platform.outputs.updated_report }}
+      dry_run: ${{ inputs.dry_run }}
+      use_github_app: true
+      source_branch: ${{ needs.determine-source-branch.outputs.source_branch }}
+    secrets: inherit
 
   # manage-pr:
   #   name: Manage Pull Request
-  #   needs: [determine-source-branch, update-application, commit-changes]
+  #   needs: [determine-source-branch, update-platform, commit-changes]
   #   if: |
   #     always() && 
   #     !inputs.dry_run && 
   #     !cancelled() && 
-  #     needs.update-application.result == 'success'
+  #     needs.update-platform.result == 'success'
   #   runs-on: ubuntu-latest
   #   outputs:
   #     pr_created: ${{ steps.create-pr.outputs.pr_created == 'true' }}
@@ -409,23 +426,23 @@ jobs:
   #       id: create-pr
   #       if: |
   #         needs.determine-source-branch.outputs.pr_exists != 'true' && 
-  #         (needs.update-application.outputs.updated == 'true' || 
+  #         (needs.update-platform.outputs.updated == 'true' || 
   #          needs.determine-source-branch.outputs.update_branch_exists == 'true')
   #       uses: folio-org/kitfox-github/.github/actions/create-pr@master
   #       with:
   #         repo: ${{ inputs.repo }}
   #         base_branch: ${{ inputs.release_branch }}
   #         head_branch: ${{ inputs.update_branch }}
-  #         pr_title: "Release: Update platform to ${{ needs.update-application.outputs.new_version || 'No updates' }}"
+  #         pr_title: "Release: Update platform to ${{ needs.update-platform.outputs.new_version || 'No updates' }}"
   #         pr_body: |
   #           ## Automated Platform Module Updates for Release
 
-  #           **New Version:** ${{ needs.update-application.outputs.new_version || 'No version change' }}
-  #           **Total modules updated:** ${{ needs.update-application.outputs.updates_cnt || '0' }}
+  #           **New Version:** ${{ needs.update-platform.outputs.new_version || 'No version change' }}
+  #           **Total modules updated:** ${{ needs.update-platform.outputs.updates_cnt || '0' }}
 
   #           ### Updated Modules:
   #           ```
-  #           ${{ needs.update-application.outputs.updated_modules || 'No modules updated' }}
+  #           ${{ needs.update-platform.outputs.updated_modules || 'No modules updated' }}
   #           ```
 
   #           This PR was automatically generated by the release scan workflow.
@@ -437,21 +454,21 @@ jobs:
   #       id: update-pr
   #       if: |
   #         needs.determine-source-branch.outputs.pr_exists == 'true' && 
-  #         needs.update-application.outputs.updated == 'true'
+  #         needs.update-platform.outputs.updated == 'true'
   #       uses: folio-org/kitfox-github/.github/actions/update-pr@master
   #       with:
   #         repo: ${{ inputs.repo }}
   #         pr_number: ${{ needs.determine-source-branch.outputs.pr_number }}
-  #         pr_title: "Release: Update platform to ${{ needs.update-application.outputs.new_version }}"
+  #         pr_title: "Release: Update platform to ${{ needs.update-platform.outputs.new_version }}"
   #         pr_body: |
   #           ## Automated Platform Module Updates for Release
 
-  #           **New Version:** ${{ needs.update-application.outputs.new_version }}
-  #           **Total modules updated:** ${{ needs.update-application.outputs.updates_cnt }}
+  #           **New Version:** ${{ needs.update-platform.outputs.new_version }}
+  #           **Total modules updated:** ${{ needs.update-platform.outputs.updates_cnt }}
 
   #           ### Updated Modules:
   #           ```
-  #           ${{ needs.update-application.outputs.updated_modules }}
+  #           ${{ needs.update-platform.outputs.updated_modules }}
   #           ```
 
   #           This PR was automatically generated by the release scan workflow.
