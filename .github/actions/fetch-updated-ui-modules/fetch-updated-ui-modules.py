@@ -1,118 +1,49 @@
-# Test data for development and testing purposes
+#!/usr/bin/env python3
 
-
-TEST_MODULES = [
-  {
-    "name": "app-acquisitions",
-    "version": "1.0.23"
-  },
-  {
-    "name": "app-bulk-edit",
-    "version": "1.0.7"
-  },
-  {
-    "name": "app-consortia",
-    "version": "1.2.1"
-  },
-  {
-    "name": "app-dcb",
-    "version": "1.1.4"
-  },
-  {
-    "name": "app-edge-complete",
-    "version": "2.0.11"
-  },
-  {
-    "name": "app-erm-usage",
-    "version": "2.0.3"
-  },
-  {
-    "name": "app-fqm",
-    "version": "1.0.12"
-  },
-  {
-    "name": "app-marc-migrations",
-    "version": "2.0.3"
-  },
-  {
-    "name": "app-oai-pmh",
-    "version": "1.0.2"
-  },
-  {
-    "name": "app-inn-reach",
-    "version": "1.0.2"
-  },
-  {
-    "name": "app-linked-data",
-    "version": "1.1.6"
-  },
-  {
-    "name": "app-reading-room",
-    "version": "2.0.2"
-  },
-  {
-    "name": "app-consortia-manager",
-    "version": "1.1.1"
-  },
-  {
-    "name": "app-platform-minimal",
-    "version": "2.0.27"
-  },
-  {
-    "name": "app-platform-complete",
-    "version": "2.1.46"
-  }
-]
-
+import argparse
 import concurrent.futures
 import json
-import urllib.request
+import sys
 import urllib.parse
+import urllib.request
 from typing import Dict, Any, List, Optional
 
 
-def extract_ui_modules(descriptors: List[tuple]) -> List[Dict[str, str]]:
-    """
-    Extract UI modules from a list of application descriptors.
-
-    Args:
-        descriptors: List of tuples containing (app_info, descriptor) where
-                    app_info has 'name' and 'version', and descriptor contains 'uiModules'
-
-    Returns:
-        List of UI module objects, each containing 'id', 'name', and 'version'
-    """
-    ui_modules = []
-
-    for app_info, descriptor in descriptors:
-        # Skip if descriptor is None (failed to fetch)
-        if descriptor is None:
-            continue
-
-        # Skip if descriptor doesn't have uiModules field
-        if 'uiModules' not in descriptor:
-            continue
-
-        # Extract and add each UI module
-        modules = descriptor.get('uiModules', [])
-        if modules:
-            ui_modules.extend(modules)
-
-    return ui_modules
+def load_modules_data(modules_input: str) -> List[Dict[str, str]]:
+  """Load modules data from JSON string or file path."""
+  try:
+    # Try to parse as JSON string first
+    return json.loads(modules_input)
+  except json.JSONDecodeError:
+    # If that fails, try to read as file path
+    try:
+      with open(modules_input, 'r') as f:
+        return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+      print(f"::error::Failed to load modules data: {e}")
+      sys.exit(1)
 
 
-def fetch_application_descriptor(far_url: str, app_name: str, app_version: str, timeout: int = 30,
-                                 full: str = 'false') -> Optional[Dict[str, Any]]:
-  """Fetch application descriptor from FAR API with timeout and error handling."""
-  # Construct the API URL with query parameters
-  base_url = f"{far_url}/applications/{app_name}-{app_version}"
-  params = {'full': full}
-  url = f"{base_url}?{urllib.parse.urlencode(params)}"
+def extract_ui_modules(app_descriptors: List[tuple]) -> List[Dict[str, str]]:
+  """Extract UI modules from application descriptors."""
+  ui_modules = []
+
+  for app_info, descriptor in app_descriptors:
+    if descriptor and 'uiModules' in descriptor:
+      modules = descriptor.get('uiModules', [])
+      if modules:
+        ui_modules.extend(modules)
+
+  return ui_modules
+
+
+def fetch_app_descriptor(api_url: str, app_name: str, app_version: str, timeout: int = 30) -> Optional[Dict[str, Any]]:
+  """Fetch application descriptor from FAR API."""
+  url = f"{api_url}/applications/{app_name}-{app_version}?full=false"
 
   try:
     print(f"Fetching {app_name}-{app_version} from {url}")
 
-    # Create request with timeout
     request = urllib.request.Request(url)
     request.add_header('User-Agent', 'FOLIO-Release-Creator/1.0')
 
@@ -120,26 +51,23 @@ def fetch_application_descriptor(far_url: str, app_name: str, app_version: str, 
       if response.status != 200:
         raise Exception(f"HTTP {response.status}")
 
-      data = json.loads(response.read().decode('utf-8'))
-      return data
+      return json.loads(response.read().decode('utf-8'))
 
   except Exception as e:
-    print(f"::error::Failed to fetch application descriptor for {app_name}-{app_version}: {e}")
+    print(f"::error::Failed to fetch descriptor for {app_name}-{app_version}: {e}")
     return None
 
 
-def fetch_multiple_descriptors(far_url: str, applications: List[Dict[str, str]], max_workers: int = 5) -> List[tuple]:
+def fetch_all_descriptors(api_url: str, applications: List[Dict[str, str]], max_workers: int = 5) -> List[tuple]:
   """Fetch multiple application descriptors concurrently."""
   results = []
 
   with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-    # Submit all requests
     future_to_app = {
-      executor.submit(fetch_application_descriptor, far_url, app['name'], app['version']): app
+      executor.submit(fetch_app_descriptor, api_url, app['name'], app['version']): app
       for app in applications
     }
 
-    # Collect results as they complete
     for future in concurrent.futures.as_completed(future_to_app):
       app = future_to_app[future]
       try:
@@ -152,12 +80,41 @@ def fetch_multiple_descriptors(far_url: str, applications: List[Dict[str, str]],
   return results
 
 
-if __name__ == "__main__":
-  far_url = 'https://far.ci.folio.org'
+def parse_arguments():
+  """Parse command line arguments."""
+  parser = argparse.ArgumentParser(description='Fetch UI modules from FOLIO application descriptors')
+  parser.add_argument(
+    '--api-url',
+    default='https://far.ci.folio.org',
+    help='FAR API base URL (default: https://far.ci.folio.org)'
+  )
+  parser.add_argument(
+    '--modules',
+    help='Modules data as JSON string or path to JSON file'
+  )
+  return parser.parse_args()
 
-  # Extract UI modules from the descriptors
-  ui_modules = extract_ui_modules(fetch_multiple_descriptors(far_url, TEST_MODULES))
 
+def main():
+  """Main execution function."""
+  args = parse_arguments()
+
+  # Load modules data
+  if args.modules:
+    modules = load_modules_data(args.modules)
+  else:
+    print("::error::Modules data is required. Provide via --modules argument.")
+    sys.exit(1)
+
+  # Fetch descriptors and extract UI modules
+  descriptors = fetch_all_descriptors(args.api_url, modules)
+  ui_modules = extract_ui_modules(descriptors)
+
+  # Output results
   print("\nExtracted UI modules:")
   print(json.dumps(ui_modules, indent=2))
   print(f"\nTotal UI modules found: {len(ui_modules)}")
+
+
+if __name__ == "__main__":
+  main()
