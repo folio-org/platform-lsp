@@ -373,10 +373,10 @@ jobs:
       - name: Fetch updated UI modules list
         id: fetch-updated-ui-modules
         if: steps.update-descriptor.outputs.updated == 'true'
-        uses: ./.github/actions/fetch-updated-ui-modules
+        uses: folio-org/platform-lsp/.github/actions/fetch-updated-ui-modules@RANCHER-2324
         with:
           applications: ${{ steps.update-descriptor.outputs.updated_applications }}
-          api-url: 'https://far.ci.folio.org'
+          far-url: 'https://far.ci.folio.org'
 
       - name: Upload Descriptor Artifact
         if: steps.update-descriptor.outputs.updated == 'true'

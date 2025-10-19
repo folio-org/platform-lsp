@@ -122,10 +122,8 @@ def parse_arguments():
     help='Modules data as JSON string or path to JSON file'
   )
   parser.add_argument(
-    '--output-format',
-    choices=['json', 'github-actions'],
-    default='json',
-    help='Output format (default: json)'
+    '--output-file',
+    help='Path to output file for UI modules JSON data'
   )
   return parser.parse_args()
 
@@ -148,9 +146,20 @@ def main():
   ui_modules = extract_ui_modules(descriptors)
 
   # Output results based on format
-  if args.output_format == 'github-actions':
-    # Output for GitHub Actions
-    print(f"::notice::Found {len(ui_modules)} UI modules total")
+  if args.output_file:
+    # Write UI modules to file for GitHub Actions consumption
+    output_data = {
+      "ui_modules": ui_modules,
+      "ui_modules_count": len(ui_modules)
+    }
+    try:
+      with open(args.output_file, 'w') as f:
+        json.dump(output_data, f, indent=2)
+      print(f"::notice::UI modules data written to {args.output_file}")
+      print(f"::notice::Found {len(ui_modules)} UI modules total")
+    except Exception as e:
+      print(f"::error::Failed to write output file: {e}")
+      sys.exit(1)
   else:
     # Standard JSON output
     print("\nExtracted UI modules:")
