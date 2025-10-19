@@ -1,6 +1,6 @@
 update_config:
   enabled: true
-  update_branch_format: "version-update/{0}"
+  update_branch_format: version-update/{0}
   labels:
     - version-update
   pr_reviewers:
@@ -9,7 +9,11 @@ update_config:
 branches:
   - snapshot
       enabled: true
+      name: "FOLIO Sunflower Version"
+      description: "FOLIO Snapshot LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system."
       need_pr: false
 #  - R2-2024
 #      enabled: true
 #      need_pr: true
+#      name: "FOLIO Sunflower Release"
+#      description: "FOLIO Sunflower LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system."
