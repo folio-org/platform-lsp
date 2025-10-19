@@ -39,11 +39,11 @@ runs:
         echo "::notice::Fetching UI modules from updated applications"
 
         # Create temporary files
-#         APPLICATIONS_FILE=$(mktemp)
+        # APPLICATIONS_FILE=$(mktemp)
         TMP_OUTPUT_FILE=$(mktemp -t ui-modules-output.json)
 
         # Write applications data to file
-#         echo "$APPLICATIONS_DATA" > "$APPLICATIONS_FILE"
+        # echo "$APPLICATIONS_DATA" > "$APPLICATIONS_FILE"
 
         # Run the Python script with output file
         cd "${{ github.action_path }}"
@@ -89,4 +89,5 @@ runs:
         echo "::notice::Successfully found $UI_MODULES_COUNT UI modules"
 
         # Clean up temporary files
-        rm -f "$TMP_OUTPUT_FILE" #"$APPLICATIONS_FILE"
+        #"$APPLICATIONS_FILE"
+        rm -f "$TMP_OUTPUT_FILE"

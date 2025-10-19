@@ -378,95 +378,95 @@ jobs:
           applications: ${{ steps.update-descriptor.outputs.updated_applications }}
           far-url: 'https://far.ci.folio.org'
 
-      - name: Read package.json content
-        id: read-package-json
-        if: steps.update-descriptor.outputs.updated == 'true'
-        env:
-          REPO: ${{ inputs.repo }}
-          SOURCE_BRANCH: ${{ needs.determine-source-branch.outputs.source_branch }}
-        run: |
-          set -euo pipefail
-          echo "::notice::Reading package.json from branch: $SOURCE_BRANCH"
+#       - name: Read package.json content
+#         id: read-package-json
+#         if: steps.update-descriptor.outputs.updated == 'true'
+#         env:
+#           REPO: ${{ inputs.repo }}
+#           SOURCE_BRANCH: ${{ needs.determine-source-branch.outputs.source_branch }}
+#         run: |
+#           set -euo pipefail
+#           echo "::notice::Reading package.json from branch: $SOURCE_BRANCH"
+#
+#           # Read package.json from the repository root
+#           gh api "repos/$REPO/contents/package.json?ref=$SOURCE_BRANCH" -H "Accept: application/vnd.github.v3.raw" > package.json
+#           if [ ! -s package.json ]; then
+#             echo "::error::package.json file is empty or not found in branch '$SOURCE_BRANCH'"
+#             exit 1
+#           fi
+#
+#           # Validate JSON format
+#           if ! jq empty package.json 2>/dev/null; then
+#             echo "::error::package.json is not valid JSON"
+#             cat package.json
+#             exit 1
+#           fi
+#
+#           # Set package.json content as output
+#           PACKAGE_JSON_CONTENT=$(cat package.json | jq -c .)
+#           {
+#             echo "package_json_content<<EOF"
+#             echo "$PACKAGE_JSON_CONTENT"
+#             echo "EOF"
+#           } >> "$GITHUB_OUTPUT"
+#
+#           echo "::notice::Successfully read package.json content"
 
-          # Read package.json from the repository root
-          gh api "repos/$REPO/contents/package.json?ref=$SOURCE_BRANCH" -H "Accept: application/vnd.github.v3.raw" > package.json
-          if [ ! -s package.json ]; then
-            echo "::error::package.json file is empty or not found in branch '$SOURCE_BRANCH'"
-            exit 1
-          fi
+#       - name: Update package.json dependencies
+#         id: update-package-json
+#         if: steps.update-descriptor.outputs.updated == 'true' && steps.fetch-updated-ui-modules.outputs.ui-modules != ''
+#         uses: folio-org/platform-lsp/.github/actions/update-package-json@RANCHER-2324
+#         with:
+#           package-json: ${{ steps.read-package-json.outputs.package_json_content }}
+#           ui-modules: ${{ steps.fetch-updated-ui-modules.outputs.ui-modules }}
 
-          # Validate JSON format
-          if ! jq empty package.json 2>/dev/null; then
-            echo "::error::package.json is not valid JSON"
-            cat package.json
-            exit 1
-          fi
+#       - name: Write updated package.json
+#         id: write-package-json
+#         if: steps.update-package-json.outputs.has-updates == 'true'
+#         run: |
+#           set -euo pipefail
+#           echo "::notice::Writing updated package.json content"
+#
+#           # Write the updated package.json content to file
+#           echo '${{ steps.update-package-json.outputs.package-json }}' | jq . > package.json
+#
+#           # Verify the file was written correctly
+#           if [ ! -s package.json ]; then
+#             echo "::error::Failed to write updated package.json"
+#             exit 1
+#           fi
+#
+#           echo "::notice::Successfully updated package.json with ${{ steps.update-package-json.outputs.updated-count }} dependency changes"
+#
+#           # Log updated UI modules to step summary
+#           if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+#             {
+#               echo "## Package.json Updates";
+#               echo "- **Updated dependencies:** ${{ steps.update-package-json.outputs.updated-count }}";
+#               echo "";
+#               echo "### Updated UI Modules:";
+#               echo '```';
+#               echo '${{ steps.update-package-json.outputs.updated-ui-report }}' | jq -r '.[] | "- " + .name + ": " + .change.old + " -> " + .change.new';
+#               echo '```';
+#               if [[ '${{ steps.update-package-json.outputs.not-found-ui-report }}' != '{}' ]]; then
+#                 echo "";
+#                 echo "### UI Modules Not Found in Dependencies:";
+#                 echo '```';
+#                 echo '${{ steps.update-package-json.outputs.not-found-ui-report }}' | jq -r 'to_entries[] | "- " + .key + ": " + .value';
+#                 echo '```';
+#               fi
+#             } >> "$GITHUB_STEP_SUMMARY"
+#           fi
 
-          # Set package.json content as output
-          PACKAGE_JSON_CONTENT=$(cat package.json | jq -c .)
-          {
-            echo "package_json_content<<EOF"
-            echo "$PACKAGE_JSON_CONTENT"
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
-
-          echo "::notice::Successfully read package.json content"
-
-      - name: Update package.json dependencies
-        id: update-package-json
-        if: steps.update-descriptor.outputs.updated == 'true' && steps.fetch-updated-ui-modules.outputs.ui-modules != ''
-        uses: folio-org/platform-lsp/.github/actions/update-package-json@RANCHER-2324
-        with:
-          package-json: ${{ steps.read-package-json.outputs.package_json_content }}
-          ui-modules: ${{ steps.fetch-updated-ui-modules.outputs.ui-modules }}
-
-      - name: Write updated package.json
-        id: write-package-json
-        if: steps.update-package-json.outputs.has-updates == 'true'
-        run: |
-          set -euo pipefail
-          echo "::notice::Writing updated package.json content"
-
-          # Write the updated package.json content to file
-          echo '${{ steps.update-package-json.outputs.package-json }}' | jq . > package.json
-
-          # Verify the file was written correctly
-          if [ ! -s package.json ]; then
-            echo "::error::Failed to write updated package.json"
-            exit 1
-          fi
-
-          echo "::notice::Successfully updated package.json with ${{ steps.update-package-json.outputs.updated-count }} dependency changes"
-
-          # Log updated UI modules to step summary
-          if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
-            {
-              echo "## Package.json Updates";
-              echo "- **Updated dependencies:** ${{ steps.update-package-json.outputs.updated-count }}";
-              echo "";
-              echo "### Updated UI Modules:";
-              echo '```';
-              echo '${{ steps.update-package-json.outputs.updated-ui-report }}' | jq -r '.[] | "- " + .name + ": " + .change.old + " -> " + .change.new';
-              echo '```';
-              if [[ '${{ steps.update-package-json.outputs.not-found-ui-report }}' != '{}' ]]; then
-                echo "";
-                echo "### UI Modules Not Found in Dependencies:";
-                echo '```';
-                echo '${{ steps.update-package-json.outputs.not-found-ui-report }}' | jq -r 'to_entries[] | "- " + .key + ": " + .value';
-                echo '```';
-              fi
-            } >> "$GITHUB_STEP_SUMMARY"
-          fi
-
-      - name: Upload Descriptor Artifact
-        if: steps.update-descriptor.outputs.updated == 'true'
-        uses: actions/upload-artifact@v4.3.6
-        with:
-          name: platform-lsp-descriptor-update
-          path: |
-            ${{ env.STATE_FILE }}
-            package.json
-          retention-days: 1
+#       - name: Upload Descriptor Artifact
+#         if: steps.update-descriptor.outputs.updated == 'true'
+#         uses: actions/upload-artifact@v4.3.6
+#         with:
+#           name: platform-lsp-descriptor-update
+#           path: |
+#             ${{ env.STATE_FILE }}
+#             package.json
+#           retention-days: 1
   
   commit-changes:
     name: Commit and Push Changes
