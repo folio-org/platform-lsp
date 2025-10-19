@@ -320,6 +320,7 @@ update-platform-config:
         #   - description: <from input parameter> (optional, platform-specific)
         # Use jq to dynamically build branch configuration
         # Use yq for reliable YAML manipulation
+        # Upload as artifact with include-hidden-files: true to preserve .github/ structure
 
 commit-platform-changes:
   uses: folio-org/kitfox-github/.github/workflows/commit-and-push-changes.yml@master
