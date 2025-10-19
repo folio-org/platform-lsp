@@ -1,8 +1,4 @@
 #!/usr/bin/env python3
-"""
-GitHub Action script to update package.json dependencies based on UI modules list.
-Optimized for CI/CD usage with clean, simple code.
-"""
 
 import argparse
 import json

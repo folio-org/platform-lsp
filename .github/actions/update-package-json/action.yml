@@ -1,0 +1,79 @@
+name: 'Update Package JSON Dependencies'
+description: 'Updates package.json dependencies based on UI modules list with version comparison'
+author: 'FOLIO DevOps'
+
+inputs:
+  package-json:
+    description: 'Content of package.json as JSON string'
+    required: true
+  ui-modules:
+    description: 'List of UI modules as JSON string'
+    required: true
+  output-file:
+    description: 'Output file path to save the structured JSON result'
+    required: true
+    default: 'package-update-result.json'
+
+outputs:
+  result-file:
+    description: 'Path to the generated result file'
+    value: ${{ inputs.output-file }}
+  updated-count:
+    description: 'Number of dependencies that were updated'
+    value: ${{ steps.update-deps.outputs.updated-count }}
+  has-updates:
+    description: 'Whether any dependencies were updated (true/false)'
+    value: ${{ steps.update-deps.outputs.has-updates }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Update package.json dependencies
+      id: update-deps
+      shell: bash
+      run: |
+        # Make the script executable
+        chmod +x "${{ github.action_path }}/update-package-json.py"
+
+        # Run the update script
+        python3 "${{ github.action_path }}/update-package-json.py" \
+          --package-json '${{ inputs.package-json }}' \
+          --ui-modules '${{ inputs.ui-modules }}' \
+          --output-file '${{ inputs.output-file }}'
+
+        # Parse the result file to extract metadata for outputs
+        if [[ -f "${{ inputs.output-file }}" ]]; then
+          # Count updated modules
+          updated_count=$(python3 -c "
+import json
+with open('${{ inputs.output-file }}', 'r') as f:
+    data = json.load(f)
+print(len(data.get('updated-ui-report', [])))
+")
+
+          # Check if any updates were made
+          has_updates="false"
+          if [[ "$updated_count" -gt 0 ]]; then
+            has_updates="true"
+          fi
+
+          # Set outputs
+          echo "updated-count=$updated_count" >> $GITHUB_OUTPUT
+          echo "has-updates=$has_updates" >> $GITHUB_OUTPUT
+
+          echo "✅ Successfully processed dependencies"
+          echo "📊 Updated $updated_count dependencies"
+          echo "📄 Results saved to ${{ inputs.output-file }}"
+        else
+          echo "❌ Error: Output file not created"
+          exit 1
+        fi
+
+branding:
+  icon: 'package'
+  color: 'blue'
