@@ -40,7 +40,7 @@ runs:
 
         # Create temporary files
         # APPLICATIONS_FILE=$(mktemp)
-        TMP_OUTPUT_FILE=$(mktemp -t ui-modules-output.json)
+        TMP_OUTPUT_FILE=$(mktemp -t ui-modules-output.XXXXX.json)
 
         # Write applications data to file
         # echo "$APPLICATIONS_DATA" > "$APPLICATIONS_FILE"

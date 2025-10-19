@@ -378,47 +378,47 @@ jobs:
           applications: ${{ steps.update-descriptor.outputs.updated_applications }}
           far-url: 'https://far.ci.folio.org'
 
-#       - name: Read package.json content
-#         id: read-package-json
-#         if: steps.update-descriptor.outputs.updated == 'true'
-#         env:
-#           REPO: ${{ inputs.repo }}
-#           SOURCE_BRANCH: ${{ needs.determine-source-branch.outputs.source_branch }}
-#         run: |
-#           set -euo pipefail
-#           echo "::notice::Reading package.json from branch: $SOURCE_BRANCH"
-#
-#           # Read package.json from the repository root
-#           gh api "repos/$REPO/contents/package.json?ref=$SOURCE_BRANCH" -H "Accept: application/vnd.github.v3.raw" > package.json
-#           if [ ! -s package.json ]; then
-#             echo "::error::package.json file is empty or not found in branch '$SOURCE_BRANCH'"
-#             exit 1
-#           fi
-#
-#           # Validate JSON format
-#           if ! jq empty package.json 2>/dev/null; then
-#             echo "::error::package.json is not valid JSON"
-#             cat package.json
-#             exit 1
-#           fi
-#
-#           # Set package.json content as output
-#           PACKAGE_JSON_CONTENT=$(cat package.json | jq -c .)
-#           {
-#             echo "package_json_content<<EOF"
-#             echo "$PACKAGE_JSON_CONTENT"
-#             echo "EOF"
-#           } >> "$GITHUB_OUTPUT"
-#
-#           echo "::notice::Successfully read package.json content"
+      - name: Read package.json content
+        id: read-package-json
+        if: steps.update-descriptor.outputs.updated == 'true'
+        env:
+          REPO: ${{ inputs.repo }}
+          SOURCE_BRANCH: ${{ needs.determine-source-branch.outputs.source_branch }}
+        run: |
+          set -euo pipefail
+          echo "::notice::Reading package.json from branch: $SOURCE_BRANCH"
 
-#       - name: Update package.json dependencies
-#         id: update-package-json
-#         if: steps.update-descriptor.outputs.updated == 'true' && steps.fetch-updated-ui-modules.outputs.ui-modules != ''
-#         uses: folio-org/platform-lsp/.github/actions/update-package-json@RANCHER-2324
-#         with:
-#           package-json: ${{ steps.read-package-json.outputs.package_json_content }}
-#           ui-modules: ${{ steps.fetch-updated-ui-modules.outputs.ui-modules }}
+          # Read package.json from the repository root
+          gh api "repos/$REPO/contents/package.json?ref=$SOURCE_BRANCH" -H "Accept: application/vnd.github.v3.raw" > package.json
+          if [ ! -s package.json ]; then
+            echo "::error::package.json file is empty or not found in branch '$SOURCE_BRANCH'"
+            exit 1
+          fi
+
+          # Validate JSON format
+          if ! jq empty package.json 2>/dev/null; then
+            echo "::error::package.json is not valid JSON"
+            cat package.json
+            exit 1
+          fi
+
+          # Set package.json content as output
+          PACKAGE_JSON_CONTENT=$(cat package.json | jq -c .)
+          {
+            echo "package_json_content<<EOF"
+            echo "$PACKAGE_JSON_CONTENT"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          echo "::notice::Successfully read package.json content"
+
+      - name: Update package.json dependencies
+        id: update-package-json
+        if: steps.update-descriptor.outputs.updated == 'true' && steps.fetch-updated-ui-modules.outputs.ui-modules != ''
+        uses: folio-org/platform-lsp/.github/actions/update-package-json@RANCHER-2324
+        with:
+          package-json: ${{ steps.read-package-json.outputs.package_json_content }}
+          ui-modules: ${{ steps.fetch-updated-ui-modules.outputs.ui-modules }}
 
 #       - name: Write updated package.json
 #         id: write-package-json
