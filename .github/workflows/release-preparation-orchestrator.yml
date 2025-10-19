@@ -259,7 +259,7 @@ jobs:
         application: ${{ fromJson(needs.initial-check.outputs.applications) }}
       fail-fast: false
       max-parallel: 5
-    uses: folio-org/kitfox-github/.github/workflows/release-preparation-flow.yml@master
+    uses: folio-org/kitfox-github/.github/workflows/release-preparation-flow.yml@RANCHER-2572-test #TODO: Switch back to master
     with:
       app_name: ${{ matrix.application }}
       repo: folio-org/${{ matrix.application }}
@@ -279,7 +279,7 @@ jobs:
         application: ${{ fromJson(needs.initial-check.outputs.applications) }}
       fail-fast: false
       max-parallel: 5
-    uses: folio-org/kitfox-github/.github/workflows/release-preparation-flow.yml@master
+    uses: folio-org/kitfox-github/.github/workflows/release-preparation-flow.yml@RANCHER-2572-test #TODO: Switch back to master
     with:
       app_name: ${{ matrix.application }}
       repo: folio-org/${{ matrix.application }}
@@ -535,7 +535,7 @@ jobs:
     name: Commit Platform Release Branch
     needs: [initial-check, prepare-platform]
     if: needs.prepare-platform.result == 'success' && inputs.dry_run != true
-    uses: folio-org/kitfox-github/.github/workflows/commit-and-push-changes.yml@master
+    uses: folio-org/kitfox-github/.github/workflows/commit-and-push-changes.yml@RANCHER-2572-test #TODO: Switch back to master
     with:
       repo: ${{ github.repository }}
       branch: ${{ inputs.new_release_branch }}
@@ -559,7 +559,7 @@ jobs:
     name: Commit Platform Config to Default Branch
     needs: [initial-check, update-platform-config, commit-platform-changes]
     if: needs.update-platform-config.outputs.config_updated == 'true' && needs.commit-platform-changes.result == 'success' && inputs.dry_run == false
-    uses: folio-org/kitfox-github/.github/workflows/commit-and-push-changes.yml@master
+    uses: folio-org/kitfox-github/.github/workflows/commit-and-push-changes.yml@RANCHER-2572-test #TODO: Switch back to master
     with:
       repo: ${{ github.repository }}
       branch: ${{ needs.initial-check.outputs.default_branch }}
