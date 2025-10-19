@@ -57,7 +57,6 @@ permissions:
 
 env:
   PLATFORM_TEMPLATE_FILE: 'platform.template.json'
-  PLATFORM_STATE_FILE: 'platform-descriptor.json'
   UPDATE_CONFIG_FILE: '.github/update-config.yml'
   UPDATE_CONFIG_TEMPLATE_PATH: '.github/templates/update-config.yml.template'
 
@@ -551,7 +550,7 @@ jobs:
         Application versions set to ^VERSION constraints.
         Eureka component versions set to ^VERSION placeholder.
       deleted_files: |
-        ${{ env.PLATFORM_STATE_FILE }}
+        platform-descriptor.json
       dry_run: ${{ inputs.dry_run }}
     secrets: inherit
 
