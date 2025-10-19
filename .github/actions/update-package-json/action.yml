@@ -50,8 +50,8 @@ runs:
 
         # Run the update script with the temporary file
         python3 "${{ github.action_path }}/update-package-json.py" \
-          --package-json '$PACKAGE_JSON' \
-          --ui-modules '$UI_MODULES' \
+          --package-json "$PACKAGE_JSON" \
+          --ui-modules "$UI_MODULES" \
           --output-file "$TMP_OUTPUT_FILE"
 
         # Parse the result file using jq to extract all outputs
