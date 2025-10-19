@@ -528,6 +528,7 @@ jobs:
         with:
           name: platform-config-file
           path: /tmp/config-artifact/
+          include-hidden-files: true
           retention-days: 1
 
   commit-platform-changes:
