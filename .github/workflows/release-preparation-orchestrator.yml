@@ -26,11 +26,6 @@ on:
         required: false
         type: boolean
         default: false
-      dry_run:
-        description: 'Perform dry run without making changes'
-        required: false
-        type: boolean
-        default: false
       branch_name:
         description: 'Display name for the release branch (e.g., "FOLIO Sunflower Release")'
         required: false
@@ -51,6 +46,11 @@ on:
         required: false
         type: string
         default: 'false'
+      dry_run:
+        description: 'Perform dry run without making changes'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
