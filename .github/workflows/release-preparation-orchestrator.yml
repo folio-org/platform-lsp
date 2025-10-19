@@ -508,12 +508,26 @@ jobs:
 
           echo "updated=true" >> "$GITHUB_OUTPUT"
 
+      - name: Prepare Config for Upload
+        if: steps.update-config.outputs.updated == 'true'
+        run: |
+          set -eo pipefail
+
+          echo "::notice::Preparing config file for artifact upload"
+          artifact_dir="/tmp/config-artifact"
+          mkdir -p "$artifact_dir/$(dirname "$UPDATE_CONFIG_FILE")"
+          cp "$UPDATE_CONFIG_FILE" "$artifact_dir/$UPDATE_CONFIG_FILE"
+
+          echo "::group::Artifact structure"
+          tree "$artifact_dir" || find "$artifact_dir" -type f
+          echo "::endgroup::"
+
       - name: Upload Config File
         if: steps.update-config.outputs.updated == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: platform-config-file
-          path: ${{ env.UPDATE_CONFIG_FILE }}
+          path: /tmp/config-artifact/
           retention-days: 1
 
   commit-platform-changes:
