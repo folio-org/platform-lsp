@@ -13,12 +13,40 @@ def load_modules_data(modules_input: str) -> List[Dict[str, str]]:
   """Load modules data from JSON string or file path."""
   try:
     # Try to parse as JSON string first
-    return json.loads(modules_input)
+    data = json.loads(modules_input)
+
+    # Handle the case where applications data contains both required and optional
+    if isinstance(data, dict) and ('required' in data or 'optional' in data):
+      modules = []
+      if 'required' in data:
+        modules.extend(data['required'])
+      if 'optional' in data:
+        modules.extend(data['optional'])
+      return modules
+    elif isinstance(data, list):
+      return data
+    else:
+      raise ValueError("Invalid data format")
+
   except json.JSONDecodeError:
     # If that fails, try to read as file path
     try:
       with open(modules_input, 'r') as f:
-        return json.load(f)
+        data = json.load(f)
+
+        # Handle the same format cases for file input
+        if isinstance(data, dict) and ('required' in data or 'optional' in data):
+          modules = []
+          if 'required' in data:
+            modules.extend(data['required'])
+          if 'optional' in data:
+            modules.extend(data['optional'])
+          return modules
+        elif isinstance(data, list):
+          return data
+        else:
+          raise ValueError("Invalid data format")
+
     except (FileNotFoundError, json.JSONDecodeError) as e:
       print(f"::error::Failed to load modules data: {e}")
       sys.exit(1)
@@ -32,6 +60,7 @@ def extract_ui_modules(app_descriptors: List[tuple]) -> List[Dict[str, str]]:
     if descriptor and 'uiModules' in descriptor:
       modules = descriptor.get('uiModules', [])
       if modules:
+        print(f"::debug::Found {len(modules)} UI modules in {app_info['name']}-{app_info['version']}")
         ui_modules.extend(modules)
 
   return ui_modules
@@ -42,7 +71,7 @@ def fetch_app_descriptor(api_url: str, app_name: str, app_version: str, timeout:
   url = f"{api_url}/applications/{app_name}-{app_version}?full=false"
 
   try:
-    print(f"Fetching {app_name}-{app_version} from {url}")
+    print(f"::debug::Fetching {app_name}-{app_version} from {url}")
 
     request = urllib.request.Request(url)
     request.add_header('User-Agent', 'FOLIO-Release-Creator/1.0')
@@ -54,7 +83,7 @@ def fetch_app_descriptor(api_url: str, app_name: str, app_version: str, timeout:
       return json.loads(response.read().decode('utf-8'))
 
   except Exception as e:
-    print(f"::error::Failed to fetch descriptor for {app_name}-{app_version}: {e}")
+    print(f"::warning::Failed to fetch descriptor for {app_name}-{app_version}: {e}")
     return None
 
 
@@ -74,7 +103,7 @@ def fetch_all_descriptors(api_url: str, applications: List[Dict[str, str]], max_
         descriptor = future.result()
         results.append((app, descriptor))
       except Exception as e:
-        print(f"::error::Unexpected error for {app['name']}-{app['version']}: {e}")
+        print(f"::warning::Unexpected error for {app['name']}-{app['version']}: {e}")
         results.append((app, None))
 
   return results
@@ -92,6 +121,12 @@ def parse_arguments():
     '--modules',
     help='Modules data as JSON string or path to JSON file'
   )
+  parser.add_argument(
+    '--output-format',
+    choices=['json', 'github-actions'],
+    default='json',
+    help='Output format (default: json)'
+  )
   return parser.parse_args()
 
 
@@ -106,14 +141,21 @@ def main():
     print("::error::Modules data is required. Provide via --modules argument.")
     sys.exit(1)
 
+  print(f"::notice::Processing {len(modules)} applications for UI modules")
+
   # Fetch descriptors and extract UI modules
   descriptors = fetch_all_descriptors(args.api_url, modules)
   ui_modules = extract_ui_modules(descriptors)
 
-  # Output results
-  print("\nExtracted UI modules:")
-  print(json.dumps(ui_modules, indent=2))
-  print(f"\nTotal UI modules found: {len(ui_modules)}")
+  # Output results based on format
+  if args.output_format == 'github-actions':
+    # Output for GitHub Actions
+    print(f"::notice::Found {len(ui_modules)} UI modules total")
+  else:
+    # Standard JSON output
+    print("\nExtracted UI modules:")
+    print(json.dumps(ui_modules, indent=2))
+    print(f"\nTotal UI modules found: {len(ui_modules)}")
 
 
 if __name__ == "__main__":

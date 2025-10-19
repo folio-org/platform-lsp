@@ -373,10 +373,10 @@ jobs:
       - name: Fetch updated UI modules list
         id: fetch-updated-ui-modules
         if: steps.update-descriptor.outputs.updated == 'true'
-        env:
-          UPDATED_APPLICATIONS: ${{ steps.update-descriptor.outputs.updated_applications }}
-        run: |
-
+        uses: ./.github/actions/fetch-updated-ui-modules
+        with:
+          applications: ${{ steps.update-descriptor.outputs.updated_applications }}
+          api-url: 'https://far.ci.folio.org'
 
       - name: Upload Descriptor Artifact
         if: steps.update-descriptor.outputs.updated == 'true'

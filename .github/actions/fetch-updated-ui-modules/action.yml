@@ -1,0 +1,79 @@
+name: 'Fetch Updated UI Modules'
+description: 'Fetch UI modules from FOLIO application descriptors using FAR API'
+author: 'FOLIO'
+
+inputs:
+  applications:
+    description: 'Applications data as JSON string (from updated applications)'
+    required: true
+  api-url:
+    description: 'FAR API base URL'
+    required: false
+    default: 'https://far.ci.folio.org'
+
+outputs:
+  ui-modules:
+    description: 'Extracted UI modules as JSON array'
+    value: ${{ steps.fetch-ui-modules.outputs.ui-modules }}
+  ui-modules-count:
+    description: 'Number of UI modules found'
+    value: ${{ steps.fetch-ui-modules.outputs.ui-modules-count }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Fetch UI modules
+      id: fetch-ui-modules
+      shell: bash
+      env:
+        APPLICATIONS_DATA: ${{ inputs.applications }}
+        API_URL: ${{ inputs.api-url }}
+      run: |
+        set -euo pipefail
+
+        echo "::notice::Fetching UI modules from updated applications"
+
+        # Create a temporary file for applications data
+        TEMP_FILE=$(mktemp)
+        echo "$APPLICATIONS_DATA" > "$TEMP_FILE"
+
+        # Create a temporary file for output
+        OUTPUT_FILE=$(mktemp)
+
+        # Run the Python script and capture both stdout and stderr
+        cd "${{ github.action_path }}"
+        python3 fetch-updated-ui-modules.py --api-url "$API_URL" --modules "$TEMP_FILE" > "$OUTPUT_FILE" 2>&1
+
+        # Show the output for debugging
+        echo "::debug::Script output:"
+        cat "$OUTPUT_FILE"
+
+        # Extract UI modules JSON from the output (between "Extracted UI modules:" and "Total UI modules found:")
+        if grep -q "Extracted UI modules:" "$OUTPUT_FILE"; then
+          # Get the JSON content between the markers
+          UI_MODULES=$(sed -n '/Extracted UI modules:/,/Total UI modules found:/p' "$OUTPUT_FILE" | sed '1d;$d' | jq -c '.')
+          UI_MODULES_COUNT=$(echo "$UI_MODULES" | jq 'length')
+        else
+          # Fallback to empty array if no UI modules found
+          UI_MODULES="[]"
+          UI_MODULES_COUNT="0"
+        fi
+
+        # Set outputs
+        {
+          echo "ui-modules<<EOF"
+          echo "$UI_MODULES"
+          echo "EOF"
+        } >> "$GITHUB_OUTPUT"
+
+        echo "ui-modules-count=$UI_MODULES_COUNT" >> "$GITHUB_OUTPUT"
+
+        echo "::notice::Found $UI_MODULES_COUNT UI modules"
+
+        # Clean up
+        rm -f "$TEMP_FILE" "$OUTPUT_FILE"
