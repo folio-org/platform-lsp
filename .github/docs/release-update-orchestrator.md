@@ -556,7 +556,7 @@ release_branches:
 ### Implementation References
 - [Release Update Orchestrator Workflow](../workflows/release-update-orchestrator.yml)
 - [Kitfox GitHub Infrastructure](https://github.com/folio-org/kitfox-github)
-- [get-release-config Action](https://github.com/folio-org/kitfox-github/tree/master/.github/actions/get-release-config)
+- [get-release-config Action](https://github.com/folio-org/kitfox-github/tree/master/.github/actions/get-update-config)
 - [Release Update Flow Workflow](https://github.com/folio-org/kitfox-github/blob/master/.github/workflows/release-update-flow.yml)
 
 ---
