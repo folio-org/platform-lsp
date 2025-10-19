@@ -47,6 +47,7 @@ def convert_ui_module_name(module_name: str) -> str:
 def update_package_json(package_json_content: str, ui_modules_content: str) -> Dict[str, Any]:
   """
   Update package.json dependencies based on UI modules list.
+  Only updates existing dependencies, does not add new ones.
 
   Args:
       package_json_content: JSON string containing package.json content
@@ -64,7 +65,11 @@ def update_package_json(package_json_content: str, ui_modules_content: str) -> D
     package_json = json.loads(package_json_content)
     ui_modules = json.loads(ui_modules_content)
 
-    # Update dependencies based on UI modules
+    # Ensure dependencies section exists
+    if "dependencies" not in package_json:
+      package_json["dependencies"] = {}
+
+    # Update dependencies based on UI modules (only existing ones)
     for module in ui_modules:
       if not isinstance(module, dict):
         print(f"Warning: Skipping invalid module entry: {module}", file=sys.stderr)
@@ -78,14 +83,14 @@ def update_package_json(package_json_content: str, ui_modules_content: str) -> D
       package_name = convert_ui_module_name(module["name"])
       version = module["version"]
 
-      # Update or add dependency
-      old_version = package_json["dependencies"].get(package_name)
-      if old_version != version:
-        if old_version:
+      # Only update if dependency already exists
+      if package_name in package_json["dependencies"]:
+        old_version = package_json["dependencies"][package_name]
+        if old_version != version:
           print(f"Updating {package_name}: {old_version} -> {version}")
-        else:
-          print(f"Adding {package_name}: {version}")
-        package_json["dependencies"][package_name] = version
+          package_json["dependencies"][package_name] = version
+      else:
+        print(f"Skipping {package_name}: not found in existing dependencies", file=sys.stderr)
 
     return package_json
 
