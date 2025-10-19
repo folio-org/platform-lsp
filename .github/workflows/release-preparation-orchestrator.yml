@@ -519,7 +519,7 @@ jobs:
           cp "$UPDATE_CONFIG_FILE" "$artifact_dir/$UPDATE_CONFIG_FILE"
 
           echo "::group::Artifact structure"
-          tree "$artifact_dir" || find "$artifact_dir" -type f
+          find "$artifact_dir" -type f
           echo "::endgroup::"
 
       - name: Upload Config File
