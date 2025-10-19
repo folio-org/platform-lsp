@@ -88,11 +88,19 @@ The distributed release preparation workflow has undergone comprehensive testing
 ```yaml
 inputs:
   previous_release_branch: "R2-2024"      # Source release branch
-  new_release_branch: "R1-2025"          # Target release branch  
+  new_release_branch: "R1-2025"          # Target release branch
   new_applications: "app-new1,app-new2"  # Optional new applications (flexible input)
   use_snapshot_fallback: false           # Use snapshot branch if previous not found
   use_snapshot_version: false            # Use snapshot version as base
   dry_run: true                          # Test mode (default)
+
+  # Platform-specific configuration (optional)
+  branch_name: "FOLIO Sunflower Release" # Display name for the release branch
+  branch_description: "FOLIO LSP..."     # Description for the release branch
+
+  # Update configuration settings (optional)
+  need_pr: true                          # Require PR for version updates (default: true)
+  prerelease_mode: "false"               # Module version constraints: "false", "true", or "only" (default: "false")
 ```
 
 ### Authorization Architecture
@@ -132,8 +140,9 @@ The orchestrator directly calls centralized workflows using `uses:` syntax in ma
 
 **Two-Workflow Architecture**:
 1. **`release-preparation-flow.yml`** - Core logic workflow
-   - Template updates and version management
-   - Branch creation and configuration
+   - Template updates with `^VERSION` placeholders and `preRelease: "false"` flags
+   - Version management and branch creation
+   - Update-config.yml management with configurable `need_pr` and `prerelease_mode`
    - Result artifact upload for orchestrator collection
    - Called directly by platform orchestrator in matrix jobs
 
@@ -291,9 +300,10 @@ prepare-platform:
   steps:
     - name: Update Platform Template
       run: |
-        # Update platform.template.json with version constraints
-        # Set application versions to ^FULL.VERSION (e.g., ^2.3.1)
-        # Set eureka-components to ^VERSION placeholder
+        # Update platform.template.json with version constraints and preRelease flags
+        # Set application versions to ^FULL.VERSION with preRelease: "false" (e.g., ^2.3.1)
+        # Set eureka-components to ^VERSION placeholder with preRelease: "false"
+        # Set platform version to new_release_branch
         # Upload as artifact
 
 update-platform-config:
@@ -302,7 +312,13 @@ update-platform-config:
     - name: Manage Update Config
       run: |
         # Create/update update-config.yml on default branch
-        # Add new release branch to tracked branches
+        # Add new release branch to tracked branches with configuration:
+        #   - enabled: true (always enabled for new release branches)
+        #   - need_pr: <from input parameter> (default: true)
+        #   - preRelease: <from input parameter> (default: "false")
+        #   - name: <from input parameter> (optional, platform-specific)
+        #   - description: <from input parameter> (optional, platform-specific)
+        # Use jq to dynamically build branch configuration
         # Use yq for reliable YAML manipulation
 
 commit-platform-changes:

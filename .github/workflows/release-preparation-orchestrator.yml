@@ -31,6 +31,26 @@ on:
         required: false
         type: boolean
         default: false
+      branch_name:
+        description: 'Display name for the release branch (e.g., "FOLIO Sunflower Release")'
+        required: false
+        type: string
+        default: ''
+      branch_description:
+        description: 'Description for the release branch'
+        required: false
+        type: string
+        default: 'FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.'
+      need_pr:
+        description: 'Require PR for version updates on this branch'
+        required: false
+        type: boolean
+        default: true
+      prerelease_mode:
+        description: 'PreRelease mode for version updates ("false", "true", or "only")'
+        required: false
+        type: string
+        default: 'false'
 
 permissions:
   contents: write
@@ -373,15 +393,15 @@ jobs:
           cat "$results_file"
           echo "::endgroup::"
 
-          echo "::notice::Updating application versions with ^VERSION constraints"
+          echo "::notice::Updating application versions with ^VERSION constraints and preRelease flags"
           jq --slurpfile results "$results_file" '
             reduce $results[0][] as $r (
               .;
               .applications.required |= map(
-                if .name == $r.application then .version = ("^" + $r.version) else . end
+                if .name == $r.application then .version = ("^" + $r.version) | .preRelease = "false" else . end
               )
               | .applications.optional |= map(
-                if .name == $r.application then .version = ("^" + $r.version) else . end
+                if .name == $r.application then .version = ("^" + $r.version) | .preRelease = "false" else . end
               )
             )
           ' "$PLATFORM_TEMPLATE_FILE" > "$tmp"
@@ -392,11 +412,11 @@ jobs:
           cat "$PLATFORM_TEMPLATE_FILE"
           echo "::endgroup::"
 
-          echo "::notice::Updating platform version and eureka-components"
+          echo "::notice::Updating platform version and eureka-components with preRelease flags"
           tmp2=$(mktemp)
           jq --arg newVer "${{ inputs.new_release_branch }}" '
-            .version = $newVer                                    #update platform version to release branch
-            | ."eureka-components" |= map(.version = "^VERSION")  #placeholder all eureka-component versions
+            .version = $newVer                                                            #update platform version to release branch
+            | ."eureka-components" |= map(.version = "^VERSION" | .preRelease = "false")  #placeholder all eureka-component versions with preRelease
           ' "$PLATFORM_TEMPLATE_FILE" > "$tmp2" \
           && mv "$tmp2" "$PLATFORM_TEMPLATE_FILE"
 
@@ -431,6 +451,10 @@ jobs:
         id: update-config
         env:
           NEW_BRANCH: ${{ inputs.new_release_branch }}
+          BRANCH_NAME: ${{ inputs.branch_name }}
+          BRANCH_DESCRIPTION: ${{ inputs.branch_description }}
+          NEED_PR: ${{ inputs.need_pr }}
+          PRERELEASE_MODE: ${{ inputs.prerelease_mode }}
         run: |
           set -eo pipefail
 
@@ -456,7 +480,26 @@ jobs:
             exit 0
           fi
 
-          yq eval ".branches += [{\"$NEW_BRANCH\": {\"enabled\": true, \"need_pr\": true}}]" -i "$UPDATE_CONFIG_FILE"
+          branch_config=$(jq -n \
+            --arg branch "$NEW_BRANCH" \
+            --arg name "$BRANCH_NAME" \
+            --arg desc "$BRANCH_DESCRIPTION" \
+            --argjson need_pr "$NEED_PR" \
+            --arg prerelease "$PRERELEASE_MODE" \
+            '{
+              ($branch): {
+                enabled: true,
+                need_pr: $need_pr,
+                preRelease: $prerelease
+              }
+              | (if $name != "" then . + {name: $name} else . end)
+              | (if $desc != "" then . + {description: $desc} else . end)
+            }')
+
+          echo "::notice::Adding branch configuration:"
+          echo "$branch_config" | jq .
+
+          yq eval ".branches += [$branch_config]" -i "$UPDATE_CONFIG_FILE"
 
           echo "::group::Updated config"
           cat "$UPDATE_CONFIG_FILE"
