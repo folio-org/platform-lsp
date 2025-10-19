@@ -54,6 +54,7 @@ def is_version_higher(new_version, old_version):
 def load_json_safely(json_string, description):
   """Load JSON string with error handling."""
   try:
+    print(json_string)
     return json.loads(json_string)
   except json.JSONDecodeError as e:
     print(f"Error: Invalid {description} JSON - {e}", file=sys.stderr)
