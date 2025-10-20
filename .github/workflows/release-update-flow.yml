@@ -1,7 +1,8 @@
 name: Release update (Flow)
 
 on:
-  workflow_call:
+#   workflow_call:
+  workflow_dispatch:
     inputs:
       repo:
         description: 'Application repository name (org/repo format)'
