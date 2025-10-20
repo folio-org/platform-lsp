@@ -72,8 +72,7 @@ runs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
-        check-latest: true
+        python-version: '3.x'
 
     - name: Install dependencies
       shell: bash
@@ -81,7 +80,6 @@ runs:
         set -euo pipefail
         echo "Installing dependencies..."
         python -m pip install --disable-pip-version-check --no-cache-dir -r "${{ github.action_path }}/requirements.txt"
-        # Create cache directories to ensure they exist for future runs
         mkdir -p ~/.cache/pip
 
     - id: update
