@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100100000001664"
+        "version": "2.1.0-SNAPSHOT.100100000001896"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.0.1-SNAPSHOT.100100000001889"
+        "version": "3.0.1-SNAPSHOT.100100000001898"
       }
     ],
     "optional": [
@@ -46,11 +46,11 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100100000001743"
+        "version": "1.0.0-SNAPSHOT.100100000001921"
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100100000001922"
+        "version": "1.2.0-SNAPSHOT.100100000001930"
       },
       {
         "name": "app-consortia",
@@ -66,7 +66,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.3.0-SNAPSHOT.100100000001891"
+        "version": "1.3.0-SNAPSHOT.100100000001899"
       },
       {
         "name": "app-ebsconet",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100100000001713"
+        "version": "1.2.0-SNAPSHOT.100100000001905"
       },
       {
         "name": "app-gobi",
@@ -102,7 +102,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100100000001523"
+        "version": "1.1.0-SNAPSHOT.100100000001938"
       },
       {
         "name": "app-lists",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100100000001917"
+        "version": "1.2.0-SNAPSHOT.100100000001925"
       },
       {
         "name": "app-reading-room",
