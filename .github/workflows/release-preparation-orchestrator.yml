@@ -273,7 +273,7 @@ jobs:
       dry_run: true
     secrets: inherit
 
-  prepare-applications:
+  update-applications:
     name: Prepare ${{ matrix.application }} Application
     needs: [initial-check, check-applications]
     if: always() && needs.check-applications.result == 'success' && inputs.dry_run != true
@@ -295,9 +295,9 @@ jobs:
 
   collect-results:
     name: Collect Application Results
-    needs: [initial-check, prepare-applications]
+    needs: [initial-check, update-applications]
     runs-on: ubuntu-latest
-    if: always() && needs.prepare-applications.result != 'skipped'
+    if: always() && needs.update-applications.result != 'skipped'
     outputs:
       failed_apps: ${{ steps.gather-failures.outputs.failed_apps }}
       success_count: ${{ steps.gather-failures.outputs.success_count }}
@@ -345,9 +345,9 @@ jobs:
 
   prepare-platform:
     name: Prepare Platform Template
-    needs: [ initial-check, prepare-applications, collect-results ]
+    needs: [ initial-check, update-applications, collect-results ]
     runs-on: ubuntu-latest
-    if: always() && needs.prepare-applications.result == 'success'
+    if: always() && needs.update-applications.result == 'success'
     outputs:
       platform_version: ${{ steps.update-platform-template.outputs.platform_version }}
     steps:
@@ -577,14 +577,14 @@ jobs:
   slack_notification:
     name: Slack Notification
     runs-on: ubuntu-latest
-    needs: [ initial-check, check-applications, prepare-applications, collect-results, prepare-platform, commit-platform-changes, commit-platform-config ]
+    needs: [ initial-check, check-applications, update-applications, collect-results, prepare-platform, commit-platform-changes, commit-platform-config ]
     if: always() && inputs.dry_run == false && needs.check-applications.result == 'success'
     outputs:
       notification_outcome: ${{ steps.send-success.outcome || steps.send-failure.outcome }}
     env:
       IS_SUCCESS: >-
         ${{
-            needs.prepare-applications.result == 'failure' && 'false' ||
+            needs.update-applications.result == 'failure' && 'false' ||
             needs.prepare-platform.result == 'failure' && 'false' ||
             needs.commit-platform-changes.result == 'failure' && 'false' ||
             'true'
@@ -656,7 +656,7 @@ jobs:
                   type: mrkdwn
                   text: >-
                     ${{
-                      needs.prepare-applications.result == 'failure' &&
+                      needs.update-applications.result == 'failure' &&
                         format(
                           'Reason: application preparation
                      Failed app(s): {0}',
@@ -685,7 +685,7 @@ jobs:
   workflow-summary:
     name: Workflow Summary
     runs-on: ubuntu-latest
-    needs: [initial-check, check-applications, prepare-applications, collect-results, prepare-platform, commit-platform-changes, commit-platform-config, slack_notification]
+    needs: [initial-check, check-applications, update-applications, collect-results, prepare-platform, commit-platform-changes, commit-platform-config, slack_notification]
     if: always()
     steps:
       - name: Generate Workflow Summary
@@ -729,7 +729,7 @@ jobs:
               echo "Set \`dry_run=false\` to apply changes."
               echo ""
 
-            elif [[ "${{ needs.check-applications.result }}" == "success" && "${{ needs.prepare-applications.result }}" == "success" ]]; then
+            elif [[ "${{ needs.check-applications.result }}" == "success" && "${{ needs.update-applications.result }}" == "success" ]]; then
               echo "- **Successfully Prepared**: $SUCCESS_COUNT"
               echo "- **Failed Applications**: $FAILURE_COUNT"
               echo ""
@@ -764,7 +764,7 @@ jobs:
               fi
               echo ""
 
-            elif [[ "${{ needs.check-applications.result }}" == "skipped" || "${{ needs.prepare-applications.result }}" == "skipped" ]]; then
+            elif [[ "${{ needs.check-applications.result }}" == "skipped" || "${{ needs.update-applications.result }}" == "skipped" ]]; then
               echo "### ⏭️ Preparation Skipped"
               echo "The preparation process was skipped. This may be due to:"
               echo "- Authorization check failure"
