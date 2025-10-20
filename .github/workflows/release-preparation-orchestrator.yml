@@ -597,25 +597,21 @@ jobs:
             needs.commit-platform-changes.result == 'failure' && 'false' ||
             'true'
         }}
-      PREPARED_APPS: ${{ needs.collect-results.outputs.prepared_apps }}
       FAILURE_REASON: >-
         ${{
-            needs.check-applications.result == 'failure' && format('Application validation failed. Failed app(s): {0}', needs.collect-results.outputs.failed_apps || 'Unknown') ||
-            needs.update-applications.result == 'failure' && format('Application update failed. Failed app(s): {0}', needs.collect-results.outputs.failed_apps || 'Unknown') ||
+            needs.check-applications.result == 'failure' && 'Application validation failed' ||
+            needs.update-applications.result == 'failure' && 'Application update failed' ||
             needs.prepare-platform.result == 'failure' && 'Platform template preparation failed' ||
             needs.commit-platform-changes.result == 'failure' && 'Platform branch commit failed' ||
             needs.commit-platform-config.result == 'failure' && 'Platform config commit failed' ||
             'Unknown failure'
         }}
+      IS_FAILED_APPS: >-
+        ${{ 
+            (needs.check-applications.result == 'failure' || needs.update-applications.result == 'failure') && 
+            'true' || 'false'
+        }}
     steps:
-      - name: Prepare Multiline Strings
-        id: prepare-multiline
-        run: |
-          set -eo pipefail
-
-          echo "::notice::Build prepared applications info string"
-          echo "prepared_applications<<EOF"$'\n'"$PREPARED_APPS"$'\n'EOF >> "$GITHUB_OUTPUT"
-
       - name: Send SUCCESS Slack Notification
         id: send-success
         if: env.IS_SUCCESS == 'true'
@@ -653,8 +649,7 @@ jobs:
                   "value": "<${{ github.server_url }}/${{ github.repository }}/commit/${{ needs.commit-platform-changes.outputs.commit_sha }}|${{ needs.commit-platform-changes.outputs.commit_sha }}>",
                   "short": true
                 }
-              ],
-              "footer": "Eureka CI/CD"
+              ]
             }
         uses: slackapi/slack-github-action@v2.1.1
         with:
@@ -673,7 +668,7 @@ jobs:
                 {
                   "color": "good",
                   "mrkdwn_in": ["text"],
-                  "text": ${{ toJSON(steps.prepare-multiline.outputs.prepared_applications) }},
+                  "text": ${{ toJSON(needs.collect-results.outputs.prepared_apps) }},
                   "footer": "Eureka CI/CD"
                 }
               ]
@@ -722,6 +717,13 @@ jobs:
                   "short": false
                 }
               ],
+              ${{ env.IS_FAILED_APPS == 'true' && '"footer": "Eureka CI/CD"' || '' }}
+            }
+          FAILED_APPS: |
+            {
+              "color": "danger",
+              "mrkdwn_in": ["text"],
+              "text": ${{ toJSON(needs.collect-results.outputs.failed_apps) }},
               "footer": "Eureka CI/CD"
             }
         uses: slackapi/slack-github-action@v2.1.1
@@ -737,7 +739,8 @@ jobs:
                 ${{ env.TITLE_BLOCK }}
               ],
               "attachments": [
-                ${{ env.FAILURE_ATTACHMENT }}
+                ${{ env.FAILURE_ATTACHMENT }},
+                ${{ env.IS_FAILED_APPS == 'true' && env.FAILED_APPS || '' }}
               ]
             }
 
