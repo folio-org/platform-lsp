@@ -117,14 +117,14 @@ jobs:
     steps:
       - name: Input parameters
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call'
+        env:
+          INPUT_PARAMS: ${{ toJSON(github.event.inputs) }}
         run: |
           set -eo pipefail
 
           echo "::notice::Input parameters"
           echo ""
-          cat <<'EOF'
-            ${{ toJSON(github.event.inputs) }}
-          EOF
+          echo "$INPUT_PARAMS" | jq '.'
           echo ""
 
           if [ "${{ inputs.dry_run }}" = "true" ]; then
