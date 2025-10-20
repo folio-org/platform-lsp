@@ -658,7 +658,7 @@ jobs:
                     ${{
                       needs.update-applications.result == 'failure' &&
                         format(
-                          'Reason: application preparation
+                          'Reason: application update
                      Failed app(s): {0}',
                           needs.collect-results.outputs.failed_apps || 'Unknown'
                         )
