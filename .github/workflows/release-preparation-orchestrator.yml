@@ -603,65 +603,6 @@ jobs:
             needs.commit-platform-config.result == 'failure' && 'Platform config commit failed' ||
             'Unknown failure'
         }}
-      SUCCESS_ATTACHMENT: |
-        {
-          "color": "good",
-          "fields": [
-            {
-              "title": "New Release",
-              "value": "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.new_release_branch }}|${{ inputs.new_release_branch }}>",
-              "short": true
-            },
-            {
-              "title": "Previous Release",
-              "value": "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.previous_release_branch }}|${{ inputs.previous_release_branch }}>",
-              "short": true
-            },
-            {
-              "title": "Applications Processed",
-              "value": "${{ needs.initial-check.outputs.application_count }}",
-              "short": true
-            },
-            {
-              "title": "Commit",
-              "value": "<${{ github.server_url }}/${{ github.repository }}/commit/${{ needs.commit-platform-changes.outputs.commit_sha }}|${{ needs.commit-platform-changes.outputs.commit_sha }}>",
-              "short": true
-            }
-          ],
-          "footer": "Eureka CI/CD"
-        }
-      FAILURE_ATTACHMENT: |
-        {
-          "color": "danger",
-          "fields": [
-            {
-              "title": "New Release",
-              "value": "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.new_release_branch }}|${{ inputs.new_release_branch }}>",
-              "short": true
-            },
-            {
-              "title": "Previous Release",
-              "value": "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.previous_release_branch }}|${{ inputs.previous_release_branch }}>",
-              "short": true
-            },
-            {
-              "title": "Applications Successfully Processed",
-              "value": "${{ needs.collect-results.outputs.success_count }}",
-              "short": true
-            },
-            {
-              "title": "Applications Failed",
-              "value": "${{ needs.collect-results.outputs.failure_count }}",
-              "short": true
-            },
-            {
-              "title": "Failure Reason",
-              "value": "${{ env.FAILURE_REASON }}",
-              "short": false
-            }
-          ],
-          "footer": "Eureka CI/CD"
-        }
     steps:
       - name: Prepare Multiline Strings
         id: prepare-multiline
@@ -683,6 +624,33 @@ jobs:
                 "type": "mrkdwn",
                 "text": "*Platform Release Preparation SUCCESS <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
               }
+            }
+          SUCCESS_ATTACHMENT: |
+            {
+              "color": "good",
+              "fields": [
+                {
+                  "title": "New Release",
+                  "value": "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.new_release_branch }}|${{ inputs.new_release_branch }}>",
+                  "short": true
+                },
+                {
+                  "title": "Previous Release",
+                  "value": "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.previous_release_branch }}|${{ inputs.previous_release_branch }}>",
+                  "short": true
+                },
+                {
+                  "title": "Applications Processed",
+                  "value": "${{ needs.initial-check.outputs.application_count }}",
+                  "short": true
+                },
+                {
+                  "title": "Commit",
+                  "value": "<${{ github.server_url }}/${{ github.repository }}/commit/${{ needs.commit-platform-changes.outputs.commit_sha }}|${{ needs.commit-platform-changes.outputs.commit_sha }}>",
+                  "short": true
+                }
+              ],
+              "footer": "Eureka CI/CD"
             }
         uses: slackapi/slack-github-action@v2.1.1
         with:
@@ -719,6 +687,38 @@ jobs:
                 "type": "mrkdwn",
                 "text": "*Platform Release Preparation FAILED <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
               }
+            }
+          FAILURE_ATTACHMENT: |
+            {
+              "color": "danger",
+              "fields": [
+                {
+                  "title": "New Release",
+                  "value": "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.new_release_branch }}|${{ inputs.new_release_branch }}>",
+                  "short": true
+                },
+                {
+                  "title": "Previous Release",
+                  "value": "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.previous_release_branch }}|${{ inputs.previous_release_branch }}>",
+                  "short": true
+                },
+                {
+                  "title": "Applications Successfully Processed",
+                  "value": "${{ needs.collect-results.outputs.success_count }}",
+                  "short": true
+                },
+                {
+                  "title": "Applications Failed",
+                  "value": "${{ needs.collect-results.outputs.failure_count }}",
+                  "short": true
+                },
+                {
+                  "title": "Failure Reason",
+                  "value": "${{ env.FAILURE_REASON }}",
+                  "short": false
+                }
+              ],
+              "footer": "Eureka CI/CD"
             }
         uses: slackapi/slack-github-action@v2.1.1
         with:
