@@ -36,7 +36,7 @@ Release Preparation orchestrates the transition from continuous development to s
 │  │  ├─ Version Validation                               │
 │  │  └─ Prerequisites Check                              │
 │  │                                                      │
-│  ├─ Phase 2: Execution (Prepare Applications)           │
+│  ├─ Phase 2: Execution (Update Applications)            │
 │  │  ├─ Branch Creation                                  │
 │  │  ├─ Version Updates                                  │
 │  │  ├─ Descriptor Modifications                         │
@@ -238,9 +238,9 @@ check-applications:
   secrets: inherit
 ```
 
-#### Phase 2b: Execution (Prepare Applications)
+#### Phase 2b: Execution (Update Applications)
 ```yaml
-prepare-applications:
+update-applications:
   name: Prepare ${{ matrix.application }} Application
   needs: [initial-check, check-applications]
   if: always() && needs.check-applications.result == 'success' && inputs.dry_run != true
@@ -265,8 +265,8 @@ prepare-applications:
 
 ```yaml
 collect-results:
-  needs: [initial-check, prepare-applications]
-  if: always() && needs.prepare-applications.result != 'skipped'
+  needs: [initial-check, update-applications]
+  if: always() && needs.update-applications.result != 'skipped'
 
   steps:
     - name: Download All Application Results
