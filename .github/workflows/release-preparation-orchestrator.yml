@@ -699,19 +699,19 @@ jobs:
     steps:
       - name: Generate Workflow Summary
         env:
-          TOTAL_APPS: ${{ needs.initial-check.outputs.application_count }}
-          SUCCESS_COUNT: ${{ needs.collect-results.outputs.success_count || '0' }}
-          FAILURE_COUNT: ${{ needs.collect-results.outputs.failure_count || '0' }}
-          FAILED_APPS: ${{ needs.collect-results.outputs.failed_apps }}
-          PREPARED_APPS: ${{ needs.collect-results.outputs.prepared_apps }}
-          PLATFORM_VERSION: ${{ needs.prepare-platform.outputs.platform_version }}
-          COMMIT_SHA: ${{ needs.commit-platform-changes.outputs.commit_sha }}
-          CONFIG_UPDATED: ${{ needs.commit-platform-config.outputs.config_updated }}
-          SLACK_OUTCOME: ${{ needs.slack_notification.outputs.notification_outcome }}
-          INITIAL_RESULT: ${{ needs.initial-check.result }}
-          CHECK_RESULT: ${{ needs.check-applications.result }}
-          UPDATE_RESULT: ${{ needs.update-applications.result }}
-          COLLECT_RESULT: ${{ needs.collect-results.result }}
+          TOTAL_APPS:           ${{ needs.initial-check.outputs.application_count }}
+          SUCCESS_COUNT:        ${{ needs.collect-results.outputs.success_count || '0' }}
+          FAILURE_COUNT:        ${{ needs.collect-results.outputs.failure_count || '0' }}
+          FAILED_APPS:          ${{ needs.collect-results.outputs.failed_apps }}
+          PREPARED_APPS:        ${{ needs.collect-results.outputs.prepared_apps }}
+          PLATFORM_VERSION:     ${{ needs.prepare-platform.outputs.platform_version }}
+          COMMIT_SHA:           ${{ needs.commit-platform-changes.outputs.commit_sha }}
+          CONFIG_UPDATED:       ${{ needs.commit-platform-config.outputs.config_updated }}
+          SLACK_OUTCOME:        ${{ needs.slack_notification.outputs.notification_outcome }}
+          INITIAL_RESULT:       ${{ needs.initial-check.result }}
+          CHECK_RESULT:         ${{ needs.check-applications.result }}
+          UPDATE_RESULT:        ${{ needs.update-applications.result }}
+          COLLECT_RESULT:       ${{ needs.collect-results.result }}
         run: |
           summary="$GITHUB_STEP_SUMMARY"
 
@@ -733,55 +733,93 @@ jobs:
 
           print_list() {
             [[ -z "$1" ]] && return
-            echo "$1" | while IFS= read -r line; do
-              [[ "$line" =~ \<([^|]+)\|([^>]+)\> ]] && line "- [${BASH_REMATCH[2]}](${BASH_REMATCH[1]})"
+            echo "$1" | while IFS= read -r l; do
+              [[ "$l" =~ \<([^|]+)\|([^>]+)\> ]] && echo "- [${BASH_REMATCH[2]}](${BASH_REMATCH[1]})"
             done >> "$summary"
           }
 
+          # 1) Aborted early
           if [[ "$INITIAL_RESULT" != "success" ]]; then
             section "❌ Workflow Aborted - Initial Check Failed"
-            line "Initial validation failed. Check the logs for details."
+            line "Initial validation failed. See the 'initial-check' logs."
+            line "\n---\n*Completed at $(date -u '+%Y-%m-%d %H:%M:%S UTC')*"
             exit 0
           fi
 
+          # 2) Dry run (no branches created, never show prepared links)
           if [[ "${{ inputs.dry_run }}" == "true" ]]; then
             section "🏃 Dry Run Mode"
             print_stats
             if [[ "$CHECK_RESULT" == "success" ]]; then
-              line "✅ All $TOTAL_APPS applications validated successfully (dry run)."
+              line "✅ All $TOTAL_APPS applications validated (no changes applied)."
+            elif [[ "$CHECK_RESULT" == "failure" ]]; then
+              line "❌ Some applications failed validation."
+              [[ -n "$FAILED_APPS" ]] && { line ""; line "**Failed Applications:**"; line "$FAILED_APPS"; }
             else
-              line "❌ Some applications failed validation:"
-              line "**Failed Applications:** $FAILED_APPS"
+              line "⚠️ Check phase ended with: \`$CHECK_RESULT\`"
             fi
+            line "\n---\n*Completed at $(date -u '+%Y-%m-%d %H:%M:%S UTC')*"
             exit 0
           fi
 
+          # 3) One of the app phases failed
           if [[ "$CHECK_RESULT" == "failure" || "$UPDATE_RESULT" == "failure" ]]; then
             section "⚠️ Some Applications Failed"
             print_stats
-            [[ "$SUCCESS_COUNT" -gt 0 ]] && { line "#### ✅ Prepared:"; print_list "$PREPARED_APPS"; }
-            [[ "$FAILURE_COUNT" -gt 0 ]] && { line "#### ❌ Failed:"; line "$FAILED_APPS"; }
-            exit 0
+
+            # If check failed, update didn't run → do NOT show prepared links
+            if [[ "$CHECK_RESULT" == "failure" ]]; then
+              line "**Phase**: Check (dry_run: true)"
+              line "Some apps failed validation. Update phase was skipped."
+              [[ -n "$FAILED_APPS" ]] && { line ""; line "#### ❌ Failed Applications"; line "$FAILED_APPS"; }
+              line "\n---\n*Completed at $(date -u '+%Y-%m-%d %H:%M:%S UTC')*"
+              exit 0
+            fi
+
+            # If update failed, it's partial → prepared links are safe to show
+            if [[ "$UPDATE_RESULT" == "failure" ]]; then
+              line "**Phase**: Update (dry_run: false)"
+              [[ "$SUCCESS_COUNT" -gt 0 && -n "$PREPARED_APPS" ]] && {
+                line ""; line "#### ✅ Prepared Applications ($SUCCESS_COUNT)"
+                print_list "$PREPARED_APPS"
+              }
+              [[ "$FAILURE_COUNT" -gt 0 && -n "$FAILED_APPS" ]] && {
+                line ""; line "#### ❌ Failed Applications ($FAILURE_COUNT)"
+                line "$FAILED_APPS"
+              }
+              line "\n---\n*Completed at $(date -u '+%Y-%m-%d %H:%M:%S UTC')*"
+              exit 0
+            fi
           fi
 
+          # 4) All green
           if [[ "$CHECK_RESULT" == "success" && "$UPDATE_RESULT" == "success" ]]; then
             section "✅ All Applications Prepared Successfully"
             print_stats
-            [[ -n "$PREPARED_APPS" ]] && { line "### 📦 Prepared Applications"; print_list "$PREPARED_APPS"; }
+
+            [[ -n "$PREPARED_APPS" ]] && {
+              line "### 📦 Prepared Applications"
+              print_list "$PREPARED_APPS"
+              line ""
+            }
+
             section "🎯 Platform Changes"
-            [[ -n "$COMMIT_SHA" ]] \
-              && line "- Template updated to $PLATFORM_VERSION ([${COMMIT_SHA:0:7}](${{ github.server_url }}/${{ github.repository }}/commit/$COMMIT_SHA))" \
-              || line "- No platform template changes committed"
+            if [[ -n "$COMMIT_SHA" ]]; then
+              line "- Template updated to $PLATFORM_VERSION ([\`${COMMIT_SHA:0:7}\`](${{ github.server_url }}/${{ github.repository }}/commit/$COMMIT_SHA))"
+            else
+              line "- No platform template changes committed"
+            fi
             [[ "$CONFIG_UPDATED" == "true" ]] && line "- Update config modified" || line "- No config changes"
-            exit 0
+          else
+            # 5) Unexpected state
+            section "⚠️ Unexpected Workflow State"
+            line "- Initial: \`$INITIAL_RESULT\`"
+            line "- Check: \`$CHECK_RESULT\`"
+            line "- Update: \`$UPDATE_RESULT\`"
+            line "- Collect: \`$COLLECT_RESULT\`"
           fi
 
-          section "⚠️ Unexpected Workflow State"
-          line "- Initial: $INITIAL_RESULT"
-          line "- Check: $CHECK_RESULT"
-          line "- Update: $UPDATE_RESULT"
-          line "- Collect: $COLLECT_RESULT"
-
+          # Notification (summary only)
           section "📨 Notification"
           if [[ "${{ inputs.dry_run }}" == "true" ]]; then
             line "ℹ️ Slack notification skipped (dry run)"
@@ -794,3 +832,4 @@ jobs:
           fi
 
           line "\n---\n*Completed at $(date -u '+%Y-%m-%d %H:%M:%S UTC')*"
+
