@@ -420,53 +420,53 @@ jobs:
           package-json: ${{ steps.read-package-json.outputs.package_json_content }}
           ui-modules: ${{ steps.fetch-updated-ui-modules.outputs.ui-modules }}
 
-#       - name: Write updated package.json
-#         id: write-package-json
-#         if: steps.update-package-json.outputs.has-updates == 'true'
-#         run: |
-#           set -euo pipefail
-#           echo "::notice::Writing updated package.json content"
-#
-#           # Write the updated package.json content to file
-#           echo '${{ steps.update-package-json.outputs.package-json }}' | jq . > package.json
-#
-#           # Verify the file was written correctly
-#           if [ ! -s package.json ]; then
-#             echo "::error::Failed to write updated package.json"
-#             exit 1
-#           fi
-#
-#           echo "::notice::Successfully updated package.json with ${{ steps.update-package-json.outputs.updated-count }} dependency changes"
-#
-#           # Log updated UI modules to step summary
-#           if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
-#             {
-#               echo "## Package.json Updates";
-#               echo "- **Updated dependencies:** ${{ steps.update-package-json.outputs.updated-count }}";
-#               echo "";
-#               echo "### Updated UI Modules:";
-#               echo '```';
-#               echo '${{ steps.update-package-json.outputs.updated-ui-report }}' | jq -r '.[] | "- " + .name + ": " + .change.old + " -> " + .change.new';
-#               echo '```';
-#               if [[ '${{ steps.update-package-json.outputs.not-found-ui-report }}' != '{}' ]]; then
-#                 echo "";
-#                 echo "### UI Modules Not Found in Dependencies:";
-#                 echo '```';
-#                 echo '${{ steps.update-package-json.outputs.not-found-ui-report }}' | jq -r 'to_entries[] | "- " + .key + ": " + .value';
-#                 echo '```';
-#               fi
-#             } >> "$GITHUB_STEP_SUMMARY"
-#           fi
+      - name: Write updated package.json
+        id: write-package-json
+        if: steps.update-package-json.outputs.has-updates == 'true'
+        run: |
+          set -euo pipefail
+          echo "::notice::Writing updated package.json content"
 
-#       - name: Upload Descriptor Artifact
-#         if: steps.update-descriptor.outputs.updated == 'true'
-#         uses: actions/upload-artifact@v4.3.6
-#         with:
-#           name: platform-lsp-descriptor-update
-#           path: |
-#             ${{ env.STATE_FILE }}
-#             package.json
-#           retention-days: 1
+          # Write the updated package.json content to file
+          echo '${{ steps.update-package-json.outputs.package-json }}' | jq . > package.json
+
+          # Verify the file was written correctly
+          if [ ! -s package.json ]; then
+            echo "::error::Failed to write updated package.json"
+            exit 1
+          fi
+
+          echo "::notice::Successfully updated package.json with ${{ steps.update-package-json.outputs.updated-count }} dependency changes"
+
+          # Log updated UI modules to step summary
+          if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+            {
+              echo "## Package.json Updates";
+              echo "- **Updated dependencies:** ${{ steps.update-package-json.outputs.updated-count }}";
+              echo "";
+              echo "### Updated UI Modules:";
+              echo '```';
+              echo '${{ steps.update-package-json.outputs.updated-ui-report }}' | jq -r '.[] | "- " + .name + ": " + .change.old + " -> " + .change.new';
+              echo '```';
+              if [[ '${{ steps.update-package-json.outputs.not-found-ui-report }}' != '{}' ]]; then
+                echo "";
+                echo "### UI Modules Not Found in Dependencies:";
+                echo '```';
+                echo '${{ steps.update-package-json.outputs.not-found-ui-report }}' | jq -r 'to_entries[] | "- " + .key + ": " + .value';
+                echo '```';
+              fi
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload Descriptor Artifact
+        if: steps.update-descriptor.outputs.updated == 'true'
+        uses: actions/upload-artifact@v4.3.6
+        with:
+          name: platform-lsp-descriptor-update
+          path: |
+            ${{ env.STATE_FILE }}
+            package.json
+          retention-days: 1
   
   commit-changes:
     name: Commit and Push Changes
