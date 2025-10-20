@@ -594,6 +594,83 @@ jobs:
             'true'
         }}
       PREPARED_APPS: ${{ needs.collect-results.outputs.prepared_apps }}
+      FAILURE_REASON: >-
+        ${{
+            needs.check-applications.result == 'failure' && format('Application validation failed. Failed app(s): {0}', needs.collect-results.outputs.failed_apps || 'Unknown') ||
+            needs.update-applications.result == 'failure' && format('Application update failed. Failed app(s): {0}', needs.collect-results.outputs.failed_apps || 'Unknown') ||
+            needs.prepare-platform.result == 'failure' && 'Platform template preparation failed' ||
+            needs.commit-platform-changes.result == 'failure' && 'Platform branch commit failed' ||
+            needs.commit-platform-config.result == 'failure' && 'Platform config commit failed' ||
+            'Unknown failure'
+        }}
+      TITLE_TEXT: "Platform Release Preparation ${{ env.IS_SUCCESS == 'true' && 'SUCCESS' || 'FAILED' }}"
+      TITLE_BLOCK: |
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*Platform Release Preparation ${{ env.IS_SUCCESS == 'true' && 'SUCCESS' || 'FAILED' }} <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+          }
+        }
+      SUCCESS_ATTACHMENT: |
+        {
+          "color": "good",
+          "fields": [
+            {
+              "title": "New Release",
+              "value": "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.new_release_branch }}|${{ inputs.new_release_branch }}>",
+              "short": true
+            },
+            {
+              "title": "Previous Release",
+              "value": "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.previous_release_branch }}|${{ inputs.previous_release_branch }}>",
+              "short": true
+            },
+            {
+              "title": "Applications Processed",
+              "value": "${{ needs.initial-check.outputs.application_count }}",
+              "short": true
+            },
+            {
+              "title": "Commit",
+              "value": "<${{ github.server_url }}/${{ github.repository }}/commit/${{ needs.commit-platform-changes.outputs.commit_sha }}|${{ needs.commit-platform-changes.outputs.commit_sha }}>",
+              "short": true
+            }
+          ],
+          "footer": "Eureka CI/CD"
+        }
+      FAILURE_ATTACHMENT: |
+        {
+          "color": "danger",
+          "fields": [
+            {
+              "title": "New Release",
+              "value": "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.new_release_branch }}|${{ inputs.new_release_branch }}>",
+              "short": true
+            },
+            {
+              "title": "Previous Release",
+              "value": "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.previous_release_branch }}|${{ inputs.previous_release_branch }}>",
+              "short": true
+            },
+            {
+              "title": "Applications Successfully Processed",
+              "value": "${{ needs.collect-results.outputs.success_count }}",
+              "short": true
+            },
+            {
+              "title": "Applications Failed",
+              "value": "${{ needs.collect-results.outputs.failure_count }}",
+              "short": true
+            },
+            {
+              "title": "Failure Reason",
+              "value": "${{ env.FAILURE_REASON }}",
+              "short": false
+            }
+          ],
+          "footer": "Eureka CI/CD"
+        }
     steps:
       - name: Prepare Multiline Strings
         id: prepare-multiline
@@ -612,32 +689,22 @@ jobs:
           token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
           errors: true
           payload: |
-            channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
-            text: "Platform Release Preparation SUCCESS"
-            blocks:
-              - type: section
-                text:
-                  type: mrkdwn
-                  text: "*Platform Release Preparation SUCCESS <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
-            attachments:
-              - color: "good"
-                fields:
-                  - title: "New Release"
-                    value: "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.new_release_branch }}|${{ inputs.new_release_branch }}>"
-                    short: true
-                  - title: "Previous Release"
-                    value: "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.previous_release_branch }}|${{ inputs.previous_release_branch }}>"
-                    short: true
-                  - title: "Applications Processed"
-                    value: "${{ needs.initial-check.outputs.application_count }}"
-                    short: true
-                  - title: "Commit"
-                    value: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ needs.commit-platform-changes.outputs.commit_sha }}|${{ needs.commit-platform-changes.outputs.commit_sha }}>"
-                    short: true
-              - color: "good"
-                mrkdwn_in: ["text"]
-                text: ${{ toJSON(steps.prepare-multiline.outputs.prepared_applications) }}
-                footer: "Eureka CI/CD"
+            {
+              "channel": "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}",
+              "text": "${{ env.TITLE_TEXT }}",
+              "blocks": [
+                ${{ env.TITLE_BLOCK }}
+              ],
+              "attachments": [
+                ${{ env.SUCCESS_ATTACHMENT }},
+                {
+                  "color": "good",
+                  "mrkdwn_in": ["text"],
+                  "text": ${{ toJSON(steps.prepare-multiline.outputs.prepared_applications) }},
+                  "footer": "Eureka CI/CD"
+                }
+              ]
+            }
 
       - name: Send FAILED Slack Notification
         id: send-failure
@@ -648,43 +715,16 @@ jobs:
           token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
           errors: true
           payload: |
-            channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
-            text: "Platform Release Preparation FAILED"
-            blocks:
-              - type: section
-                text:
-                  type: mrkdwn
-                  text: "*Platform Release Preparation FAILED <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
-              - type: section
-                text:
-                  type: mrkdwn
-                  text: >-
-                    ${{
-                      needs.update-applications.result == 'failure' &&
-                        format(
-                          'Reason: application update
-                     Failed app(s): {0}',
-                          needs.collect-results.outputs.failed_apps || 'Unknown'
-                        )
-                      ||
-                      'Reason: platform preparation'
-                    }}
-            attachments:
-              - color: "danger"
-                fields:
-                  - title: "New Release"
-                    value: "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.new_release_branch }}|${{ inputs.new_release_branch }}>"
-                    short: true
-                  - title: "Previous Release"
-                    value: "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.previous_release_branch }}|${{ inputs.previous_release_branch }}>"
-                    short: true
-                  - title: "Applications Successfully Processed"
-                    value: "${{ needs.collect-results.outputs.success_count }}"
-                    short: true
-                  - title: "Applications Failed"
-                    value: "${{ needs.collect-results.outputs.failure_count }}"
-                    short: true
-                footer: "Eureka CI/CD"
+            {
+              "channel": "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}",
+              "text": "${{ env.TITLE_TEXT }}",
+              "blocks": [
+                ${{ env.TITLE_BLOCK }}
+              ],
+              "attachments": [
+                ${{ env.FAILURE_ATTACHMENT }}
+              ]
+            }
 
   workflow-summary:
     name: Workflow Summary
