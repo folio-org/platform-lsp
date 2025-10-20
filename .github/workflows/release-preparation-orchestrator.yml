@@ -584,6 +584,7 @@ jobs:
     env:
       IS_SUCCESS: >-
         ${{
+            needs.check-applications.result == 'failure' && 'false' ||
             needs.update-applications.result == 'failure' && 'false' ||
             needs.prepare-platform.result == 'failure' && 'false' ||
             needs.commit-platform-changes.result == 'failure' && 'false' ||
@@ -763,7 +764,6 @@ jobs:
             exit 0
           fi
 
-          # All successful
           if [[ "$CHECK_RESULT" == "success" && "$UPDATE_RESULT" == "success" ]]; then
             section "✅ All Applications Prepared Successfully"
             print_stats
