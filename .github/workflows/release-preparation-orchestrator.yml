@@ -300,6 +300,7 @@ jobs:
     if: always() && needs.check-applications.result != 'skipped'
     outputs:
       failed_apps: ${{ steps.gather-failures.outputs.failed_apps }}
+      successful_apps: ${{ steps.gather-failures.outputs.successful_apps }}
       success_count: ${{ steps.gather-failures.outputs.success_count }}
       failure_count: ${{ steps.gather-failures.outputs.failure_count }}
       prepared_apps: ${{ steps.gather-failures.outputs.prepared_apps }}
@@ -323,6 +324,7 @@ jobs:
           success_count=$(jq '[.[] | select(.status=="success")] | length' <<<"$all")
           failure_count=$(jq '[.[] | select(.status!="success")] | length' <<<"$all")
           failed_apps=$(jq -r '[.[] | select(.status!="success") | .application] | join(", ")' <<<"$all")
+          successful_apps=$(jq -r '[.[] | select(.status=="success") | .application] | join(", ")' <<<"$all")
 
           prepared_apps=$(jq -r --arg base "${GITHUB_SERVER_URL}" --arg branch "${{ inputs.new_release_branch }}" '
             [.[]
@@ -337,6 +339,7 @@ jobs:
           echo "failed_apps=$failed_apps" >> "$GITHUB_OUTPUT"
           echo "success_count=$success_count" >> "$GITHUB_OUTPUT"
           echo "failure_count=$failure_count" >> "$GITHUB_OUTPUT"
+          echo "successful_apps=$successful_apps" >> "$GITHUB_OUTPUT"
           {
             echo "prepared_apps<<EOF"
             printf '%s\n' "$prepared_apps"
@@ -703,6 +706,7 @@ jobs:
           SUCCESS_COUNT: ${{ needs.collect-results.outputs.success_count || '0' }}
           FAILURE_COUNT: ${{ needs.collect-results.outputs.failure_count || '0' }}
           FAILED_APPS: ${{ needs.collect-results.outputs.failed_apps }}
+          SUCCESSFUL_APPS: ${{ needs.collect-results.outputs.successful_apps }}
           PREPARED_APPS: ${{ needs.collect-results.outputs.prepared_apps }}
           PLATFORM_VERSION: ${{ needs.prepare-platform.outputs.platform_version }}
           COMMIT_SHA: ${{ needs.commit-platform-changes.outputs.commit_sha }}
@@ -760,7 +764,7 @@ jobs:
             section "⚠️ Some Applications Failed"
             print_stats
           
-            [[ "$CHECK_RESULT" == "failure" && "$SUCCESS_COUNT" -gt 0 ]] && { line "#### ✅ Successfully checked:"; line "$PREPARED_APPS"; }
+            [[ "$CHECK_RESULT" == "failure" && "$SUCCESS_COUNT" -gt 0 ]] && { line "#### ✅ Successfully checked:"; line "$SUCCESSFUL_APPS"; }
             [[ "$UPDATE_RESULT" == "failure" && "$SUCCESS_COUNT" -gt 0 ]] && { line "#### ✅ Prepared:"; print_list "$PREPARED_APPS"; }
             [[ "$FAILURE_COUNT" -gt 0 ]] && { line "#### ❌ Failed:"; line "$FAILED_APPS"; }
             exit 0
