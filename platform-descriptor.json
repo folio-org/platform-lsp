@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.0.1-SNAPSHOT.100100000001709"
+        "version": "3.0.1-SNAPSHOT.100100000001889"
       }
     ],
     "optional": [
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100100000001746"
+        "version": "1.2.0-SNAPSHOT.100100000001922"
       },
       {
         "name": "app-consortia",
@@ -66,7 +66,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.3.0-SNAPSHOT.100100000001644"
+        "version": "1.3.0-SNAPSHOT.100100000001891"
       },
       {
         "name": "app-ebsconet",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100100000000720"
+        "version": "1.2.0-SNAPSHOT.100100000001917"
       },
       {
         "name": "app-reading-room",
