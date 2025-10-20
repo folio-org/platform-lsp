@@ -603,15 +603,6 @@ jobs:
             needs.commit-platform-config.result == 'failure' && 'Platform config commit failed' ||
             'Unknown failure'
         }}
-      TITLE_TEXT: "Platform Release Preparation ${{ env.IS_SUCCESS == 'true' && 'SUCCESS' || 'FAILED' }}"
-      TITLE_BLOCK: |
-        {
-          "type": "section",
-          "text": {
-            "type": "mrkdwn",
-            "text": "*Platform Release Preparation ${{ env.IS_SUCCESS == 'true' && 'SUCCESS' || 'FAILED' }} <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
-          }
-        }
       SUCCESS_ATTACHMENT: |
         {
           "color": "good",
@@ -683,6 +674,16 @@ jobs:
       - name: Send SUCCESS Slack Notification
         id: send-success
         if: env.IS_SUCCESS == 'true'
+        env:
+          TITLE_TEXT: "Platform Release Preparation SUCCESS"
+          TITLE_BLOCK: |
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*Platform Release Preparation SUCCESS <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+              }
+            }
         uses: slackapi/slack-github-action@v2.1.1
         with:
           method: chat.postMessage
@@ -709,6 +710,16 @@ jobs:
       - name: Send FAILED Slack Notification
         id: send-failure
         if: env.IS_SUCCESS == 'false'
+        env:
+          TITLE_TEXT: "Platform Release Preparation FAILED"
+          TITLE_BLOCK: |
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*Platform Release Preparation FAILED <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+              }
+            }
         uses: slackapi/slack-github-action@v2.1.1
         with:
           method: chat.postMessage
