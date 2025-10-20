@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100100000001921"
+        "version": "1.0.0-SNAPSHOT.100100000001928"
       },
       {
         "name": "app-bulk-edit",
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-ebsconet",
-        "version": "1.1.0-SNAPSHOT.100100000001047"
+        "version": "1.1.0-SNAPSHOT.100100000001936"
       },
       {
         "name": "app-edge-complete",
@@ -102,7 +102,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100100000001938"
+        "version": "1.1.0-SNAPSHOT.100100000001943"
       },
       {
         "name": "app-lists",
