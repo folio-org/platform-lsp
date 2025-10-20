@@ -327,8 +327,8 @@ jobs:
 
           success_count=$(jq '[.[] | select(.status=="success")] | length' <<<"$all")
           failure_count=$(jq '[.[] | select(.status!="success")] | length' <<<"$all")
-          failed_apps=$(jq -r '[.[] | select(.status!="success") | .application] | join(", ")' <<<"$all")
-          successful_apps=$(jq -r '[.[] | select(.status=="success") | .application] | join(", ")' <<<"$all")
+          failed_apps=$(jq -r '[.[] | select(.status!="success") | .application] | join("\n")' <<<"$all")
+          successful_apps=$(jq -r '[.[] | select(.status=="success") | .application] | join("\n")' <<<"$all")
 
           prepared_apps=$(jq -r --arg base "${GITHUB_SERVER_URL}" --arg branch "${{ inputs.new_release_branch }}" '
             [.[]
@@ -340,15 +340,23 @@ jobs:
 
           echo "::notice::Results Summary - Success: $success_count, Failures: $failure_count"
 
-          echo "failed_apps=$failed_apps" >> "$GITHUB_OUTPUT"
           echo "success_count=$success_count" >> "$GITHUB_OUTPUT"
           echo "failure_count=$failure_count" >> "$GITHUB_OUTPUT"
-          echo "successful_apps=$successful_apps" >> "$GITHUB_OUTPUT"
           {
             echo "prepared_apps<<EOF"
             printf '%s\n' "$prepared_apps"
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
+          {
+            echo "successful_apps<<EOF"
+            printf '%s\n' "$successful_apps"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          {
+            echo "failed_apps<<EOF"
+            printf '%s\n' "$failed_apps"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"          
 
   prepare-platform:
     name: Prepare Platform Template
