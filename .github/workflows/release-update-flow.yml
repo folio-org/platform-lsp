@@ -87,8 +87,8 @@ defaults:
 
 env:
   STATE_FILE: platform-descriptor.json
-  GH_TOKEN: ${{ github.token }}
   FAR_URL: 'https://far.ci.folio.org'
+  ARTIFACT_NAME: platform-lsp-update-files
 
 jobs:
   determine-source-branch:
@@ -153,7 +153,6 @@ jobs:
             echo "pr_url=" >> "$GITHUB_OUTPUT"
           fi
 
-  # Renamed from update-platform to update-platform to align with workflow outputs
   update-platform:
     name: Read & Update Platform Descriptor
     needs: determine-source-branch
@@ -433,9 +432,9 @@ jobs:
 
       - name: Upload Descriptor Artifact
         if: steps.update-descriptor.outputs.updated == 'true'
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4
         with:
-          name: platform-lsp-descriptor-update
+          name: ${{ env.ARTIFACT_NAME }}
           path: |
             ${{ env.STATE_FILE }}
             package.json
@@ -449,41 +448,41 @@ jobs:
     with:
       repo: ${{ inputs.repo }}
       branch: ${{ inputs.update_branch }}
-      artifact_name: platform-lsp-descriptor-update
+      artifact_name: ${{ env.ARTIFACT_NAME }}
       commit_message: |
         Update platform to ${{ needs.update-platform.outputs.new_version }}.
 
         Updated modules:
-        ${{ needs.update-platform.outputs.updated_report }}
+        ${{ needs.update-platform.outputs.updated_modules }}
       dry_run: ${{ inputs.dry_run }}
       use_github_app: true
       source_branch: ${{ needs.determine-source-branch.outputs.source_branch }}
     secrets: inherit
 
-#   manage-pr:
-#     name: Manage Pull Request
-#     needs: [determine-source-branch, update-application, commit-changes]
-#     if: |
-#       always() &&
-#       !inputs.dry_run &&
-#       !cancelled() &&
-#       needs.update-application.result == 'success' &&
-#       (
-#         needs.update-application.outputs.updated == 'true' ||
-#         (
-#           needs.determine-source-branch.outputs.pr_exists != 'true' &&
-#           needs.determine-source-branch.outputs.update_branch_exists == 'true'
-#         )
-#       )
-#     runs-on: ubuntu-latest
-#     outputs:
-#       pr_created: ${{ steps.create-pr.outputs.pr_created == 'true' }}
-#       pr_updated: ${{ steps.update-pr.outputs.pr_updated == 'true' }}
-#       pr_number: ${{ steps.create-pr.outputs.pr_number || steps.update-pr.outputs.pr_number || needs.determine-source-branch.outputs.pr_number || '' }}
-#       pr_url: ${{ steps.create-pr.outputs.pr_url || steps.update-pr.outputs.pr_url || needs.determine-source-branch.outputs.pr_url || '' }}
-#       successful_reviewers: ${{ steps.create-pr.outputs.successful_reviewers || steps.update-pr.outputs.successful_reviewers || '' }}
-#       failed_reviewers: ${{ steps.create-pr.outputs.failed_reviewers || steps.update-pr.outputs.failed_reviewers || '' }}
-#     steps:
+  manage-pr:
+    name: Manage Pull Request
+    needs: [determine-source-branch, update-platform, commit-changes]
+    if: |
+      always() &&
+      !inputs.dry_run &&
+      !cancelled() &&
+      needs.update-platform.result == 'success' &&
+      (
+        needs.update-platform.outputs.updated == 'true' ||
+        (
+          needs.determine-source-branch.outputs.pr_exists != 'true' &&
+          needs.determine-source-branch.outputs.update_branch_exists == 'true'
+        )
+      )
+    runs-on: ubuntu-latest
+    outputs:
+      pr_created: ${{ steps.create-pr.outputs.pr_created == 'true' }}
+      pr_updated: ${{ steps.update-pr.outputs.pr_updated == 'true' }}
+      pr_number: ${{ steps.create-pr.outputs.pr_number || steps.update-pr.outputs.pr_number || needs.determine-source-branch.outputs.pr_number || '' }}
+      pr_url: ${{ steps.create-pr.outputs.pr_url || steps.update-pr.outputs.pr_url || needs.determine-source-branch.outputs.pr_url || '' }}
+      successful_reviewers: ${{ steps.create-pr.outputs.successful_reviewers || steps.update-pr.outputs.successful_reviewers || '' }}
+      failed_reviewers: ${{ steps.create-pr.outputs.failed_reviewers || steps.update-pr.outputs.failed_reviewers || '' }}
+    steps:
 #       - name: Compare Application Versions
 #         id: compare
 #         uses: folio-org/kitfox-github/.github/actions/compare-state-files@master
@@ -495,66 +494,67 @@ jobs:
 #           head-source: ${{ inputs.update_branch }}
 #           state-file: 'application-descriptor.json'
 #           github-token: ${{ github.token }}
-#
-#       - name: Generate App Token
-#         id: app-token
-#         uses: actions/create-github-app-token@v1
-#         with:
-#           app-id: ${{ vars.EUREKA_CI_APP_ID }}
-#           private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
-#           owner: ${{ github.repository_owner }}
-#           repositories: ${{ inputs.app_name }}
-#
-#       - name: Create PR if needed
-#         id: create-pr
-#         if: |
-#           needs.determine-source-branch.outputs.pr_exists != 'true' &&
-#           (needs.update-application.outputs.updated == 'true' ||
-#            needs.determine-source-branch.outputs.update_branch_exists == 'true')
-#         uses: folio-org/kitfox-github/.github/actions/create-pr@master
-#         with:
-#           repo: ${{ inputs.repo }}
-#           base_branch: ${{ inputs.release_branch }}
-#           head_branch: ${{ inputs.update_branch }}
-#           pr_title: "Release: Update to ${{ steps.compare.outputs.new-version || 'No updates' }}"
-#           pr_body: |
-#             ## Automated Module Updates for Release
-#
-#             **New Version:** ${{ steps.compare.outputs.new-version || 'No version change' }}
-#             **Total modules updated:** ${{ steps.compare.outputs.updates-cnt || '0' }}
-#
-#             ### Updated Modules:
-#             ```
-#             ${{ steps.compare.outputs.updated-modules || 'No modules updated' }}
-#             ```
-#
-#             This PR was automatically generated by the release scan workflow.
-#           pr_labels: ${{ inputs.pr_labels }}
-#           pr_reviewers: ${{ inputs.pr_reviewers }}
-#           github_token: ${{ steps.app-token.outputs.token || github.token }}
-#
-#       - name: Update existing PR if needed
-#         id: update-pr
-#         if: |
-#           needs.determine-source-branch.outputs.pr_exists == 'true' &&
-#           needs.update-application.outputs.updated == 'true'
-#         uses: folio-org/kitfox-github/.github/actions/update-pr@master
-#         with:
-#           repo: ${{ inputs.repo }}
-#           pr_number: ${{ needs.determine-source-branch.outputs.pr_number }}
-#           pr_title: "Release: Update to ${{ steps.compare.outputs.new-version }}"
-#           pr_body: |
-#             ## Automated Module Updates for Release
-#
-#             **New Version:** ${{ steps.compare.outputs.new-version }}
-#             **Total modules updated:** ${{ steps.compare.outputs.updates-cnt }}
-#
-#             ### Updated Modules:
-#             ```
-#             ${{ steps.compare.outputs.updated-modules }}
-#             ```
-#
-#             This PR was automatically generated by the release scan workflow.
-#           pr_labels: ${{ inputs.pr_labels }}
-#           pr_reviewers: ${{ inputs.pr_reviewers }}
-#           github_token: ${{ steps.app-token.outputs.token || github.token }}
+
+      - name: Generate App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.EUREKA_CI_APP_ID }}
+          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ inputs.app_name }}
+
+      - name: Create PR if needed
+        id: create-pr
+        if: |
+          needs.determine-source-branch.outputs.pr_exists != 'true' &&
+          (needs.update-platform.outputs.updated == 'true' ||
+           needs.determine-source-branch.outputs.update_branch_exists == 'true')
+        uses: folio-org/kitfox-github/.github/actions/create-pr@master
+        with:
+          repo: ${{ inputs.repo }}
+          base_branch: ${{ inputs.release_branch }}
+          head_branch: ${{ inputs.update_branch }}
+          pr_title: "Release: Update to ${{ needs.update-platform.outputs.new_version || 'No updates' }}"
+          pr_body: |
+            ## Automated Module Updates for Release
+
+            **New Version:** ${{ needs.update-platform.outputs.new_version || 'No version change' }}
+            **Total modules updated:** ${{ needs.update-platform.outputs.updates_cnt || '0' }}
+
+            ### Updated Modules:
+            ```
+            ${{ needs.update-platform.outputs.updated_report || 'No modules updated' }}
+            ```
+
+
+            This PR was automatically generated by the release scan workflow.
+          pr_labels: ${{ inputs.pr_labels }}
+          pr_reviewers: ${{ inputs.pr_reviewers }}
+          github_token: ${{ steps.app-token.outputs.token || github.token }}
+
+      - name: Update existing PR if needed
+        id: update-pr
+        if: |
+          needs.determine-source-branch.outputs.pr_exists == 'true' &&
+          needs.update-platform.outputs.updated == 'true'
+        uses: folio-org/kitfox-github/.github/actions/update-pr@master
+        with:
+          repo: ${{ inputs.repo }}
+          pr_number: ${{ needs.determine-source-branch.outputs.pr_number }}
+          pr_title: "Release: Update to ${{ steps.compare.outputs.new-version }}"
+          pr_body: |
+            ## Automated Module Updates for Release
+
+            **New Version:** ${{ needs.update-platform.outputs.new_version }}
+            **Total modules updated:** ${{ needs.update-platform.outputs.updates_cnt }}
+
+            ### Updated Modules:
+            ```
+            ${{ needs.update-platform.outputs.updated_report }}
+            ```
+
+            This PR was automatically generated by the release scan workflow.
+          pr_labels: ${{ inputs.pr_labels }}
+          pr_reviewers: ${{ inputs.pr_reviewers }}
+          github_token: ${{ steps.app-token.outputs.token || github.token }}
