@@ -4,10 +4,6 @@ on:
 #   workflow_call:
   workflow_dispatch:
     inputs:
-      app_name:
-        description: 'Application name'
-        required: true
-        type: string
       repo:
         description: 'Application repository name (org/repo format)'
         required: true
@@ -61,21 +57,12 @@ on:
 #       updated_modules:
 #         description: 'List of updated Eureka components and applications'
 #         value: ${{ jobs.update-platform.outputs.updated_modules }}
-#       previous_version:
-#         description: 'Previous platform version'
-#         value: ${{ jobs.update-platform.outputs.previous_version }}
 #       new_version:
 #         description: 'New platform version if updated'
 #         value: ${{ jobs.update-platform.outputs.new_version }}
 #       updates_cnt:
 #         description: 'Number of updates'
 #         value: ${{ jobs.update-platform.outputs.updates_cnt }}
-#       platform_descriptor_file:
-#         description: 'Generated platform descriptor file path'
-#         value: ${{ jobs.update-platform.outputs.platform_descriptor_file }}
-#       platform_descriptor_file_name:
-#         description: 'Name of updated platform descriptor file'
-#         value: ${{ jobs.update-platform.outputs.platform_descriptor_file_name }}
 #       workflow_status:
 #         description: 'Overall workflow status'
 #         value: ${{ jobs.determine-source-branch.result == 'failure' && 'failure' || (jobs.update-platform.result == 'failure' && 'failure' || (jobs.commit-changes.result == 'failure' && 'failure' || (jobs.manage-pr.result == 'failure' && 'failure' || 'success'))) }}
@@ -99,9 +86,9 @@ defaults:
     shell: bash
 
 env:
-  APP_NAME: ${{ inputs.app_name }}
   STATE_FILE: platform-descriptor.json
   GH_TOKEN: ${{ github.token }}
+  FAR_URL: 'https://far.ci.folio.org'
 
 jobs:
   determine-source-branch:
@@ -176,11 +163,8 @@ jobs:
       updated_components: ${{ steps.update-descriptor.outputs.updated_eureka_components }}
       updated_applications: ${{ steps.update-descriptor.outputs.updated_applications }}
       updated_modules: ${{ steps.update-descriptor.outputs.updated_modules }}
-      previous_version: ${{ steps.update-descriptor.outputs.previous_version }}
       new_version: ${{ steps.update-descriptor.outputs.new_version }}
       updates_cnt: ${{ steps.update-descriptor.outputs.updates_cnt }}
-      platform_descriptor_file: ${{ steps.update-descriptor.outputs.platform_descriptor_file }}
-      platform_descriptor_file_name: ${{ steps.update-descriptor.outputs.platform_descriptor_file_name }}
       failure_reason: ${{ steps.update-descriptor.outputs.failure_reason }}
     steps:
       - name: Checkout Platform Repository
@@ -192,9 +176,9 @@ jobs:
           fetch-depth: 1
 
       # gh CLI is pre-installed on ubuntu-latest runners; retained comment for self-hosted scenarios.
-      - name: Ensure gh CLI
+      # - name: Ensure gh CLI
         # if: runner.os != 'Linux' # adjust as needed for self-hosted matrices
-        run: sudo apt-get update && sudo apt-get install -y gh
+        # run: sudo apt-get update && sudo apt-get install -y gh
 
       - name: Read descriptor file
         id: read-descriptor
@@ -258,46 +242,40 @@ jobs:
           UPDATED: false
           FAILURE_REASON: ''
         run: |
-          # set -euo pipefail
-          set -x
+          set -euo pipefail
+          # set -x TODO remove comment after debugging
           echo "::notice::Checking for updated eureka components and applications"
 
-          # Extract previous version and set file paths (outputs)
           PREVIOUS_VERSION=$(jq -r '.version // "unknown"' "$STATE_FILE")
           echo "::notice::Current platform version is $PREVIOUS_VERSION"
-          {
-            echo "previous_version=$PREVIOUS_VERSION"
-            echo "platform_descriptor_file=$PWD/$STATE_FILE"
-            echo "platform_descriptor_file_name=$STATE_FILE"
-          } >> "$GITHUB_OUTPUT"
 
           CURRENT_EUREKA_COMPONENTS=$(jq -c '.["eureka-components"]' "$STATE_FILE")
           CURRENT_APPLICATIONS=$(jq -c '.applications' "$STATE_FILE")
 
-          # Check if components or applications changed
           if [ "$UPDATED_EUREKA_COMPONENTS" != "$CURRENT_EUREKA_COMPONENTS" ] || [ "$UPDATED_APPLICATIONS" != "$CURRENT_APPLICATIONS" ]; then
+            [ "$UPDATED_EUREKA_COMPONENTS" != "$CURRENT_EUREKA_COMPONENTS" ] && echo "::notice::Eureka components have been updated"
+            [ "$UPDATED_APPLICATIONS" != "$CURRENT_APPLICATIONS" ] && echo "::notice::Applications have been updated"
             UPDATED=true
 
-            echo "::debug::Eureka components have been updated"
+            echo "::notice::Eureka components have been updated"
 
             if [[ "$PREVIOUS_VERSION" =~ ^(R[0-9]+-[0-9]+)\.([0-9]+)$ ]]; then
               BASE_VERSION="${BASH_REMATCH[1]}"
               PATCH_VERSION="${BASH_REMATCH[2]}"
               NEW_VERSION="${BASE_VERSION}.$((PATCH_VERSION + 1))"
+            else
+              FAILURE_REASON="Previous version '$PREVIOUS_VERSION' does not match expected format 'R<iteration>-<year>.<patch>'"
+              echo "::error::$FAILURE_REASON"
+              exit 1
             fi
 
-
-            # Update version and both components and applications in a single jq operation
             jq --arg version "$NEW_VERSION" \
               --argjson components "$UPDATED_EUREKA_COMPONENTS" \
               --argjson applications "$UPDATED_APPLICATIONS" \
               '.version = $version | .["eureka-components"] = $components | .applications = $applications' \
-              "$STATE_FILE" > "${STATE_FILE}.tmp" && mv "${STATE_FILE}.tmp" "$STATE_FILE"
+              "$STATE_FILE" > "${STATE_FILE}.tmp"
+            mv "${STATE_FILE}.tmp" "$STATE_FILE"
 
-            # Log what was updated
-            [ "$UPDATED_EUREKA_COMPONENTS" != "$CURRENT_EUREKA_COMPONENTS" ] && echo "::notice::Eureka components have been updated"
-            [ "$UPDATED_APPLICATIONS" != "$CURRENT_APPLICATIONS" ] && echo "::notice::Applications have been updated"
-             # Output updated components for downstream steps
             {
               echo "updated=$UPDATED"
               echo "new_version=$NEW_VERSION"
@@ -345,7 +323,6 @@ jobs:
             echo "updates_cnt=$UPDATES_CNT" >> "$GITHUB_OUTPUT"
           fi
 
-          # Update step summary if available
           if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
             {
               echo "## Descriptor File Updates";
@@ -366,18 +343,13 @@ jobs:
 
           echo "failure_reason=$FAILURE_REASON" >> "$GITHUB_OUTPUT"
 
-          # Debug output print of updated descriptor
-          echo "::debug::Updated descriptor file content:"
-          ls -al
-          cat "$STATE_FILE"
-
       - name: Fetch updated UI modules list
         id: fetch-updated-ui-modules
         if: steps.update-descriptor.outputs.updated == 'true'
         uses: folio-org/platform-lsp/.github/actions/fetch-updated-ui-modules@RANCHER-2324
         with:
           applications: ${{ steps.update-descriptor.outputs.updated_applications }}
-          far-url: 'https://far.ci.folio.org'
+          far-url: $FAR_URL
 
       - name: Read package.json content
         id: read-package-json
