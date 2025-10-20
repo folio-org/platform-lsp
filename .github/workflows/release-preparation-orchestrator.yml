@@ -55,6 +55,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.new_release_branch }}
+  cancel-in-progress: false
+
 env:
   PLATFORM_TEMPLATE_FILE: 'platform.template.json'
   UPDATE_CONFIG_FILE: '.github/update-config.yml'
