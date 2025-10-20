@@ -274,7 +274,7 @@ jobs:
     secrets: inherit
 
   update-applications:
-    name: Prepare ${{ matrix.application }} Application
+    name: Update ${{ matrix.application }} Application
     needs: [initial-check, check-applications]
     if: always() && needs.check-applications.result == 'success' && inputs.dry_run != true
     strategy:
