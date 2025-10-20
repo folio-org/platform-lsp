@@ -239,6 +239,8 @@ jobs:
 
       - name: Detect Default Branch
         id: detect-default-branch
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -eo pipefail
 
