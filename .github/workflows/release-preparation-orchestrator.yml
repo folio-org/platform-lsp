@@ -764,9 +764,9 @@ jobs:
             section "⚠️ Some Applications Failed"
             print_stats
           
-            [[ "$CHECK_RESULT" == "failure" && "$SUCCESS_COUNT" -gt 0 ]] && { line "#### ✅ Successfully checked:"; line "$SUCCESSFUL_APPS"; }
+            [[ "$CHECK_RESULT" == "failure" && "$SUCCESS_COUNT" -gt 0 ]] && { line "#### ✅ Successfully checked:"; print_list "$SUCCESSFUL_APPS"; }
             [[ "$UPDATE_RESULT" == "failure" && "$SUCCESS_COUNT" -gt 0 ]] && { line "#### ✅ Prepared:"; print_list "$PREPARED_APPS"; }
-            [[ "$FAILURE_COUNT" -gt 0 ]] && { line "#### ❌ Failed:"; line "$FAILED_APPS"; }
+            [[ "$FAILURE_COUNT" -gt 0 ]] && { line "#### ❌ Failed:"; print_list "$FAILED_APPS"; }
             exit 0
           fi
 
