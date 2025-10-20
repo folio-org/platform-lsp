@@ -16,7 +16,7 @@ import logging
 import argparse
 from datetime import datetime
 from functools import lru_cache
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 # ---------------------------------------------------------------------------
 # Logging setup
@@ -33,7 +33,7 @@ logger = logging.getLogger("app-updater")
 # Configuration
 # ---------------------------------------------------------------------------
 # Load environment variables from .env file (optional local usage)
-load_dotenv()
+# load_dotenv()
 
 FAR_BASE_URL = os.getenv("FAR_BASE_URL", "https://far.ci.folio.org")
 FILTER_SCOPE = os.getenv("FILTER_SCOPE", "patch").lower()  # major | minor | patch
