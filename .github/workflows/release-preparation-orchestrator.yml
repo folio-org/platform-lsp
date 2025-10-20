@@ -122,7 +122,9 @@ jobs:
 
           echo "::notice::Input parameters"
           echo ""
-          echo "${{ toJSON(github.event.inputs) }}"
+          cat <<'EOF'
+            ${{ toJSON(github.event.inputs) }}
+          EOF
           echo ""
 
           if [ "${{ inputs.dry_run }}" = "true" ]; then
