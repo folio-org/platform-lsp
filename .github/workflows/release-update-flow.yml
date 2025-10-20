@@ -39,49 +39,49 @@ on:
         required: false
         type: string
         default: ''
-    outputs:
-      pr_created:
-        description: 'Whether a PR was created or updated'
-        value: ${{ jobs.manage-pr.outputs.pr_created || jobs.manage-pr.outputs.pr_updated }}
-      pr_number:
-        description: 'PR number if created or updated'
-        value: ${{ jobs.manage-pr.outputs.pr_number }}
-      pr_url:
-        description: 'PR URL if created or updated'
-        value: ${{ jobs.manage-pr.outputs.pr_url }}
-      successful_reviewers:
-        description: 'Successfully added reviewers'
-        value: ${{ jobs.manage-pr.outputs.successful_reviewers }}
-      failed_reviewers:
-        description: 'Failed to add reviewers'
-        value: ${{ jobs.manage-pr.outputs.failed_reviewers }}
-      updated:
-        description: 'Whether the platform descriptor was updated'
-        value: ${{ jobs.update-platform.outputs.updated }}
-      updated_modules:
-        description: 'List of updated Eureka components and applications'
-        value: ${{ jobs.update-platform.outputs.updated_modules }}
-      previous_version:
-        description: 'Previous platform version'
-        value: ${{ jobs.update-platform.outputs.previous_version }}
-      new_version:
-        description: 'New platform version if updated'
-        value: ${{ jobs.update-platform.outputs.new_version }}
-      updates_cnt:
-        description: 'Number of updates'
-        value: ${{ jobs.update-platform.outputs.updates_cnt }}
-      platform_descriptor_file:
-        description: 'Generated platform descriptor file path'
-        value: ${{ jobs.update-platform.outputs.platform_descriptor_file }}
-      platform_descriptor_file_name:
-        description: 'Name of updated platform descriptor file'
-        value: ${{ jobs.update-platform.outputs.platform_descriptor_file_name }}
-      workflow_status:
-        description: 'Overall workflow status'
-        value: ${{ jobs.determine-source-branch.result == 'failure' && 'failure' || (jobs.update-platform.result == 'failure' && 'failure' || (jobs.commit-changes.result == 'failure' && 'failure' || (jobs.manage-pr.result == 'failure' && 'failure' || 'success'))) }}
-      failure_reason:
-        description: 'Reason for workflow failure if any'
-        value: ${{ jobs.determine-source-branch.result == 'failure' && 'Failed to determine source branch' || (jobs.update-platform.result == 'failure' && 'Failed to update application modules' || (jobs.update-platform.result == 'skipped' && 'Update application job was skipped' || (jobs.commit-changes.result == 'failure' && 'Failed to commit changes to branch' || (jobs.manage-pr.result == 'failure' && 'Failed to manage pull request' || '')))) }}
+#     outputs:
+#       pr_created:
+#         description: 'Whether a PR was created or updated'
+#         value: ${{ jobs.manage-pr.outputs.pr_created || jobs.manage-pr.outputs.pr_updated }}
+#       pr_number:
+#         description: 'PR number if created or updated'
+#         value: ${{ jobs.manage-pr.outputs.pr_number }}
+#       pr_url:
+#         description: 'PR URL if created or updated'
+#         value: ${{ jobs.manage-pr.outputs.pr_url }}
+#       successful_reviewers:
+#         description: 'Successfully added reviewers'
+#         value: ${{ jobs.manage-pr.outputs.successful_reviewers }}
+#       failed_reviewers:
+#         description: 'Failed to add reviewers'
+#         value: ${{ jobs.manage-pr.outputs.failed_reviewers }}
+#       updated:
+#         description: 'Whether the platform descriptor was updated'
+#         value: ${{ jobs.update-platform.outputs.updated }}
+#       updated_modules:
+#         description: 'List of updated Eureka components and applications'
+#         value: ${{ jobs.update-platform.outputs.updated_modules }}
+#       previous_version:
+#         description: 'Previous platform version'
+#         value: ${{ jobs.update-platform.outputs.previous_version }}
+#       new_version:
+#         description: 'New platform version if updated'
+#         value: ${{ jobs.update-platform.outputs.new_version }}
+#       updates_cnt:
+#         description: 'Number of updates'
+#         value: ${{ jobs.update-platform.outputs.updates_cnt }}
+#       platform_descriptor_file:
+#         description: 'Generated platform descriptor file path'
+#         value: ${{ jobs.update-platform.outputs.platform_descriptor_file }}
+#       platform_descriptor_file_name:
+#         description: 'Name of updated platform descriptor file'
+#         value: ${{ jobs.update-platform.outputs.platform_descriptor_file_name }}
+#       workflow_status:
+#         description: 'Overall workflow status'
+#         value: ${{ jobs.determine-source-branch.result == 'failure' && 'failure' || (jobs.update-platform.result == 'failure' && 'failure' || (jobs.commit-changes.result == 'failure' && 'failure' || (jobs.manage-pr.result == 'failure' && 'failure' || 'success'))) }}
+#       failure_reason:
+#         description: 'Reason for workflow failure if any'
+#         value: ${{ jobs.determine-source-branch.result == 'failure' && 'Failed to determine source branch' || (jobs.update-platform.result == 'failure' && 'Failed to update application modules' || (jobs.update-platform.result == 'skipped' && 'Update application job was skipped' || (jobs.commit-changes.result == 'failure' && 'Failed to commit changes to branch' || (jobs.manage-pr.result == 'failure' && 'Failed to manage pull request' || '')))) }}
 
 permissions:
   contents: write
