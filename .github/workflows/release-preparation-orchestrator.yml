@@ -788,6 +788,7 @@ jobs:
       - collect-results
       - prepare-platform
       - commit-platform-changes
+      - update-platform-config
       - commit-platform-config
       - slack_notification
     if: always()
