@@ -486,7 +486,7 @@ jobs:
           else
             echo "::notice::$UPDATE_CONFIG_FILE not found, creating from template"
 
-            git clone --depth 1 https://github.com/folio-org/platform-lsp.git /tmp/platform-lsp
+            git clone --depth 1 https://github.com/folio-org/platform-lsp.git /tmp/platform-lsp -b RANCHER-2572-test #TODO: Remove specific branch
 
             template_path="/tmp/platform-lsp/$UPDATE_CONFIG_TEMPLATE_PATH"
             if [ ! -f "$template_path" ]; then
