@@ -448,7 +448,7 @@ jobs:
     with:
       repo: ${{ inputs.repo }}
       branch: ${{ inputs.update_branch }}
-      artifact_name: ${{ env.ARTIFACT_NAME }}
+      artifact_name: "${{ env.ARTIFACT_NAME }}"
       commit_message: |
         Update platform to ${{ needs.update-platform.outputs.new_version }}.
 
