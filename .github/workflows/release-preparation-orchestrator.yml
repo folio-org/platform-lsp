@@ -793,8 +793,13 @@ jobs:
           SUCCESSFUL_APPS: ${{ needs.collect-results.outputs.successful_apps }}
           PREPARED_APPS: ${{ needs.collect-results.outputs.prepared_apps }}
           PLATFORM_VERSION: ${{ needs.prepare-platform.outputs.platform_version }}
-          COMMIT_SHA: ${{ needs.commit-platform-changes.outputs.commit_sha }}
-          CONFIG_UPDATED: ${{ needs.commit-platform-config.outputs.config_updated }}
+          PLATFORM_UPDATE_RESULT: ${{ needs.prepare-platform.result }}
+          PLATFORM_COMMIT_RESULT: ${{ needs.commit-platform-changes.result }}
+          PLATFORM_COMMIT_SHA: ${{ needs.commit-platform-changes.outputs.commit_sha }}
+          CONFIG_UPDATED: ${{ needs.update-platform-config.outputs.config_updated }}
+          CONFIG_UPDATE_RESULT: ${{ needs.update-platform-config.result }}
+          CONFIG_COMMIT_RESULT: ${{ needs.commit-platform-config.result }}
+          CONFIG_COMMIT_SHA: ${{ needs.commit-platform-config.outputs.commit_sha }}
           SLACK_OUTCOME: ${{ needs.slack_notification.outputs.notification_outcome }}
           INITIAL_RESULT: ${{ needs.initial-check.result }}
           CHECK_RESULT: ${{ needs.check-applications.result }}
@@ -867,11 +872,36 @@ jobs:
             section "✅ All Applications Prepared Successfully"
             print_stats
             [[ -n "$PREPARED_APPS" ]] && { line "### 📦 Prepared Applications"; print_list "$PREPARED_APPS"; }
+          
             section "🎯 Platform Changes"
-            [[ -n "$COMMIT_SHA" ]] \
-              && line "- Template updated to $PLATFORM_VERSION ([${COMMIT_SHA:0:7}](${{ github.server_url }}/${{ github.repository }}/commit/$COMMIT_SHA))" \
-              || line "- No platform template changes committed"
-            [[ "$CONFIG_UPDATED" == "true" ]] && line "- Update config modified" || line "- No config changes"
+            if [[ "$PLATFORM_UPDATE_RESULT" == "success" ]]; then
+              if [[ "$PLATFORM_COMMIT_RESULT" == "success" && -n "$PLATFORM_COMMIT_SHA" ]]; then
+                line "- ✅ Template updated to $PLATFORM_VERSION and committed ([${PLATFORM_COMMIT_SHA:0:7}](${{ github.server_url }}/${{ github.repository }}/commit/$PLATFORM_COMMIT_SHA))"
+              elif [[ "$PLATFORM_COMMIT_RESULT" == "success" ]]; then
+                line "- ✅ Template updated to $PLATFORM_VERSION and committed"
+              else
+                line "- ⚠️ Template updated to $PLATFORM_VERSION but not committed"
+              fi
+            else
+              line "- ❌ Template update failed or skipped"
+            fi
+
+            if [[ "$CONFIG_UPDATE_RESULT" == "success" ]]; then
+              if [[ "$CONFIG_UPDATED" == "true" ]]; then
+                if [[ "$CONFIG_COMMIT_RESULT" == "success" && -n "$CONFIG_COMMIT_SHA" ]]; then
+                  line "- ✅ Config updated and committed ([${CONFIG_COMMIT_SHA:0:7}](${{ github.server_url }}/${{ github.repository }}/commit/$CONFIG_COMMIT_SHA))"
+                elif [[ "$CONFIG_COMMIT_RESULT" == "success" ]]; then
+                  line "- ✅ Config updated and committed"
+                else
+                  line "- ⚠️ Config updated but not committed"
+                fi
+              else
+                line "- ℹ️ Config already up-to-date (no changes needed)"
+              fi
+            else
+              line "- ❌ Config update failed or skipped"
+            fi
+          
             exit 0
           fi
 
@@ -891,5 +921,3 @@ jobs:
               *)       line "ℹ️ Slack notification: $SLACK_OUTCOME" ;;
             esac
           fi
-
-          line "\n---\n*Completed at $(date -u '+%Y-%m-%d %H:%M:%S UTC')*"
