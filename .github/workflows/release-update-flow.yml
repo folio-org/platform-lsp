@@ -89,6 +89,7 @@ env:
   STATE_FILE: platform-descriptor.json
   FAR_URL: 'https://far.ci.folio.org'
   ARTIFACT_NAME: platform-lsp-update-files
+  GH_TOKEN: ${{ github.token }}
 
 jobs:
   determine-source-branch:
