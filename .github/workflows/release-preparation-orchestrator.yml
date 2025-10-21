@@ -557,7 +557,7 @@ jobs:
   commit-platform-changes:
     name: Commit Platform Release Branch
     needs: [initial-check, prepare-platform]
-    if: needs.prepare-platform.result == 'success'
+    if: always() && needs.prepare-platform.result == 'success'
     uses: folio-org/kitfox-github/.github/workflows/commit-and-push-changes.yml@RANCHER-2572-test #TODO: Switch back to master
     with:
       repo: ${{ github.repository }}
@@ -581,7 +581,7 @@ jobs:
   commit-platform-config:
     name: Commit Platform Config to Default Branch
     needs: [initial-check, update-platform-config, commit-platform-changes]
-    if: needs.update-platform-config.result == 'success'
+    if: always() && needs.update-platform-config.result == 'success'
     uses: folio-org/kitfox-github/.github/workflows/commit-and-push-changes.yml@RANCHER-2572-test #TODO: Switch back to master
     with:
       repo: ${{ github.repository }}
