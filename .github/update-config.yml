@@ -1,0 +1,26 @@
+update_config:
+  enabled: true
+  update_branch_format: version-update/{0}
+  labels:
+    - version-update
+  pr_reviewers:
+    - folio-org/kitfox
+branches:
+  - snapshot:
+      enabled: true
+      name: "FOLIO Sunflower Version"
+      description: "FOLIO Snapshot LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system."
+      need_pr: false
+      pre_release: "only"
+  - R2-2025:
+      enabled: true
+      need_pr: true
+      preRelease: "false"
+      name: FOLIO Sunflower Release
+      description: FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.
+#  - R2-2024:
+#      enabled: true
+#      need_pr: true
+#      pre_release: "false"
+#      name: "FOLIO Sunflower Release"
+#      description: "FOLIO Sunflower LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system."6
