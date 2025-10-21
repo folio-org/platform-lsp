@@ -128,9 +128,9 @@ jobs:
       pr_labels: ${{ steps.get-config.outputs.pr_labels }}
       update_branches_map: ${{ steps.get-config.outputs.update_branches_map }}
     steps:
-      - name: Get Release Configuration
+      - name: Get Update Configuration
         id: get-config
-        uses: folio-org/kitfox-github/.github/actions/get-release-config@master
+        uses: folio-org/kitfox-github/.github/actions/get-update-config@master
         with:
           repo: folio-org/${{ matrix.application }}
           github_token: ${{ github.token }}
@@ -223,7 +223,7 @@ jobs:
               | {
                   application: .application,
                   release_branch: .,
-                  update_branch: $update_map[.],
+                  update_branch: ($update_map[.] // ""),
                   pr_reviewers: $reviewers,
                   pr_labels: $labels
                 }
