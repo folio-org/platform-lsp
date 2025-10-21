@@ -434,7 +434,7 @@ jobs:
         if: steps.update-descriptor.outputs.updated == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARTIFACT_NAME }}
+          name: "${{ env.ARTIFACT_NAME }}"
           path: |
             ${{ env.STATE_FILE }}
             package.json
