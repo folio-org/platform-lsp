@@ -161,9 +161,11 @@ jobs:
       updated: ${{ steps.update-descriptor.outputs.updated }}
       updated_components: ${{ steps.update-descriptor.outputs.updated_eureka_components }}
       updated_applications: ${{ steps.update-descriptor.outputs.updated_applications }}
+      updated_report: ${{ steps.update-descriptor.outputs.updated_report }}
       updated_modules: ${{ steps.update-descriptor.outputs.updated_modules }}
       new_version: ${{ steps.update-descriptor.outputs.new_version }}
       updates_cnt: ${{ steps.update-descriptor.outputs.updates_cnt }}
+      artifact_name: ${{ env.ARTIFACT_NAME }}
       failure_reason: ${{ steps.update-descriptor.outputs.failure_reason }}
     steps:
       - name: Checkout Platform Repository
@@ -448,7 +450,7 @@ jobs:
     with:
       repo: ${{ inputs.repo }}
       branch: ${{ inputs.update_branch }}
-      artifact_name: "${{ env.ARTIFACT_NAME }}"
+      artifact_name: ${{ needs.update-platform.outputs.artifact_name }}
       commit_message: |
         Update platform to ${{ needs.update-platform.outputs.new_version }}.
 
