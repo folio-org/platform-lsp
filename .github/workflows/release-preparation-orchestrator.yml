@@ -419,12 +419,23 @@ jobs:
           jq --slurpfile results "$results_file" '
             reduce $results[0][] as $r (
               .;
-              .applications.required |= map(
-                if .name == $r.application then .version = ("^" + $r.version) | .preRelease = "false" else . end
-              )
-              | .applications.optional |= map(
-                if .name == $r.application then .version = ("^" + $r.version) | .preRelease = "false" else . end
-              )
+              # Check if application exists in required or optional
+              if ([.applications.required[]?, .applications.optional[]? | .name] | any(. == $r.application)) then
+                # Application exists, update it
+                .applications.required |= map(
+                  if .name == $r.application then .version = ("^" + $r.version) | .preRelease = "false" else . end
+                )
+                | .applications.optional |= map(
+                  if .name == $r.application then .version = ("^" + $r.version) | .preRelease = "false" else . end
+                )
+              else
+                # Application doesn't exist, add it to required
+                .applications.optional += [{
+                  name: $r.application,
+                  version: ("^" + $r.version),
+                  preRelease: "false"
+                }]
+              end
             )
           ' "$PLATFORM_TEMPLATE_FILE" > "$tmp"
 
