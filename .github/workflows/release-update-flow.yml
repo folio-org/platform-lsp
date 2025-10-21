@@ -1,0 +1,63 @@
+name: Release update (Flow)
+
+on:
+#   workflow_call:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: 'Application repository name (org/repo format)'
+        required: true
+        type: string
+      release_branch:
+        description: 'Release branch to scan (e.g., R1-2025)'
+        required: true
+        type: string
+      update_branch:
+        description: 'Update branch name for this release branch'
+        required: true
+        type: string
+      workflow_run_number:
+        description: 'GitHub run number for display'
+        required: true
+        type: string
+      dry_run:
+        description: 'Perform dry run without creating PRs'
+        required: false
+        type: boolean
+        default: false
+      pr_reviewers:
+        description: 'Comma-separated list of reviewers (users or teams with org/ prefix)'
+        required: false
+        type: string
+        default: ''
+      pr_labels:
+        description: 'Comma-separated list of labels to add to PR'
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+# Prevent overlapping runs for the same repo / release branch
+concurrency:
+  group: release-update-${{ inputs.repo }}-${{ inputs.release_branch }}
+  cancel-in-progress: false
+
+# Consistent shell usage & safer defaults
+defaults:
+  run:
+    shell: bash
+
+env:
+  STATE_FILE: platform-descriptor.json
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hello world step
+        run: echo "Hello, world!"
