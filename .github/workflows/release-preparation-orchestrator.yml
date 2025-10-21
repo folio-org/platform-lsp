@@ -597,7 +597,15 @@ jobs:
   slack_notification:
     name: Slack Notification
     runs-on: ubuntu-latest
-    needs: [ initial-check, check-applications, update-applications, collect-results, prepare-platform, commit-platform-changes, commit-platform-config ]
+    needs:
+      - initial-check
+      - check-applications
+      - update-applications
+      - collect-results
+      - prepare-platform
+      - commit-platform-changes
+      - update-platform-config
+      - commit-platform-config
     if: always() && inputs.dry_run == false
     outputs:
       notification_outcome: ${{ steps.send-success.outcome || steps.send-failure.outcome }}
@@ -608,6 +616,9 @@ jobs:
             needs.update-applications.result == 'failure' && 'false' ||
             needs.prepare-platform.result == 'failure' && 'false' ||
             needs.commit-platform-changes.result == 'failure' && 'false' ||
+            needs.update-platform-config.result == 'failure' && 'false' ||
+            needs.commit-platform-config.result == 'failure' && 'false' ||
+            needs.collect-results.result == 'failure' && 'false' ||
             'true'
         }}
       FAILURE_REASON: >-
@@ -615,6 +626,8 @@ jobs:
             needs.check-applications.result == 'failure' && 'Application validation failed' ||
             needs.update-applications.result == 'failure' && 'Application update failed' ||
             needs.prepare-platform.result == 'failure' && 'Platform template preparation failed' ||
+            needs.update-platform-config.result == 'failure' && 'Platform config update failed' ||
+            needs.collect-results.result == 'failure' && 'Application result collection failed' ||
             needs.commit-platform-changes.result == 'failure' && 'Platform branch commit failed' ||
             needs.commit-platform-config.result == 'failure' && 'Platform config commit failed' ||
             'Unknown failure'
