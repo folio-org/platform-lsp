@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100100000002015"
+        "version": "2.1.0-SNAPSHOT.100100000002030"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.0.1-SNAPSHOT.100100000001974"
+        "version": "3.0.1-SNAPSHOT.100100000002032"
       }
     ],
     "optional": [
@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100100000002047"
+        "version": "1.0.0-SNAPSHOT.100100000002058"
       },
       {
         "name": "app-bulk-edit",
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.0.0-SNAPSHOT.100100000000850"
+        "version": "1.0.0-SNAPSHOT.100100000002026"
       },
       {
         "name": "app-erm-usage",
@@ -102,7 +102,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100100000002040"
+        "version": "1.1.0-SNAPSHOT.100100000002078"
       },
       {
         "name": "app-lists",
