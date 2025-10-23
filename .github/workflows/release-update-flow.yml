@@ -359,13 +359,13 @@ jobs:
 
           # Ensure UPDATED_REPORT has content
           if [ -z "${UPDATED_REPORT:-}" ] || [ "$(jq 'length' <<< "$UPDATED_REPORT")" -eq 0 ]; then
-            markdown='### Module Updates\n\nNo modules were updated.'
+            markdown=$'### Module Updates\n\nNo modules were updated.'
           else
-            # Build a Dependabot-style summary and table
             header_line="This change updates ${UPDATES_CNT} module(s) for platform version ${NEW_VERSION}."
-            table_header='| Module | Old Version | New Version |\n| ------ | ----------- | ----------- |'
+            # Build table rows with real newlines
             table_rows=$(jq -r '.[] | "| " + .name + " | " + .change.old + " | " + .change.new + " |"' <<< "$UPDATED_REPORT")
-            markdown="### Module Updates\n\n$header_line\n\n$table_header\n$table_rows\n\n> Generated automatically by release-update workflow."
+            # Compose full markdown using printf to ensure proper newlines
+            markdown=$(printf '### Module Updates\n\n%s\n\n| Module | Old Version | New Version |\n| ------ | ----------- | ----------- |\n%s\n\n> Generated automatically by release-update workflow.' "$header_line" "$table_rows")
           fi
 
           {
@@ -374,7 +374,6 @@ jobs:
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
-          # Optional: write to step summary for visibility
           if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
             echo "$markdown" >> "$GITHUB_STEP_SUMMARY"
           fi
