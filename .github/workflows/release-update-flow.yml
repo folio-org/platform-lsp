@@ -164,9 +164,9 @@ jobs:
       updates_cnt: ${{ steps.build-change-report.outputs.updates_cnt }}
       artifact_name: ${{ env.ARTIFACT_NAME }}
       failure_reason: ${{ steps.calculate-new-version.outputs.failure_reason }}
-      updates_markdown: ${{ steps.generate-updates-markdown.outputs.updates_markdown }}
-      ui_updates_markdown: ${{ steps.generate-ui-updates-markdown.outputs.ui_updates_markdown }}
-      missing_ui_markdown: ${{ steps.generate-missing-ui-report.outputs.missing_ui_markdown }}
+      updates_markdown: ${{ steps.generate-markdown-reports.outputs.updates_markdown }}
+      ui_updates_markdown: ${{ steps.generate-markdown-reports.outputs.ui_updates_markdown }}
+      missing_ui_markdown: ${{ steps.generate-markdown-reports.outputs.missing_ui_markdown }}
     steps:
       - name: Checkout Platform Repository
         uses: actions/checkout@v4
@@ -399,32 +399,7 @@ jobs:
             } >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      - name: Generate Markdown Update Report
-        id: generate-updates-markdown
-        if: steps.calculate-new-version.outputs.updated == 'true'
-        env:
-          UPDATED_REPORT: ${{ steps.build-change-report.outputs.updated_report }}
-          UPDATES_CNT: ${{ steps.build-change-report.outputs.updates_cnt }}
-          NEW_VERSION: ${{ steps.calculate-new-version.outputs.new_version }}
-        run: |
-          set -euo pipefail
-          IFS=$'\n\t'
-          if [ -z "${UPDATED_REPORT:-}" ] || [ "$(jq 'length' <<< "$UPDATED_REPORT")" -eq 0 ]; then
-            markdown=$'### Application & Component Updates\n\nNo applications or eureka components were updated.'
-          else
-            header_line="This change updates ${UPDATES_CNT} application(s) and/or eureka component(s) for platform version ${NEW_VERSION}."
-            table_rows=$(jq -r '.[] | "| " + .name + " | " + .change.old + " | " + .change.new + " |"' <<< "$UPDATED_REPORT")
-            markdown=$(printf '### Application & Component Updates\n\n%s\n\n| Name | Old Version | New Version |\n| ---- | ----------- | ----------- |\n%s\n\n> Generated automatically by release-update workflow.' "$header_line" "$table_rows")
-          fi
-          {
-            echo 'updates_markdown<<EOF'
-            echo "$markdown"
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
-          if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
-            echo "$markdown" >> "$GITHUB_STEP_SUMMARY"
-          fi
-
+      # Newly reinserted steps to gather UI dependency info prior to consolidated markdown generation
       - name: Fetch updated UI modules list
         id: fetch-updated-ui-modules
         if: steps.calculate-new-version.outputs.updated == 'true'
@@ -474,19 +449,12 @@ jobs:
         run: |
           set -euo pipefail
           echo "::notice::Writing updated package.json content"
-
-          # Write the updated package.json content to file
           echo '${{ steps.update-package-json.outputs.package-json }}' | jq . > package.json
-
-          # Verify the file was written correctly
           if [ ! -s package.json ]; then
             echo "::error::Failed to write updated package.json"
             exit 1
           fi
-
           echo "::notice::Successfully updated package.json with ${{ steps.update-package-json.outputs.updated-count }} dependency changes"
-
-          # Log updated UI modules to step summary
           if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
             {
               echo "## Package.json Updates";
@@ -506,56 +474,116 @@ jobs:
             } >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      - name: Generate UI Dependency Update Report
-        id: generate-ui-updates-markdown
-        if: steps.update-package-json.outputs.has-updates == 'true'
+      # Consolidated markdown generation step (replaces three previous steps)
+      - name: Generate Markdown Reports
+        id: generate-markdown-reports
+        if: steps.calculate-new-version.outputs.updated == 'true'
         env:
+          UPDATED_REPORT: ${{ steps.build-change-report.outputs.updated_report }}
+          UPDATES_CNT: ${{ steps.build-change-report.outputs.updates_cnt }}
+          NEW_VERSION: ${{ steps.calculate-new-version.outputs.new_version }}
           UPDATED_UI_REPORT: ${{ steps.update-package-json.outputs.updated-ui-report }}
           UPDATED_COUNT: ${{ steps.update-package-json.outputs.updated-count }}
-        run: |
-          set -euo pipefail
-          IFS=$'\n\t'
-          if [ -z "${UPDATED_UI_REPORT:-}" ] || [ "${UPDATED_UI_REPORT}" = '[]' ] || [ "$(jq 'length' <<< "$UPDATED_UI_REPORT")" -eq 0 ]; then
-            markdown=$'### UI Dependency Updates\n\nNo UI dependencies were updated.'
-          else
-            header_line="This change updates ${UPDATED_COUNT} UI dependency(ies) in package.json."
-            table_rows=$(jq -r '.[] | "| " + .name + " | " + .change.old + " | " + .change.new + " |"' <<< "$UPDATED_UI_REPORT")
-            markdown=$(printf '### UI Dependency Updates\n\n%s\n\n| Dependency | Old Version | New Version |\n| ---------- | ----------- | ----------- |\n%s\n\n> Generated automatically by release-update workflow.' "$header_line" "$table_rows")
-          fi
-          {
-            echo 'ui_updates_markdown<<EOF'
-            echo "$markdown"
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
-          if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
-            echo "$markdown" >> "$GITHUB_STEP_SUMMARY"
-          fi
-
-      - name: Generate Missing UI Dependencies Report
-        id: generate-missing-ui-report
-        if: steps.update-package-json.outputs.not-found-ui-report != '{}' && steps.update-package-json.outputs.not-found-ui-report != ''
-        env:
           NOT_FOUND_UI_REPORT: ${{ steps.update-package-json.outputs.not-found-ui-report }}
         run: |
           set -euo pipefail
           IFS=$'\n\t'
-          if [ -z "${NOT_FOUND_UI_REPORT:-}" ] || [ "${NOT_FOUND_UI_REPORT}" = '{}' ]; then
-            markdown=$'### Missing UI Dependencies\n\nNo missing UI dependencies detected.'
+
+          render_table() {
+            local json="$1" header="$2" jq_rows="$3"
+            if [ -z "${json:-}" ]; then
+              echo ''
+              return 0
+            fi
+            # Determine length (arrays or objects both supported via length)
+            local count
+            if ! count=$(jq 'length' <<< "$json" 2>/dev/null); then
+              echo ''
+              return 0
+            fi
+            if [ "$count" -eq 0 ]; then
+              echo ''
+              return 0
+            fi
+            # Print header
+            IFS='|' read -r -a cols <<< "$header"
+            local header_line='|'
+            local separator='|'
+            for col in "${cols[@]}"; do
+              col_trim="${col// / }" # keep as-is
+              header_line+=" ${col} |"
+              # separator: use at least 4 dashes or length of column
+              local dash_count=${#col}
+              if [ $dash_count -lt 4 ]; then dash_count=4; fi
+              separator+=" $(printf '%*s' "$dash_count" '' | tr ' ' '-') |"
+            done
+            echo "$header_line"
+            echo "$separator"
+            # Rows
+            jq -r "$jq_rows" <<< "$json" | while IFS= read -r line; do
+              IFS='|' read -r -a fields <<< "$line"
+              local row='|'
+              for f in "${fields[@]}"; do
+                row+=" ${f} |"
+              done
+              echo "$row"
+            done
+          }
+
+          # Descriptor updates section
+          if [ -z "${UPDATED_REPORT:-}" ] || [ "$(jq 'length' <<< "${UPDATED_REPORT:-[]}")" -eq 0 ]; then
+            descriptor_markdown=$'### Application & Component Updates\n\nNo applications or eureka components were updated.'
           else
-            # Count missing items (object entries)
-            missing_cnt=$(jq 'length' <<< "$NOT_FOUND_UI_REPORT" || echo 0)
-            header_line="${missing_cnt} UI module(s) referenced by application descriptors were NOT found in package.json and were not updated."
-            table_rows=$(jq -r 'to_entries[] | "| " + .key + " | " + (.value|tostring) + " |"' <<< "$NOT_FOUND_UI_REPORT")
-            markdown=$(printf '### Missing UI Dependencies\n\n%s\n\n| Module | Referenced Version |\n| ------ | ------------------ |\n%s\n\n> Review package.json to add these dependencies if they are required.' "$header_line" "$table_rows")
+            descriptor_header="This change updates ${UPDATES_CNT} application(s) and/or eureka component(s) for platform version ${NEW_VERSION}."
+            descriptor_table=$(render_table "${UPDATED_REPORT}" 'Name|Old Version|New Version' '.[] | "\(.name)|\(.change.old)|\(.change.new)"')
+            descriptor_markdown=$(printf '### Application & Component Updates\n\n%s\n\n%s\n\n> Generated automatically by release-update workflow.' "${descriptor_header}" "${descriptor_table}")
           fi
+
+          # UI dependency updates section
+          if [ -z "${UPDATED_UI_REPORT:-}" ] || [ "${UPDATED_UI_REPORT}" = '[]' ] || [ "$(jq 'length' <<< "${UPDATED_UI_REPORT:-[]}")" -eq 0 ]; then
+            ui_updates_markdown=$'### UI Dependency Updates\n\nNo UI dependencies were updated.'
+          else
+            ui_header="This change updates ${UPDATED_COUNT} UI dependency(ies) in package.json."
+            ui_table=$(render_table "${UPDATED_UI_REPORT}" 'Dependency|Old Version|New Version' '.[] | "\(.name)|\(.change.old)|\(.change.new)"')
+            ui_updates_markdown=$(printf '### UI Dependency Updates\n\n%s\n\n%s\n\n> Generated automatically by release-update workflow.' "${ui_header}" "${ui_table}")
+          fi
+
+          # Missing UI dependencies section
+          if [ -z "${NOT_FOUND_UI_REPORT:-}" ] || [ "${NOT_FOUND_UI_REPORT}" = '{}' ] || [ "$(jq 'length' <<< "${NOT_FOUND_UI_REPORT:-{}}")" -eq 0 ]; then
+            missing_ui_markdown=$'### Missing UI Dependencies\n\nNo missing UI dependencies detected.'
+          else
+            missing_cnt=$(jq 'length' <<< "${NOT_FOUND_UI_REPORT}" || echo 0)
+            missing_header="${missing_cnt} UI module(s) referenced by application descriptors were NOT found in package.json and were not updated."
+            missing_table=$(render_table "${NOT_FOUND_UI_REPORT}" 'Module|Referenced Version' 'to_entries[] | "\(.key)|\(.value)"')
+            missing_ui_markdown=$(printf '### Missing UI Dependencies\n\n%s\n\n%s\n\n> Review package.json to add these dependencies if they are required.' "${missing_header}" "${missing_table}")
+          fi
+
           {
-            echo 'missing_ui_markdown<<EOF'
-            echo "$markdown"
+            echo 'updates_markdown<<EOF'
+            echo "$descriptor_markdown"
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
+          {
+            echo 'ui_updates_markdown<<EOF'
+            echo "$ui_updates_markdown"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+          {
+            echo 'missing_ui_markdown<<EOF'
+            echo "$missing_ui_markdown"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
           if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
-            echo "$markdown" >> "$GITHUB_STEP_SUMMARY"
+            {
+              echo "$descriptor_markdown"
+              echo ''
+              echo "$ui_updates_markdown"
+              echo ''
+              echo "$missing_ui_markdown"
+            } >> "$GITHUB_STEP_SUMMARY"
           fi
+
       - name: Upload Descriptor Artifact
         if: steps.calculate-new-version.outputs.updated == 'true'
         uses: actions/upload-artifact@v4
