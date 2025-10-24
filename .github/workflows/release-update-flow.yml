@@ -72,10 +72,10 @@ permissions:
   pull-requests: write
   issues: write
 
-# Prevent overlapping runs for the same repo / release branch
+# Prevent overlapping runs for the same repo / release & update branch combination
 concurrency:
-  group: release-update-${{ inputs.repo }}-${{ inputs.release_branch }}
-  cancel-in-progress: false
+  group: release-update-${{ inputs.repo }}-${{ inputs.release_branch }}-${{ inputs.update_branch }}
+  cancel-in-progress: true
 
 # Consistent shell usage & safer defaults
 defaults:
