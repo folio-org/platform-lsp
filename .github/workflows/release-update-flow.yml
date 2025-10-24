@@ -156,14 +156,14 @@ jobs:
     needs: determine-source-branch
     runs-on: ubuntu-latest
     outputs:
-      updated: ${{ steps.update-descriptor.outputs.updated }}
-      updated_components: ${{ steps.update-descriptor.outputs.updated_eureka_components }}
-      updated_applications: ${{ steps.update-descriptor.outputs.updated_applications }}
-      updated_report: ${{ steps.update-descriptor.outputs.updated_report }}
-      new_version: ${{ steps.update-descriptor.outputs.new_version }}
-      updates_cnt: ${{ steps.update-descriptor.outputs.updates_cnt }}
+      updated: ${{ steps.calculate-new-version.outputs.updated }}
+      updated_components: ${{ steps.compare-components.outputs.updated_eureka_components }}
+      updated_applications: ${{ steps.compare-components.outputs.updated_applications }}
+      updated_report: ${{ steps.build-change-report.outputs.updated_report }}
+      new_version: ${{ steps.calculate-new-version.outputs.new_version }}
+      updates_cnt: ${{ steps.build-change-report.outputs.updates_cnt }}
       artifact_name: ${{ env.ARTIFACT_NAME }}
-      failure_reason: ${{ steps.update-descriptor.outputs.failure_reason }}
+      failure_reason: ${{ steps.calculate-new-version.outputs.failure_reason }}
       updates_markdown: ${{ steps.generate-updates-markdown.outputs.updates_markdown }}
       ui_updates_markdown: ${{ steps.generate-ui-updates-markdown.outputs.ui_updates_markdown }}
       missing_ui_markdown: ${{ steps.generate-missing-ui-report.outputs.missing_ui_markdown }}
@@ -189,39 +189,37 @@ jobs:
           STATE_FILE: ${{ env.STATE_FILE }}
         run: |
           set -euo pipefail
-          echo "::notice::Reading descriptor file from branch: $SOURCE_BRANCH"
+          echo '::notice::Reading descriptor file from branch: $SOURCE_BRANCH'
 
-          gh api "repos/$REPO/contents/$STATE_FILE?ref=$SOURCE_BRANCH" -H "Accept: application/vnd.github.v3.raw" > "$STATE_FILE"
+          gh api "repos/$REPO/contents/$STATE_FILE?ref=$SOURCE_BRANCH" -H 'Accept: application/vnd.github.v3.raw' > "$STATE_FILE"
           if [ ! -s "$STATE_FILE" ]; then
             echo "::error::Descriptor file '$STATE_FILE' is empty or not found in branch '$SOURCE_BRANCH'"
             exit 1
           fi
 
-          if ! jq -e 'has("eureka-components")' "$STATE_FILE" > /dev/null; then
-            echo "::error::Descriptor file does not contain 'eureka-components' field"
-            echo "File content:" && cat "$STATE_FILE"
-            exit 1
-          fi
-          EUREKA_COMPONENTS=$(jq -c '.["eureka-components"]' "$STATE_FILE")
+          for field in eureka-components applications; do
+            if ! jq -e "has(\"$field\")" "$STATE_FILE" >/dev/null; then
+              echo "::error::Descriptor file does not contain '$field' field"
+              echo 'File content:' && cat "$STATE_FILE"
+              exit 1
+            fi
+          done
+
+          EUREKA_COMPONENTS=$(jq -c '."eureka-components"' "$STATE_FILE")
           {
-            echo "eureka_components<<EOF"
+            echo 'eureka_components<<EOF'
             echo "$EUREKA_COMPONENTS"
-            echo "EOF"
+            echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
-          if ! jq -e 'has("applications")' "$STATE_FILE" > /dev/null; then
-            echo "::error::Descriptor file does not contain 'applications' field"
-            echo "File content:" && cat "$STATE_FILE"
-            exit 1
-          fi
           APPLICATIONS=$(jq -c '.applications' "$STATE_FILE")
           {
-            echo "applications<<EOF"
+            echo 'applications<<EOF'
             echo "$APPLICATIONS"
-            echo "EOF"
+            echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
-          echo "::notice::Successfully extracted eureka-components and applications from descriptor file"
+          echo '::notice::Extracted eureka-components and applications from descriptor file'
 
       - name: Update Eureka Components
         id: update-eureka-components
@@ -235,60 +233,121 @@ jobs:
         with:
           applications: ${{ steps.read-descriptor.outputs.applications }}
 
-      - name: Update Descriptor File
-        id: update-descriptor
+      - name: Compare Components & Applications
+        id: compare-components
         env:
+          STATE_FILE: ${{ env.STATE_FILE }}
           UPDATED_EUREKA_COMPONENTS: ${{ steps.update-eureka-components.outputs.updated-components }}
           UPDATED_APPLICATIONS: ${{ steps.update-applications.outputs.updated-applications }}
-          UPDATED: false
-          FAILURE_REASON: ''
         run: |
           set -euo pipefail
-          # set -x TODO remove comment after debugging
-          echo "::notice::Checking for updated eureka components and applications"
+          echo '::notice::Comparing descriptor eureka-components & applications with updated results'
 
           PREVIOUS_VERSION=$(jq -r '.version // "unknown"' "$STATE_FILE")
-          echo "::notice::Current platform version is $PREVIOUS_VERSION"
-
-          CURRENT_EUREKA_COMPONENTS=$(jq -c '.["eureka-components"]' "$STATE_FILE")
+          CURRENT_EUREKA_COMPONENTS=$(jq -c '."eureka-components"' "$STATE_FILE")
           CURRENT_APPLICATIONS=$(jq -c '.applications' "$STATE_FILE")
 
+          changes_detected=false
           if [ "$UPDATED_EUREKA_COMPONENTS" != "$CURRENT_EUREKA_COMPONENTS" ] || [ "$UPDATED_APPLICATIONS" != "$CURRENT_APPLICATIONS" ]; then
-            [ "$UPDATED_EUREKA_COMPONENTS" != "$CURRENT_EUREKA_COMPONENTS" ] && echo "::notice::Eureka components have been updated"
-            [ "$UPDATED_APPLICATIONS" != "$CURRENT_APPLICATIONS" ] && echo "::notice::Applications have been updated"
-            UPDATED=true
+            changes_detected=true
+            [ "$UPDATED_EUREKA_COMPONENTS" != "$CURRENT_EUREKA_COMPONENTS" ] && echo '::notice::Eureka components changed'
+            [ "$UPDATED_APPLICATIONS" != "$CURRENT_APPLICATIONS" ] && echo '::notice::Applications changed'
+          fi
 
-            echo "::notice::Eureka components have been updated"
+          echo "previous_version=$PREVIOUS_VERSION" >> "$GITHUB_OUTPUT"
+          echo "changes_detected=$changes_detected" >> "$GITHUB_OUTPUT"
 
+          {
+            echo 'current_eureka_components<<EOF'
+            echo "$CURRENT_EUREKA_COMPONENTS"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+            {
+            echo 'current_applications<<EOF'
+            echo "$CURRENT_APPLICATIONS"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo 'updated_eureka_components<<EOF'
+            echo "$UPDATED_EUREKA_COMPONENTS"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo 'updated_applications<<EOF'
+            echo "$UPDATED_APPLICATIONS"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Calculate New Version
+        id: calculate-new-version
+        env:
+          PREVIOUS_VERSION: ${{ steps.compare-components.outputs.previous_version }}
+          CHANGES_DETECTED: ${{ steps.compare-components.outputs.changes_detected }}
+        run: |
+          set -euo pipefail
+          UPDATED=false
+          FAILURE_REASON=''
+          NEW_VERSION="$PREVIOUS_VERSION"
+
+          if [ "$CHANGES_DETECTED" = 'true' ]; then
             if [[ "$PREVIOUS_VERSION" =~ ^(R[0-9]+-[0-9]+)\.([0-9]+)$ ]]; then
               BASE_VERSION="${BASH_REMATCH[1]}"
               PATCH_VERSION="${BASH_REMATCH[2]}"
               NEW_VERSION="${BASE_VERSION}.$((PATCH_VERSION + 1))"
+              UPDATED=true
+              echo "::notice::Calculated new version $NEW_VERSION from previous $PREVIOUS_VERSION"
             else
               FAILURE_REASON="Previous version '$PREVIOUS_VERSION' does not match expected format 'R<iteration>-<year>.<patch>'"
-              echo "::error::$FAILURE_REASON"
-              exit 1
+              echo "::warning::$FAILURE_REASON (no update applied)"
+              UPDATED=false
             fi
-
-            jq --arg version "$NEW_VERSION" \
-              --argjson components "$UPDATED_EUREKA_COMPONENTS" \
-              --argjson applications "$UPDATED_APPLICATIONS" \
-              '.version = $version | .["eureka-components"] = $components | .applications = $applications' \
-              "$STATE_FILE" > "${STATE_FILE}.tmp"
-            mv "${STATE_FILE}.tmp" "$STATE_FILE"
-
-            {
-              echo "updated=$UPDATED"
-              echo "new_version=$NEW_VERSION"
-              echo "updated_eureka_components=$UPDATED_EUREKA_COMPONENTS"
-              echo "updated_applications=$UPDATED_APPLICATIONS"
-            } >> "$GITHUB_OUTPUT"
+          else
+            echo '::notice::No component/application changes detected; version unchanged'
           fi
 
-          if [ "$UPDATED" = true ]; then
+          echo "updated=$UPDATED" >> "$GITHUB_OUTPUT"
+          echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+          echo "failure_reason=$FAILURE_REASON" >> "$GITHUB_OUTPUT"
+
+      - name: Apply Descriptor Updates
+        id: apply-updates
+        if: steps.calculate-new-version.outputs.updated == 'true'
+        env:
+          STATE_FILE: ${{ env.STATE_FILE }}
+          NEW_VERSION: ${{ steps.calculate-new-version.outputs.new_version }}
+          UPDATED_EUREKA_COMPONENTS: ${{ steps.compare-components.outputs.updated_eureka_components }}
+          UPDATED_APPLICATIONS: ${{ steps.compare-components.outputs.updated_applications }}
+        run: |
+          set -euo pipefail
+          echo '::notice::Applying descriptor updates'
+          jq --arg version "$NEW_VERSION" \
+             --argjson components "$UPDATED_EUREKA_COMPONENTS" \
+             --argjson applications "$UPDATED_APPLICATIONS" \
+             '.version = $version | ."eureka-components" = $components | .applications = $applications' \
+             "$STATE_FILE" > "${STATE_FILE}.tmp"
+          mv "${STATE_FILE}.tmp" "$STATE_FILE"
+          echo '::notice::Descriptor file updated'
+          echo 'applied=true' >> "$GITHUB_OUTPUT"
+
+      - name: Build Change Report
+        id: build-change-report
+        env:
+          UPDATED: ${{ steps.calculate-new-version.outputs.updated }}
+          CURRENT_EUREKA_COMPONENTS: ${{ steps.compare-components.outputs.current_eureka_components }}
+          UPDATED_EUREKA_COMPONENTS: ${{ steps.compare-components.outputs.updated_eureka_components }}
+          CURRENT_APPLICATIONS: ${{ steps.compare-components.outputs.current_applications }}
+          UPDATED_APPLICATIONS: ${{ steps.compare-components.outputs.updated_applications }}
+        run: |
+          set -euo pipefail
+          UPDATED_REPORT='[]'
+          UPDATES_CNT='0'
+
+          if [ "$UPDATED" = 'true' ]; then
             compare_lists() {
               local current="$1" updated="$2"
-
               jq -n --argjson OLD "$current" --argjson NEW "$updated" '
                 def to_map: map({key:.name, value:.version}) | from_entries;
                 ($OLD|to_map) as $O | ($NEW|to_map) as $N |
@@ -300,61 +359,56 @@ jobs:
             }
 
             components=$(compare_lists "$CURRENT_EUREKA_COMPONENTS" "$UPDATED_EUREKA_COMPONENTS")
-
             required_applications=$(compare_lists \
-              "$(jq -c '.required' <<< $CURRENT_APPLICATIONS)" \
-              "$(jq -c '.required' <<< $UPDATED_APPLICATIONS)")
-
+              "$(jq -c '.required' <<< "$CURRENT_APPLICATIONS")" \
+              "$(jq -c '.required' <<< "$UPDATED_APPLICATIONS")")
             optional_applications=$(compare_lists \
-              "$(jq -c '.optional' <<< $CURRENT_APPLICATIONS)" \
-              "$(jq -c '.optional' <<< $UPDATED_APPLICATIONS)")
+              "$(jq -c '.optional' <<< "$CURRENT_APPLICATIONS")" \
+              "$(jq -c '.optional' <<< "$UPDATED_APPLICATIONS")")
 
-            UPDATED_REPORT="$(jq -n --argjson a "$components" \
-              --argjson b "$required_applications" \
-              --argjson c "$optional_applications" '$a+$b+$c')"
-
-            UPDATES_CNT=$(jq 'length' <<< "$UPDATED_REPORT")
-
-            {
-              echo "updated_report<<EOF"
-              echo "$UPDATED_REPORT"
-              echo "EOF"
-            } >> "$GITHUB_OUTPUT"
-
-            echo "updates_cnt=$UPDATES_CNT" >> "$GITHUB_OUTPUT"
+            UPDATED_REPORT="$(jq -n --argjson a "$components" --argjson b "$required_applications" --argjson c "$optional_applications" '$a+$b+$c')"
+            UPDATES_CNT="$(jq 'length' <<< "$UPDATED_REPORT")"
           fi
+
+          {
+            echo 'updated_report<<EOF'
+            echo "$UPDATED_REPORT"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+          echo "updates_cnt=$UPDATES_CNT" >> "$GITHUB_OUTPUT"
 
           if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
             {
-              echo "## Descriptor File Updates";
-              if [ "$UPDATED" = true ]; then
-                echo "- **Previous version:** $PREVIOUS_VERSION";
-                echo "- **New version:** $NEW_VERSION";
-                echo "- **Total applications/components updated:** $UPDATES_CNT";
-                echo "";
-                echo "### Updated Applications & Components:";
-                echo '```';
-                echo "$UPDATED_REPORT" | jq -r '.[] | "- " + .name + ": " + .change.old + " -> " + .change.new';
-                echo '```';
+              echo '## Descriptor File Updates'
+              if [ "$UPDATED" = 'true' ]; then
+                echo "- **Previous version:** ${{ steps.compare-components.outputs.previous_version }}"
+                echo "- **New version:** ${{ steps.calculate-new-version.outputs.new_version }}"
+                echo "- **Total applications/components updated:** $UPDATES_CNT"
+                echo ''
+                echo '### Updated Applications & Components:'
+                echo '```'
+                echo "$UPDATED_REPORT" | jq -r '.[] | "- " + .name + ": " + .change.old + " -> " + .change.new'
+                echo '```'
               else
-                echo "No updates were necessary for the descriptor file.";
+                reason='No updates detected.'
+                if [ -n "${{ steps.calculate-new-version.outputs.failure_reason }}" ]; then
+                  reason="${{ steps.calculate-new-version.outputs.failure_reason }}"
+                fi
+                echo "$reason"
               fi
             } >> "$GITHUB_STEP_SUMMARY"
           fi
 
-          echo "failure_reason=$FAILURE_REASON" >> "$GITHUB_OUTPUT"
-
       - name: Generate Markdown Update Report
         id: generate-updates-markdown
-        if: steps.update-descriptor.outputs.updated == 'true'
+        if: steps.calculate-new-version.outputs.updated == 'true'
         env:
-          UPDATED_REPORT: ${{ steps.update-descriptor.outputs.updated_report }}
-          UPDATES_CNT: ${{ steps.update-descriptor.outputs.updates_cnt }}
-          NEW_VERSION: ${{ steps.update-descriptor.outputs.new_version }}
+          UPDATED_REPORT: ${{ steps.build-change-report.outputs.updated_report }}
+          UPDATES_CNT: ${{ steps.build-change-report.outputs.updates_cnt }}
+          NEW_VERSION: ${{ steps.calculate-new-version.outputs.new_version }}
         run: |
           set -euo pipefail
           IFS=$'\n\t'
-
           if [ -z "${UPDATED_REPORT:-}" ] || [ "$(jq 'length' <<< "$UPDATED_REPORT")" -eq 0 ]; then
             markdown=$'### Application & Component Updates\n\nNo applications or eureka components were updated.'
           else
@@ -362,62 +416,53 @@ jobs:
             table_rows=$(jq -r '.[] | "| " + .name + " | " + .change.old + " | " + .change.new + " |"' <<< "$UPDATED_REPORT")
             markdown=$(printf '### Application & Component Updates\n\n%s\n\n| Name | Old Version | New Version |\n| ---- | ----------- | ----------- |\n%s\n\n> Generated automatically by release-update workflow.' "$header_line" "$table_rows")
           fi
-
           {
             echo 'updates_markdown<<EOF'
             echo "$markdown"
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
-
           if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
             echo "$markdown" >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Fetch updated UI modules list
         id: fetch-updated-ui-modules
-        if: steps.update-descriptor.outputs.updated == 'true'
+        if: steps.calculate-new-version.outputs.updated == 'true'
         uses: folio-org/platform-lsp/.github/actions/fetch-updated-ui-modules@RANCHER-2324
         with:
-          applications: ${{ steps.update-descriptor.outputs.updated_applications }}
+          applications: ${{ steps.compare-components.outputs.updated_applications }}
           far-url: ${{ env.FAR_URL }}
 
       - name: Read package.json content
         id: read-package-json
-        if: steps.update-descriptor.outputs.updated == 'true'
+        if: steps.calculate-new-version.outputs.updated == 'true'
         env:
           REPO: ${{ inputs.repo }}
           SOURCE_BRANCH: ${{ needs.determine-source-branch.outputs.source_branch }}
         run: |
           set -euo pipefail
           echo "::notice::Reading package.json from branch: $SOURCE_BRANCH"
-
-          # Read package.json from the repository root
-          gh api "repos/$REPO/contents/package.json?ref=$SOURCE_BRANCH" -H "Accept: application/vnd.github.v3.raw" > package.json
+          gh api "repos/$REPO/contents/package.json?ref=$SOURCE_BRANCH" -H 'Accept: application/vnd.github.v3.raw' > package.json
           if [ ! -s package.json ]; then
             echo "::error::package.json file is empty or not found in branch '$SOURCE_BRANCH'"
             exit 1
           fi
-
-          # Validate JSON format
           if ! jq empty package.json 2>/dev/null; then
-            echo "::error::package.json is not valid JSON"
+            echo '::error::package.json is not valid JSON'
             cat package.json
             exit 1
           fi
-
-          # Set package.json content as output
-          PACKAGE_JSON_CONTENT=$(cat package.json | jq -c .)
+          PACKAGE_JSON_CONTENT=$(jq -c . package.json)
           {
-            echo "package_json_content<<EOF"
+            echo 'package_json_content<<EOF'
             echo "$PACKAGE_JSON_CONTENT"
-            echo "EOF"
+            echo 'EOF'
           } >> "$GITHUB_OUTPUT"
-
-          echo "::notice::Successfully read package.json content"
+          echo '::notice::Read package.json content'
 
       - name: Update package.json dependencies
         id: update-package-json
-        if: steps.update-descriptor.outputs.updated == 'true' && steps.fetch-updated-ui-modules.outputs.ui-modules != ''
+        if: steps.calculate-new-version.outputs.updated == 'true' && steps.fetch-updated-ui-modules.outputs.ui-modules != ''
         uses: folio-org/platform-lsp/.github/actions/update-package-json@RANCHER-2324
         with:
           package-json: ${{ steps.read-package-json.outputs.package_json_content }}
@@ -470,7 +515,6 @@ jobs:
         run: |
           set -euo pipefail
           IFS=$'\n\t'
-
           if [ -z "${UPDATED_UI_REPORT:-}" ] || [ "${UPDATED_UI_REPORT}" = '[]' ] || [ "$(jq 'length' <<< "$UPDATED_UI_REPORT")" -eq 0 ]; then
             markdown=$'### UI Dependency Updates\n\nNo UI dependencies were updated.'
           else
@@ -478,13 +522,11 @@ jobs:
             table_rows=$(jq -r '.[] | "| " + .name + " | " + .change.old + " | " + .change.new + " |"' <<< "$UPDATED_UI_REPORT")
             markdown=$(printf '### UI Dependency Updates\n\n%s\n\n| Dependency | Old Version | New Version |\n| ---------- | ----------- | ----------- |\n%s\n\n> Generated automatically by release-update workflow.' "$header_line" "$table_rows")
           fi
-
           {
             echo 'ui_updates_markdown<<EOF'
             echo "$markdown"
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
-
           if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
             echo "$markdown" >> "$GITHUB_STEP_SUMMARY"
           fi
@@ -497,7 +539,6 @@ jobs:
         run: |
           set -euo pipefail
           IFS=$'\n\t'
-
           if [ -z "${NOT_FOUND_UI_REPORT:-}" ] || [ "${NOT_FOUND_UI_REPORT}" = '{}' ]; then
             markdown=$'### Missing UI Dependencies\n\nNo missing UI dependencies detected.'
           else
@@ -507,18 +548,16 @@ jobs:
             table_rows=$(jq -r 'to_entries[] | "| " + .key + " | " + (.value|tostring) + " |"' <<< "$NOT_FOUND_UI_REPORT")
             markdown=$(printf '### Missing UI Dependencies\n\n%s\n\n| Module | Referenced Version |\n| ------ | ------------------ |\n%s\n\n> Review package.json to add these dependencies if they are required.' "$header_line" "$table_rows")
           fi
-
           {
             echo 'missing_ui_markdown<<EOF'
             echo "$markdown"
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
-
           if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
             echo "$markdown" >> "$GITHUB_STEP_SUMMARY"
           fi
       - name: Upload Descriptor Artifact
-        if: steps.update-descriptor.outputs.updated == 'true'
+        if: steps.calculate-new-version.outputs.updated == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: "${{ env.ARTIFACT_NAME }}"
