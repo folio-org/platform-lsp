@@ -54,9 +54,6 @@ on:
 #       updated:
 #         description: 'Whether the platform descriptor was updated'
 #         value: ${{ jobs.update-platform.outputs.updated }}
-#       updated_modules:
-#         description: 'List of updated Eureka components and applications'
-#         value: ${{ jobs.update-platform.outputs.updated_modules }}
 #       new_version:
 #         description: 'New platform version if updated'
 #         value: ${{ jobs.update-platform.outputs.new_version }}
@@ -163,7 +160,6 @@ jobs:
       updated_components: ${{ steps.update-descriptor.outputs.updated_eureka_components }}
       updated_applications: ${{ steps.update-descriptor.outputs.updated_applications }}
       updated_report: ${{ steps.update-descriptor.outputs.updated_report }}
-      updated_modules: ${{ steps.update-descriptor.outputs.updated_modules }}
       new_version: ${{ steps.update-descriptor.outputs.new_version }}
       updates_cnt: ${{ steps.update-descriptor.outputs.updates_cnt }}
       artifact_name: ${{ env.ARTIFACT_NAME }}
@@ -543,8 +539,8 @@ jobs:
       commit_message: |
         Update platform to ${{ needs.update-platform.outputs.new_version }}.
 
-        Updated modules:
-        ${{ needs.update-platform.outputs.updated_modules }}
+        **Total applications/components updated:** ${{ needs.update-platform.outputs.updates_cnt || '0' }}
+        ${{ needs.update-platform.outputs.updates_markdown }}
       dry_run: ${{ inputs.dry_run }}
       use_github_app: true
       source_branch: ${{ needs.determine-source-branch.outputs.source_branch }}
