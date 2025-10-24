@@ -263,7 +263,7 @@ jobs:
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
-            {
+          {
             echo 'current_applications<<EOF'
             echo "$CURRENT_APPLICATIONS"
             echo 'EOF'
@@ -377,29 +377,6 @@ jobs:
           } >> "$GITHUB_OUTPUT"
           echo "updates_cnt=$UPDATES_CNT" >> "$GITHUB_OUTPUT"
 
-          if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
-            {
-              echo '## Descriptor File Updates'
-              if [ "$UPDATED" = 'true' ]; then
-                echo "- **Previous version:** ${{ steps.compare-components.outputs.previous_version }}"
-                echo "- **New version:** ${{ steps.calculate-new-version.outputs.new_version }}"
-                echo "- **Total applications/components updated:** $UPDATES_CNT"
-                echo ''
-                echo '### Updated Applications & Components:'
-                echo '```'
-                echo "$UPDATED_REPORT" | jq -r '.[] | "- " + .name + ": " + .change.old + " -> " + .change.new'
-                echo '```'
-              else
-                reason='No updates detected.'
-                if [ -n "${{ steps.calculate-new-version.outputs.failure_reason }}" ]; then
-                  reason="${{ steps.calculate-new-version.outputs.failure_reason }}"
-                fi
-                echo "$reason"
-              fi
-            } >> "$GITHUB_STEP_SUMMARY"
-          fi
-
-      # Newly reinserted steps to gather UI dependency info prior to consolidated markdown generation
       - name: Fetch updated UI modules list
         id: fetch-updated-ui-modules
         if: steps.calculate-new-version.outputs.updated == 'true'
@@ -455,33 +432,16 @@ jobs:
             exit 1
           fi
           echo "::notice::Successfully updated package.json with ${{ steps.update-package-json.outputs.updated-count }} dependency changes"
-          if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
-            {
-              echo "## Package.json Updates";
-              echo "- **Updated dependencies:** ${{ steps.update-package-json.outputs.updated-count }}";
-              echo "";
-              echo "### Updated UI Modules:";
-              echo '```';
-              echo '${{ steps.update-package-json.outputs.updated-ui-report }}' | jq -r '.[] | "- " + .name + ": " + .change.old + " -> " + .change.new';
-              echo '```';
-              if [[ '${{ steps.update-package-json.outputs.not-found-ui-report }}' != '{}' ]]; then
-                echo "";
-                echo "### UI Modules Not Found in Dependencies:";
-                echo '```';
-                echo '${{ steps.update-package-json.outputs.not-found-ui-report }}' | jq -r 'to_entries[] | "- " + .key + ": " + .value';
-                echo '```';
-              fi
-            } >> "$GITHUB_STEP_SUMMARY"
-          fi
 
-      # Consolidated markdown generation step (replaces three previous steps)
       - name: Generate Markdown Reports
         id: generate-markdown-reports
-        if: steps.calculate-new-version.outputs.updated == 'true'
         env:
+          UPDATED: ${{ steps.calculate-new-version.outputs.updated }}
+          FAILURE_REASON: ${{ steps.calculate-new-version.outputs.failure_reason }}
+          PREVIOUS_VERSION: ${{ steps.compare-components.outputs.previous_version }}
+          NEW_VERSION: ${{ steps.calculate-new-version.outputs.new_version }}
           UPDATED_REPORT: ${{ steps.build-change-report.outputs.updated_report }}
           UPDATES_CNT: ${{ steps.build-change-report.outputs.updates_cnt }}
-          NEW_VERSION: ${{ steps.calculate-new-version.outputs.new_version }}
           UPDATED_UI_REPORT: ${{ steps.update-package-json.outputs.updated-ui-report }}
           UPDATED_COUNT: ${{ steps.update-package-json.outputs.updated-count }}
           NOT_FOUND_UI_REPORT: ${{ steps.update-package-json.outputs.not-found-ui-report }}
@@ -495,7 +455,6 @@ jobs:
               echo ''
               return 0
             fi
-            # Determine length (arrays or objects both supported via length)
             local count
             if ! count=$(jq 'length' <<< "$json" 2>/dev/null); then
               echo ''
@@ -505,21 +464,17 @@ jobs:
               echo ''
               return 0
             fi
-            # Print header
             IFS='|' read -r -a cols <<< "$header"
             local header_line='|'
             local separator='|'
             for col in "${cols[@]}"; do
-              col_trim="${col// / }" # keep as-is
               header_line+=" ${col} |"
-              # separator: use at least 4 dashes or length of column
               local dash_count=${#col}
-              if [ $dash_count -lt 4 ]; then dash_count=4; fi
+              [ $dash_count -lt 4 ] && dash_count=4
               separator+=" $(printf '%*s' "$dash_count" '' | tr ' ' '-') |"
             done
             echo "$header_line"
             echo "$separator"
-            # Rows
             jq -r "$jq_rows" <<< "$json" | while IFS= read -r line; do
               IFS='|' read -r -a fields <<< "$line"
               local row='|'
@@ -530,32 +485,37 @@ jobs:
             done
           }
 
-          # Descriptor updates section
-          if [ -z "${UPDATED_REPORT:-}" ] || [ "$(jq 'length' <<< "${UPDATED_REPORT:-[]}")" -eq 0 ]; then
-            descriptor_markdown=$'### Application & Component Updates\n\nNo applications or eureka components were updated.'
-          else
-            descriptor_header="This change updates ${UPDATES_CNT} application(s) and/or eureka component(s) for platform version ${NEW_VERSION}."
-            descriptor_table=$(render_table "${UPDATED_REPORT}" 'Name|Old Version|New Version' '.[] | "\(.name)|\(.change.old)|\(.change.new)"')
-            descriptor_markdown=$(printf '### Application & Component Updates\n\n%s\n\n%s\n\n> Generated automatically by release-update workflow.' "${descriptor_header}" "${descriptor_table}")
-          fi
-
-          # UI dependency updates section
-          if [ -z "${UPDATED_UI_REPORT:-}" ] || [ "${UPDATED_UI_REPORT}" = '[]' ] || [ "$(jq 'length' <<< "${UPDATED_UI_REPORT:-[]}")" -eq 0 ]; then
+          if [ "$UPDATED" != 'true' ]; then
+            reason='No updates detected.'
+            [ -n "${FAILURE_REASON:-}" ] && reason="$FAILURE_REASON"
+            descriptor_markdown=$'### Application & Component Updates\n\n'"$reason"
             ui_updates_markdown=$'### UI Dependency Updates\n\nNo UI dependencies were updated.'
-          else
-            ui_header="This change updates ${UPDATED_COUNT} UI dependency(ies) in package.json."
-            ui_table=$(render_table "${UPDATED_UI_REPORT}" 'Dependency|Old Version|New Version' '.[] | "\(.name)|\(.change.old)|\(.change.new)"')
-            ui_updates_markdown=$(printf '### UI Dependency Updates\n\n%s\n\n%s\n\n> Generated automatically by release-update workflow.' "${ui_header}" "${ui_table}")
-          fi
-
-          # Missing UI dependencies section
-          if [ -z "${NOT_FOUND_UI_REPORT:-}" ] || [ "${NOT_FOUND_UI_REPORT}" = '{}' ] || [ "$(jq 'length' <<< "${NOT_FOUND_UI_REPORT:-{}}")" -eq 0 ]; then
             missing_ui_markdown=$'### Missing UI Dependencies\n\nNo missing UI dependencies detected.'
           else
-            missing_cnt=$(jq 'length' <<< "${NOT_FOUND_UI_REPORT}" || echo 0)
-            missing_header="${missing_cnt} UI module(s) referenced by application descriptors were NOT found in package.json and were not updated."
-            missing_table=$(render_table "${NOT_FOUND_UI_REPORT}" 'Module|Referenced Version' 'to_entries[] | "\(.key)|\(.value)"')
-            missing_ui_markdown=$(printf '### Missing UI Dependencies\n\n%s\n\n%s\n\n> Review package.json to add these dependencies if they are required.' "${missing_header}" "${missing_table}")
+            if [ -z "${UPDATED_REPORT:-}" ] || [ "$(jq 'length' <<< "${UPDATED_REPORT:-[]}")" -eq 0 ]; then
+              descriptor_markdown=$'### Application & Component Updates\n\nNo applications or eureka components were updated.'
+            else
+              descriptor_header="This change updates ${UPDATES_CNT} application(s) and/or eureka component(s) for platform version ${NEW_VERSION}."
+              descriptor_table=$(render_table "${UPDATED_REPORT}" 'Name|Old Version|New Version' '.[] | "\(.name)|\(.change.old)|\(.change.new)"')
+              descriptor_markdown=$(printf '### Application & Component Updates\n\n%s\n\n%s\n\n> Generated automatically by release-update workflow.' "${descriptor_header}" "${descriptor_table}")
+            fi
+
+            if [ -z "${UPDATED_UI_REPORT:-}" ] || [ "${UPDATED_UI_REPORT}" = '[]' ] || [ "$(jq 'length' <<< "${UPDATED_UI_REPORT:-[]}")" -eq 0 ]; then
+              ui_updates_markdown=$'### UI Dependency Updates\n\nNo UI dependencies were updated.'
+            else
+              ui_header="This change updates ${UPDATED_COUNT} UI dependency(ies) in package.json."
+              ui_table=$(render_table "${UPDATED_UI_REPORT}" 'Dependency|Old Version|New Version' '.[] | "\(.name)|\(.change.old)|\(.change.new)"')
+              ui_updates_markdown=$(printf '### UI Dependency Updates\n\n%s\n\n%s\n\n> Generated automatically by release-update workflow.' "${ui_header}" "${ui_table}")
+            fi
+
+            if [ -z "${NOT_FOUND_UI_REPORT:-}" ] || [ "${NOT_FOUND_UI_REPORT}" = '{}' ] || [ "$(jq 'length' <<< "${NOT_FOUND_UI_REPORT:-{}}")" -eq 0 ]; then
+              missing_ui_markdown=$'### Missing UI Dependencies\n\nNo missing UI dependencies detected.'
+            else
+              missing_cnt=$(jq 'length' <<< "${NOT_FOUND_UI_REPORT}" || echo 0)
+              missing_header="${missing_cnt} UI module(s) referenced by application descriptors were NOT found in package.json and were not updated."
+              missing_table=$(render_table "${NOT_FOUND_UI_REPORT}" 'Module|Referenced Version' 'to_entries[] | "\(.key)|\(.value)"')
+              missing_ui_markdown=$(printf '### Missing UI Dependencies\n\n%s\n\n%s\n\n> Review package.json to add these dependencies if they are required.' "${missing_header}" "${missing_table}")
+            fi
           fi
 
           {
@@ -637,17 +597,6 @@ jobs:
       successful_reviewers: ${{ steps.create-pr.outputs.successful_reviewers || steps.update-pr.outputs.successful_reviewers || '' }}
       failed_reviewers: ${{ steps.create-pr.outputs.failed_reviewers || steps.update-pr.outputs.failed_reviewers || '' }}
     steps:
-      # - name: Compare Application Versions
-      #   id: compare
-      #   uses: folio-org/kitfox-github/.github/actions/compare-state-files@master
-      #   with:
-      #     repo: ${{ inputs.repo }}
-      #     base-source-type: 'branch'
-      #     base-source: ${{ inputs.release_branch }}
-      #     head-source-type: 'branch'
-      #     head-source: ${{ inputs.update_branch }}
-      #     state-file: 'application-descriptor.json'
-      #     github-token: ${{ github.token }}
 
       - name: Generate App Token
         id: app-token
