@@ -120,9 +120,13 @@ def update_dependencies(package_json: Dict[str, Any], ui_modules: List[Dict[str,
 
 
 def save_results(output_file: str, package_json: Dict[str, Any], updated_modules: List[Dict[str, Any]], not_found_modules: Dict[str, str]) -> None:
-  """Persist structured results file consumed by composite action step."""
+  """Persist structured results file consumed by composite action step.
+
+  We intentionally DO NOT sort keys to preserve original ordering and minimize diff noise.
+  """
   structured_output = {
-    "package-json": json.dumps(package_json, indent=2, sort_keys=True),
+    # Preserve original key ordering; pretty-print with indent=2 only.
+    "package-json": json.dumps(package_json, indent=2),
     "updated-ui-report": updated_modules,
     "not-found-ui-report": not_found_modules
   }
