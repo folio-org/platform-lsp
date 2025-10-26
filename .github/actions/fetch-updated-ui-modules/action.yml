@@ -1,6 +1,9 @@
 name: 'Fetch Updated UI Modules'
 description: 'Fetch UI modules from FOLIO application descriptors using FAR API'
 author: 'FOLIO'
+branding:
+  icon: 'download'
+  color: 'blue'
 
 inputs:
   applications:
@@ -18,6 +21,8 @@ outputs:
   ui-modules-count:
     description: 'Number of UI modules found'
     value: ${{ steps.fetch-ui-modules.outputs.ui-modules-count }}
+
+# permissions: read-only default is sufficient; action only performs outbound HTTPS GETs.
 
 runs:
   using: 'composite'
@@ -38,27 +43,19 @@ runs:
 
         echo "::notice::Fetching UI modules from updated applications"
 
-        # Create temporary files
-        # APPLICATIONS_FILE=$(mktemp)
         TMP_OUTPUT_FILE=$(mktemp -t ui-modules-output.XXXXX.json)
 
-        # Write applications data to file
-        # echo "$APPLICATIONS_DATA" > "$APPLICATIONS_FILE"
-
-        # Run the Python script with output file
         cd "${{ github.action_path }}"
         python3 fetch-updated-ui-modules.py \
           --api-url "$FAR_URL" \
           --modules "$APPLICATIONS_DATA" \
           --output-file "$TMP_OUTPUT_FILE"
 
-        # Check if output file was created successfully
         if [[ ! -f "$TMP_OUTPUT_FILE" ]]; then
           echo "::error::Output file was not created by the Python script"
           exit 1
         fi
 
-        # Read the results from the output file
         if ! UI_MODULES_JSON=$(jq -r '.ui_modules' "$TMP_OUTPUT_FILE" 2>/dev/null); then
           echo "::error::Failed to read ui_modules from output file"
           cat "$TMP_OUTPUT_FILE"
@@ -71,13 +68,11 @@ runs:
           exit 1
         fi
 
-        # Validate the data
         if [[ "$UI_MODULES_JSON" == "null" ]]; then
           UI_MODULES_JSON="[]"
           UI_MODULES_COUNT="0"
         fi
 
-        # Set GitHub Actions outputs
         {
           echo "ui-modules<<EOF"
           echo "$UI_MODULES_JSON" | jq -c '.'
@@ -88,6 +83,4 @@ runs:
 
         echo "::notice::Successfully found $UI_MODULES_COUNT UI modules"
 
-        # Clean up temporary files
-        #"$APPLICATIONS_FILE"
         rm -f "$TMP_OUTPUT_FILE"
