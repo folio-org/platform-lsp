@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.0.1-SNAPSHOT.100100000002100"
+        "version": "3.1.0-SNAPSHOT.100100000002227"
       }
     ],
     "optional": [
@@ -64,6 +64,10 @@
         "name": "app-dashboard",
         "version": "1.0.0-SNAPSHOT.100100000000248"
       },
+      {
+        "name": "app-data-export",
+        "version": "1.0.0-SNAPSHOT.100100000000000"
+      },      
       {
         "name": "app-dcb",
         "version": "1.3.0-SNAPSHOT.100100000001984"
