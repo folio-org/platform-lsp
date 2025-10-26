@@ -10,11 +10,11 @@ inputs:
   far-base-url:
     description: FAR base URL
     required: false
-    default: https://far.ci.folio.org
+    default: 'https://far.ci.folio.org'
   filter-scope:
     description: SemVer scope to consider (major|minor|patch)
     required: false
-    default: patch
+    default: 'patch'
     type: choice
     options:
       - major
@@ -23,7 +23,7 @@ inputs:
   sort-order:
     description: Sort order for candidate versions within scope (asc|desc)
     required: false
-    default: asc
+    default: 'asc'
     type: choice
     options:
       - asc
@@ -59,7 +59,7 @@ inputs:
   log-level:
     description: Level of logging verbosity (INFO, DEBUG, WARNING, ERROR)
     required: false
-    default: INFO
+    default: 'INFO'
 
 outputs:
   updated-applications:
@@ -74,13 +74,22 @@ runs:
       with:
         python-version: '3.x'
 
+    - name: Cache pip dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: pip-${{ runner.os }}-${{ hashFiles(format('{0}/requirements.txt', github.action_path)) }}
+        restore-keys: |
+          pip-${{ runner.os }}-
+
     - name: Install dependencies
       shell: bash
       run: |
         set -euo pipefail
-        echo "Installing dependencies..."
-        python -m pip install --disable-pip-version-check --no-cache-dir -r "${{ github.action_path }}/requirements.txt"
+        IFS=$'\n\t'
+        echo 'Installing dependencies...'
         mkdir -p ~/.cache/pip
+        python -m pip install --disable-pip-version-check --no-cache-dir -r "${{ github.action_path }}/requirements.txt"
 
     - id: update
       name: Run update script
@@ -96,28 +105,31 @@ runs:
         REQUEST_TIMEOUT: ${{ inputs.request-timeout }}
         MAX_RETRIES: ${{ inputs.max-retries }}
         RETRY_BACKOFF: ${{ inputs.retry-backoff }}
-        PYTHONUNBUFFERED: "1"
+        PYTHONUNBUFFERED: '1'
         LOG_LEVEL: ${{ inputs.log-level }}
       run: |
         set -euo pipefail
-        echo "Running application update script..."
+        IFS=$'\n\t'
+        echo 'Running application update script...'
 
-        # Log to GitHub step summary if available
+        # Log to GitHub step summary if available (metadata only; business logic unchanged)
         if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
-          echo "## Update Applications" >> $GITHUB_STEP_SUMMARY
-          echo "- Using FAR Base URL: $FAR_BASE_URL" >> $GITHUB_STEP_SUMMARY
-          echo "- Filter scope: $FILTER_SCOPE" >> $GITHUB_STEP_SUMMARY
-          echo "- Sort order: $SORT_ORDER" >> $GITHUB_STEP_SUMMARY
-          echo "- Include pre-release versions: $FAR_PRE_RELEASE" >> $GITHUB_STEP_SUMMARY
-          echo "- Log level: $LOG_LEVEL" >> $GITHUB_STEP_SUMMARY
+          {
+            echo '## Update Applications'
+            echo "- Using FAR Base URL: $FAR_BASE_URL"
+            echo "- Filter scope: $FILTER_SCOPE"
+            echo "- Sort order: $SORT_ORDER"
+            echo "- Include pre-release versions: $FAR_PRE_RELEASE"
+            echo "- Log level: $LOG_LEVEL"
+          } >> "$GITHUB_STEP_SUMMARY"
         fi
 
         # Write applications to temporary file to avoid command line length issues
-        TEMP_JSON_FILE=$(mktemp)
+        TEMP_JSON_FILE="$(mktemp)"
         echo "$APPLICATIONS_JSON" > "$TEMP_JSON_FILE"
 
         # Run the script and capture its output
-        python "${GITHUB_ACTION_PATH}/update-applications.py" --filter-scope "$FILTER_SCOPE" --data "$(cat $TEMP_JSON_FILE)"
+        python "${GITHUB_ACTION_PATH}/update-applications.py" --filter-scope "$FILTER_SCOPE" --data "$(cat "$TEMP_JSON_FILE")"
         rm -f "$TEMP_JSON_FILE"
 
 branding:
