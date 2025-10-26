@@ -2,12 +2,14 @@ name: 'Update Package JSON Dependencies'
 description: 'Updates package.json dependencies based on UI modules list with version comparison'
 author: 'FOLIO DevOps'
 
+# Inputs are JSON strings passed from a previous workflow step.
+# They must already be valid JSON; the action will fail early if parsing fails.
 inputs:
   package-json:
     description: 'Content of package.json as JSON string'
     required: true
   ui-modules:
-    description: 'List of UI modules as JSON string'
+    description: 'List of UI modules as JSON string (each with name, version)'
     required: true
 
 outputs:
@@ -31,7 +33,7 @@ runs:
   using: 'composite'
   steps:
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v4 # Kept @v4 for stability; upgrade to @v5 when broadly adopted.
       with:
         python-version: '3.x'
 
@@ -42,10 +44,12 @@ runs:
         PACKAGE_JSON: ${{ inputs.package-json }}
         UI_MODULES: ${{ inputs.ui-modules }}
       run: |
+        # Bash safety options (do not exit on non-zero inside jq conditionals)
+        set -euo pipefail
         # Create a temporary file for the output
         TMP_OUTPUT_FILE=$(mktemp -t package-update-result.XXXXX.json)
 
-        # Make the script executable
+        # Make the script executable (redundant for Python, but harmless)
         chmod +x "${{ github.action_path }}/update-package-json.py"
 
         # Run the update script with the temporary file
@@ -57,12 +61,12 @@ runs:
         # Parse the result file using jq to extract all outputs
         if [[ -f "$TMP_OUTPUT_FILE" ]]; then
           # Extract individual components using jq
-          package_json=$(jq -r '.["package-json"]' "$TMP_OUTPUT_FILE")
-          updated_ui_report=$(jq -c '.["updated-ui-report"]' "$TMP_OUTPUT_FILE")
-          not_found_ui_report=$(jq -c '.["not-found-ui-report"]' "$TMP_OUTPUT_FILE")
+          package_json=$(jq -r '."package-json"' "$TMP_OUTPUT_FILE")
+          updated_ui_report=$(jq -c '."updated-ui-report"' "$TMP_OUTPUT_FILE")
+          not_found_ui_report=$(jq -c '."not-found-ui-report"' "$TMP_OUTPUT_FILE")
 
           # Count updated modules
-          updated_count=$(jq '.["updated-ui-report"] | length' "$TMP_OUTPUT_FILE")
+          updated_count=$(jq '."updated-ui-report" | length' "$TMP_OUTPUT_FILE")
 
           # Check if any updates were made
           has_updates="false"
@@ -78,21 +82,21 @@ runs:
             echo "package-json<<EOF"
             echo "$package_json"
             echo "EOF"
-          } >> $GITHUB_OUTPUT
+          } >> "$GITHUB_OUTPUT"
 
           {
             echo "updated-ui-report<<EOF"
             echo "$updated_ui_report"
             echo "EOF"
-          } >> $GITHUB_OUTPUT
+          } >> "$GITHUB_OUTPUT"
 
-          {
+            {
             echo "not-found-ui-report<<EOF"
             echo "$not_found_ui_report"
             echo "EOF"
-          } >> $GITHUB_OUTPUT
-          echo "updated-count=$updated_count" >> $GITHUB_OUTPUT
-          echo "has-updates=$has_updates" >> $GITHUB_OUTPUT
+          } >> "$GITHUB_OUTPUT"
+          echo "updated-count=$updated_count" >> "$GITHUB_OUTPUT"
+          echo "has-updates=$has_updates" >> "$GITHUB_OUTPUT"
 
           echo "✅ Successfully processed dependencies"
           echo "📊 Updated $updated_count dependencies"
