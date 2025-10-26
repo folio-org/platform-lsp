@@ -60,7 +60,7 @@ runs:
         DOCKER_USERNAME: "${{ inputs.docker-username }}"
         DOCKER_PASSWORD: "${{ inputs.docker-password }}"
         PYTHONUNBUFFERED: "1"
-        LOG_LEVEL: "${{ inputs.log-level }}"
+        LOG_LEVEL: "${{ inputs.log-level }}"  # ensure script picks up desired verbosity
         COMPONENTS_JSON: "${{ inputs.components }}"
         FILTER_SCOPE: "${{ inputs.filter-scope }}"
         SORT_ORDER: "${{ inputs.sort-order }}"
