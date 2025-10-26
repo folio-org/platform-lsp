@@ -304,7 +304,7 @@ def main():
         output_obj = process_applications_json(applications_json, filter_scope, sort_order)
         if output_obj is None:
             return 1
-        serialized = json.dumps(output_obj, separators=(",", ":"), sort_keys=True)
+        serialized = json.dumps(output_obj, separators=(",", ":"))  # removed sort_keys=True to preserve original object key order
         gh_output = os.getenv("GITHUB_OUTPUT")
         if gh_output:
             try:

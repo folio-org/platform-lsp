@@ -346,7 +346,7 @@ def main() -> int:
         for c in updated:
             logger.info(f" - {c['name']}: {c['version']}")
 
-        serialized = json.dumps(updated, separators=(",", ":"), sort_keys=True)
+        serialized = json.dumps(updated, separators=(",", ":"))  # removed sort_keys=True to preserve key order
 
         gh_output = os.getenv("GITHUB_OUTPUT")
         if gh_output:

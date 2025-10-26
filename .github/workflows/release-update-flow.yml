@@ -308,7 +308,10 @@ jobs:
           set -euo pipefail
           IFS=$'\n\t'
           echo '::notice::Applying descriptor updates'
-          jq --arg version "$NEW_VERSION" --argjson components "$UPDATED_EUREKA_COMPONENTS" --argjson applications "$UPDATED_APPLICATIONS" '.version = $version | ."eureka-components" = $components | .applications = $applications' "$STATE_FILE" > "${STATE_FILE}.tmp"
+          # Simple in-place update without reordering logic; Python update scripts now preserve original key order.
+          jq --arg version "$NEW_VERSION" \
+             --argjson components "$UPDATED_EUREKA_COMPONENTS" \
+             --argjson applications "$UPDATED_APPLICATIONS" '.version = $version | ."eureka-components" = $components | .applications = $applications' "$STATE_FILE" > "${STATE_FILE}.tmp"
           mv "${STATE_FILE}.tmp" "$STATE_FILE"
           echo '::notice::Descriptor file updated'
           echo 'applied=true' >> "$GITHUB_OUTPUT"
