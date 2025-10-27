@@ -29,6 +29,7 @@ permissions:
   statuses: write
 
 env:
+  PLATFORM_DESCRIPTOR_FILE: 'platform-descriptor.json'
   GH_TOKEN: ${{ github.token }}
 
 jobs:
@@ -147,19 +148,19 @@ jobs:
           echo "::notice::Configuration validation successful"
 
 
-#   check:
-#     name: Check commit
-#     needs: pre-check
-#     if: needs.pre-check.outputs.validation_status == 'success'
-#     runs-on: ubuntu-latest
-#     outputs:
-#       generated: ${{ steps.generate.outputs.generated }}
-#       descriptor_file: ${{ steps.generate.outputs.descriptor_file }}
-#       descriptor_file_name: ${{ steps.generate.outputs.descriptor_file_name }}
-#       validation_passed: ${{ steps.validate.outputs.validation_passed }}
-#       platform_found: ${{ steps.fetch-platform.outputs.platform_found }}
-#       failure_reason: ${{ steps.generate.outputs.generated != 'true' && 'Failed to generate application descriptor' || steps.validate.outputs.failure_reason || 'Check workflow logs for details' }}
-#     steps:
+  check:
+    name: Check commit
+    needs: pre-check
+    if: needs.pre-check.outputs.validation_status == 'success'
+    runs-on: ubuntu-latest
+    outputs:
+      generated: ${{ steps.generate.outputs.generated }}
+      descriptor_file: ${{ steps.generate.outputs.descriptor_file }}
+      descriptor_file_name: ${{ steps.generate.outputs.descriptor_file_name }}
+      validation_passed: ${{ steps.validate.outputs.validation_passed }}
+      platform_found: ${{ steps.fetch-platform.outputs.platform_found }}
+      failure_reason: ${{ steps.generate.outputs.generated != 'true' && 'Failed to generate application descriptor' || steps.validate.outputs.failure_reason || 'Check workflow logs for details' }}
+    steps:
 #       - name: Generate GitHub App Token
 #         id: app-token
 #         uses: actions/create-github-app-token@v1
@@ -169,36 +170,36 @@ jobs:
 #           owner: ${{ inputs.repo_owner }}
 #           repositories: ${{ inputs.repo_name }}
 #
-#       - name: Checkout Repository
-#         uses: actions/checkout@v4
-#         with:
-#           repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
-#           ref: ${{ inputs.head_sha }}
-#           token: ${{ steps.app-token.outputs.token }}
-#
-#       - name: Create Check Run
-#         id: create-check
-#         uses: actions/github-script@v7
-#         with:
-#           github-token: ${{ steps.app-token.outputs.token }}
-#           script: |
-#             const { data: checkRun } = await github.rest.checks.create({
-#               owner: '${{ inputs.repo_owner }}',
-#               repo: '${{ inputs.repo_name }}',
-#               name: 'eureka-ci/release-app-validation',
-#               head_sha: '${{ inputs.head_sha }}',
-#               status: 'in_progress',
-#               started_at: new Date().toISOString(),
-#               output: {
-#                 title: 'Application Verification',
-#                 summary: 'Starting application verification for PR #${{ inputs.pr_number }}...'
-#               },
-#               details_url: `https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/pull/${{ inputs.pr_number }}`
-#             });
-#
-#             console.log(`Created check run with ID: ${checkRun.id}`);
-#             core.setOutput('check_run_id', checkRun.id);
-#
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
+          ref: ${{ inputs.head_sha }}
+          token: ${{ env.GH_TOKEN }}
+
+      - name: Create Check Run
+        id: create-check
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ env.GH_TOKEN }}
+          script: |
+            const { data: checkRun } = await github.rest.checks.create({
+              owner: '${{ inputs.repo_owner }}',
+              repo: '${{ inputs.repo_name }}',
+              name: 'eureka-ci/release-app-validation',
+              head_sha: '${{ inputs.head_sha }}',
+              status: 'in_progress',
+              started_at: new Date().toISOString(),
+              output: {
+                title: 'Application Verification',
+                summary: 'Starting application verification for PR #${{ inputs.pr_number }}...'
+              },
+              details_url: `https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/pull/${{ inputs.pr_number }}`
+            });
+
+            console.log(`Created check run with ID: ${checkRun.id}`);
+            core.setOutput('check_run_id', checkRun.id);
+
 #       - name: Update Check Run - Generating Descriptor
 #         uses: actions/github-script@v7
 #         with:
@@ -251,36 +252,36 @@ jobs:
 #             echo "fetch_error=true" >> "$GITHUB_OUTPUT"
 #             exit 1
 #           fi
-#
-#       - name: Upload Platform Descriptor
-#         if: steps.generate.outputs.generated == 'true' && steps.fetch-platform.outputs.platform_found == 'true'
-#         uses: actions/upload-artifact@v4
-#         with:
-#           name: platform-descriptor
-#           path: /tmp/platform/platform-descriptor.json
-#           retention-days: 1
-#
-#       - name: Update Check Run - Validating
-#         if: steps.generate.outputs.generated == 'true'
-#         uses: actions/github-script@v7
-#         with:
-#           github-token: ${{ steps.app-token.outputs.token }}
-#           script: |
-#             await github.rest.checks.update({
-#               owner: '${{ inputs.repo_owner }}',
-#               repo: '${{ inputs.repo_name }}',
-#               check_run_id: ${{ steps.create-check.outputs.check_run_id }},
-#               status: 'in_progress',
-#               output: {
-#                 title: 'Application Verification',
-#                 summary: 'Step 2/2: Validating application descriptor and dependencies...'
-#               }
-#             });
-#
-#       - name: Validate Application
+
+      - name: Upload Platform Descriptor
+        if: steps.generate.outputs.generated == 'true' && steps.fetch-platform.outputs.platform_found == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: platform-descriptor
+          path: ./${{ env.PLATFORM_DESCRIPTOR_FILE }}
+          retention-days: 1
+
+      - name: Update Check Run - Validating
+        if: steps.generate.outputs.generated == 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ env.GH_TOKEN }}
+          script: |
+            await github.rest.checks.update({
+              owner: '${{ inputs.repo_owner }}',
+              repo: '${{ inputs.repo_name }}',
+              check_run_id: ${{ steps.create-check.outputs.check_run_id }},
+              status: 'in_progress',
+              output: {
+                title: 'Platform Verification',
+                summary: 'Step 1/2: Validating platform descriptors and dependencies...'
+              }
+            });
+
+#       - name: Validate Platform
 #         id: validate
 #         if: steps.generate.outputs.generated == 'true'
-#         uses: folio-org/kitfox-github/.github/actions/validate-application@master
+#         uses: folio-org/platform-lsp/.github/actions/validate-platform@RANCHER-2324
 #         with:
 #           app_name: ${{ inputs.repo_name }}
 #           app_descriptor_file: ${{ steps.generate.outputs.descriptor_file }}
@@ -288,6 +289,22 @@ jobs:
 #           use_platform_descriptor: ${{ steps.fetch-platform.outputs.platform_found == 'true' && 'true' || 'false' }}
 #           rely_on_FAR: 'false'
 #           far_url: ${{ vars.FAR_URL }}
+
+      - name: Update Check Run - Compiling stripes (UI)
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ env.GH_TOKEN }}
+          script: |
+            await github.rest.checks.update({
+              owner: '${{ inputs.repo_owner }}',
+              repo: '${{ inputs.repo_name }}',
+              check_run_id: ${{ steps.create-check.outputs.check_run_id }},
+              status: 'in_progress',
+              output: {
+                title: 'Application Verification',
+                summary: 'Step 2/2: Compiling stripes (UI)...'
+              }
+            });
 #
 #       - name: Finalize Check Run
 #         if: always()
