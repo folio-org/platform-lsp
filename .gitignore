@@ -43,4 +43,4 @@ claude*
 .env.production
 
 # Ignore copilot instructions file
-.copilot-*
+copilot-*
