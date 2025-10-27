@@ -1,4 +1,4 @@
-scan_config:
+update_config:
   enabled: true
   update_branch_format: version-update/{0}
   labels:
@@ -6,5 +6,8 @@ scan_config:
   pr_reviewers:
     - folio-org/kitfox
 
-release_branches:
- - R1-1994
+branches:
+  - R1-1994:
+      enabled: true
+      need_pr: true
+      pre_release: "false"
