@@ -415,118 +415,118 @@ jobs:
 #               ]
 #             }
 
-  summarize:
-    name: Workflow Summary
-    needs: [pre-check, check, notify]
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Generate Workflow Summary
-        env:
-          PRE_CHECK_RESULT: ${{ needs.pre-check.result }}
-          VALIDATION_STATUS: ${{ needs.pre-check.outputs.validation_status }}
-          VALIDATION_MESSAGE: ${{ needs.pre-check.outputs.validation_message }}
-          CHECK_RESULT: ${{ needs.check.result }}
-          VALIDATION_PASSED: ${{ needs.check.outputs.validation_passed }}
-          FAILURE_REASON: ${{ needs.check.outputs.failure_reason }}
-          HEAD_BRANCH: ${{ needs.pre-check.outputs.head_branch }}
-          BASE_BRANCH: ${{ needs.pre-check.outputs.base_branch }}
-        run: |
-          {
-            echo "### 🎯 Release PR Check Summary"
-            echo ""
-            echo "**Repository:** \`${{ inputs.repo_owner }}/${{ inputs.repo_name }}\`"
-            echo "**PR:** [#${{ inputs.pr_number }}](https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/pull/${{ inputs.pr_number }})"
-            echo "**Commit:** [\`${{ inputs.head_sha }}\`](https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/commit/${{ inputs.head_sha }})"
-            echo ""
-
-            echo "### 📋 Pre-Check Status"
-            echo ""
-            if [[ "$PRE_CHECK_RESULT" == "success" ]]; then
-              if [[ "$VALIDATION_STATUS" == "success" ]]; then
-                echo "✅ **Pre-Check:** Passed"
-                echo "- **Base Branch:** $BASE_BRANCH"
-                echo "- **Head Branch:** $HEAD_BRANCH"
-                echo "- **Message:** $VALIDATION_MESSAGE"
-              elif [[ "$VALIDATION_STATUS" == "skipped" ]]; then
-                echo "⏭️ **Pre-Check:** Skipped"
-                echo "- **Reason:** $VALIDATION_MESSAGE"
-              elif [[ -z "$VALIDATION_STATUS" ]]; then
-                echo "⏭️ **Pre-Check:** Validation step was skipped"
-                echo "- This typically means the PR was not found or the commit is not in the PR"
-              else
-                echo "⚠️ **Pre-Check:** Unknown status ($VALIDATION_STATUS)"
-              fi
-            elif [[ "$PRE_CHECK_RESULT" == "failure" ]]; then
-              echo "❌ **Pre-Check:** Failed"
-              echo "- **Message:** $VALIDATION_MESSAGE"
-            elif [[ "$PRE_CHECK_RESULT" == "cancelled" ]]; then
-              echo "⚠️ **Pre-Check:** Cancelled"
-            else
-              echo "⏭️ **Pre-Check:** Skipped"
-            fi
-
-            echo ""
-            echo "### 🔍 Platform Check Status"
-            echo ""
-
-            if [[ "$VALIDATION_STATUS" != "success" ]]; then
-              echo "ℹ️ Platform check was skipped due to pre-check status"
-            elif [[ "$CHECK_RESULT" == "success" ]]; then
-              if [[ "$VALIDATION_PASSED" == "true" ]]; then
-                echo "✅ **Platform Check:** Passed"
-                echo "- **Validation:** Passed"
-              else
-                echo "❌ **Platform Check:** Failed"
-                if [[ -n "$FAILURE_REASON" ]]; then
-                  echo "- **Failure Reason:** $FAILURE_REASON"
-                fi
-              fi
-            elif [[ "$CHECK_RESULT" == "failure" ]]; then
-              echo "❌ **Platform Check:** Failed"
-              if [[ -n "$FAILURE_REASON" ]]; then
-                echo "- **Failure Reason:** $FAILURE_REASON"
-              else
-                echo "- Check the workflow logs for details"
-              fi
-            elif [[ "$CHECK_RESULT" == "cancelled" ]]; then
-              echo "⚠️ **Platform Check:** Cancelled"
-            else
-              echo "⏭️ **Platform Check:** Skipped"
-            fi
-
-            echo ""
-            echo "### 📨 Notification Status"
-            echo ""
-
-            if [[ -n "${{ needs.notify.outputs.team_channel }}" ]]; then
-              if [[ "${{ needs.notify.result }}" == "success" ]]; then
-                echo "✅ **Team Channel** (\`${{ needs.notify.outputs.team_channel }}\`): Sent"
-              elif [[ "${{ needs.notify.result }}" == "failure" ]]; then
-                echo "⚠️ **Team Channel** (\`${{ needs.notify.outputs.team_channel }}\`): Failed"
-              else
-                echo "ℹ️ **Team Channel** (\`${{ needs.notify.outputs.team_channel }}\`): Skipped"
-              fi
-            else
-              echo "ℹ️ **Team Channel:** Not configured"
-            fi
-
-            echo ""
-
-            if [[ -n "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}" ]]; then
-              if [[ "${{ needs.notify.result }}" == "success" ]]; then
-                echo "✅ **General Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Sent"
-              elif [[ "${{ needs.notify.result }}" == "failure" ]]; then
-                echo "⚠️ **General Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Failed"
-              else
-                echo "ℹ️ **General Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Skipped"
-              fi
-            else
-              echo "ℹ️ **General Channel:** Not configured"
-            fi
-
-            echo ""
-            echo "---"
-            echo ""
-            echo "**Workflow Run:** [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
-          } >> $GITHUB_STEP_SUMMARY
+#   summarize:
+#     name: Workflow Summary
+#     needs: [pre-check, check, notify]
+#     if: always()
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Generate Workflow Summary
+#         env:
+#           PRE_CHECK_RESULT: ${{ needs.pre-check.result }}
+#           VALIDATION_STATUS: ${{ needs.pre-check.outputs.validation_status }}
+#           VALIDATION_MESSAGE: ${{ needs.pre-check.outputs.validation_message }}
+#           CHECK_RESULT: ${{ needs.check.result }}
+#           VALIDATION_PASSED: ${{ needs.check.outputs.validation_passed }}
+#           FAILURE_REASON: ${{ needs.check.outputs.failure_reason }}
+#           HEAD_BRANCH: ${{ needs.pre-check.outputs.head_branch }}
+#           BASE_BRANCH: ${{ needs.pre-check.outputs.base_branch }}
+#         run: |
+#           {
+#             echo "### 🎯 Release PR Check Summary"
+#             echo ""
+#             echo "**Repository:** \`${{ inputs.repo_owner }}/${{ inputs.repo_name }}\`"
+#             echo "**PR:** [#${{ inputs.pr_number }}](https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/pull/${{ inputs.pr_number }})"
+#             echo "**Commit:** [\`${{ inputs.head_sha }}\`](https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/commit/${{ inputs.head_sha }})"
+#             echo ""
+#
+#             echo "### 📋 Pre-Check Status"
+#             echo ""
+#             if [[ "$PRE_CHECK_RESULT" == "success" ]]; then
+#               if [[ "$VALIDATION_STATUS" == "success" ]]; then
+#                 echo "✅ **Pre-Check:** Passed"
+#                 echo "- **Base Branch:** $BASE_BRANCH"
+#                 echo "- **Head Branch:** $HEAD_BRANCH"
+#                 echo "- **Message:** $VALIDATION_MESSAGE"
+#               elif [[ "$VALIDATION_STATUS" == "skipped" ]]; then
+#                 echo "⏭️ **Pre-Check:** Skipped"
+#                 echo "- **Reason:** $VALIDATION_MESSAGE"
+#               elif [[ -z "$VALIDATION_STATUS" ]]; then
+#                 echo "⏭️ **Pre-Check:** Validation step was skipped"
+#                 echo "- This typically means the PR was not found or the commit is not in the PR"
+#               else
+#                 echo "⚠️ **Pre-Check:** Unknown status ($VALIDATION_STATUS)"
+#               fi
+#             elif [[ "$PRE_CHECK_RESULT" == "failure" ]]; then
+#               echo "❌ **Pre-Check:** Failed"
+#               echo "- **Message:** $VALIDATION_MESSAGE"
+#             elif [[ "$PRE_CHECK_RESULT" == "cancelled" ]]; then
+#               echo "⚠️ **Pre-Check:** Cancelled"
+#             else
+#               echo "⏭️ **Pre-Check:** Skipped"
+#             fi
+#
+#             echo ""
+#             echo "### 🔍 Platform Check Status"
+#             echo ""
+#
+#             if [[ "$VALIDATION_STATUS" != "success" ]]; then
+#               echo "ℹ️ Platform check was skipped due to pre-check status"
+#             elif [[ "$CHECK_RESULT" == "success" ]]; then
+#               if [[ "$VALIDATION_PASSED" == "true" ]]; then
+#                 echo "✅ **Platform Check:** Passed"
+#                 echo "- **Validation:** Passed"
+#               else
+#                 echo "❌ **Platform Check:** Failed"
+#                 if [[ -n "$FAILURE_REASON" ]]; then
+#                   echo "- **Failure Reason:** $FAILURE_REASON"
+#                 fi
+#               fi
+#             elif [[ "$CHECK_RESULT" == "failure" ]]; then
+#               echo "❌ **Platform Check:** Failed"
+#               if [[ -n "$FAILURE_REASON" ]]; then
+#                 echo "- **Failure Reason:** $FAILURE_REASON"
+#               else
+#                 echo "- Check the workflow logs for details"
+#               fi
+#             elif [[ "$CHECK_RESULT" == "cancelled" ]]; then
+#               echo "⚠️ **Platform Check:** Cancelled"
+#             else
+#               echo "⏭️ **Platform Check:** Skipped"
+#             fi
+#
+#             echo ""
+#             echo "### 📨 Notification Status"
+#             echo ""
+#
+#             if [[ -n "${{ needs.notify.outputs.team_channel }}" ]]; then
+#               if [[ "${{ needs.notify.result }}" == "success" ]]; then
+#                 echo "✅ **Team Channel** (\`${{ needs.notify.outputs.team_channel }}\`): Sent"
+#               elif [[ "${{ needs.notify.result }}" == "failure" ]]; then
+#                 echo "⚠️ **Team Channel** (\`${{ needs.notify.outputs.team_channel }}\`): Failed"
+#               else
+#                 echo "ℹ️ **Team Channel** (\`${{ needs.notify.outputs.team_channel }}\`): Skipped"
+#               fi
+#             else
+#               echo "ℹ️ **Team Channel:** Not configured"
+#             fi
+#
+#             echo ""
+#
+#             if [[ -n "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}" ]]; then
+#               if [[ "${{ needs.notify.result }}" == "success" ]]; then
+#                 echo "✅ **General Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Sent"
+#               elif [[ "${{ needs.notify.result }}" == "failure" ]]; then
+#                 echo "⚠️ **General Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Failed"
+#               else
+#                 echo "ℹ️ **General Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Skipped"
+#               fi
+#             else
+#               echo "ℹ️ **General Channel:** Not configured"
+#             fi
+#
+#             echo ""
+#             echo "---"
+#             echo ""
+#             echo "**Workflow Run:** [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+#           } >> $GITHUB_STEP_SUMMARY
