@@ -1,184 +1,117 @@
-# Validate Application Action
+# Validate Platform Action
 
-A composite GitHub Action for validating FOLIO application descriptors against the FOLIO Application Registry (FAR).
+A composite GitHub Action that validates a FOLIO platform descriptor by:
+- Ensuring the downloaded platform descriptor artifact exists and contains an `.applications` section
+- Fetching each listed application descriptor from FAR
+- Performing dependency integrity validation against FAR
 
 ## Description
 
-This action performs comprehensive validation of application descriptors including:
-- Module interface integrity checks
-- Application dependency validation (conditional)
-- Cross-application compatibility verification
-
-**Note**: This action only performs validation. For publishing descriptors to FAR, use the `publish-app-descriptor` action separately.
+This action is designed for platform-level validation. It consumes a previously uploaded platform descriptor artifact, downloads every application descriptor referenced (required and optional), and submits them to FAR's `validate-descriptors` endpoint. It fails closed on any missing artifact, malformed JSON, fetch failure, or dependency integrity issue.
 
 ## Inputs
 
-| Name                                | Description                                                                | Required  | Default               |
-|-------------------------------------|----------------------------------------------------------------------------|-----------|-----------------------|
-| `app_name`                          | Application name                                                           | **Yes**   | -                     |
-| `app_descriptor_file`               | Application descriptor file name                                           | **Yes**   | -                     |
-| `app_descriptor_artifact_name`      | Application descriptor artifact name (defaults to `{app_name}-descriptor`) | No        | -                     |
-| `platform_descriptor_artifact_name` | Name of the platform descriptor artifact to download                       | No        | `platform-descriptor` |
-| `use_platform_descriptor`           | Whether platform descriptor should be used for dependency validation       | No        | `true`                |
-| `rely_on_FAR`                       | Whether to rely on FAR for application descriptor dependencies             | No        | `false`               |
-| `far_url`                           | FAR API URL base                                                           | **Yes**   | -                     |
+| Name | Description | Required | Default |
+|------|-------------|----------|---------|
+| `platform_descriptor_artifact_name` | Name of the platform descriptor artifact to download | No       | `platform-descriptor` |
+| `far_url` | Base FAR API URL (the action appends `/applications`) | No       | `https://far.ci.folio.org` |
 
 ## Outputs
 
-| Name                | Description                                        |
-|---------------------|----------------------------------------------------|
-| `validation_passed` | Whether all validations passed (`true` or `false`) |
-| `failure_reason`    | Detailed reason for failure if validation failed   |
+| Name | Description |
+|------|-------------|
+| `validation_passed` | `true` if dependency validation succeeded, otherwise `false` |
+| `failure_reason` | Populated with a human-readable error if validation failed |
+| `application_count` | Number of applications (required + optional) discovered in the platform descriptor |
 
-## Conditional Validation Logic
+## Artifact Expectations
 
-The action adapts its validation behavior based on input availability:
+Upload the platform descriptor artifact in a prior step using `actions/upload-artifact@v4` with a directory containing `platform-descriptor.json` (or the name matching the artifact configured). The JSON must have:
 
-1. **Application Descriptor Artifact Not Provided**: Validates descriptor from the repository
-2. **Platform Descriptor Artifact Not Provided**: Validates application descriptor only (skips dependency validation)
-3. **Neither Descriptor Provided**: Fails validation with a clear error message
-
-This allows for flexible validation scenarios, from simple interface validation to full dependency checks.
-
-## Usage
-
-### Basic Usage with Full Validation
-
-```yaml
-steps:
-  - name: Validate Application
-    uses: folio-org/kitfox-github/.github/actions/validate-application@master
-    with:
-      app_name: ${{ github.event.repository.name }}
-      app_descriptor_file: ${{ needs.generate.outputs.descriptor_file }}
-      app_descriptor_artifact_name: ${{ needs.generate.outputs.descriptor_artifact_name }}
-      far_url: ${{ vars.FAR_URL }}
+```json
+{
+  "applications": {
+    "required": [ { "name": "app-a", "version": "1.0.0" } ],
+    "optional": [ { "name": "app-b", "version": "2.3.1" } ]
+  }
+}
 ```
 
-### Interface Validation Only (No Dependency Check)
+`required` and `optional` arrays are both processed; empty or missing arrays are tolerated.
 
-When you want to validate only the module interfaces without dependency checks, set `use_platform_descriptor` to `false`:
+## Validation Steps
 
-```yaml
-steps:
-  - name: Validate Application
-    uses: folio-org/kitfox-github/.github/actions/validate-application@master
-    with:
-      app_name: my-application
-      app_descriptor_file: app-descriptor.json
-      app_descriptor_artifact_name: my-app-descriptor
-      use_platform_descriptor: 'false'
-      far_url: ${{ vars.FAR_URL }}
-```
-
-### With Custom Platform Descriptor
-
-```yaml
-steps:
-  - name: Validate with Custom Platform
-    uses: folio-org/kitfox-github/.github/actions/validate-application@master
-    with:
-      app_name: my-application
-      app_descriptor_file: app-descriptor.json
-      app_descriptor_artifact_name: my-app-descriptor
-      platform_descriptor_artifact_name: custom-platform-descriptor
-      far_url: ${{ vars.FAR_URL }}
-```
-
-### Using FAR for Dependencies
-
-```yaml
-steps:
-  - name: Validate with FAR Dependencies
-    uses: folio-org/kitfox-github/.github/actions/validate-application@master
-    with:
-      app_name: my-application
-      app_descriptor_file: app-descriptor.json
-      app_descriptor_artifact_name: my-app-descriptor
-      rely_on_FAR: 'true'
-      far_url: ${{ vars.FAR_URL }}
-```
-
-## Prerequisites
-
-This action expects the following artifacts to be available:
-1. **Application descriptor artifact** - Named according to `app_descriptor_artifact_name` (or `{app_name}-descriptor` if not specified)
-2. **Platform descriptor artifact** (optional) - Named according to `platform_descriptor_artifact_name` (defaults to `platform-descriptor`)
-
-If the platform descriptor artifact is not provided, only interface validation will be performed.
-
-These artifacts should be uploaded in previous workflow steps using `actions/upload-artifact`.
-
-## Validation Process
-
-1. **Validate Inputs**: Ensures at least one descriptor source is provided
-2. **Download Artifacts**: Retrieves application and optionally platform descriptor artifacts
-3. **Fetch FAR Descriptors**: If not relying on FAR and platform descriptor is available, fetches all application descriptors from FAR for validation
-4. **Module Interface Validation**: Validates module interfaces against FAR API
-5. **Dependency Validation** (conditional): Validates application dependencies if platform descriptor is available
+1. Download platform descriptor artifact.
+2. Confirm file exists and is non-empty.
+3. Verify `.applications` key exists.
+4. Extract application list (required + optional) and count.
+5. Fetch each application descriptor from FAR (`GET /applications/<name>-<version>?full=true`).
+6. Submit all fetched descriptors to FAR (`POST /applications/validate-descriptors`).
+7. Emit outputs / failure reason.
 
 ## Error Handling
 
-The action will fail if:
-- Neither application descriptor artifact nor file is provided
-- Required artifacts are not found
-- Descriptor validation fails (invalid JSON, missing fields, etc.)
-- Module interface validation fails
-- Dependency validation fails (when platform descriptor is provided)
+The action stops immediately on:
+- Missing or empty artifact
+- Missing `.applications` key
+- Failure to fetch any application descriptor (network or 4xx/5xx)
+- Non-2xx response from validation endpoint
 
-All errors are reported through the `failure_reason` output and in the action logs.
+Errors are annotated with `::error::` and the first failure reason is exposed via `failure_reason` output.
 
-## Example Workflow
+## Usage Example
 
 ```yaml
-name: Validate Application
-on:
-  workflow_dispatch:
-
 jobs:
-  generate:
+  validate-platform:
     runs-on: ubuntu-latest
-    outputs:
-      descriptor_file: ${{ steps.generate.outputs.descriptor_file }}
-      descriptor_file_name: ${{ steps.generate.outputs.descriptor_file_name }}
     steps:
-      - name: Generate Descriptor
-        id: generate
-        # ... generate application descriptor ...
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Upload Descriptor Artifact
-        uses: actions/upload-artifact@v4
+      - name: Download Platform Descriptor Artifact
+        # Normally produced in a previous workflow; shown here for completeness
+        uses: actions/download-artifact@v4
         with:
-          name: ${{ steps.generate.outputs.descriptor_file_name }}
-          path: ${{ steps.generate.outputs.descriptor_file }}
+          name: platform-descriptor
+          path: /tmp/platform-descriptor
 
-  validate:
-    needs: generate
-    runs-on: ubuntu-latest
-    steps:
-      - name: Validate Application
+      - name: Validate Platform Descriptor
         id: validate
-        uses: folio-org/kitfox-github/.github/actions/validate-application@master
+        uses: folio-org/platform-lsp/.github/actions/validate-platform@master
         with:
-          app_name: ${{ github.event.repository.name }}
-          app_descriptor_file: ${{ needs.generate.outputs.descriptor_file }}
-          app_descriptor_artifact_name: ${{ needs.generate.outputs.descriptor_artifact_name }}
           far_url: ${{ vars.FAR_URL }}
 
-      - name: Publish Application Descriptor
-        if: steps.validate.outputs.validation_passed == 'true'
-        uses: folio-org/kitfox-github/.github/actions/publish-app-descriptor@master
-        with:
-          descriptor-artifact-name: ${{ needs.generate.outputs.descriptor_artifact_name }}
-          descriptor-file-name: ${{ needs.generate.outputs.descriptor_file }}
-          far-url: ${{ vars.FAR_URL }}
-
-      - name: Check Results
+      - name: Report Results
         if: always()
         run: |
           echo "Validation passed: ${{ steps.validate.outputs.validation_passed }}"
           echo "Failure reason: ${{ steps.validate.outputs.failure_reason }}"
+          echo "Application count: ${{ steps.validate.outputs.application_count }}"
 ```
+
+## Reuse Pattern (Workflow Call)
+
+To integrate with a reusable workflow, expose outputs downstream:
+
+```yaml
+jobs:
+  platform-validate:
+    uses: folio-org/platform-lsp/.github/workflows/validate-platform.yml@master
+    with:
+      far_url: ${{ vars.FAR_URL }}
+```
+
+(Adjust if you create a reusable workflow wrapper.)
+
+## Future Enhancements (Optional)
+
+| Enhancement | Rationale |
+|-------------|-----------|
+| Retry logic for descriptor fetches | Improve resilience to transient FAR/network errors |
+| Concurrency for fetches | Speed up large platform descriptor validations |
+| Dry-run mode | Allow schema checks without FAR calls |
+| Failed apps list output | Provide granular diagnostics |
 
 ## License
 

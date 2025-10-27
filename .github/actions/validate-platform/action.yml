@@ -1,5 +1,5 @@
-name: 'Validate Application'
-description: 'Validate application descriptor integrity'
+name: 'Validate Platform'
+description: 'Validate platform descriptor integrity'
 inputs:
   platform_descriptor_artifact_name:
     description: 'Name of the platform descriptor artifact to download'
@@ -7,14 +7,18 @@ inputs:
     default: 'platform-descriptor'
   far_url:
     description: 'FAR API URL base'
-    required: true
+    default: 'https://far.ci.folio.org'
+    required: false
 outputs:
   validation_passed:
     description: 'Whether all validations passed'
-    value: ${{ steps.validate-dependencies.outputs.validation_passed == 'true' }}
+    value: ${{ steps.validate-dependencies.outputs.validation_passed || 'false' }}
   failure_reason:
     description: 'Reason for failure'
     value: ${{ steps.fetch-app-descriptors.outputs.failure_reason || steps.validate-dependencies.outputs.failure_reason || '' }}
+  application_count:
+    description: 'Number of applications listed in the platform descriptor'
+    value: ${{ steps.fetch-app-descriptors.outputs.application_count || '0' }}
 
 runs:
   using: 'composite'
@@ -37,41 +41,49 @@ runs:
         IFS=$'\n\t'
         echo "::notice::Fetch application descriptors from FAR for validation"
 
-        if [ ! -f "/tmp/$PLATFORM_DESCRIPTOR/$PLATFORM_DESCRIPTOR.json" ]; then
-          echo "::error::Platform descriptor artifact not found"
-          echo "failure_reason=Platform descriptor artifact not found" >> "$GITHUB_OUTPUT"
+        descriptor_path="/tmp/$PLATFORM_DESCRIPTOR/$PLATFORM_DESCRIPTOR.json"
+        if [ ! -s "$descriptor_path" ]; then
+          echo "::error::Platform descriptor artifact not found or empty"
+          echo "failure_reason=Platform descriptor artifact not found or empty" >> "$GITHUB_OUTPUT"
           exit 1
         fi
 
-        cp /tmp/$PLATFORM_DESCRIPTOR/$PLATFORM_DESCRIPTOR.json ./$PLATFORM_DESCRIPTOR.json
+        # Validate JSON has .applications key
+        if ! jq -e '.applications' "$descriptor_path" >/dev/null 2>&1; then
+          echo "::error::Platform descriptor JSON missing .applications field"
+          echo "failure_reason=Platform descriptor JSON missing .applications field" >> "$GITHUB_OUTPUT"
+          exit 1
+        fi
+
+        cp "$descriptor_path" "./$PLATFORM_DESCRIPTOR.json"
         echo "::notice::Platform descriptor loaded successfully"
 
         mkdir -p /tmp/app-descriptors
         platform_apps=$(jq -c '
           [.applications.required[]?, .applications.optional[]?]
           | map({name: .name, version: .version})
-        ' platform-descriptor.json)
+        ' "$PLATFORM_DESCRIPTOR.json")
 
         app_count=$(echo "$platform_apps" | jq 'length')
         echo "::notice::Found $app_count applications in platform descriptor"
+        echo "application_count=$app_count" >> "$GITHUB_OUTPUT"
 
-        echo "$platform_apps" | jq -c '.[]' |
-        while read -r app_entry; do
+        # Iterate application entries without subshell to preserve environment & exit behavior
+        while IFS= read -r app_entry; do
           app_name=$(echo "$app_entry" | jq -r '.name')
           app_version=$(echo "$app_entry" | jq -r '.version')
 
-          echo "Fetching descriptor for $app_name version $app_version..."
-
-          descriptor_url="$FAR_API_URL/$app_name-$app_version?full=true"
-          if descriptor=$(curl -sf "$descriptor_url" 2>/dev/null); then
-            echo "$descriptor" > "/tmp/app-descriptors/${app_name}.json"
-            echo "::notice:: Fetched $app_name"
-          else
-            echo "::error:: Could not fetch $app_name from FAR"
-            echo "failure_reason=Could not fetch $app_name from FAR" >> "$GITHUB_OUTPUT"
-            exit 1
-          fi
-        done
+            echo "Fetching descriptor for $app_name version $app_version..."
+            descriptor_url="$FAR_API_URL/$app_name-$app_version?full=true"
+            if descriptor=$(curl -sSf "$descriptor_url" 2>/dev/null); then
+              echo "$descriptor" > "/tmp/app-descriptors/${app_name}.json"
+              echo "::notice::Fetched $app_name"
+            else
+              echo "::error::Could not fetch $app_name from FAR"
+              echo "failure_reason=Could not fetch $app_name from FAR" >> "$GITHUB_OUTPUT"
+              exit 1
+            fi
+        done < <(echo "$platform_apps" | jq -c '.[]')
 
         echo "::notice::Application descriptors fetched for validation"
 
@@ -86,6 +98,14 @@ runs:
         echo "::notice::Validate application dependencies integrity"
 
         resp_file="$(mktemp)"
+        # Ensure cleanup executes even on failure
+        cleanup() {
+          rm -f "$resp_file" || echo "::warning::Failed to remove temp response file"
+          if [ -d /tmp/app-descriptors ]; then
+            rm -rf /tmp/app-descriptors || echo "::warning::Failed to cleanup /tmp/app-descriptors"
+          fi
+        }
+        trap cleanup EXIT
 
         http_code="$(
           find /tmp/app-descriptors -maxdepth 1 -type f -name '*.json' -print0 \
@@ -96,10 +116,6 @@ runs:
                 --data-binary @- \
                 "$FAR_API_URL/validate-descriptors"
         )"
-
-        echo "HTTP response code: $http_code"
-        echo "Response body:"
-        cat "$resp_file"
 
         if ! [[ "$http_code" =~ ^2[0-9]{2}$ ]]; then
           echo "::error::Dependencies integrity validation request failed (HTTP $http_code)"
@@ -112,4 +128,3 @@ runs:
 
         echo "::notice::Dependencies integrity validation passed"
         echo "validation_passed=true" >> "$GITHUB_OUTPUT"
-        rm -f "$resp_file"
