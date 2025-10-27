@@ -42,15 +42,6 @@ jobs:
       head_branch: ${{ steps.pr-info.outputs.head_ref }}
       base_branch: ${{ steps.pr-info.outputs.base_ref }}
     steps:
-#       - name: Generate GitHub App Token
-#         id: app-token
-#         uses: actions/create-github-app-token@v1
-#         with:
-#           app-id: ${{ vars.EUREKA_CI_APP_ID }}
-#           private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
-#           owner: ${{ inputs.repo_owner }}
-#           repositories: ${{ inputs.repo_name }}
-
       - name: Get Pull Request Information
         id: pr-info
         uses: folio-org/kitfox-github/.github/actions/get-pr-info@master
@@ -161,15 +152,6 @@ jobs:
       platform_found: ${{ steps.fetch-platform.outputs.platform_found }}
       failure_reason: ${{ steps.generate.outputs.generated != 'true' && 'Failed to generate application descriptor' || steps.validate.outputs.failure_reason || 'Check workflow logs for details' }}
     steps:
-#       - name: Generate GitHub App Token
-#         id: app-token
-#         uses: actions/create-github-app-token@v1
-#         with:
-#           app-id: ${{ vars.EUREKA_CI_APP_ID }}
-#           private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
-#           owner: ${{ inputs.repo_owner }}
-#           repositories: ${{ inputs.repo_name }}
-#
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
@@ -199,59 +181,6 @@ jobs:
 
             console.log(`Created check run with ID: ${checkRun.id}`);
             core.setOutput('check_run_id', checkRun.id);
-
-#       - name: Update Check Run - Generating Descriptor
-#         uses: actions/github-script@v7
-#         with:
-#           github-token: ${{ steps.app-token.outputs.token }}
-#           script: |
-#             await github.rest.checks.update({
-#               owner: '${{ inputs.repo_owner }}',
-#               repo: '${{ inputs.repo_name }}',
-#               check_run_id: ${{ steps.create-check.outputs.check_run_id }},
-#               status: 'in_progress',
-#               output: {
-#                 title: 'Application Verification',
-#                 summary: 'Step 1/2: Generating application descriptor...'
-#               }
-#             });
-#
-#       - name: Generate Application Descriptor
-#         id: generate
-#         uses: folio-org/kitfox-github/.github/actions/generate-application-descriptor@master
-#         with:
-#           app_name: ${{ inputs.repo_name }}
-#           state_file: 'application-descriptor.json'
-#           upload_artifact: 'true'
-#
-#       - name: Fetch Platform Descriptor
-#         id: fetch-platform
-#         if: steps.generate.outputs.generated == 'true'
-#         env:
-#           BRANCH: ${{ needs.pre-check.outputs.base_branch }}
-#         run: |
-#           set -eo pipefail
-#           mkdir -p /tmp/platform
-#
-#           echo "::notice::Fetching platform descriptor from platform-lsp branch: $BRANCH"
-#
-#           http_code=$(curl -sS -w "%{http_code}" -o /tmp/platform/platform-descriptor.json \
-#             "https://raw.githubusercontent.com/folio-org/platform-lsp/$BRANCH/platform-descriptor.json")
-#
-#           if [ "$http_code" = "200" ]; then
-#             echo "::notice::Platform descriptor fetched successfully from branch: $BRANCH"
-#             echo "platform_found=true" >> "$GITHUB_OUTPUT"
-#           elif [ "$http_code" = "404" ]; then
-#             echo "::warning::Platform descriptor not found for branch $BRANCH (HTTP 404)"
-#             echo "::warning::Dependency validation will be skipped"
-#             echo "platform_found=false" >> "$GITHUB_OUTPUT"
-#           else
-#             echo "::error::Failed to fetch platform descriptor from branch $BRANCH (HTTP $http_code)"
-#             echo "::error::This might be a temporary issue. Please retry the check."
-#             echo "platform_found=false" >> "$GITHUB_OUTPUT"
-#             echo "fetch_error=true" >> "$GITHUB_OUTPUT"
-#             exit 1
-#           fi
 
       - name: Upload Platform Descriptor
         if: steps.generate.outputs.generated == 'true' && steps.fetch-platform.outputs.platform_found == 'true'
@@ -301,7 +230,7 @@ jobs:
               check_run_id: ${{ steps.create-check.outputs.check_run_id }},
               status: 'in_progress',
               output: {
-                title: 'Application Verification',
+                title: 'Stripes compilation Verification',
                 summary: 'Step 2/2: Compiling stripes (UI)...'
               }
             });
