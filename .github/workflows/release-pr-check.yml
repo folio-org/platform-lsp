@@ -1,0 +1,31 @@
+name: Release PR Check
+
+run-name: >-
+  Release application check • PR #${{ inputs.pr_number }} • ${{ inputs.repo_name }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo_owner:
+        description: 'Repository owner'
+        required: true
+        type: string
+      repo_name:
+        description: 'Repository name'
+        required: true
+        type: string
+      pr_number:
+        description: 'Pull request number'
+        required: true
+        type: string
+      head_sha:
+        description: 'Head commit SHA that triggered the check suite'
+        required: true
+        type: string
+
+jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hello world step
+        run: echo "Hello, world!"

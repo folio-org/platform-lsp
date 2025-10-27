@@ -39,7 +39,6 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  issues: write
 
 # Prevent overlapping runs for the same repo / release branch
 concurrency:
