@@ -207,17 +207,17 @@ jobs:
               }
             });
 
-#       - name: Validate Platform
-#         id: validate
-#         if: steps.generate.outputs.generated == 'true'
-#         uses: folio-org/platform-lsp/.github/actions/validate-platform@RANCHER-2324
-#         with:
-#           app_name: ${{ inputs.repo_name }}
-#           app_descriptor_file: ${{ steps.generate.outputs.descriptor_file }}
-#           app_descriptor_artifact_name: ${{ steps.generate.outputs.artifact_name }}
-#           use_platform_descriptor: ${{ steps.fetch-platform.outputs.platform_found == 'true' && 'true' || 'false' }}
-#           rely_on_FAR: 'false'
-#           far_url: ${{ vars.FAR_URL }}
+      - name: Validate Platform
+        id: validate
+        if: steps.generate.outputs.generated == 'true'
+        uses: folio-org/platform-lsp/.github/actions/validate-platform@RANCHER-2324
+        with:
+          app_name: ${{ inputs.repo_name }}
+          app_descriptor_file: ${{ steps.generate.outputs.descriptor_file }}
+          app_descriptor_artifact_name: ${{ steps.generate.outputs.artifact_name }}
+          use_platform_descriptor: ${{ steps.fetch-platform.outputs.platform_found == 'true' && 'true' || 'false' }}
+          rely_on_FAR: 'false'
+          far_url: ${{ vars.FAR_URL }}
 
       - name: Update Check Run - Compiling stripes (UI)
         uses: actions/github-script@v7
