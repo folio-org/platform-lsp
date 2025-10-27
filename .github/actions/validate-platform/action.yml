@@ -97,6 +97,10 @@ runs:
                 "$FAR_API_URL/validate-descriptors"
         )"
 
+        echo "HTTP response code: $http_code"
+        echo "Response body:"
+        cat "$resp_file"
+
         if ! [[ "$http_code" =~ ^2[0-9]{2}$ ]]; then
           echo "::error::Dependencies integrity validation request failed (HTTP $http_code)"
 
