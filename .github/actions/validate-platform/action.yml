@@ -1,44 +1,26 @@
 name: 'Validate Application'
 description: 'Validate application descriptor integrity'
 inputs:
-  app_name:
-    description: 'Application name'
-    required: true
-  app_descriptor_file:
-    description: 'Application descriptor file name'
-    required: true
-  app_descriptor_artifact_name:
-    description: 'Application descriptor file name without extension'
-    required: false
   platform_descriptor_artifact_name:
     description: 'Name of the platform descriptor artifact to download'
     required: false
     default: 'platform-descriptor'
-  use_platform_descriptor:
-    description: 'Whether platform descriptor should be used for dependency validation'
-    required: false
-    default: 'true'
-  rely_on_FAR:
-    description: 'Whether to rely on FAR for application descriptor dependencies'
-    required: false
-    default: 'false'
   far_url:
     description: 'FAR API URL base'
     required: true
 outputs:
   validation_passed:
     description: 'Whether all validations passed'
-    value: ${{ steps.validate-interfaces.outputs.validation_passed == 'true' && (steps.validate-dependencies.outputs.validation_passed == 'true' || steps.validate-dependencies.outcome == 'skipped') }}
+    value: ${{ steps.validate-dependencies.outputs.validation_passed == 'true' }}
   failure_reason:
     description: 'Reason for failure'
-    value: ${{ steps.fetch-app-descriptors.outputs.failure_reason || steps.validate-interfaces.outputs.failure_reason || steps.validate-dependencies.outputs.failure_reason || '' }}
+    value: ${{ steps.fetch-app-descriptors.outputs.failure_reason || steps.validate-dependencies.outputs.failure_reason || '' }}
 
 runs:
   using: 'composite'
   steps:
     - name: Download Platform Descriptor
       id: download-platform-descriptor
-      if: inputs.rely_on_FAR != 'true' && inputs.use_platform_descriptor == 'true'
       uses: actions/download-artifact@v4
       with:
         name: ${{ inputs.platform_descriptor_artifact_name }}
@@ -46,19 +28,19 @@ runs:
 
     - name: Fetch Application Descriptors from FAR
       id: fetch-app-descriptors
-      if: inputs.rely_on_FAR != 'true' && inputs.use_platform_descriptor == 'true' && steps.download-platform-descriptor.outcome == 'success'
       shell: bash
       env:
         FAR_API_URL: "${{ inputs.far_url }}/applications"
-        PLATFORM_DESCRIPTOR: "platform-descriptor"
+        PLATFORM_DESCRIPTOR: 'platform-descriptor'
       run: |
-        set -eo pipefail
+        set -euo pipefail
+        IFS=$'\n\t'
         echo "::notice::Fetch application descriptors from FAR for validation"
 
         if [ ! -f "/tmp/$PLATFORM_DESCRIPTOR/$PLATFORM_DESCRIPTOR.json" ]; then
-          echo "::warning::Platform descriptor artifact not found, skipping FAR descriptors fetch"
-          echo "skip_far_fetch=true" >> "$GITHUB_OUTPUT"
-          exit 0
+          echo "::error::Platform descriptor artifact not found"
+          echo "failure_reason=Platform descriptor artifact not found" >> "$GITHUB_OUTPUT"
+          exit 1
         fi
 
         cp /tmp/$PLATFORM_DESCRIPTOR/$PLATFORM_DESCRIPTOR.json ./$PLATFORM_DESCRIPTOR.json
@@ -95,12 +77,12 @@ runs:
 
     - name: Validate Application Dependencies Integrity
       id: validate-dependencies
-      if: (inputs.use_platform_descriptor == 'true' && steps.download-platform-descriptor.outcome == 'success') || inputs.rely_on_FAR == 'true'
       shell: bash
       env:
         FAR_API_URL: "${{ inputs.far_url }}/applications"
       run: |
-        set -eo pipefail
+        set -euo pipefail
+        IFS=$'\n\t'
         echo "::notice::Validate application dependencies integrity"
 
         resp_file="$(mktemp)"
