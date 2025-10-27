@@ -281,7 +281,7 @@ jobs:
             };
 
             // Add re-run action button if there was a fetch error or validation failure
-            if (fetchError === 'true' || validationPassed === 'false') {
+            if (validationPassed === 'false') {
               updateParams.actions = [{
                 label: 'Re-run Validation',
                 description: 'Trigger a new validation check',
