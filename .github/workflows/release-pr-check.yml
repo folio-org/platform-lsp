@@ -1,0 +1,624 @@
+name: Release PR Check
+
+run-name: >-
+  Release application check • PR #${{ inputs.pr_number }} • ${{ inputs.repo_name }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo_owner:
+        description: 'Repository owner'
+        required: true
+        type: string
+      repo_name:
+        description: 'Repository name'
+        required: true
+        type: string
+      pr_number:
+        description: 'Pull request number'
+        required: true
+        type: string
+      head_sha:
+        description: 'Head commit SHA that triggered the check suite'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  checks: write
+  statuses: write
+
+jobs:
+  pre-check:
+    name: Pre-Check Configuration
+    runs-on: ubuntu-latest
+    outputs:
+      validation_status: ${{ steps.validate.outputs.status }}
+      validation_message: ${{ steps.validate.outputs.message }}
+      head_branch: ${{ steps.pr-info.outputs.head_ref }}
+      base_branch: ${{ steps.pr-info.outputs.base_ref }}
+    steps:
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.EUREKA_CI_APP_ID }}
+          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+          owner: ${{ inputs.repo_owner }}
+          repositories: ${{ inputs.repo_name }}
+
+      - name: Get Pull Request Information
+        id: pr-info
+        uses: folio-org/kitfox-github/.github/actions/get-pr-info@master
+        with:
+          repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
+          pr_number: ${{ inputs.pr_number }}
+          github_token: ${{ steps.app-token.outputs.token }}
+
+      - name: Check Commit in PR
+        id: check-commit
+        if: steps.pr-info.outputs.pr_exists == 'true'
+        uses: folio-org/kitfox-github/.github/actions/is-commit-in-pr@master
+        with:
+          repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
+          pr_number: ${{ inputs.pr_number }}
+          commit_sha: ${{ inputs.head_sha }}
+          github_token: ${{ steps.app-token.outputs.token }}
+
+      - name: Checkout Repository
+        if: steps.pr-info.outputs.pr_exists == 'true' && steps.check-commit.outputs.commit_found == 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
+          ref: ${{ inputs.head_sha }}
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Get Update Configuration
+        id: get-config
+        if: steps.pr-info.outputs.pr_exists == 'true' && steps.check-commit.outputs.commit_found == 'true'
+        uses: folio-org/kitfox-github/.github/actions/get-update-config@master
+        with:
+          repo: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
+          branch: master
+          github_token: ${{ steps.app-token.outputs.token }}
+
+      - name: Validate Configuration
+        id: validate
+        if: steps.pr-info.outputs.pr_exists == 'true' && steps.check-commit.outputs.commit_found == 'true'
+        env:
+          TARGET_BRANCH: ${{ steps.pr-info.outputs.base_ref }}
+          PR_LABELS: ${{ steps.pr-info.outputs.labels }}
+          CONFIG_EXISTS: ${{ steps.get-config.outputs.config_exists }}
+          ENABLED: ${{ steps.get-config.outputs.enabled }}
+          RELEASE_BRANCHES: ${{ steps.get-config.outputs.release_branches }}
+          REQUIRED_LABELS: ${{ steps.get-config.outputs.pr_labels }}
+        run: |
+          echo "::notice::Validating configuration for branch $TARGET_BRANCH"
+
+          if [[ "$CONFIG_EXISTS" != "true" ]]; then
+            echo "status=skipped" >> "$GITHUB_OUTPUT"
+            echo "message=Release configuration file not found" >> "$GITHUB_OUTPUT"
+            echo "::warning::Configuration file not found: .github/release-config.yml"
+            exit 0
+          fi
+
+          if [[ "$ENABLED" != "true" ]]; then
+            echo "status=skipped" >> "$GITHUB_OUTPUT"
+            echo "message=Release scanning is disabled in configuration" >> "$GITHUB_OUTPUT"
+            echo "::notice::Release scanning is disabled"
+            exit 0
+          fi
+
+          BRANCH_EXISTS=$(echo "$RELEASE_BRANCHES" | jq -r ".[] | select(. == \"$TARGET_BRANCH\")" 2>/dev/null)
+          if [ -z "$BRANCH_EXISTS" ]; then
+            echo "status=skipped" >> "$GITHUB_OUTPUT"
+            echo "message=Target branch $TARGET_BRANCH is not configured for release scanning" >> "$GITHUB_OUTPUT"
+            echo "::notice::Branch $TARGET_BRANCH is not in release_branches configuration"
+            exit 0
+          fi
+
+          if [ -n "$REQUIRED_LABELS" ]; then
+            echo "::notice::Checking for required labels: $REQUIRED_LABELS"
+            PR_LABELS_ARRAY=$(echo "$PR_LABELS" | jq -r '.[]' 2>/dev/null || echo "")
+            MISSING_LABELS=""
+
+            # Convert comma-separated labels to array
+            IFS=',' read -ra LABEL_ARRAY <<< "$REQUIRED_LABELS"
+            for label in "${LABEL_ARRAY[@]}"; do
+              label=$(echo "$label" | xargs) # Trim whitespace
+              if ! echo "$PR_LABELS_ARRAY" | grep -q "^$label$"; then
+                MISSING_LABELS="${MISSING_LABELS}${MISSING_LABELS:+, }$label"
+              fi
+            done
+
+            if [ -n "$MISSING_LABELS" ]; then
+              echo "status=skipped" >> "$GITHUB_OUTPUT"
+              echo "message=PR is missing required labels: $MISSING_LABELS" >> "$GITHUB_OUTPUT"
+              echo "::notice::PR does not have required labels, skipping validation"
+              exit 0
+            fi
+          fi
+
+          echo "status=success" >> "$GITHUB_OUTPUT"
+          echo "message=Configuration validation passed" >> "$GITHUB_OUTPUT"
+          echo "::notice::Configuration validation successful"
+
+
+#   check:
+#     name: Check commit
+#     needs: pre-check
+#     if: needs.pre-check.outputs.validation_status == 'success'
+#     runs-on: ubuntu-latest
+#     outputs:
+#       generated: ${{ steps.generate.outputs.generated }}
+#       descriptor_file: ${{ steps.generate.outputs.descriptor_file }}
+#       descriptor_file_name: ${{ steps.generate.outputs.descriptor_file_name }}
+#       validation_passed: ${{ steps.validate.outputs.validation_passed }}
+#       platform_found: ${{ steps.fetch-platform.outputs.platform_found }}
+#       failure_reason: ${{ steps.generate.outputs.generated != 'true' && 'Failed to generate application descriptor' || steps.validate.outputs.failure_reason || 'Check workflow logs for details' }}
+#     steps:
+#       - name: Generate GitHub App Token
+#         id: app-token
+#         uses: actions/create-github-app-token@v1
+#         with:
+#           app-id: ${{ vars.EUREKA_CI_APP_ID }}
+#           private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+#           owner: ${{ inputs.repo_owner }}
+#           repositories: ${{ inputs.repo_name }}
+#
+#       - name: Checkout Repository
+#         uses: actions/checkout@v4
+#         with:
+#           repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
+#           ref: ${{ inputs.head_sha }}
+#           token: ${{ steps.app-token.outputs.token }}
+#
+#       - name: Create Check Run
+#         id: create-check
+#         uses: actions/github-script@v7
+#         with:
+#           github-token: ${{ steps.app-token.outputs.token }}
+#           script: |
+#             const { data: checkRun } = await github.rest.checks.create({
+#               owner: '${{ inputs.repo_owner }}',
+#               repo: '${{ inputs.repo_name }}',
+#               name: 'eureka-ci/release-app-validation',
+#               head_sha: '${{ inputs.head_sha }}',
+#               status: 'in_progress',
+#               started_at: new Date().toISOString(),
+#               output: {
+#                 title: 'Application Verification',
+#                 summary: 'Starting application verification for PR #${{ inputs.pr_number }}...'
+#               },
+#               details_url: `https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/pull/${{ inputs.pr_number }}`
+#             });
+#
+#             console.log(`Created check run with ID: ${checkRun.id}`);
+#             core.setOutput('check_run_id', checkRun.id);
+#
+#       - name: Update Check Run - Generating Descriptor
+#         uses: actions/github-script@v7
+#         with:
+#           github-token: ${{ steps.app-token.outputs.token }}
+#           script: |
+#             await github.rest.checks.update({
+#               owner: '${{ inputs.repo_owner }}',
+#               repo: '${{ inputs.repo_name }}',
+#               check_run_id: ${{ steps.create-check.outputs.check_run_id }},
+#               status: 'in_progress',
+#               output: {
+#                 title: 'Application Verification',
+#                 summary: 'Step 1/2: Generating application descriptor...'
+#               }
+#             });
+#
+#       - name: Generate Application Descriptor
+#         id: generate
+#         uses: folio-org/kitfox-github/.github/actions/generate-application-descriptor@master
+#         with:
+#           app_name: ${{ inputs.repo_name }}
+#           state_file: 'application-descriptor.json'
+#           upload_artifact: 'true'
+#
+#       - name: Fetch Platform Descriptor
+#         id: fetch-platform
+#         if: steps.generate.outputs.generated == 'true'
+#         env:
+#           BRANCH: ${{ needs.pre-check.outputs.base_branch }}
+#         run: |
+#           set -eo pipefail
+#           mkdir -p /tmp/platform
+#
+#           echo "::notice::Fetching platform descriptor from platform-lsp branch: $BRANCH"
+#
+#           http_code=$(curl -sS -w "%{http_code}" -o /tmp/platform/platform-descriptor.json \
+#             "https://raw.githubusercontent.com/folio-org/platform-lsp/$BRANCH/platform-descriptor.json")
+#
+#           if [ "$http_code" = "200" ]; then
+#             echo "::notice::Platform descriptor fetched successfully from branch: $BRANCH"
+#             echo "platform_found=true" >> "$GITHUB_OUTPUT"
+#           elif [ "$http_code" = "404" ]; then
+#             echo "::warning::Platform descriptor not found for branch $BRANCH (HTTP 404)"
+#             echo "::warning::Dependency validation will be skipped"
+#             echo "platform_found=false" >> "$GITHUB_OUTPUT"
+#           else
+#             echo "::error::Failed to fetch platform descriptor from branch $BRANCH (HTTP $http_code)"
+#             echo "::error::This might be a temporary issue. Please retry the check."
+#             echo "platform_found=false" >> "$GITHUB_OUTPUT"
+#             echo "fetch_error=true" >> "$GITHUB_OUTPUT"
+#             exit 1
+#           fi
+#
+#       - name: Upload Platform Descriptor
+#         if: steps.generate.outputs.generated == 'true' && steps.fetch-platform.outputs.platform_found == 'true'
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: platform-descriptor
+#           path: /tmp/platform/platform-descriptor.json
+#           retention-days: 1
+#
+#       - name: Update Check Run - Validating
+#         if: steps.generate.outputs.generated == 'true'
+#         uses: actions/github-script@v7
+#         with:
+#           github-token: ${{ steps.app-token.outputs.token }}
+#           script: |
+#             await github.rest.checks.update({
+#               owner: '${{ inputs.repo_owner }}',
+#               repo: '${{ inputs.repo_name }}',
+#               check_run_id: ${{ steps.create-check.outputs.check_run_id }},
+#               status: 'in_progress',
+#               output: {
+#                 title: 'Application Verification',
+#                 summary: 'Step 2/2: Validating application descriptor and dependencies...'
+#               }
+#             });
+#
+#       - name: Validate Application
+#         id: validate
+#         if: steps.generate.outputs.generated == 'true'
+#         uses: folio-org/kitfox-github/.github/actions/validate-application@master
+#         with:
+#           app_name: ${{ inputs.repo_name }}
+#           app_descriptor_file: ${{ steps.generate.outputs.descriptor_file }}
+#           app_descriptor_artifact_name: ${{ steps.generate.outputs.artifact_name }}
+#           use_platform_descriptor: ${{ steps.fetch-platform.outputs.platform_found == 'true' && 'true' || 'false' }}
+#           rely_on_FAR: 'false'
+#           far_url: ${{ vars.FAR_URL }}
+#
+#       - name: Finalize Check Run
+#         if: always()
+#         uses: actions/github-script@v7
+#         with:
+#           github-token: ${{ steps.app-token.outputs.token }}
+#           script: |
+#             let conclusion, title, summary;
+#             const generated = '${{ steps.generate.outputs.generated }}';
+#             const validationPassed = '${{ steps.validate.outputs.validation_passed }}';
+#             const failureReason = '${{ steps.validate.outputs.failure_reason }}';
+#             const platformFound = '${{ steps.fetch-platform.outputs.platform_found }}';
+#             const fetchError = '${{ steps.fetch-platform.outputs.fetch_error }}';
+#             const fetchOutcome = '${{ steps.fetch-platform.outcome }}';
+#
+#             if (generated !== 'true') {
+#               conclusion = 'failure';
+#               title = 'Descriptor Generation Failed';
+#               summary = 'Failed to generate application descriptor';
+#             } else if (fetchError === 'true' || fetchOutcome === 'failure') {
+#               conclusion = 'failure';
+#               title = 'Platform Descriptor Fetch Failed';
+#               summary = 'Failed to fetch platform descriptor from branch ${{ needs.pre-check.outputs.base_branch }}. This might be a temporary issue. Please use the "Re-run Validation" button to retry.';
+#             } else if (validationPassed === 'false') {
+#               conclusion = 'failure';
+#               title = 'Verification Failed';
+#               summary = failureReason || 'Application verification failed. Check the logs for details.';
+#             } else if (validationPassed === 'true') {
+#               conclusion = 'success';
+#               title = 'All Checks Passed';
+#               summary = platformFound === 'false'
+#                 ? 'Application verification completed successfully (dependency validation skipped - platform descriptor not found)'
+#                 : 'Application verification completed successfully';
+#             } else {
+#               conclusion = 'neutral';
+#               title = 'Check Incomplete';
+#               summary = 'Some checks could not be completed';
+#             }
+#
+#             let verificationSection = '';
+#             if (generated === 'true') {
+#               verificationSection = `
+#             ### Application Verification
+#             - **Passed:** ${validationPassed || 'unknown'}
+#             ${failureReason ? `- **Reason:** ${failureReason}` : ''}`;
+#             }
+#
+#             const text = `
+#             ## Application Verification Results
+#
+#             **Branch:** \`${{ needs.pre-check.outputs.head_branch }}\`
+#             **Commit:** \`${{ inputs.head_sha }}\`
+#             **Pull Request:** [#${{ inputs.pr_number }}](https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/pull/${{ inputs.pr_number }})
+#
+#             ### Validation Status
+#             - **Result:** ${{ needs.pre-check.outputs.validation_status || 'unknown' }}
+#             - **Message:** ${{ needs.pre-check.outputs.validation_message || 'No message' }}
+#
+#             ### Descriptor Generation
+#             - **Generated:** ${generated || 'false'}
+#             ${verificationSection}
+#
+#             ### Workflow Run
+#             - **Run ID:** ${{ github.run_id }}
+#             - **Run Number:** ${{ github.run_number }}
+#             - **Run URL:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+#             `;
+#
+#             const updateParams = {
+#               owner: '${{ inputs.repo_owner }}',
+#               repo: '${{ inputs.repo_name }}',
+#               check_run_id: ${{ steps.create-check.outputs.check_run_id }},
+#               status: 'completed',
+#               conclusion: conclusion,
+#               completed_at: new Date().toISOString(),
+#               output: {
+#                 title: title,
+#                 summary: summary,
+#                 text: text
+#               },
+#               details_url: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+#             };
+#
+#             // Add re-run action button if there was a fetch error or validation failure
+#             if (fetchError === 'true' || validationPassed === 'false') {
+#               updateParams.actions = [{
+#                 label: 'Re-run Validation',
+#                 description: 'Trigger a new validation check',
+#                 identifier: 're-run-validation'
+#               }];
+#             }
+#
+#             await github.rest.checks.update(updateParams);
+
+
+#   notify:
+#     name: Send Notifications
+#     needs: [pre-check, check]
+#     if: always() && !cancelled() && needs.pre-check.outputs.validation_status == 'success'
+#     runs-on: ubuntu-latest
+#     outputs:
+#       team_channel: ${{ steps.get-vars.outputs.team_channel }}
+#     env:
+#       TITLE_TEXT: "${{ inputs.repo_name }} release update check ${{ (needs.check.result == 'success' && needs.check.outputs.validation_passed == 'true') && 'passed' || 'failed' }}"
+#       TITLE_BLOCK: |
+#         {
+#           "type": "section",
+#           "text": {
+#             "type": "mrkdwn",
+#             "text": "*${{ inputs.repo_name }} release update check ${{ (needs.check.result == 'success' && needs.check.outputs.validation_passed == 'true') && 'passed' || 'failed' }} <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+#           }
+#         }
+#       ATTACHMENT: |
+#         {
+#           "color": "${{ (needs.check.result == 'success' && needs.check.outputs.validation_passed == 'true') && 'good' || 'danger' }}",
+#           "fields": [
+#             {
+#               "title": "Repository",
+#               "value": "${{ inputs.repo_owner }}/${{ inputs.repo_name }}",
+#               "short": true
+#             },
+#             {
+#               "title": "Release branch",
+#               "value": "${{ needs.pre-check.outputs.base_branch }}",
+#               "short": true
+#             },
+#             {
+#               "title": "Update branch",
+#               "value": "${{ needs.pre-check.outputs.head_branch }}",
+#               "short": true
+#             },
+#             {
+#               "title": "PR Number",
+#               "value": "<https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/pull/${{ inputs.pr_number }}|#${{ inputs.pr_number }}>",
+#               "short": true
+#             },
+#             {
+#               "title": "Commit",
+#               "value": "<https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/commit/${{ inputs.head_sha }}|${{ inputs.head_sha }}>",
+#               "short": true
+#             }${{ (needs.check.result != 'success' || needs.check.outputs.validation_passed != 'true') && format(',
+#             {{
+#               "title": "Failure Reason",
+#               "value": "{0}",
+#               "short": false
+#             }}', needs.check.outputs.failure_reason) || '' }}
+#           ],
+#           "footer": "Eureka CI/CD"
+#         }
+#     steps:
+#       - name: Generate GitHub App Token
+#         id: app-token
+#         uses: actions/create-github-app-token@v1
+#         with:
+#           app-id: ${{ vars.EUREKA_CI_APP_ID }}
+#           private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+#           owner: ${{ inputs.repo_owner }}
+#           repositories: ${{ inputs.repo_name }}
+#
+#       - name: Get Repository Variables
+#         id: get-vars
+#         uses: actions/github-script@v7
+#         with:
+#           github-token: ${{ steps.app-token.outputs.token }}
+#           script: |
+#             try {
+#               const { data: variable } = await github.rest.actions.getRepoVariable({
+#                 owner: '${{ inputs.repo_owner }}',
+#                 repo: '${{ inputs.repo_name }}',
+#                 name: 'SLACK_NOTIF_CHANNEL'
+#               });
+#               console.log(`Found SLACK_NOTIF_CHANNEL: ${variable.value}`);
+#               core.setOutput('team_channel', variable.value);
+#             } catch (error) {
+#               console.log(`SLACK_NOTIF_CHANNEL not found or not accessible: ${error.message}`);
+#               core.setOutput('team_channel', '');
+#             }
+#
+#       - name: Send to Team Channel
+#         if: steps.get-vars.outputs.team_channel != ''
+#         continue-on-error: true
+#         uses: slackapi/slack-github-action@v2.1.1
+#         with:
+#           method: chat.postMessage
+#           token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+#           errors: false
+#           payload: |
+#             {
+#               "channel": "${{ steps.get-vars.outputs.team_channel }}",
+#               "text": "${{ env.TITLE_TEXT }}",
+#               "blocks": [
+#                 ${{ env.TITLE_BLOCK }}
+#               ],
+#               "attachments": [
+#                 ${{ env.ATTACHMENT }}
+#               ]
+#             }
+#
+#       - name: Send to General Channel
+#         if: vars.GENERAL_SLACK_NOTIF_CHANNEL != ''
+#         continue-on-error: true
+#         uses: slackapi/slack-github-action@v2.1.1
+#         with:
+#           method: chat.postMessage
+#           token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+#           errors: false
+#           payload: |
+#             {
+#               "channel": "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}",
+#               "text": "${{ env.TITLE_TEXT }}",
+#               "blocks": [
+#                 ${{ env.TITLE_BLOCK }}
+#               ],
+#               "attachments": [
+#                 ${{ env.ATTACHMENT }}
+#               ]
+#             }
+
+#   summarize:
+#     name: Workflow Summary
+#     needs: [pre-check, check, notify]
+#     if: always()
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Generate Workflow Summary
+#         env:
+#           PRE_CHECK_RESULT: ${{ needs.pre-check.result }}
+#           VALIDATION_STATUS: ${{ needs.pre-check.outputs.validation_status }}
+#           VALIDATION_MESSAGE: ${{ needs.pre-check.outputs.validation_message }}
+#           CHECK_RESULT: ${{ needs.check.result }}
+#           GENERATED: ${{ needs.check.outputs.generated }}
+#           VALIDATION_PASSED: ${{ needs.check.outputs.validation_passed }}
+#           FAILURE_REASON: ${{ needs.check.outputs.failure_reason }}
+#           HEAD_BRANCH: ${{ needs.pre-check.outputs.head_branch }}
+#           BASE_BRANCH: ${{ needs.pre-check.outputs.base_branch }}
+#         run: |
+#           {
+#             echo "### 🎯 Release PR Check Summary"
+#             echo ""
+#             echo "**Repository:** \`${{ inputs.repo_owner }}/${{ inputs.repo_name }}\`"
+#             echo "**PR:** [#${{ inputs.pr_number }}](https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/pull/${{ inputs.pr_number }})"
+#             echo "**Commit:** [\`${{ inputs.head_sha }}\`](https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/commit/${{ inputs.head_sha }})"
+#             echo ""
+#
+#             echo "### 📋 Pre-Check Status"
+#             echo ""
+#             if [[ "$PRE_CHECK_RESULT" == "success" ]]; then
+#               if [[ "$VALIDATION_STATUS" == "success" ]]; then
+#                 echo "✅ **Pre-Check:** Passed"
+#                 echo "- **Base Branch:** $BASE_BRANCH"
+#                 echo "- **Head Branch:** $HEAD_BRANCH"
+#                 echo "- **Message:** $VALIDATION_MESSAGE"
+#               elif [[ "$VALIDATION_STATUS" == "skipped" ]]; then
+#                 echo "⏭️ **Pre-Check:** Skipped"
+#                 echo "- **Reason:** $VALIDATION_MESSAGE"
+#               elif [[ -z "$VALIDATION_STATUS" ]]; then
+#                 echo "⏭️ **Pre-Check:** Validation step was skipped"
+#                 echo "- This typically means the PR was not found or the commit is not in the PR"
+#               else
+#                 echo "⚠️ **Pre-Check:** Unknown status ($VALIDATION_STATUS)"
+#               fi
+#             elif [[ "$PRE_CHECK_RESULT" == "failure" ]]; then
+#               echo "❌ **Pre-Check:** Failed"
+#               echo "- **Message:** $VALIDATION_MESSAGE"
+#             elif [[ "$PRE_CHECK_RESULT" == "cancelled" ]]; then
+#               echo "⚠️ **Pre-Check:** Cancelled"
+#             else
+#               echo "⏭️ **Pre-Check:** Skipped"
+#             fi
+#
+#             echo ""
+#             echo "### 🔍 Application Check Status"
+#             echo ""
+#
+#             if [[ "$VALIDATION_STATUS" != "success" ]]; then
+#               echo "ℹ️ Application check was skipped due to pre-check status"
+#             elif [[ "$CHECK_RESULT" == "success" ]]; then
+#               if [[ "$VALIDATION_PASSED" == "true" ]]; then
+#                 echo "✅ **Application Check:** Passed"
+#                 echo "- **Descriptor Generated:** $GENERATED"
+#                 echo "- **Validation:** Passed"
+#               else
+#                 echo "❌ **Application Check:** Failed"
+#                 echo "- **Descriptor Generated:** $GENERATED"
+#                 if [[ -n "$FAILURE_REASON" ]]; then
+#                   echo "- **Failure Reason:** $FAILURE_REASON"
+#                 fi
+#               fi
+#             elif [[ "$CHECK_RESULT" == "failure" ]]; then
+#               echo "❌ **Application Check:** Failed"
+#               echo "- **Descriptor Generated:** $GENERATED"
+#               if [[ -n "$FAILURE_REASON" ]]; then
+#                 echo "- **Failure Reason:** $FAILURE_REASON"
+#               else
+#                 echo "- Check the workflow logs for details"
+#               fi
+#             elif [[ "$CHECK_RESULT" == "cancelled" ]]; then
+#               echo "⚠️ **Application Check:** Cancelled"
+#             else
+#               echo "⏭️ **Application Check:** Skipped"
+#             fi
+#
+#             echo ""
+#             echo "### 📨 Notification Status"
+#             echo ""
+#
+#             if [[ -n "${{ needs.notify.outputs.team_channel }}" ]]; then
+#               if [[ "${{ needs.notify.result }}" == "success" ]]; then
+#                 echo "✅ **Team Channel** (\`${{ needs.notify.outputs.team_channel }}\`): Sent"
+#               elif [[ "${{ needs.notify.result }}" == "failure" ]]; then
+#                 echo "⚠️ **Team Channel** (\`${{ needs.notify.outputs.team_channel }}\`): Failed"
+#               else
+#                 echo "ℹ️ **Team Channel** (\`${{ needs.notify.outputs.team_channel }}\`): Skipped"
+#               fi
+#             else
+#               echo "ℹ️ **Team Channel:** Not configured"
+#             fi
+#
+#             echo ""
+#
+#             if [[ -n "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}" ]]; then
+#               if [[ "${{ needs.notify.result }}" == "success" ]]; then
+#                 echo "✅ **General Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Sent"
+#               elif [[ "${{ needs.notify.result }}" == "failure" ]]; then
+#                 echo "⚠️ **General Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Failed"
+#               else
+#                 echo "ℹ️ **General Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Skipped"
+#               fi
+#             else
+#               echo "ℹ️ **General Channel:** Not configured"
+#             fi
+#
+#             echo ""
+#             echo "---"
+#             echo ""
+#             echo "**Workflow Run:** [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+#           } >> $GITHUB_STEP_SUMMARY

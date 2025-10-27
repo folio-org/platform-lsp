@@ -1,0 +1,183 @@
+name: 'Validate Application'
+description: 'Validate application descriptor integrity'
+inputs:
+  app_name:
+    description: 'Application name'
+    required: true
+  app_descriptor_file:
+    description: 'Application descriptor file name'
+    required: true
+  app_descriptor_artifact_name:
+    description: 'Application descriptor file name without extension'
+    required: false
+  platform_descriptor_artifact_name:
+    description: 'Name of the platform descriptor artifact to download'
+    required: false
+    default: 'platform-descriptor'
+  use_platform_descriptor:
+    description: 'Whether platform descriptor should be used for dependency validation'
+    required: false
+    default: 'true'
+  rely_on_FAR:
+    description: 'Whether to rely on FAR for application descriptor dependencies'
+    required: false
+    default: 'false'
+  far_url:
+    description: 'FAR API URL base'
+    required: true
+outputs:
+  validation_passed:
+    description: 'Whether all validations passed'
+    value: ${{ steps.validate-interfaces.outputs.validation_passed == 'true' && (steps.validate-dependencies.outputs.validation_passed == 'true' || steps.validate-dependencies.outcome == 'skipped') }}
+  failure_reason:
+    description: 'Reason for failure'
+    value: ${{ steps.fetch-app-descriptors.outputs.failure_reason || steps.validate-interfaces.outputs.failure_reason || steps.validate-dependencies.outputs.failure_reason || '' }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Validate Inputs
+      shell: bash
+      run: |
+        if [[ -z "${{ inputs.app_descriptor_artifact_name }}" && -z "${{ inputs.app_descriptor_file }}" ]]; then
+          echo "::error::Neither application descriptor artifact nor descriptor file is provided. At least one must be specified."
+          exit 1
+        fi
+
+    - name: Download Descriptor Artifact
+      if: inputs.app_descriptor_artifact_name != ''
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ inputs.app_descriptor_artifact_name }}
+        path: /tmp/app-descriptors
+
+    - name: Download Platform Descriptor
+      id: download-platform-descriptor
+      if: inputs.rely_on_FAR != 'true' && inputs.use_platform_descriptor == 'true'
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ inputs.platform_descriptor_artifact_name }}
+        path: /tmp/platform-descriptor
+
+    - name: Fetch Application Descriptors from FAR
+      id: fetch-app-descriptors
+      if: inputs.rely_on_FAR != 'true' && inputs.use_platform_descriptor == 'true' && steps.download-platform-descriptor.outcome == 'success'
+      shell: bash
+      env:
+        APP_NAME: ${{ inputs.app_name }}
+        FAR_API_URL: "${{ inputs.far_url }}/applications"
+        PLATFORM_DESCRIPTOR: "platform-descriptor"
+      run: |
+        set -eo pipefail
+        echo "::notice::Fetch application descriptors from FAR for validation"
+
+        if [ ! -f "/tmp/$PLATFORM_DESCRIPTOR/$PLATFORM_DESCRIPTOR.json" ]; then
+          echo "::warning::Platform descriptor artifact not found, skipping FAR descriptors fetch"
+          echo "skip_far_fetch=true" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+
+        cp /tmp/$PLATFORM_DESCRIPTOR/$PLATFORM_DESCRIPTOR.json ./$PLATFORM_DESCRIPTOR.json
+        echo "::notice::Platform descriptor loaded successfully"
+
+        mkdir -p /tmp/app-descriptors
+        platform_apps=$(jq -c '
+          [.applications.required[]?, .applications.optional[]?]
+          | map({name: .name, version: .version})
+        ' platform-descriptor.json)
+
+        app_count=$(echo "$platform_apps" | jq 'length')
+        echo "::notice::Found $app_count applications in platform descriptor"
+
+        echo "$platform_apps" | jq -c '.[]' |
+        while read -r app_entry; do
+          app_name=$(echo "$app_entry" | jq -r '.name')
+          app_version=$(echo "$app_entry" | jq -r '.version')
+
+          [[ "$app_name" == "$APP_NAME" ]] && continue
+
+          echo "Fetching descriptor for $app_name version $app_version..."
+
+          descriptor_url="$FAR_API_URL/$app_name-$app_version?full=true"
+          if descriptor=$(curl -sf "$descriptor_url" 2>/dev/null); then
+            echo "$descriptor" > "/tmp/app-descriptors/${app_name}.json"
+            echo "::notice:: Fetched $app_name"
+          else
+            echo "::error:: Could not fetch $app_name from FAR"
+            echo "failure_reason=Could not fetch $app_name from FAR" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+        done
+
+        echo "::notice::Application descriptors fetched for validation"
+
+    - name: Validate Application Module Interface Integrity
+      id: validate-interfaces
+      shell: bash
+      env:
+        APP_DESCRIPTOR_FILE: "/tmp/app-descriptors/${{ inputs.app_descriptor_file }}"
+        FAR_API_URL: "${{ inputs.far_url }}/applications"
+      run: |
+        set -eo pipefail
+        echo "::notice::Validate application module interface integrity"
+
+        if [ ! -f "$APP_DESCRIPTOR_FILE" ]; then
+          echo "::error::Updated descriptor not found: $APP_DESCRIPTOR_FILE"
+          echo "failure_reason=Updated descriptor not found: $APP_DESCRIPTOR_FILE" >> "$GITHUB_OUTPUT"
+          exit 1
+        fi
+
+        validation_response_and_code=$(curl -s -w "\n%{http_code}" -X POST \
+          -H "Content-Type: application/json" \
+          --data-binary @"$APP_DESCRIPTOR_FILE" \
+          "$FAR_API_URL/validate")
+
+        validation_response=$(echo "$validation_response_and_code" | sed '$d')
+        http_code=$(echo "$validation_response_and_code" | tail -n1)
+
+        if ! [[ "$http_code" =~ ^2[0-9][0-9]$ ]]; then
+          echo "::error::Module interface integrity validation request failed (HTTP $http_code)"
+          echo "::error::$validation_response"
+          echo "failure_reason=Module interface integrity validation request failed (HTTP $http_code)" >> "$GITHUB_OUTPUT"
+          exit 1
+        fi
+
+        echo "::notice::Module interface integrity validation passed"
+        echo "validation_passed=true" >> "$GITHUB_OUTPUT"
+
+    - name: Validate Application Dependencies Integrity
+      id: validate-dependencies
+      if: (inputs.use_platform_descriptor == 'true' && steps.download-platform-descriptor.outcome == 'success') || inputs.rely_on_FAR == 'true'
+      shell: bash
+      env:
+        RELY_ON_FAR: ${{ inputs.rely_on_FAR }}
+        FAR_API_URL: "${{ inputs.far_url }}/applications"
+      run: |
+        set -eo pipefail
+        echo "::notice::Validate application dependencies integrity"
+
+        resp_file="$(mktemp)"
+
+        http_code="$(
+          find /tmp/app-descriptors -maxdepth 1 -type f -name '*.json' -print0 \
+            | xargs -0 -r cat \
+            | jq -s '{applicationDescriptors: .}' \
+            | curl -sS -o "$resp_file" -w "%{http_code}" -X POST \
+                -H "Content-Type: application/json" \
+                --data-binary @- \
+                "$FAR_API_URL/validate-descriptors"
+        )"
+
+        if ! [[ "$http_code" =~ ^2[0-9]{2}$ ]]; then
+          echo "::error::Dependencies integrity validation request failed (HTTP $http_code)"
+
+          [[ -s "$resp_file" ]] && cat "$resp_file" >&2 || echo "(empty response body)" >&2
+
+          echo "failure_reason=Dependencies integrity validation request failed (HTTP $http_code)" >> "$GITHUB_OUTPUT"
+          exit 1
+        fi
+
+        echo "::notice::Dependencies integrity validation passed"
+        echo "validation_passed=true" >> "$GITHUB_OUTPUT"
+        [[ "$RELY_ON_FAR" == "true" ]] && cat "$resp_file" >&2 || echo "(empty response body)" >&2
+        rm -f "$resp_file"
