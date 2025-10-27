@@ -1,7 +1,7 @@
 name: Release PR Check
 
 run-name: >-
-  Release application check • PR #${{ inputs.pr_number }} • ${{ inputs.repo_name }}
+  Release platform check • PR #${{ inputs.pr_number }} • ${{ inputs.repo_name }}
 
 on:
   workflow_dispatch:
@@ -145,12 +145,8 @@ jobs:
     if: needs.pre-check.outputs.validation_status == 'success'
     runs-on: ubuntu-latest
     outputs:
-      generated: ${{ steps.generate.outputs.generated }}
-      descriptor_file: ${{ steps.generate.outputs.descriptor_file }}
-      descriptor_file_name: ${{ steps.generate.outputs.descriptor_file_name }}
       validation_passed: ${{ steps.validate.outputs.validation_passed }}
-      platform_found: ${{ steps.fetch-platform.outputs.platform_found }}
-      failure_reason: ${{ steps.generate.outputs.generated != 'true' && 'Failed to generate application descriptor' || steps.validate.outputs.failure_reason || 'Check workflow logs for details' }}
+      failure_reason: ${{ steps.validate.outputs.failure_reason || 'Check workflow logs for details' }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -168,13 +164,13 @@ jobs:
             const { data: checkRun } = await github.rest.checks.create({
               owner: '${{ inputs.repo_owner }}',
               repo: '${{ inputs.repo_name }}',
-              name: 'eureka-ci/release-app-validation',
+              name: 'eureka-ci/release-platform-validation',
               head_sha: '${{ inputs.head_sha }}',
               status: 'in_progress',
               started_at: new Date().toISOString(),
               output: {
-                title: 'Application Verification',
-                summary: 'Starting application verification for PR #${{ inputs.pr_number }}...'
+                title: 'Platform Verification',
+                summary: 'Starting platform verification for PR #${{ inputs.pr_number }}...'
               },
               details_url: `https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/pull/${{ inputs.pr_number }}`
             });
@@ -227,99 +223,73 @@ jobs:
                 summary: 'Step 2/2: Compiling stripes (UI)...'
               }
             });
-#
-#       - name: Finalize Check Run
-#         if: always()
-#         uses: actions/github-script@v7
-#         with:
-#           github-token: ${{ steps.app-token.outputs.token }}
-#           script: |
-#             let conclusion, title, summary;
-#             const generated = '${{ steps.generate.outputs.generated }}';
-#             const validationPassed = '${{ steps.validate.outputs.validation_passed }}';
-#             const failureReason = '${{ steps.validate.outputs.failure_reason }}';
-#             const platformFound = '${{ steps.fetch-platform.outputs.platform_found }}';
-#             const fetchError = '${{ steps.fetch-platform.outputs.fetch_error }}';
-#             const fetchOutcome = '${{ steps.fetch-platform.outcome }}';
-#
-#             if (generated !== 'true') {
-#               conclusion = 'failure';
-#               title = 'Descriptor Generation Failed';
-#               summary = 'Failed to generate application descriptor';
-#             } else if (fetchError === 'true' || fetchOutcome === 'failure') {
-#               conclusion = 'failure';
-#               title = 'Platform Descriptor Fetch Failed';
-#               summary = 'Failed to fetch platform descriptor from branch ${{ needs.pre-check.outputs.base_branch }}. This might be a temporary issue. Please use the "Re-run Validation" button to retry.';
-#             } else if (validationPassed === 'false') {
-#               conclusion = 'failure';
-#               title = 'Verification Failed';
-#               summary = failureReason || 'Application verification failed. Check the logs for details.';
-#             } else if (validationPassed === 'true') {
-#               conclusion = 'success';
-#               title = 'All Checks Passed';
-#               summary = platformFound === 'false'
-#                 ? 'Application verification completed successfully (dependency validation skipped - platform descriptor not found)'
-#                 : 'Application verification completed successfully';
-#             } else {
-#               conclusion = 'neutral';
-#               title = 'Check Incomplete';
-#               summary = 'Some checks could not be completed';
-#             }
-#
-#             let verificationSection = '';
-#             if (generated === 'true') {
-#               verificationSection = `
-#             ### Application Verification
-#             - **Passed:** ${validationPassed || 'unknown'}
-#             ${failureReason ? `- **Reason:** ${failureReason}` : ''}`;
-#             }
-#
-#             const text = `
-#             ## Application Verification Results
-#
-#             **Branch:** \`${{ needs.pre-check.outputs.head_branch }}\`
-#             **Commit:** \`${{ inputs.head_sha }}\`
-#             **Pull Request:** [#${{ inputs.pr_number }}](https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/pull/${{ inputs.pr_number }})
-#
-#             ### Validation Status
-#             - **Result:** ${{ needs.pre-check.outputs.validation_status || 'unknown' }}
-#             - **Message:** ${{ needs.pre-check.outputs.validation_message || 'No message' }}
-#
-#             ### Descriptor Generation
-#             - **Generated:** ${generated || 'false'}
-#             ${verificationSection}
-#
-#             ### Workflow Run
-#             - **Run ID:** ${{ github.run_id }}
-#             - **Run Number:** ${{ github.run_number }}
-#             - **Run URL:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-#             `;
-#
-#             const updateParams = {
-#               owner: '${{ inputs.repo_owner }}',
-#               repo: '${{ inputs.repo_name }}',
-#               check_run_id: ${{ steps.create-check.outputs.check_run_id }},
-#               status: 'completed',
-#               conclusion: conclusion,
-#               completed_at: new Date().toISOString(),
-#               output: {
-#                 title: title,
-#                 summary: summary,
-#                 text: text
-#               },
-#               details_url: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-#             };
-#
-#             // Add re-run action button if there was a fetch error or validation failure
-#             if (fetchError === 'true' || validationPassed === 'false') {
-#               updateParams.actions = [{
-#                 label: 'Re-run Validation',
-#                 description: 'Trigger a new validation check',
-#                 identifier: 're-run-validation'
-#               }];
-#             }
-#
-#             await github.rest.checks.update(updateParams);
+
+      - name: Finalize Check Run
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ env.GH_TOKEN }}
+          script: |
+            let conclusion, title, summary;
+            const validationPassed = '${{ steps.validate.outputs.validation_passed }}';
+            const failureReason = '${{ steps.validate.outputs.failure_reason }}';
+
+            if (validationPassed === 'false') {
+              conclusion = 'failure';
+              title = 'Verification Failed';
+              summary = failureReason || 'Platform verification failed. Check the logs for details.';
+            } else if (validationPassed === 'true') {
+              conclusion = 'success';
+              title = 'All Checks Passed';
+              summary = 'Platform verification completed successfully.';
+            } else {
+              conclusion = 'neutral';
+              title = 'Check Incomplete';
+              summary = 'Some checks could not be completed';
+            }
+
+            const text = `
+            ## Platform Verification Results
+
+            **Branch:** \`${{ needs.pre-check.outputs.head_branch }}\`
+            **Commit:** \`${{ inputs.head_sha }}\`
+            **Pull Request:** [#${{ inputs.pr_number }}](https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/pull/${{ inputs.pr_number }})
+
+            ### Validation Status
+            - **Result:** ${{ needs.pre-check.outputs.validation_status || 'unknown' }}
+            - **Message:** ${{ needs.pre-check.outputs.validation_message || 'No message' }}
+
+            ### Workflow Run
+            - **Run ID:** ${{ github.run_id }}
+            - **Run Number:** ${{ github.run_number }}
+            - **Run URL:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            `;
+
+            const updateParams = {
+              owner: '${{ inputs.repo_owner }}',
+              repo: '${{ inputs.repo_name }}',
+              check_run_id: ${{ steps.create-check.outputs.check_run_id }},
+              status: 'completed',
+              conclusion: conclusion,
+              completed_at: new Date().toISOString(),
+              output: {
+                title: title,
+                summary: summary,
+                text: text
+              },
+              details_url: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+            };
+
+            // Add re-run action button if there was a fetch error or validation failure
+            if (fetchError === 'true' || validationPassed === 'false') {
+              updateParams.actions = [{
+                label: 'Re-run Validation',
+                description: 'Trigger a new validation check',
+                identifier: 're-run-validation'
+              }];
+            }
+
+            await github.rest.checks.update(updateParams);
 
 
 #   notify:
@@ -445,122 +415,118 @@ jobs:
 #               ]
 #             }
 
-#   summarize:
-#     name: Workflow Summary
-#     needs: [pre-check, check, notify]
-#     if: always()
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Generate Workflow Summary
-#         env:
-#           PRE_CHECK_RESULT: ${{ needs.pre-check.result }}
-#           VALIDATION_STATUS: ${{ needs.pre-check.outputs.validation_status }}
-#           VALIDATION_MESSAGE: ${{ needs.pre-check.outputs.validation_message }}
-#           CHECK_RESULT: ${{ needs.check.result }}
-#           GENERATED: ${{ needs.check.outputs.generated }}
-#           VALIDATION_PASSED: ${{ needs.check.outputs.validation_passed }}
-#           FAILURE_REASON: ${{ needs.check.outputs.failure_reason }}
-#           HEAD_BRANCH: ${{ needs.pre-check.outputs.head_branch }}
-#           BASE_BRANCH: ${{ needs.pre-check.outputs.base_branch }}
-#         run: |
-#           {
-#             echo "### 🎯 Release PR Check Summary"
-#             echo ""
-#             echo "**Repository:** \`${{ inputs.repo_owner }}/${{ inputs.repo_name }}\`"
-#             echo "**PR:** [#${{ inputs.pr_number }}](https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/pull/${{ inputs.pr_number }})"
-#             echo "**Commit:** [\`${{ inputs.head_sha }}\`](https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/commit/${{ inputs.head_sha }})"
-#             echo ""
-#
-#             echo "### 📋 Pre-Check Status"
-#             echo ""
-#             if [[ "$PRE_CHECK_RESULT" == "success" ]]; then
-#               if [[ "$VALIDATION_STATUS" == "success" ]]; then
-#                 echo "✅ **Pre-Check:** Passed"
-#                 echo "- **Base Branch:** $BASE_BRANCH"
-#                 echo "- **Head Branch:** $HEAD_BRANCH"
-#                 echo "- **Message:** $VALIDATION_MESSAGE"
-#               elif [[ "$VALIDATION_STATUS" == "skipped" ]]; then
-#                 echo "⏭️ **Pre-Check:** Skipped"
-#                 echo "- **Reason:** $VALIDATION_MESSAGE"
-#               elif [[ -z "$VALIDATION_STATUS" ]]; then
-#                 echo "⏭️ **Pre-Check:** Validation step was skipped"
-#                 echo "- This typically means the PR was not found or the commit is not in the PR"
-#               else
-#                 echo "⚠️ **Pre-Check:** Unknown status ($VALIDATION_STATUS)"
-#               fi
-#             elif [[ "$PRE_CHECK_RESULT" == "failure" ]]; then
-#               echo "❌ **Pre-Check:** Failed"
-#               echo "- **Message:** $VALIDATION_MESSAGE"
-#             elif [[ "$PRE_CHECK_RESULT" == "cancelled" ]]; then
-#               echo "⚠️ **Pre-Check:** Cancelled"
-#             else
-#               echo "⏭️ **Pre-Check:** Skipped"
-#             fi
-#
-#             echo ""
-#             echo "### 🔍 Application Check Status"
-#             echo ""
-#
-#             if [[ "$VALIDATION_STATUS" != "success" ]]; then
-#               echo "ℹ️ Application check was skipped due to pre-check status"
-#             elif [[ "$CHECK_RESULT" == "success" ]]; then
-#               if [[ "$VALIDATION_PASSED" == "true" ]]; then
-#                 echo "✅ **Application Check:** Passed"
-#                 echo "- **Descriptor Generated:** $GENERATED"
-#                 echo "- **Validation:** Passed"
-#               else
-#                 echo "❌ **Application Check:** Failed"
-#                 echo "- **Descriptor Generated:** $GENERATED"
-#                 if [[ -n "$FAILURE_REASON" ]]; then
-#                   echo "- **Failure Reason:** $FAILURE_REASON"
-#                 fi
-#               fi
-#             elif [[ "$CHECK_RESULT" == "failure" ]]; then
-#               echo "❌ **Application Check:** Failed"
-#               echo "- **Descriptor Generated:** $GENERATED"
-#               if [[ -n "$FAILURE_REASON" ]]; then
-#                 echo "- **Failure Reason:** $FAILURE_REASON"
-#               else
-#                 echo "- Check the workflow logs for details"
-#               fi
-#             elif [[ "$CHECK_RESULT" == "cancelled" ]]; then
-#               echo "⚠️ **Application Check:** Cancelled"
-#             else
-#               echo "⏭️ **Application Check:** Skipped"
-#             fi
-#
-#             echo ""
-#             echo "### 📨 Notification Status"
-#             echo ""
-#
-#             if [[ -n "${{ needs.notify.outputs.team_channel }}" ]]; then
-#               if [[ "${{ needs.notify.result }}" == "success" ]]; then
-#                 echo "✅ **Team Channel** (\`${{ needs.notify.outputs.team_channel }}\`): Sent"
-#               elif [[ "${{ needs.notify.result }}" == "failure" ]]; then
-#                 echo "⚠️ **Team Channel** (\`${{ needs.notify.outputs.team_channel }}\`): Failed"
-#               else
-#                 echo "ℹ️ **Team Channel** (\`${{ needs.notify.outputs.team_channel }}\`): Skipped"
-#               fi
-#             else
-#               echo "ℹ️ **Team Channel:** Not configured"
-#             fi
-#
-#             echo ""
-#
-#             if [[ -n "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}" ]]; then
-#               if [[ "${{ needs.notify.result }}" == "success" ]]; then
-#                 echo "✅ **General Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Sent"
-#               elif [[ "${{ needs.notify.result }}" == "failure" ]]; then
-#                 echo "⚠️ **General Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Failed"
-#               else
-#                 echo "ℹ️ **General Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Skipped"
-#               fi
-#             else
-#               echo "ℹ️ **General Channel:** Not configured"
-#             fi
-#
-#             echo ""
-#             echo "---"
-#             echo ""
-#             echo "**Workflow Run:** [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
-#           } >> $GITHUB_STEP_SUMMARY
+  summarize:
+    name: Workflow Summary
+    needs: [pre-check, check, notify]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Workflow Summary
+        env:
+          PRE_CHECK_RESULT: ${{ needs.pre-check.result }}
+          VALIDATION_STATUS: ${{ needs.pre-check.outputs.validation_status }}
+          VALIDATION_MESSAGE: ${{ needs.pre-check.outputs.validation_message }}
+          CHECK_RESULT: ${{ needs.check.result }}
+          VALIDATION_PASSED: ${{ needs.check.outputs.validation_passed }}
+          FAILURE_REASON: ${{ needs.check.outputs.failure_reason }}
+          HEAD_BRANCH: ${{ needs.pre-check.outputs.head_branch }}
+          BASE_BRANCH: ${{ needs.pre-check.outputs.base_branch }}
+        run: |
+          {
+            echo "### 🎯 Release PR Check Summary"
+            echo ""
+            echo "**Repository:** \`${{ inputs.repo_owner }}/${{ inputs.repo_name }}\`"
+            echo "**PR:** [#${{ inputs.pr_number }}](https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/pull/${{ inputs.pr_number }})"
+            echo "**Commit:** [\`${{ inputs.head_sha }}\`](https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/commit/${{ inputs.head_sha }})"
+            echo ""
+
+            echo "### 📋 Pre-Check Status"
+            echo ""
+            if [[ "$PRE_CHECK_RESULT" == "success" ]]; then
+              if [[ "$VALIDATION_STATUS" == "success" ]]; then
+                echo "✅ **Pre-Check:** Passed"
+                echo "- **Base Branch:** $BASE_BRANCH"
+                echo "- **Head Branch:** $HEAD_BRANCH"
+                echo "- **Message:** $VALIDATION_MESSAGE"
+              elif [[ "$VALIDATION_STATUS" == "skipped" ]]; then
+                echo "⏭️ **Pre-Check:** Skipped"
+                echo "- **Reason:** $VALIDATION_MESSAGE"
+              elif [[ -z "$VALIDATION_STATUS" ]]; then
+                echo "⏭️ **Pre-Check:** Validation step was skipped"
+                echo "- This typically means the PR was not found or the commit is not in the PR"
+              else
+                echo "⚠️ **Pre-Check:** Unknown status ($VALIDATION_STATUS)"
+              fi
+            elif [[ "$PRE_CHECK_RESULT" == "failure" ]]; then
+              echo "❌ **Pre-Check:** Failed"
+              echo "- **Message:** $VALIDATION_MESSAGE"
+            elif [[ "$PRE_CHECK_RESULT" == "cancelled" ]]; then
+              echo "⚠️ **Pre-Check:** Cancelled"
+            else
+              echo "⏭️ **Pre-Check:** Skipped"
+            fi
+
+            echo ""
+            echo "### 🔍 Platform Check Status"
+            echo ""
+
+            if [[ "$VALIDATION_STATUS" != "success" ]]; then
+              echo "ℹ️ Platform check was skipped due to pre-check status"
+            elif [[ "$CHECK_RESULT" == "success" ]]; then
+              if [[ "$VALIDATION_PASSED" == "true" ]]; then
+                echo "✅ **Platform Check:** Passed"
+                echo "- **Validation:** Passed"
+              else
+                echo "❌ **Platform Check:** Failed"
+                if [[ -n "$FAILURE_REASON" ]]; then
+                  echo "- **Failure Reason:** $FAILURE_REASON"
+                fi
+              fi
+            elif [[ "$CHECK_RESULT" == "failure" ]]; then
+              echo "❌ **Platform Check:** Failed"
+              if [[ -n "$FAILURE_REASON" ]]; then
+                echo "- **Failure Reason:** $FAILURE_REASON"
+              else
+                echo "- Check the workflow logs for details"
+              fi
+            elif [[ "$CHECK_RESULT" == "cancelled" ]]; then
+              echo "⚠️ **Platform Check:** Cancelled"
+            else
+              echo "⏭️ **Platform Check:** Skipped"
+            fi
+
+            echo ""
+            echo "### 📨 Notification Status"
+            echo ""
+
+            if [[ -n "${{ needs.notify.outputs.team_channel }}" ]]; then
+              if [[ "${{ needs.notify.result }}" == "success" ]]; then
+                echo "✅ **Team Channel** (\`${{ needs.notify.outputs.team_channel }}\`): Sent"
+              elif [[ "${{ needs.notify.result }}" == "failure" ]]; then
+                echo "⚠️ **Team Channel** (\`${{ needs.notify.outputs.team_channel }}\`): Failed"
+              else
+                echo "ℹ️ **Team Channel** (\`${{ needs.notify.outputs.team_channel }}\`): Skipped"
+              fi
+            else
+              echo "ℹ️ **Team Channel:** Not configured"
+            fi
+
+            echo ""
+
+            if [[ -n "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}" ]]; then
+              if [[ "${{ needs.notify.result }}" == "success" ]]; then
+                echo "✅ **General Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Sent"
+              elif [[ "${{ needs.notify.result }}" == "failure" ]]; then
+                echo "⚠️ **General Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Failed"
+              else
+                echo "ℹ️ **General Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Skipped"
+              fi
+            else
+              echo "ℹ️ **General Channel:** Not configured"
+            fi
+
+            echo ""
+            echo "---"
+            echo ""
+            echo "**Workflow Run:** [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+          } >> $GITHUB_STEP_SUMMARY
