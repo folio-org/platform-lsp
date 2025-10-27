@@ -28,6 +28,9 @@ permissions:
   checks: write
   statuses: write
 
+env:
+  GH_TOKEN: ${{ github.token }}
+
 jobs:
   pre-check:
     name: Pre-Check Configuration
@@ -38,14 +41,14 @@ jobs:
       head_branch: ${{ steps.pr-info.outputs.head_ref }}
       base_branch: ${{ steps.pr-info.outputs.base_ref }}
     steps:
-      - name: Generate GitHub App Token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ vars.EUREKA_CI_APP_ID }}
-          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
-          owner: ${{ inputs.repo_owner }}
-          repositories: ${{ inputs.repo_name }}
+#       - name: Generate GitHub App Token
+#         id: app-token
+#         uses: actions/create-github-app-token@v1
+#         with:
+#           app-id: ${{ vars.EUREKA_CI_APP_ID }}
+#           private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+#           owner: ${{ inputs.repo_owner }}
+#           repositories: ${{ inputs.repo_name }}
 
       - name: Get Pull Request Information
         id: pr-info
@@ -53,7 +56,7 @@ jobs:
         with:
           repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
           pr_number: ${{ inputs.pr_number }}
-          github_token: ${{ steps.app-token.outputs.token }}
+          github_token: ${{ env.GH_TOKEN }}
 
       - name: Check Commit in PR
         id: check-commit
@@ -63,7 +66,7 @@ jobs:
           repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
           pr_number: ${{ inputs.pr_number }}
           commit_sha: ${{ inputs.head_sha }}
-          github_token: ${{ steps.app-token.outputs.token }}
+          github_token: ${{ env.GH_TOKEN }}
 
       - name: Checkout Repository
         if: steps.pr-info.outputs.pr_exists == 'true' && steps.check-commit.outputs.commit_found == 'true'
@@ -71,7 +74,7 @@ jobs:
         with:
           repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
           ref: ${{ inputs.head_sha }}
-          token: ${{ steps.app-token.outputs.token }}
+          token: ${{ env.GH_TOKEN }}
 
       - name: Get Update Configuration
         id: get-config
@@ -80,7 +83,7 @@ jobs:
         with:
           repo: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
           branch: master
-          github_token: ${{ steps.app-token.outputs.token }}
+          github_token: ${{ env.GH_TOKEN }}
 
       - name: Validate Configuration
         id: validate
