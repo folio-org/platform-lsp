@@ -23,6 +23,27 @@ on:
         required: true
         type: string
 
+      node-version:
+        description: 'Node.js version to use'
+        required: false
+        default: '20.x'
+        type: string
+      folio-npm-registry:
+        description: 'FOLIO NPM registry URL'
+        required: false
+        default: 'https://repository.folio.org/repository/npm-folio/'
+        type: string
+      yarn-lock-retention-days:
+        description: 'Number of days to retain the yarn.lock artifact'
+        required: false
+        default: 1
+        type: number
+      allow-lint-errors:
+        description: 'Whether to allow lint errors without failing the workflow'
+        required: false
+        default: true
+        type: boolean
+
 permissions:
   contents: read
   checks: write
@@ -223,6 +244,37 @@ jobs:
                 summary: 'Step 2/2: Compiling stripes (UI)...'
               }
             });
+
+      - name: Install Node ${{ inputs.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          check-latest: true
+          always-auth: true
+
+      - name: Set FOLIO NPM registry
+        run: yarn config set @folio:registry ${{ inputs.folio-npm-registry }}
+
+      - name: Check if lockfile should be frozen
+        id: check-yarn-lock
+        run: echo install-args=$(test -f yarn.lock && echo --frozen-lockfile) | tee -a $GITHUB_OUTPUT
+
+      - name: Install dependencies
+        run: yarn install ${{ steps.check-yarn-lock.outputs.install-args }} --ignore-scripts --non-interactive
+
+      - name: List installed FOLIO package versions
+        run: yarn list --pattern @folio
+
+      - name: Publish yarn.lock
+        uses: actions/upload-artifact@v4
+        with:
+          name: yarn.lock
+          path: yarn.lock
+          retention-days: ${{ inputs.yarn-lock-retention-days }}
+
+      - name: Lint
+        run: yarn lint
+        continue-on-error: ${{ inputs.allow-lint-errors }}
 
       - name: Finalize Check Run
         if: always()
