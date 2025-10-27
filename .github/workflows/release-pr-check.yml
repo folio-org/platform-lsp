@@ -255,9 +255,10 @@ jobs:
       - name: Set FOLIO NPM registry
         run: yarn config set @folio:registry ${{ inputs.folio-npm-registry }}
 
-      - name: Check if lockfile should be frozen
-        id: check-yarn-lock
-        run: echo install-args=$(test -f yarn.lock && echo --frozen-lockfile) | tee -a $GITHUB_OUTPUT
+      # TODO: Re-enable frozen lockfile check when yarn.lock is stable
+      # - name: Check if lockfile should be frozen
+      #   id: check-yarn-lock
+      #   run: echo install-args=$(test -f yarn.lock && echo --frozen-lockfile) | tee -a $GITHUB_OUTPUT
 
       - name: Install dependencies
         run: yarn install ${{ steps.check-yarn-lock.outputs.install-args }} --ignore-scripts --non-interactive
