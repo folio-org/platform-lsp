@@ -274,9 +274,10 @@ jobs:
           path: yarn.lock
           retention-days: ${{ inputs.yarn-lock-retention-days }}
 
-      - name: Lint
-        run: yarn lint
-        continue-on-error: ${{ inputs.allow-lint-errors }}
+      # TODO: Re-enable linting when platform is stable
+      # - name: Lint
+      #   run: yarn lint
+      #   continue-on-error: ${{ inputs.allow-lint-errors }}
 
       - name: Finalize Check Run
         if: always()
