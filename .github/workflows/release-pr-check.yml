@@ -183,7 +183,6 @@ jobs:
             core.setOutput('check_run_id', checkRun.id);
 
       - name: Upload Platform Descriptor
-        if: steps.generate.outputs.generated == 'true' && steps.fetch-platform.outputs.platform_found == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: platform-descriptor
@@ -191,7 +190,6 @@ jobs:
           retention-days: 1
 
       - name: Update Check Run - Validating
-        if: steps.generate.outputs.generated == 'true'
         uses: actions/github-script@v7
         with:
           github-token: ${{ env.GH_TOKEN }}
@@ -209,7 +207,6 @@ jobs:
 
       - name: Validate Platform
         id: validate
-        if: steps.generate.outputs.generated == 'true'
         uses: folio-org/platform-lsp/.github/actions/validate-platform@RANCHER-2324
         with:
           platform_descriptor_artifact_name: 'platform-descriptor'
