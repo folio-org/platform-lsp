@@ -22,7 +22,6 @@ on:
         description: 'Head commit SHA that triggered the check suite'
         required: true
         type: string
-
       node-version:
         description: 'Node.js version to use'
         required: false
