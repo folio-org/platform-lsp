@@ -41,3 +41,6 @@ claude*
 .env.development
 .env.test
 .env.production
+
+# Ignore copilot instructions file
+.copilot-*
