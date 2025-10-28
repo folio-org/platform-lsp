@@ -159,14 +159,14 @@ jobs:
           echo "::notice::Configuration validation successful"
 
 
-  check:
-    name: Check commit
+  # Replacing monolithic 'check' job with single-responsibility jobs
+  create-check-run:
+    name: Create and Initialize Check Run
     needs: pre-check
     if: needs.pre-check.outputs.validation_status == 'success'
     runs-on: ubuntu-latest
     outputs:
-      validation_passed: ${{ steps.validate.outputs.validation_passed }}
-      failure_reason: ${{ steps.validate.outputs.failure_reason || 'Check workflow logs for details' }}
+      check_run_id: ${{ steps.create-check.outputs.check_run_id }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -175,6 +175,13 @@ jobs:
           ref: ${{ inputs.head_sha }}
           token: ${{ env.GH_TOKEN }}
 
+      - name: Upload Platform Descriptor
+        uses: actions/upload-artifact@v4
+        with:
+          name: platform-descriptor
+          path: ./${{ env.PLATFORM_DESCRIPTOR_FILE }}
+          retention-days: 1
+          
       - name: Create Check Run
         id: create-check
         uses: actions/github-script@v7
@@ -198,13 +205,15 @@ jobs:
             console.log(`Created check run with ID: ${checkRun.id}`);
             core.setOutput('check_run_id', checkRun.id);
 
-      - name: Upload Platform Descriptor
-        uses: actions/upload-artifact@v4
-        with:
-          name: platform-descriptor
-          path: ./${{ env.PLATFORM_DESCRIPTOR_FILE }}
-          retention-days: 1
-
+  validate-platform:
+    name: Validate Platform
+    needs: [pre-check, create-check-run]
+    if: needs.pre-check.outputs.validation_status == 'success'
+    runs-on: ubuntu-latest
+    outputs:
+      validation_passed: ${{ steps.validate.outputs.validation_passed }}
+      failure_reason: ${{ steps.validate.outputs.failure_reason || 'Check workflow logs for details' }}
+    steps:
       - name: Update Check Run - Validating
         uses: actions/github-script@v7
         with:
@@ -213,7 +222,7 @@ jobs:
             await github.rest.checks.update({
               owner: '${{ inputs.repo_owner }}',
               repo: '${{ inputs.repo_name }}',
-              check_run_id: ${{ steps.create-check.outputs.check_run_id }},
+              check_run_id: ${{ needs.create-check-run.outputs.check_run_id }},
               status: 'in_progress',
               output: {
                 title: 'Platform Verification',
@@ -228,6 +237,19 @@ jobs:
           platform_descriptor_artifact_name: 'platform-descriptor'
           far_url: ${{ vars.FAR_URL }}
 
+  build-stripes:
+    name: Compile Stripes UI
+    needs: [pre-check, create-check-run, validate-platform]
+    if: needs.pre-check.outputs.validation_status == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
+          ref: ${{ inputs.head_sha }}
+          token: ${{ env.GH_TOKEN }}
+
       - name: Update Check Run - Compiling stripes (UI)
         uses: actions/github-script@v7
         with:
@@ -236,7 +258,7 @@ jobs:
             await github.rest.checks.update({
               owner: '${{ inputs.repo_owner }}',
               repo: '${{ inputs.repo_name }}',
-              check_run_id: ${{ steps.create-check.outputs.check_run_id }},
+              check_run_id: ${{ needs.create-check-run.outputs.check_run_id }},
               status: 'in_progress',
               output: {
                 title: 'Stripes compilation Verification',
@@ -278,6 +300,12 @@ jobs:
       #   run: yarn lint
       #   continue-on-error: ${{ inputs.allow-lint-errors }}
 
+  finalize-check-run:
+    name: Finalize Check Run
+    needs: [pre-check, create-check-run, validate-platform, build-stripes]
+    if: always() && needs.pre-check.outputs.validation_status == 'success'
+    runs-on: ubuntu-latest
+    steps:
       - name: Finalize Check Run
         if: always()
         uses: actions/github-script@v7
@@ -285,8 +313,8 @@ jobs:
           github-token: ${{ env.GH_TOKEN }}
           script: |
             let conclusion, title, summary;
-            const validationPassed = '${{ steps.validate.outputs.validation_passed }}';
-            const failureReason = '${{ steps.validate.outputs.failure_reason }}';
+            const validationPassed = '${{ needs.validate-platform.outputs.validation_passed }}';
+            const failureReason = '${{ needs.validate-platform.outputs.failure_reason }}';
 
             if (validationPassed === 'false') {
               conclusion = 'failure';
@@ -322,7 +350,7 @@ jobs:
             const updateParams = {
               owner: '${{ inputs.repo_owner }}',
               repo: '${{ inputs.repo_name }}',
-              check_run_id: ${{ steps.create-check.outputs.check_run_id }},
+              check_run_id: ${{ needs.create-check-run.outputs.check_run_id }},
               status: 'completed',
               conclusion: conclusion,
               completed_at: new Date().toISOString(),
@@ -334,7 +362,6 @@ jobs:
               details_url: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
             };
 
-            // Add re-run action button if there was a fetch error or validation failure
             if (validationPassed === 'false') {
               updateParams.actions = [{
                 label: 'Re-run Validation',
@@ -391,12 +418,7 @@ jobs:
 #               "title": "Commit",
 #               "value": "<https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/commit/${{ inputs.head_sha }}|${{ inputs.head_sha }}>",
 #               "short": true
-#             }${{ (needs.check.result != 'success' || needs.check.outputs.validation_passed != 'true') && format(',
-#             {{
-#               "title": "Failure Reason",
-#               "value": "{0}",
-#               "short": false
-#             }}', needs.check.outputs.failure_reason) || '' }}
+#             }${{ (needs.check.result != 'success' || needs.check.outputs.validation_passed != 'true') && format(',\n#             {{\n#               "title": "Failure Reason",\n#               "value": "{0}",\n#               "short": false\n#             }}', needs.check.outputs.failure_reason) || '' }}
 #           ],
 #           "footer": "Eureka CI/CD"
 #         }
