@@ -445,6 +445,41 @@ jobs:
           } >> "$GITHUB_OUTPUT"
           echo '::notice::Read package.json content'
 
+      - name: 'Fetch base branch package.json'
+        id: fetch-base-package-json
+        if: steps.calculate-new-version.outputs.updated == 'true'
+        env:
+          RELEASE_BRANCH: ${{ inputs.release_branch }}
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          echo "::notice::Fetching base package.json from release branch: $RELEASE_BRANCH"
+          BASE_PACKAGE_JSON="package.json.base"
+          if ! git show "origin/$RELEASE_BRANCH:package.json" > "$BASE_PACKAGE_JSON" 2>/dev/null; then
+            echo "::warning::Failed to fetch package.json from base branch $RELEASE_BRANCH"
+            echo "base_package_json_exists=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ ! -s "$BASE_PACKAGE_JSON" ]; then
+            echo "::warning::Base package.json file is empty"
+            echo "base_package_json_exists=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if ! jq empty "$BASE_PACKAGE_JSON" 2>/dev/null; then
+            echo "::warning::Base package.json is not valid JSON"
+            echo "base_package_json_exists=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          BASE_PACKAGE_JSON_CONTENT=$(jq -c . "$BASE_PACKAGE_JSON")
+          {
+            echo 'base_package_json_content<<EOF'
+            echo "$BASE_PACKAGE_JSON_CONTENT"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+          echo "base_package_json_file=$BASE_PACKAGE_JSON" >> "$GITHUB_OUTPUT"
+          echo "base_package_json_exists=true" >> "$GITHUB_OUTPUT"
+          echo "::notice::Base package.json saved to $BASE_PACKAGE_JSON"
+
       - name: 'Update package.json dependencies'
         id: update-package-json
         if: steps.calculate-new-version.outputs.updated == 'true' && steps.fetch-updated-ui-modules.outputs.ui-modules != ''
@@ -467,6 +502,60 @@ jobs:
           fi
           echo "::notice::Successfully updated package.json with ${{ steps.update-package-json.outputs.updated-count }} dependency changes"
 
+      - name: 'Build collapsed UI dependencies diff'
+        id: build-ui-diff
+        if: steps.calculate-new-version.outputs.updated == 'true' && steps.fetch-base-package-json.outputs.base_package_json_exists == 'true'
+        env:
+          BASE_PACKAGE_JSON_CONTENT: ${{ steps.fetch-base-package-json.outputs.base_package_json_content }}
+          NOT_FOUND_UI_REPORT: ${{ steps.update-package-json.outputs.not-found-ui-report }}
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          echo "::notice::Building collapsed UI dependencies diff"
+
+          # Read current package.json (after updates)
+          UPDATED_PACKAGE_JSON_CONTENT=$(jq -c . package.json)
+
+          # Extract dependencies from both versions
+          BASE_DEPS=$(echo "$BASE_PACKAGE_JSON_CONTENT" | jq -c '.dependencies // {}')
+          UPDATED_DEPS=$(echo "$UPDATED_PACKAGE_JSON_CONTENT" | jq -c '.dependencies // {}')
+
+          # Build collapsed diff showing only changes
+          COLLAPSED_UI_DIFF=$(jq -n \
+            --argjson base "$BASE_DEPS" \
+            --argjson updated "$UPDATED_DEPS" '
+            [
+              ($base | keys[]) as $k |
+              select(
+                ($updated | has($k)) and
+                ($base[$k] != $updated[$k])
+              ) |
+              {
+                name: $k,
+                change: {
+                  old: $base[$k],
+                  new: $updated[$k]
+                }
+              }
+            ]
+          ')
+
+          UI_UPDATES_CNT=$(jq 'length' <<< "$COLLAPSED_UI_DIFF")
+
+          echo "::notice::Found $UI_UPDATES_CNT UI dependency changes between base and head"
+
+          {
+            echo 'collapsed_ui_diff<<EOF'
+            echo "$COLLAPSED_UI_DIFF"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+          echo "ui_updates_cnt=$UI_UPDATES_CNT" >> "$GITHUB_OUTPUT"
+          {
+            echo 'not_found_ui_report<<EOF'
+            echo "${NOT_FOUND_UI_REPORT:-{}}"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
       - name: 'Generate Collapsed Markdown Report'
         id: generate-markdown-reports
         env:
@@ -476,9 +565,10 @@ jobs:
           NEW_VERSION: ${{ steps.calculate-new-version.outputs.new_version }}
           UPDATED_REPORT: ${{ steps.build-change-report.outputs.updated_report }}
           UPDATES_CNT: ${{ steps.build-change-report.outputs.updates_cnt }}
-          UPDATED_UI_REPORT: ${{ steps.update-package-json.outputs.updated-ui-report }}
-          UPDATED_COUNT: ${{ steps.update-package-json.outputs.updated-count }}
-          NOT_FOUND_UI_REPORT: ${{ steps.update-package-json.outputs.not-found-ui-report }}
+          COLLAPSED_UI_DIFF: ${{ steps.build-ui-diff.outputs.collapsed_ui_diff }}
+          UI_UPDATES_CNT: ${{ steps.build-ui-diff.outputs.ui_updates_cnt }}
+          NOT_FOUND_UI_REPORT: ${{ steps.build-ui-diff.outputs.not_found_ui_report }}
+          BASE_PACKAGE_JSON_EXISTS: ${{ steps.fetch-base-package-json.outputs.base_package_json_exists }}
           RELEASE_BRANCH: ${{ inputs.release_branch }}
           UPDATE_BRANCH: ${{ inputs.update_branch }}
         run: |
@@ -572,21 +662,29 @@ jobs:
               )
             fi
 
-            # Build UI updates table
-            ui_table=$(render_ui_table "${UPDATED_UI_REPORT}")
-            if [ -z "$ui_table" ]; then
-              ui_updates_markdown=$'### UI Dependency Updates\n\nNo UI dependencies were updated.'
-            else
-              ui_updates_markdown=$(cat <<EOF
+            # Build UI updates table (using collapsed diff if available)
+            if [ "${BASE_PACKAGE_JSON_EXISTS}" = "true" ]; then
+              ui_table=$(render_ui_table "${COLLAPSED_UI_DIFF}")
+              ui_count="${UI_UPDATES_CNT:-0}"
+              if [ -z "$ui_table" ]; then
+                ui_updates_markdown=$'### UI Dependency Updates\n\n_No changes between base and head package.json._'
+              else
+                ui_updates_markdown=$(cat <<EOF
           ### UI Dependency Updates
 
-          **Updated dependencies:** ${UPDATED_COUNT}
+          **Base branch:** ${RELEASE_BRANCH}
+          **Head branch:** ${UPDATE_BRANCH}
+          **Updated dependencies:** ${ui_count}
 
           ${ui_table}
 
-          > Changes to \`package.json\` dependencies based on updated application descriptors.
+          > This table shows the collapsed diff of \`package.json\` dependencies between base and head branches.
           EOF
-              )
+                )
+              fi
+            else
+              # Fallback if base package.json doesn't exist
+              ui_updates_markdown=$'### UI Dependency Updates\n\n_Base branch package.json not available for comparison._'
             fi
 
             # Build missing UI table
