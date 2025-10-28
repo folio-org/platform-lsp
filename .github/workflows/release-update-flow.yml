@@ -175,7 +175,34 @@ jobs:
           repository: ${{ inputs.repo }}
           ref: ${{ needs.determine-source-branch.outputs.source_branch }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 1
+          fetch-depth: 0
+
+      - name: 'Fetch and save base branch descriptor'
+        id: fetch-base-descriptor
+        env:
+          RELEASE_BRANCH: ${{ inputs.release_branch }}
+          STATE_FILE: ${{ env.STATE_FILE }}
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          echo "::notice::Fetching base descriptor from release branch: $RELEASE_BRANCH"
+          git fetch origin "$RELEASE_BRANCH" --depth=1
+          BASE_STATE_FILE="platform-descriptor.base.json"
+          if ! git show "origin/$RELEASE_BRANCH:$STATE_FILE" > "$BASE_STATE_FILE" 2>/dev/null; then
+            echo "::error::Failed to fetch $STATE_FILE from base branch $RELEASE_BRANCH"
+            exit 1
+          fi
+          if [ ! -s "$BASE_STATE_FILE" ]; then
+            echo "::error::Base descriptor file is empty"
+            exit 1
+          fi
+          if ! jq empty "$BASE_STATE_FILE" 2>/dev/null; then
+            echo "::error::Base descriptor is not valid JSON"
+            cat "$BASE_STATE_FILE"
+            exit 1
+          fi
+          echo "base_state_file=$BASE_STATE_FILE" >> "$GITHUB_OUTPUT"
+          echo "::notice::Base descriptor saved to $BASE_STATE_FILE"
 
       - name: 'Read descriptor file'
         id: read-descriptor
@@ -316,33 +343,69 @@ jobs:
           echo '::notice::Descriptor file updated'
           echo 'applied=true' >> "$GITHUB_OUTPUT"
 
-      - name: 'Build Change Report'
+      - name: 'Build Collapsed Diff Report (Base vs Head)'
         id: build-change-report
         env:
-          UPDATED: ${{ steps.calculate-new-version.outputs.updated }}
-          CURRENT_EUREKA_COMPONENTS: ${{ steps.compare-components.outputs.current_eureka_components }}
-          UPDATED_EUREKA_COMPONENTS: ${{ steps.compare-components.outputs.updated_eureka_components }}
-          CURRENT_APPLICATIONS: ${{ steps.compare-components.outputs.current_applications }}
-          UPDATED_APPLICATIONS: ${{ steps.compare-components.outputs.updated_applications }}
+          BASE_STATE_FILE: ${{ steps.fetch-base-descriptor.outputs.base_state_file }}
+          STATE_FILE: ${{ env.STATE_FILE }}
         run: |
           set -euo pipefail
           IFS=$'\n\t'
-          UPDATED_REPORT='[]'
-          UPDATES_CNT='0'
-          if [ "$UPDATED" = 'true' ]; then
-            compare_lists() {
-              local current="$1" updated="$2"
-              jq -n --argjson OLD "$current" --argjson NEW "$updated" 'def to_map: map({key:.name, value:.version}) | from_entries; ($OLD|to_map) as $O | ($NEW|to_map) as $N | [ ($O|keys[]) as $k | select(($N|has($k)) and ($O[$k] != $N[$k])) | { name: $k, change: { old: $O[$k], new: $N[$k] } } ]'
-            }
-            components=$(compare_lists "$CURRENT_EUREKA_COMPONENTS" "$UPDATED_EUREKA_COMPONENTS")
-            required_applications=$(compare_lists "$(jq -c '.required' <<< "$CURRENT_APPLICATIONS")" "$(jq -c '.required' <<< "$UPDATED_APPLICATIONS")")
-            optional_applications=$(compare_lists "$(jq -c '.optional' <<< "$CURRENT_APPLICATIONS")" "$(jq -c '.optional' <<< "$UPDATED_APPLICATIONS")")
-            UPDATED_REPORT="$(jq -n --argjson a "$components" --argjson b "$required_applications" --argjson c "$optional_applications" '$a+$b+$c')"
-            UPDATES_CNT="$(jq 'length' <<< "$UPDATED_REPORT")"
-          fi
+          echo '::notice::Building collapsed diff between base and head descriptors'
+
+          # Function to collapse changes for a given list (base vs head)
+          collapse_lists() {
+            local base_json="$1"
+            local head_json="$2"
+            local label="$3"
+            jq -n \
+              --argjson B "$base_json" \
+              --argjson H "$head_json" \
+              --arg label "$label" '
+              def to_map: map({key:.name, value:.version}) | from_entries;
+              ($B | to_map) as $BM |
+              ($H | to_map) as $HM |
+              [
+                ($BM | keys[]) as $k |
+                select(($HM | has($k)) and ($BM[$k] != $HM[$k])) |
+                {
+                  name: $k,
+                  change: { old: $BM[$k], new: $HM[$k] },
+                  group: $label
+                }
+              ]
+            '
+          }
+
+          # Extract components and applications from base
+          BASE_EC=$(jq -c '."eureka-components"' "$BASE_STATE_FILE")
+          BASE_REQ=$(jq -c '.applications.required' "$BASE_STATE_FILE")
+          BASE_OPT=$(jq -c '.applications.optional' "$BASE_STATE_FILE")
+
+          # Extract components and applications from head
+          HEAD_EC=$(jq -c '."eureka-components"' "$STATE_FILE")
+          HEAD_REQ=$(jq -c '.applications.required' "$STATE_FILE")
+          HEAD_OPT=$(jq -c '.applications.optional' "$STATE_FILE")
+
+          # Build collapsed diffs
+          EC_DIFF=$(collapse_lists "$BASE_EC" "$HEAD_EC" "Eureka Components")
+          REQ_DIFF=$(collapse_lists "$BASE_REQ" "$HEAD_REQ" "Applications (required)")
+          OPT_DIFF=$(collapse_lists "$BASE_OPT" "$HEAD_OPT" "Applications (optional)")
+
+          # Combine all diffs
+          COLLAPSED_REPORT=$(jq -n \
+            --argjson a "$EC_DIFF" \
+            --argjson b "$REQ_DIFF" \
+            --argjson c "$OPT_DIFF" \
+            '$a + $b + $c')
+
+          UPDATES_CNT=$(jq 'length' <<< "$COLLAPSED_REPORT")
+
+          echo "::notice::Found $UPDATES_CNT total changes between base and head"
+
           {
             echo 'updated_report<<EOF'
-            echo "$UPDATED_REPORT"
+            echo "$COLLAPSED_REPORT"
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
           echo "updates_cnt=$UPDATES_CNT" >> "$GITHUB_OUTPUT"
@@ -404,7 +467,7 @@ jobs:
           fi
           echo "::notice::Successfully updated package.json with ${{ steps.update-package-json.outputs.updated-count }} dependency changes"
 
-      - name: 'Generate Markdown Reports'
+      - name: 'Generate Collapsed Markdown Report'
         id: generate-markdown-reports
         env:
           UPDATED: ${{ steps.calculate-new-version.outputs.updated }}
@@ -416,13 +479,15 @@ jobs:
           UPDATED_UI_REPORT: ${{ steps.update-package-json.outputs.updated-ui-report }}
           UPDATED_COUNT: ${{ steps.update-package-json.outputs.updated-count }}
           NOT_FOUND_UI_REPORT: ${{ steps.update-package-json.outputs.not-found-ui-report }}
+          RELEASE_BRANCH: ${{ inputs.release_branch }}
+          UPDATE_BRANCH: ${{ inputs.update_branch }}
         run: |
           set -euo pipefail
           IFS=$'\n\t'
 
-          render_table() {
-            local json="$1" header="$2" jq_rows="$3"
-            if [ -z "${json:-}" ]; then
+          render_collapsed_table() {
+            local json="$1"
+            if [ -z "${json:-}" ] || [ "$json" = "[]" ]; then
               echo ''
               return 0
             fi
@@ -435,25 +500,49 @@ jobs:
               echo ''
               return 0
             fi
-            IFS='|' read -r -a cols <<< "$header"
-            local header_line='|'
-            local separator='|'
-            for col in "${cols[@]}"; do
-              header_line+=" ${col} |"
-              local dash_count=${#col}
-              [ $dash_count -lt 4 ] && dash_count=4
-              separator+=" $(printf '%*s' "$dash_count" '' | tr ' ' '-') |"
-            done
-            echo "$header_line"
-            echo "$separator"
-            jq -r "$jq_rows" <<< "$json" | while IFS= read -r line; do
-              IFS='|' read -r -a fields <<< "$line"
-              local row='|'
-              for f in "${fields[@]}"; do
-                row+=" ${f} |"
-              done
-              echo "$row"
-            done
+            echo '| Name | Old Version | New Version | Group |'
+            echo '| ---- | ----------- | ----------- | ----- |'
+            jq -r '.[] | "| \(.name) | \(.change.old) | \(.change.new) | \(.group) |"' <<< "$json"
+          }
+
+          render_ui_table() {
+            local json="$1"
+            if [ -z "${json:-}" ] || [ "$json" = "[]" ]; then
+              echo ''
+              return 0
+            fi
+            local count
+            if ! count=$(jq 'length' <<< "$json" 2>/dev/null); then
+              echo ''
+              return 0
+            fi
+            if [ "$count" -eq 0 ]; then
+              echo ''
+              return 0
+            fi
+            echo '| Dependency | Old Version | New Version |'
+            echo '| ---------- | ----------- | ----------- |'
+            jq -r '.[] | "| \(.name) | \(.change.old) | \(.change.new) |"' <<< "$json"
+          }
+
+          render_missing_table() {
+            local json="$1"
+            if [ -z "${json:-}" ] || [ "$json" = "{}" ]; then
+              echo ''
+              return 0
+            fi
+            local count
+            if ! count=$(jq 'length' <<< "$json" 2>/dev/null); then
+              echo ''
+              return 0
+            fi
+            if [ "$count" -eq 0 ]; then
+              echo ''
+              return 0
+            fi
+            echo '| Module | Referenced Version |'
+            echo '| ------ | ------------------ |'
+            jq -r 'to_entries[] | "| \(.key) | \(.value) |"' <<< "$json"
           }
 
           if [ "$UPDATED" != 'true' ]; then
@@ -463,29 +552,59 @@ jobs:
             ui_updates_markdown=$'### UI Dependency Updates\n\nNo UI dependencies were updated.'
             missing_ui_markdown=$'### Missing UI Dependencies\n\nNo missing UI dependencies detected.'
           else
-            if [ -z "${UPDATED_REPORT:-}" ] || [ "$(jq 'length' <<< "${UPDATED_REPORT:-[]}")" -eq 0 ]; then
-              descriptor_markdown=$'### Application & Component Updates\n\nNo applications or eureka components were updated.'
+            # Build descriptor changes table
+            descriptor_table=$(render_collapsed_table "${UPDATED_REPORT}")
+            if [ -z "$descriptor_table" ]; then
+              descriptor_markdown=$'### Application & Component Updates\n\n_No changes between base and head descriptor._'
             else
-              descriptor_header="This change updates ${UPDATES_CNT} application(s) and/or eureka component(s) for platform version ${NEW_VERSION}."
-              descriptor_table=$(render_table "${UPDATED_REPORT}" 'Name|Old Version|New Version' '.[] | "\(.name)|\(.change.old)|\(.change.new)"')
-              descriptor_markdown=$(printf '### Application & Component Updates\n\n%s\n\n%s\n\n> Generated automatically by release-update workflow.' "${descriptor_header}" "${descriptor_table}")
+              descriptor_markdown=$(cat <<EOF
+          ### Application & Component Updates
+
+          **Base branch:** ${RELEASE_BRANCH}
+          **Head branch:** ${UPDATE_BRANCH}
+          **Platform version:** ${NEW_VERSION}
+          **Changed entries:** ${UPDATES_CNT}
+
+          ${descriptor_table}
+
+          > This table shows the collapsed diff of \`platform-descriptor.json\` between base and head branches.
+          EOF
+              )
             fi
 
-            if [ -z "${UPDATED_UI_REPORT:-}" ] || [ "${UPDATED_UI_REPORT}" = '[]' ] || [ "$(jq 'length' <<< "${UPDATED_UI_REPORT:-[]}")" -eq 0 ]; then
+            # Build UI updates table
+            ui_table=$(render_ui_table "${UPDATED_UI_REPORT}")
+            if [ -z "$ui_table" ]; then
               ui_updates_markdown=$'### UI Dependency Updates\n\nNo UI dependencies were updated.'
             else
-              ui_header="This change updates ${UPDATED_COUNT} UI dependency(ies) in package.json."
-              ui_table=$(render_table "${UPDATED_UI_REPORT}" 'Dependency|Old Version|New Version' '.[] | "\(.name)|\(.change.old)|\(.change.new)"')
-              ui_updates_markdown=$(printf '### UI Dependency Updates\n\n%s\n\n%s\n\n> Generated automatically by release-update workflow.' "${ui_header}" "${ui_table}")
+              ui_updates_markdown=$(cat <<EOF
+          ### UI Dependency Updates
+
+          **Updated dependencies:** ${UPDATED_COUNT}
+
+          ${ui_table}
+
+          > Changes to \`package.json\` dependencies based on updated application descriptors.
+          EOF
+              )
             fi
 
-            if [ -z "${NOT_FOUND_UI_REPORT:-}" ] || [ "${NOT_FOUND_UI_REPORT}" = '{}' ] || [ "$(jq 'length' <<< "${NOT_FOUND_UI_REPORT:-{}}")" -eq 0 ]; then
+            # Build missing UI table
+            missing_table=$(render_missing_table "${NOT_FOUND_UI_REPORT}")
+            if [ -z "$missing_table" ]; then
               missing_ui_markdown=$'### Missing UI Dependencies\n\nNo missing UI dependencies detected.'
             else
               missing_cnt=$(jq 'length' <<< "${NOT_FOUND_UI_REPORT}" || echo 0)
-              missing_header="${missing_cnt} UI module(s) referenced by application descriptors were NOT found in package.json and were not updated."
-              missing_table=$(render_table "${NOT_FOUND_UI_REPORT}" 'Module|Referenced Version' 'to_entries[] | "\(.key)|\(.value)"')
-              missing_ui_markdown=$(printf '### Missing UI Dependencies\n\n%s\n\n%s\n\n> Review package.json to add these dependencies if they are required.' "${missing_header}" "${missing_table}")
+              missing_ui_markdown=$(cat <<EOF
+          ### Missing UI Dependencies
+
+          **Missing entries:** ${missing_cnt}
+
+          ${missing_table}
+
+          > These UI modules are referenced by application descriptors but were NOT found in \`package.json\`.
+          EOF
+              )
             fi
           fi
 
@@ -568,60 +687,57 @@ jobs:
       successful_reviewers: ${{ steps.create-pr.outputs.successful_reviewers || steps.update-pr.outputs.successful_reviewers || '' }}
       failed_reviewers: ${{ steps.create-pr.outputs.failed_reviewers || steps.update-pr.outputs.failed_reviewers || '' }}
     steps:
-      - name: 'Build initial PR body with history markers'
-        id: build-initial-pr-body
+      - name: 'Build collapsed PR body'
+        id: build-pr-body
         if: |
-          needs.determine-source-branch.outputs.pr_exists != 'true' &&
-          (needs.update-platform.outputs.updated == 'true' ||
-           needs.determine-source-branch.outputs.update_branch_exists == 'true')
+          needs.update-platform.outputs.updated == 'true' ||
+          needs.determine-source-branch.outputs.update_branch_exists == 'true'
         env:
           NEW_VERSION: ${{ needs.update-platform.outputs.new_version }}
           UPDATES_CNT: ${{ needs.update-platform.outputs.updates_cnt }}
           UPDATES_MARKDOWN: ${{ needs.update-platform.outputs.updates_markdown }}
           UI_UPDATES_MARKDOWN: ${{ needs.update-platform.outputs.ui_updates_markdown }}
           MISSING_UI_MARKDOWN: ${{ needs.update-platform.outputs.missing_ui_markdown }}
+          RELEASE_BRANCH: ${{ inputs.release_branch }}
+          UPDATE_BRANCH: ${{ inputs.update_branch }}
         run: |
           set -euo pipefail
           IFS=$'\n\t'
 
-          START_MARKER='<!-- kitfox:release-report:start -->'
-          END_MARKER='<!-- kitfox:release-report:end -->'
-
           version_display="${NEW_VERSION:-No version change}"
           count_display="${UPDATES_CNT:-0}"
 
-          # Build initial report section in details tag
-          report_section=$(cat <<EOF
-          <details open><summary>Version ${version_display} • ${count_display} changes</summary>
+          # Build complete PR body with collapsed report
+          pr_body=$(cat <<EOF
+          ## Automated Release Update
+
+          **Base branch:** ${RELEASE_BRANCH}
+          **Head branch:** ${UPDATE_BRANCH}
+          **Platform version:** ${version_display}
+          **Total changes:** ${count_display}
+
+          ---
 
           ${UPDATES_MARKDOWN:-### Application & Component Updates
 
           No applications or eureka components were updated.}
 
+          ---
+
           ${UI_UPDATES_MARKDOWN:-### UI Dependency Updates
 
           No UI dependencies were updated.}
+
+          ---
 
           ${MISSING_UI_MARKDOWN:-### Missing UI Dependencies
 
           No missing UI dependencies detected.}
 
-          </details>
-          EOF
-          )
+          ---
 
-          # Build complete PR body with markers
-          pr_body=$(cat <<EOF
-          ## Automated Application & Component Updates for Release
-
-          **New Version:** ${version_display}
-          **Total applications/components updated:** ${count_display}
-
-          ${START_MARKER}
-          ${report_section}
-          ${END_MARKER}
-
-          This PR was automatically generated by the release update workflow.
+          > This PR description is auto-generated from a collapsed diff between the base and head branches.
+          > Re-running the workflow with the same base/head state produces an identical description.
           EOF
           )
 
@@ -631,159 +747,31 @@ jobs:
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
-          echo "::notice::Built initial PR body with history markers"
-
-      - name: 'Merge PR body with cumulative history'
-        id: merge-pr-body
-        if: |
-          needs.determine-source-branch.outputs.pr_exists == 'true' &&
-          needs.update-platform.outputs.updated == 'true'
-        env:
-          REPO: ${{ inputs.repo }}
-          PR_NUMBER: ${{ needs.determine-source-branch.outputs.pr_number }}
-          NEW_VERSION: ${{ needs.update-platform.outputs.new_version }}
-          UPDATES_CNT: ${{ needs.update-platform.outputs.updates_cnt }}
-          UPDATES_MARKDOWN: ${{ needs.update-platform.outputs.updates_markdown }}
-          UI_UPDATES_MARKDOWN: ${{ needs.update-platform.outputs.ui_updates_markdown }}
-          MISSING_UI_MARKDOWN: ${{ needs.update-platform.outputs.missing_ui_markdown }}
-        run: |
-          set -euo pipefail
-          IFS=$'\n\t'
-
-          START_MARKER='<!-- kitfox:release-report:start -->'
-          END_MARKER='<!-- kitfox:release-report:end -->'
-
-          echo "::notice::Fetching existing PR body for PR #${PR_NUMBER}"
-          existing_body=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}" --jq '.body // ""' || echo "")
-
-          # Build new version report section
-          new_report=$(cat <<EOF
-          <details open><summary>Version ${NEW_VERSION} • ${UPDATES_CNT:-0} changes</summary>
-
-          ${UPDATES_MARKDOWN}
-
-          ${UI_UPDATES_MARKDOWN}
-
-          ${MISSING_UI_MARKDOWN}
-
-          </details>
-          EOF
-          )
-
-          # Check if markers exist in current body
-          if ! grep -q "$START_MARKER" <<< "$existing_body"; then
-            echo "::warning::History markers not found in existing PR body. Creating new structured body."
-            # Preserve old body as legacy content
-            merged_body=$(cat <<EOF
-          ## Automated Application & Component Updates for Release
-
-          **New Version:** ${NEW_VERSION}
-          **Total applications/components updated:** ${UPDATES_CNT:-0}
-
-          ${START_MARKER}
-          ${new_report}
-          ${END_MARKER}
-
-          ---
-          ### Previous PR Content
-          ${existing_body}
-
-          This PR was automatically generated by the release update workflow.
-          EOF
-            )
-          else
-            # Extract sections: pre-marker, history, post-marker
-            pre_marker="${existing_body%%$START_MARKER*}"
-            after_start="${existing_body#*$START_MARKER}"
-
-            if grep -q "$END_MARKER" <<< "$after_start"; then
-              history_section="${after_start%%$END_MARKER*}"
-              post_marker="${after_start#*$END_MARKER}"
-            else
-              echo "::warning::End marker missing. Treating rest as history."
-              history_section="$after_start"
-              post_marker=""
-            fi
-
-            # Check if this version already exists in history
-            escaped_version=$(printf '%s' "$NEW_VERSION" | sed 's/[]\/$*.^[]/\\&/g')
-            if grep -q "<summary>Version ${escaped_version} " <<< "$history_section"; then
-              echo "::notice::Version ${NEW_VERSION} already exists in history. Replacing entry."
-              # Use perl for multi-line replacement
-              updated_history=$(perl -0777 -pe "
-                my \$version = quotemeta(\$ENV{'NEW_VERSION'});
-                my \$new_report = \$ENV{'new_report'};
-                s{<details[^>]*>\\s*<summary>Version \$version[^<]*</summary>.*?</details>}{\$new_report}gs;
-              " <<< "$history_section")
-            else
-              echo "::notice::Adding new version ${NEW_VERSION} to history."
-              updated_history=$(cat <<EOF
-          ${history_section}
-          ${new_report}
-          EOF
-              )
-            fi
-
-            # Update header with latest version and count
-            updated_pre=$(echo "$pre_marker" | perl -0777 -pe "
-              s/\*\*New Version:\*\* [^\n]*/\*\*New Version:\*\* \$ENV{'NEW_VERSION'}/;
-              s/\*\*Total applications\/components updated:\*\* [^\n]*/\*\*Total applications\/components updated:\*\* \$ENV{'UPDATES_CNT'}/;
-            ")
-
-            # Reassemble full body
-            merged_body=$(cat <<EOF
-          ${updated_pre}${START_MARKER}${updated_history}
-          ${END_MARKER}${post_marker}
-          EOF
-            )
-          fi
-
-          # Check body size and warn if approaching limit
-          body_size=$(printf '%s' "$merged_body" | wc -c)
-          max_size=$((60 * 1024))
-          if [ "$body_size" -gt "$max_size" ]; then
-            echo "::warning::PR body size (${body_size} bytes) exceeds recommended limit (${max_size} bytes)."
-            echo "::warning::Consider migrating older entries to CHANGELOG.md in the branch."
-          else
-            echo "::notice::PR body size: ${body_size} bytes"
-          fi
-
-          {
-            echo 'merged_body<<EOF'
-            echo "$merged_body"
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
-
-          echo "::notice::Successfully merged PR body with cumulative history"
+          echo "::notice::Built collapsed PR body (${#pr_body} bytes)"
 
       - name: 'Create PR if needed'
         id: create-pr
-        if: |
-          needs.determine-source-branch.outputs.pr_exists != 'true' &&
-          (needs.update-platform.outputs.updated == 'true' ||
-           needs.determine-source-branch.outputs.update_branch_exists == 'true')
+        if: needs.determine-source-branch.outputs.pr_exists != 'true'
         uses: folio-org/kitfox-github/.github/actions/create-pr@master
         with:
           repo: ${{ inputs.repo }}
           base_branch: ${{ inputs.release_branch }}
           head_branch: ${{ inputs.update_branch }}
           pr_title: "Release: Update to ${{ needs.update-platform.outputs.new_version || 'No updates' }}"
-          pr_body: ${{ steps.build-initial-pr-body.outputs.pr_body }}
+          pr_body: ${{ steps.build-pr-body.outputs.pr_body }}
           pr_labels: ${{ inputs.pr_labels }}
           pr_reviewers: ${{ inputs.pr_reviewers }}
           github_token: ${{ env.GH_TOKEN }}
 
       - name: 'Update existing PR if needed'
         id: update-pr
-        if: |
-          needs.determine-source-branch.outputs.pr_exists == 'true' &&
-          needs.update-platform.outputs.updated == 'true'
+        if: needs.determine-source-branch.outputs.pr_exists == 'true'
         uses: folio-org/kitfox-github/.github/actions/update-pr@master
         with:
           repo: ${{ inputs.repo }}
           pr_number: ${{ needs.determine-source-branch.outputs.pr_number }}
           pr_title: "Release: Update to ${{ needs.update-platform.outputs.new_version }}"
-          pr_body: ${{ steps.merge-pr-body.outputs.merged_body }}
+          pr_body: ${{ steps.build-pr-body.outputs.pr_body }}
           pr_labels: ${{ inputs.pr_labels }}
           pr_reviewers: ${{ inputs.pr_reviewers }}
           github_token: ${{ env.GH_TOKEN }}
