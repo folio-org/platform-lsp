@@ -102,6 +102,7 @@
     "@folio/inn-reach": "6.0.1"
   },
   "resolutions":   {
+    "@babel/helpers": "7.26.10",
     "@babel/runtime": "7.26.10",
     "@rehooks/local-storage": "2.4.5",
     "@folio/stripes-acq-components": "7.0.5",
