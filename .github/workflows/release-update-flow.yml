@@ -466,6 +466,22 @@ jobs:
           echo "::notice::Using base descriptor: $BASE_STATE_FILE"
           echo "base_file=$BASE_STATE_FILE" >> "$GITHUB_OUTPUT"
 
+      - name: 'Find base package.json file'
+        id: find-base-package
+        if: needs.update-package-json.result == 'success'
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          # Determine base package.json file name
+          BASE_PACKAGE_FILE=$(find . -maxdepth 1 -name "package.json.base" -o -name "package.*.base" | head -n 1)
+          if [ -z "$BASE_PACKAGE_FILE" ]; then
+            echo "::warning::Could not find base package.json file in artifact"
+            echo "base_file=" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::Using base package.json: $BASE_PACKAGE_FILE"
+            echo "base_file=$BASE_PACKAGE_FILE" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: 'Generate platform diff report'
         id: build-change-report
         uses: folio-org/platform-lsp/.github/actions/generate-platform-diff-report@RANCHER-2324
@@ -476,69 +492,16 @@ jobs:
           update_branch: ${{ inputs.update_branch }}
           platform_version: ${{ needs.update-platform-descriptor.outputs.new_version }}
 
-      - name: 'Build collapsed UI dependencies diff'
+      - name: 'Generate package diff report'
         id: build-ui-diff
-        if: needs.update-package-json.result == 'success'
-        run: |
-          set -euo pipefail
-          IFS=$'\n\t'
-          echo "::notice::Building collapsed UI dependencies diff"
-
-          # Check if package.json files exist
-          if [ ! -f "package.json" ]; then
-            echo "::warning::package.json not found in artifact, skipping UI diff"
-            echo 'collapsed_ui_diff=[]' >> "$GITHUB_OUTPUT"
-            echo "ui_updates_cnt=0" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          # Find base package.json
-          BASE_PACKAGE_JSON_FILE=$(find . -maxdepth 1 -name "package.json.base" -o -name "package.*.base" | head -n 1)
-          if [ -z "$BASE_PACKAGE_JSON_FILE" ]; then
-            echo "::warning::Base package.json not found, skipping UI diff"
-            echo 'collapsed_ui_diff=[]' >> "$GITHUB_OUTPUT"
-            echo "ui_updates_cnt=0" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          # Read base and current package.json
-          BASE_PACKAGE_JSON_CONTENT=$(jq -c . "$BASE_PACKAGE_JSON_FILE")
-          UPDATED_PACKAGE_JSON_CONTENT=$(jq -c . package.json)
-
-          # Extract dependencies from both versions
-          BASE_DEPS=$(echo "$BASE_PACKAGE_JSON_CONTENT" | jq -c '.dependencies // {}')
-          UPDATED_DEPS=$(echo "$UPDATED_PACKAGE_JSON_CONTENT" | jq -c '.dependencies // {}')
-
-          # Build collapsed diff showing only changes
-          COLLAPSED_UI_DIFF=$(jq -n \
-            --argjson base "$BASE_DEPS" \
-            --argjson updated "$UPDATED_DEPS" '
-            [
-              ($base | keys[]) as $k |
-              select(
-                ($updated | has($k)) and
-                ($base[$k] != $updated[$k])
-              ) |
-              {
-                name: $k,
-                change: {
-                  old: $base[$k],
-                  new: $updated[$k]
-                }
-              }
-            ]
-          ')
-
-          UI_UPDATES_CNT=$(jq 'length' <<< "$COLLAPSED_UI_DIFF")
-
-          echo "::notice::Found $UI_UPDATES_CNT UI dependency changes between base and head"
-
-          {
-            echo 'collapsed_ui_diff<<EOF'
-            echo "$COLLAPSED_UI_DIFF"
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
-          echo "ui_updates_cnt=$UI_UPDATES_CNT" >> "$GITHUB_OUTPUT"
+        if: needs.update-package-json.result == 'success' && steps.find-base-package.outputs.base_file != ''
+        uses: folio-org/platform-lsp/.github/actions/generate-package-diff-report@RANCHER-2324
+        with:
+          base_package_path: ${{ steps.find-base-package.outputs.base_file }}
+          head_package_path: package.json
+          release_branch: ${{ inputs.release_branch }}
+          update_branch: ${{ inputs.update_branch }}
+          dependency_type: dependencies
 
       - name: 'Generate Collapsed Markdown Report'
         id: generate-markdown-reports
@@ -546,36 +509,12 @@ jobs:
           UPDATED: ${{ needs.update-platform-descriptor.outputs.updated }}
           FAILURE_REASON: ${{ needs.update-platform-descriptor.outputs.failure_reason }}
           DESCRIPTOR_MARKDOWN: ${{ steps.build-change-report.outputs.updates_markdown }}
-          COLLAPSED_UI_DIFF: ${{ steps.build-ui-diff.outputs.collapsed_ui_diff }}
-          UI_UPDATES_CNT: ${{ steps.build-ui-diff.outputs.ui_updates_cnt }}
+          UI_UPDATES_MARKDOWN: ${{ steps.build-ui-diff.outputs.ui_updates_markdown }}
           NOT_FOUND_UI_REPORT: ${{ needs.update-package-json.outputs.not_found_ui_report }}
-          BASE_PACKAGE_JSON_EXISTS: ${{ needs.update-package-json.result == 'success' && 'true' || 'false' }}
-          RELEASE_BRANCH: ${{ inputs.release_branch }}
-          UPDATE_BRANCH: ${{ inputs.update_branch }}
+          PACKAGE_DIFF_AVAILABLE: ${{ steps.build-ui-diff.outputs.has_changes != '' && 'true' || 'false' }}
         run: |
           set -euo pipefail
           IFS=$'\n\t'
-
-
-          render_ui_table() {
-            local json="$1"
-            if [ -z "${json:-}" ] || [ "$json" = "[]" ]; then
-              echo ''
-              return 0
-            fi
-            local count
-            if ! count=$(jq 'length' <<< "$json" 2>/dev/null); then
-              echo ''
-              return 0
-            fi
-            if [ "$count" -eq 0 ]; then
-              echo ''
-              return 0
-            fi
-            echo '| Dependency | Old Version | New Version |'
-            echo '| ---------- | ----------- | ----------- |'
-            jq -r '.[] | "| \(.name) | \(.change.old) | \(.change.new) |"' <<< "$json"
-          }
 
           render_missing_table() {
             local json="$1"
@@ -608,29 +547,12 @@ jobs:
             # Use the markdown generated by the action
             descriptor_markdown="${DESCRIPTOR_MARKDOWN}"
 
-            # Build UI updates table (using collapsed diff if available)
-            if [ "${BASE_PACKAGE_JSON_EXISTS}" = "true" ]; then
-              ui_table=$(render_ui_table "${COLLAPSED_UI_DIFF}")
-              ui_count="${UI_UPDATES_CNT:-0}"
-              if [ -z "$ui_table" ]; then
-                ui_updates_markdown=$'### UI Dependency Updates\n\n_No changes between base and head package.json._'
-              else
-                ui_updates_markdown=$(cat <<EOF
-          ### UI Dependency Updates
-
-          **Base branch:** ${RELEASE_BRANCH}
-          **Head branch:** ${UPDATE_BRANCH}
-          **Updated dependencies:** ${ui_count}
-
-          ${ui_table}
-
-          > This table shows the collapsed diff of \`package.json\` dependencies between base and head branches.
-          EOF
-                )
-              fi
+            # Use UI updates markdown from the action (if available)
+            if [ "${PACKAGE_DIFF_AVAILABLE}" = "true" ]; then
+              ui_updates_markdown="${UI_UPDATES_MARKDOWN}"
             else
-              # Fallback if base package.json doesn't exist
-              ui_updates_markdown=$'### UI Dependency Updates\n\n_Base branch package.json not available for comparison._'
+              # Fallback if package diff was not generated
+              ui_updates_markdown=$'### UI Dependency Updates\n\n_No package.json comparison available._'
             fi
 
             # Build missing UI table
