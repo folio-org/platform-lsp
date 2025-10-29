@@ -70,7 +70,7 @@
     "@folio/servicepoints": "7.2.0",
     "@folio/plugin-eusage-reports": "3.2.0",
     "@folio/service-interaction": "3.1.1",
-    "@folio/stripes": "9.2.17",
+    "@folio/stripes": "9.2.18",
     "@folio/stripes-authority-components": "5.0.3",
     "@folio/stripes-erm-components": "9.2.1",
     "@folio/stripes-inventory-components": "1.0.2",
@@ -118,6 +118,7 @@
     "final-form": "^4.20.4",
     "minimist": "^1.2.3",
     "moment": "~2.29.0",
+    "react-cookie": "^7.2.2",
     "redux-form": "^8.0.0"
   }
 }
