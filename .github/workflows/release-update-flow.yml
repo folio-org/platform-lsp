@@ -1,7 +1,64 @@
 name: 'Release update (Flow)'
 
 on:
-#   workflow_call:
+  workflow_call:
+    inputs:
+      repo:
+        description: 'Application repository name (org/repo format)'
+        required: true
+        type: string
+      release_branch:
+        description: 'Release branch to scan (e.g., R1-2025)'
+        required: true
+        type: string
+      update_branch:
+        description: 'Update branch name for this release branch'
+        required: true
+        type: string
+      workflow_run_number:
+        description: 'GitHub run number for display'
+        required: true
+        type: string
+      dry_run:
+        description: 'Perform dry run without creating PRs'
+        required: false
+        type: boolean
+        default: false
+      pr_reviewers:
+        description: 'Comma-separated list of reviewers (users or teams with org/ prefix)'
+        required: false
+        type: string
+        default: ''
+      pr_labels:
+        description: 'Comma-separated list of labels to add to PR'
+        required: false
+        type: string
+        default: ''
+    outputs:
+      updated:
+        description: 'Whether the platform descriptor was updated'
+        value: ${{ jobs.update-platform-descriptor.outputs.updated }}
+      pr_created:
+        description: 'Whether a PR was created or updated'
+        value: ${{ jobs.manage-pr.outputs.pr_created == 'true' || jobs.manage-pr.outputs.pr_updated == 'true' }}
+      pr_url:
+        description: 'PR URL if created or updated'
+        value: ${{ jobs.manage-pr.outputs.pr_url }}
+      workflow_status:
+        description: 'Overall workflow status (success/failure)'
+        value: ${{ (jobs.update-platform-descriptor.result == 'failure' || jobs.commit-changes.result == 'failure' || jobs.manage-pr.result == 'failure') && 'failure' || 'success' }}
+      failure_reason:
+        description: 'Reason for workflow failure if any'
+        value: ${{ jobs.update-platform-descriptor.outputs.failure_reason || '' }}
+      new_version:
+        description: 'New platform version if updated'
+        value: ${{ jobs.update-platform-descriptor.outputs.new_version }}
+      updates_cnt:
+        description: 'Number of modules/components updated'
+        value: ${{ jobs.generate-reports.outputs.updates_cnt }}
+      pr_number:
+        description: 'PR number if created or updated'
+        value: ${{ jobs.manage-pr.outputs.pr_number }}
   workflow_dispatch:
     inputs:
       repo:
@@ -35,37 +92,6 @@ on:
         required: false
         type: string
         default: ''
-#     outputs:
-#       pr_created:
-#         description: 'Whether a PR was created or updated'
-#         value: ${{ jobs.manage-pr.outputs.pr_created || jobs.manage-pr.outputs.pr_updated }}
-#       pr_number:
-#         description: 'PR number if created or updated'
-#         value: ${{ jobs.manage-pr.outputs.pr_number }}
-#       pr_url:
-#         description: 'PR URL if created or updated'
-#         value: ${{ jobs.manage-pr.outputs.pr_url }}
-#       successful_reviewers:
-#         description: 'Successfully added reviewers'
-#         value: ${{ jobs.manage-pr.outputs.successful_reviewers }}
-#       failed_reviewers:
-#         description: 'Failed to add reviewers'
-#         value: ${{ jobs.manage-pr.outputs.failed_reviewers }}
-#       updated:
-#         description: 'Whether the platform descriptor was updated'
-#         value: ${{ jobs.update-platform.outputs.updated }}
-#       new_version:
-#         description: 'New platform version if updated'
-#         value: ${{ jobs.update-platform.outputs.new_version }}
-#       updates_cnt:
-#         description: 'Number of updates'
-#         value: ${{ jobs.update-platform.outputs.updates_cnt }}
-#       workflow_status:
-#         description: 'Overall workflow status'
-#         value: ${{ jobs.determine-source-branch.result == 'failure' && 'failure' || (jobs.update-platform.result == 'failure' && 'failure' || (jobs.commit-changes.result == 'failure' && 'failure' || (jobs.manage-pr.result == 'failure' && 'failure' || 'success'))) }}
-#       failure_reason:
-#         description: 'Reason for workflow failure if any'
-#         value: ${{ jobs.determine-source-branch.result == 'failure' && 'Failed to determine source branch' || (jobs.update-platform.result == 'failure' && 'Failed to update application modules' || (jobs.update-platform.result == 'skipped' && 'Update application job was skipped' || (jobs.commit-changes.result == 'failure' && 'Failed to commit changes to branch' || (jobs.manage-pr.result == 'failure' && 'Failed to manage pull request' || '')))) }}
 
 permissions:
   contents: write
