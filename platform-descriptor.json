@@ -50,7 +50,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100100000002397"
+        "version": "1.2.0-SNAPSHOT.100100000002450"
       },
       {
         "name": "app-consortia",
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-requests-mediated-ui",
-        "version": "1.3.0-SNAPSHOT.100100000000851"
+        "version": "1.3.0-SNAPSHOT.100100000002416"
       },
       {
         "name": "app-rtac",
