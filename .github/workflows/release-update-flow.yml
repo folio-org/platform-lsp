@@ -95,62 +95,20 @@ jobs:
       contents: read
       pull-requests: read
     outputs:
-      source_branch: ${{ steps.determine-branch.outputs.source_branch }}
-      update_branch_exists: ${{ steps.determine-branch.outputs.update_branch_exists }}
-      pr_exists: ${{ steps.check-pr.outputs.pr_exists }}
-      pr_number: ${{ steps.check-pr.outputs.pr_number }}
-      pr_url: ${{ steps.check-pr.outputs.pr_url }}
+      source_branch: ${{ steps.check-status.outputs.source_branch }}
+      update_branch_exists: ${{ steps.check-status.outputs.update_branch_exists }}
+      pr_exists: ${{ steps.check-status.outputs.pr_exists }}
+      pr_number: ${{ steps.check-status.outputs.pr_number }}
+      pr_url: ${{ steps.check-status.outputs.pr_url }}
     steps:
-      - name: 'Determine which branch to scan'
-        id: determine-branch
-        env:
-          REPO: ${{ inputs.repo }}
-          RELEASE_BRANCH: ${{ inputs.release_branch }}
-          UPDATE_BRANCH: ${{ inputs.update_branch }}
-        run: |
-          set -euo pipefail
-          IFS=$'\n\t'
-          echo "::notice::Checking if update branch exists: $UPDATE_BRANCH"
-          if gh api "repos/$REPO/branches/$UPDATE_BRANCH" >/dev/null 2>&1; then
-            echo "::notice::Update branch exists, will scan: $UPDATE_BRANCH"
-            echo "source_branch=$UPDATE_BRANCH" >> "$GITHUB_OUTPUT"
-            echo "update_branch_exists=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "::notice::Update branch does not exist, will scan: $RELEASE_BRANCH"
-            echo "source_branch=$RELEASE_BRANCH" >> "$GITHUB_OUTPUT"
-            echo "update_branch_exists=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: 'Check for existing PR'
-        id: check-pr
-        if: steps.determine-branch.outputs.update_branch_exists == 'true'
-        env:
-          REPO: ${{ inputs.repo }}
-          BASE_BRANCH: ${{ inputs.release_branch }}
-          HEAD_BRANCH: ${{ inputs.update_branch }}
-        run: |
-          set -euo pipefail
-          IFS=$'\n\t'
-          echo "::notice::Checking for existing PR from $HEAD_BRANCH to $BASE_BRANCH"
-          pr_json=$(gh pr list \
-            --repo "$REPO" \
-            --base "$BASE_BRANCH" \
-            --head "$HEAD_BRANCH" \
-            --json number,url \
-            --jq '.[0]' || echo '{}')
-          if [ "$pr_json" != "{}" ] && [ -n "$pr_json" ] && [ "$(echo "$pr_json" | jq -r '.url // ""')" != "" ]; then
-            pr_number=$(echo "$pr_json" | jq -r '.number // ""')
-            pr_url=$(echo "$pr_json" | jq -r '.url // ""')
-            echo "::notice::Found existing PR #$pr_number: $pr_url"
-            echo "pr_exists=true" >> "$GITHUB_OUTPUT"
-            echo "pr_number=$pr_number" >> "$GITHUB_OUTPUT"
-            echo "pr_url=$pr_url" >> "$GITHUB_OUTPUT"
-          else
-            echo "::notice::No existing PR found"
-            echo "pr_exists=false" >> "$GITHUB_OUTPUT"
-            echo "pr_number=" >> "$GITHUB_OUTPUT"
-            echo "pr_url=" >> "$GITHUB_OUTPUT"
-          fi
+      - name: 'Check branch and PR status'
+        id: check-status
+        uses: folio-org/platform-lsp/.github/actions/check-branch-and-pr-status@RANCHER-2324
+        with:
+          repo: ${{ inputs.repo }}
+          release_branch: ${{ inputs.release_branch }}
+          update_branch: ${{ inputs.update_branch }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
   update-platform-descriptor:
     name: 'Update Platform Descriptor'
