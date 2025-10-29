@@ -152,22 +152,16 @@ jobs:
             echo "pr_url=" >> "$GITHUB_OUTPUT"
           fi
 
-  update-platform:
-    name: 'Read & Update Platform Descriptor'
+  update-platform-descriptor:
+    name: 'Update Platform Descriptor'
     needs: determine-source-branch
     runs-on: ubuntu-latest
     outputs:
       updated: ${{ steps.calculate-new-version.outputs.updated }}
       updated_components: ${{ steps.compare-components.outputs.updated_eureka_components }}
       updated_applications: ${{ steps.compare-components.outputs.updated_applications }}
-      updated_report: ${{ steps.build-change-report.outputs.updated_report }}
       new_version: ${{ steps.calculate-new-version.outputs.new_version }}
-      updates_cnt: ${{ steps.build-change-report.outputs.updates_cnt }}
-      artifact_name: ${{ env.ARTIFACT_NAME }}
       failure_reason: ${{ steps.calculate-new-version.outputs.failure_reason }}
-      updates_markdown: ${{ steps.generate-markdown-reports.outputs.updates_markdown }}
-      ui_updates_markdown: ${{ steps.generate-markdown-reports.outputs.ui_updates_markdown }}
-      missing_ui_markdown: ${{ steps.generate-markdown-reports.outputs.missing_ui_markdown }}
     steps:
       - name: 'Checkout Platform Repository'
         uses: actions/checkout@v4
@@ -343,15 +337,175 @@ jobs:
           echo '::notice::Descriptor file updated'
           echo 'applied=true' >> "$GITHUB_OUTPUT"
 
+      - name: 'Upload Platform Descriptor Artifact'
+        if: steps.calculate-new-version.outputs.updated == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'platform-descriptor-files-${{ github.run_id }}'
+          path: |
+            ${{ env.STATE_FILE }}
+            ${{ steps.fetch-base-descriptor.outputs.base_state_file }}
+          retention-days: 1
+
+  update-package-json:
+    name: 'Update Package JSON'
+    needs: [determine-source-branch, update-platform-descriptor]
+    if: needs.update-platform-descriptor.outputs.updated == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      has_updates: ${{ steps.update-package-json.outputs.has-updates }}
+      updated_count: ${{ steps.update-package-json.outputs.updated-count }}
+      not_found_ui_report: ${{ steps.update-package-json.outputs.not-found-ui-report }}
+    steps:
+      - name: 'Checkout Platform Repository'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repo }}
+          ref: ${{ needs.determine-source-branch.outputs.source_branch }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: 'Fetch updated UI modules list'
+        id: fetch-updated-ui-modules
+        uses: folio-org/platform-lsp/.github/actions/fetch-updated-ui-modules@RANCHER-2324
+        with:
+          applications: ${{ needs.update-platform-descriptor.outputs.updated_applications }}
+          far-url: ${{ env.FAR_URL }}
+
+      - name: 'Read package.json content'
+        id: read-package-json
+        env:
+          SOURCE_BRANCH: ${{ needs.determine-source-branch.outputs.source_branch }}
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          echo "::notice::Reading package.json from checked-out branch: $SOURCE_BRANCH"
+          if [ ! -f package.json ] || [ ! -s package.json ]; then
+            echo "::error::package.json file is missing or empty in branch '$SOURCE_BRANCH'"
+            ls -al || true
+            exit 1
+          fi
+          if ! jq empty package.json 2>/dev/null; then
+            echo '::error::package.json is not valid JSON'
+            cat package.json
+            exit 1
+          fi
+          PACKAGE_JSON_CONTENT=$(jq -c . package.json)
+          {
+            echo 'package_json_content<<EOF'
+            echo "$PACKAGE_JSON_CONTENT"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+          echo '::notice::Read package.json content'
+
+      - name: 'Fetch base branch package.json'
+        id: fetch-base-package-json
+        env:
+          RELEASE_BRANCH: ${{ inputs.release_branch }}
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          echo "::notice::Fetching base package.json from release branch: $RELEASE_BRANCH"
+          BASE_PACKAGE_JSON="package.json.base"
+          if ! git show "origin/$RELEASE_BRANCH:package.json" > "$BASE_PACKAGE_JSON" 2>/dev/null; then
+            echo "::warning::Failed to fetch package.json from base branch $RELEASE_BRANCH"
+            echo "base_package_json_exists=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ ! -s "$BASE_PACKAGE_JSON" ]; then
+            echo "::warning::Base package.json file is empty"
+            echo "base_package_json_exists=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if ! jq empty "$BASE_PACKAGE_JSON" 2>/dev/null; then
+            echo "::warning::Base package.json is not valid JSON"
+            echo "base_package_json_exists=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          BASE_PACKAGE_JSON_CONTENT=$(jq -c . "$BASE_PACKAGE_JSON")
+          {
+            echo 'base_package_json_content<<EOF'
+            echo "$BASE_PACKAGE_JSON_CONTENT"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+          echo "base_package_json_file=$BASE_PACKAGE_JSON" >> "$GITHUB_OUTPUT"
+          echo "base_package_json_exists=true" >> "$GITHUB_OUTPUT"
+          echo "::notice::Base package.json saved to $BASE_PACKAGE_JSON"
+
+      - name: 'Update package.json dependencies'
+        id: update-package-json
+        if: steps.fetch-updated-ui-modules.outputs.ui-modules != ''
+        uses: folio-org/platform-lsp/.github/actions/update-package-json@RANCHER-2324
+        with:
+          package-json: ${{ steps.read-package-json.outputs.package_json_content }}
+          ui-modules: ${{ steps.fetch-updated-ui-modules.outputs.ui-modules }}
+
+      - name: 'Write updated package.json'
+        id: write-package-json
+        if: steps.update-package-json.outputs.has-updates == 'true'
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          echo "::notice::Writing updated package.json content"
+          echo '${{ steps.update-package-json.outputs.package-json }}' | jq . > package.json
+          if [ ! -s package.json ]; then
+            echo "::error::Failed to write updated package.json"
+            exit 1
+          fi
+          echo "::notice::Successfully updated package.json with ${{ steps.update-package-json.outputs.updated-count }} dependency changes"
+
+      - name: 'Upload Package JSON Artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'package-json-files-${{ github.run_id }}'
+          path: |
+            package.json
+            ${{ steps.fetch-base-package-json.outputs.base_package_json_file }}
+          retention-days: 1
+
+  generate-reports:
+    name: 'Generate Diff Reports'
+    needs: [determine-source-branch, update-platform-descriptor, update-package-json]
+    if: always() && !cancelled() && needs.update-platform-descriptor.result == 'success'
+    runs-on: ubuntu-latest
+    outputs:
+      updates_markdown: ${{ steps.generate-markdown-reports.outputs.updates_markdown }}
+      ui_updates_markdown: ${{ steps.generate-markdown-reports.outputs.ui_updates_markdown }}
+      missing_ui_markdown: ${{ steps.generate-markdown-reports.outputs.missing_ui_markdown }}
+      updates_cnt: ${{ steps.build-change-report.outputs.updates_cnt }}
+      artifact_name: ${{ env.ARTIFACT_NAME }}
+    steps:
+      - name: 'Download Platform Descriptor Artifact'
+        uses: actions/download-artifact@v4
+        with:
+          name: 'platform-descriptor-files-${{ github.run_id }}'
+          path: .
+
+      - name: 'Download Package JSON Artifact'
+        if: needs.update-package-json.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: 'package-json-files-${{ github.run_id }}'
+          path: .
+        continue-on-error: true
+
       - name: 'Build Collapsed Diff Report (Base vs Head)'
         id: build-change-report
         env:
-          BASE_STATE_FILE: ${{ steps.fetch-base-descriptor.outputs.base_state_file }}
           STATE_FILE: ${{ env.STATE_FILE }}
         run: |
           set -euo pipefail
           IFS=$'\n\t'
           echo '::notice::Building collapsed diff between base and head descriptors'
+
+          # Determine base descriptor file name
+          BASE_STATE_FILE=$(find . -maxdepth 1 -name "platform-descriptor.base.json" -o -name "*.base.json" | head -n 1)
+          if [ -z "$BASE_STATE_FILE" ]; then
+            echo "::error::Could not find base descriptor file in artifact"
+            ls -la
+            exit 1
+          fi
+          echo "::notice::Using base descriptor: $BASE_STATE_FILE"
 
           # Function to collapse changes for a given list (base vs head)
           collapse_lists() {
@@ -410,110 +564,33 @@ jobs:
           } >> "$GITHUB_OUTPUT"
           echo "updates_cnt=$UPDATES_CNT" >> "$GITHUB_OUTPUT"
 
-      - name: 'Fetch updated UI modules list'
-        id: fetch-updated-ui-modules
-        if: steps.calculate-new-version.outputs.updated == 'true'
-        uses: folio-org/platform-lsp/.github/actions/fetch-updated-ui-modules@RANCHER-2324
-        with:
-          applications: ${{ steps.compare-components.outputs.updated_applications }}
-          far-url: ${{ env.FAR_URL }}
-
-      - name: 'Read package.json content'
-        id: read-package-json
-        if: steps.calculate-new-version.outputs.updated == 'true'
-        env:
-          SOURCE_BRANCH: ${{ needs.determine-source-branch.outputs.source_branch }}
-        run: |
-          set -euo pipefail
-          IFS=$'\n\t'
-          echo "::notice::Reading package.json from checked-out branch: $SOURCE_BRANCH"
-          if [ ! -f package.json ] || [ ! -s package.json ]; then
-            echo "::error::package.json file is missing or empty in branch '$SOURCE_BRANCH'"
-            ls -al || true
-            exit 1
-          fi
-          if ! jq empty package.json 2>/dev/null; then
-            echo '::error::package.json is not valid JSON'
-            cat package.json
-            exit 1
-          fi
-          PACKAGE_JSON_CONTENT=$(jq -c . package.json)
-          {
-            echo 'package_json_content<<EOF'
-            echo "$PACKAGE_JSON_CONTENT"
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
-          echo '::notice::Read package.json content'
-
-      - name: 'Fetch base branch package.json'
-        id: fetch-base-package-json
-        if: steps.calculate-new-version.outputs.updated == 'true'
-        env:
-          RELEASE_BRANCH: ${{ inputs.release_branch }}
-        run: |
-          set -euo pipefail
-          IFS=$'\n\t'
-          echo "::notice::Fetching base package.json from release branch: $RELEASE_BRANCH"
-          BASE_PACKAGE_JSON="package.json.base"
-          if ! git show "origin/$RELEASE_BRANCH:package.json" > "$BASE_PACKAGE_JSON" 2>/dev/null; then
-            echo "::warning::Failed to fetch package.json from base branch $RELEASE_BRANCH"
-            echo "base_package_json_exists=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          if [ ! -s "$BASE_PACKAGE_JSON" ]; then
-            echo "::warning::Base package.json file is empty"
-            echo "base_package_json_exists=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          if ! jq empty "$BASE_PACKAGE_JSON" 2>/dev/null; then
-            echo "::warning::Base package.json is not valid JSON"
-            echo "base_package_json_exists=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          BASE_PACKAGE_JSON_CONTENT=$(jq -c . "$BASE_PACKAGE_JSON")
-          {
-            echo 'base_package_json_content<<EOF'
-            echo "$BASE_PACKAGE_JSON_CONTENT"
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
-          echo "base_package_json_file=$BASE_PACKAGE_JSON" >> "$GITHUB_OUTPUT"
-          echo "base_package_json_exists=true" >> "$GITHUB_OUTPUT"
-          echo "::notice::Base package.json saved to $BASE_PACKAGE_JSON"
-
-      - name: 'Update package.json dependencies'
-        id: update-package-json
-        if: steps.calculate-new-version.outputs.updated == 'true' && steps.fetch-updated-ui-modules.outputs.ui-modules != ''
-        uses: folio-org/platform-lsp/.github/actions/update-package-json@RANCHER-2324
-        with:
-          package-json: ${{ steps.read-package-json.outputs.package_json_content }}
-          ui-modules: ${{ steps.fetch-updated-ui-modules.outputs.ui-modules }}
-
-      - name: 'Write updated package.json'
-        id: write-package-json
-        if: steps.update-package-json.outputs.has-updates == 'true'
-        run: |
-          set -euo pipefail
-          IFS=$'\n\t'
-          echo "::notice::Writing updated package.json content"
-          echo '${{ steps.update-package-json.outputs.package-json }}' | jq . > package.json
-          if [ ! -s package.json ]; then
-            echo "::error::Failed to write updated package.json"
-            exit 1
-          fi
-          echo "::notice::Successfully updated package.json with ${{ steps.update-package-json.outputs.updated-count }} dependency changes"
-
       - name: 'Build collapsed UI dependencies diff'
         id: build-ui-diff
-        if: steps.calculate-new-version.outputs.updated == 'true' && steps.fetch-base-package-json.outputs.base_package_json_exists == 'true'
-        env:
-          BASE_PACKAGE_JSON_CONTENT: ${{ steps.fetch-base-package-json.outputs.base_package_json_content }}
-          NOT_FOUND_UI_REPORT: ${{ steps.update-package-json.outputs.not-found-ui-report }}
+        if: needs.update-package-json.result == 'success'
         run: |
           set -euo pipefail
           IFS=$'\n\t'
           echo "::notice::Building collapsed UI dependencies diff"
 
-          # Read current package.json (after updates)
+          # Check if package.json files exist
+          if [ ! -f "package.json" ]; then
+            echo "::warning::package.json not found in artifact, skipping UI diff"
+            echo 'collapsed_ui_diff=[]' >> "$GITHUB_OUTPUT"
+            echo "ui_updates_cnt=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Find base package.json
+          BASE_PACKAGE_JSON_FILE=$(find . -maxdepth 1 -name "package.json.base" -o -name "package.*.base" | head -n 1)
+          if [ -z "$BASE_PACKAGE_JSON_FILE" ]; then
+            echo "::warning::Base package.json not found, skipping UI diff"
+            echo 'collapsed_ui_diff=[]' >> "$GITHUB_OUTPUT"
+            echo "ui_updates_cnt=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Read base and current package.json
+          BASE_PACKAGE_JSON_CONTENT=$(jq -c . "$BASE_PACKAGE_JSON_FILE")
           UPDATED_PACKAGE_JSON_CONTENT=$(jq -c . package.json)
 
           # Extract dependencies from both versions
@@ -550,25 +627,20 @@ jobs:
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
           echo "ui_updates_cnt=$UI_UPDATES_CNT" >> "$GITHUB_OUTPUT"
-          {
-            echo 'not_found_ui_report<<EOF'
-            echo "${NOT_FOUND_UI_REPORT:-{}}"
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
 
       - name: 'Generate Collapsed Markdown Report'
         id: generate-markdown-reports
         env:
-          UPDATED: ${{ steps.calculate-new-version.outputs.updated }}
-          FAILURE_REASON: ${{ steps.calculate-new-version.outputs.failure_reason }}
-          PREVIOUS_VERSION: ${{ steps.compare-components.outputs.previous_version }}
-          NEW_VERSION: ${{ steps.calculate-new-version.outputs.new_version }}
+          UPDATED: ${{ needs.update-platform-descriptor.outputs.updated }}
+          FAILURE_REASON: ${{ needs.update-platform-descriptor.outputs.failure_reason }}
+          PREVIOUS_VERSION: ${{ needs.update-platform-descriptor.outputs.new_version }}
+          NEW_VERSION: ${{ needs.update-platform-descriptor.outputs.new_version }}
           UPDATED_REPORT: ${{ steps.build-change-report.outputs.updated_report }}
           UPDATES_CNT: ${{ steps.build-change-report.outputs.updates_cnt }}
           COLLAPSED_UI_DIFF: ${{ steps.build-ui-diff.outputs.collapsed_ui_diff }}
           UI_UPDATES_CNT: ${{ steps.build-ui-diff.outputs.ui_updates_cnt }}
-          NOT_FOUND_UI_REPORT: ${{ steps.build-ui-diff.outputs.not_found_ui_report }}
-          BASE_PACKAGE_JSON_EXISTS: ${{ steps.fetch-base-package-json.outputs.base_package_json_exists }}
+          NOT_FOUND_UI_REPORT: ${{ needs.update-package-json.outputs.not_found_ui_report }}
+          BASE_PACKAGE_JSON_EXISTS: ${{ needs.update-package-json.result == 'success' && 'true' || 'false' }}
           RELEASE_BRANCH: ${{ inputs.release_branch }}
           UPDATE_BRANCH: ${{ inputs.update_branch }}
         run: |
@@ -732,8 +804,7 @@ jobs:
             } >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      - name: 'Upload Descriptor Artifact'
-        if: steps.calculate-new-version.outputs.updated == 'true'
+      - name: 'Upload Combined Artifact for Commit'
         uses: actions/upload-artifact@v4
         with:
           name: "${{ env.ARTIFACT_NAME }}"
@@ -744,18 +815,18 @@ jobs:
 
   commit-changes:
     name: 'Commit and Push Changes'
-    needs: [determine-source-branch, update-platform]
-    if: needs.update-platform.outputs.updated == 'true'
+    needs: [determine-source-branch, update-platform-descriptor, update-package-json, generate-reports]
+    if: needs.update-platform-descriptor.outputs.updated == 'true'
     uses: folio-org/kitfox-github/.github/workflows/commit-and-push-changes.yml@master
     with:
       repo: ${{ inputs.repo }}
       branch: ${{ inputs.update_branch }}
-      artifact_name: ${{ needs.update-platform.outputs.artifact_name }}
+      artifact_name: ${{ needs.generate-reports.outputs.artifact_name || 'platform-lsp-update-files' }}
       commit_message: |
-        Update platform to ${{ needs.update-platform.outputs.new_version }}.
+        Update platform to ${{ needs.update-platform-descriptor.outputs.new_version }}.
 
-        **Total applications/components updated:** ${{ needs.update-platform.outputs.updates_cnt || '0' }}
-        ${{ needs.update-platform.outputs.updates_markdown }}
+        **Total applications/components updated:** ${{ needs.generate-reports.outputs.updates_cnt || '0' }}
+        ${{ needs.generate-reports.outputs.updates_markdown }}
       dry_run: ${{ inputs.dry_run }}
       use_github_app: true
       source_branch: ${{ needs.determine-source-branch.outputs.source_branch }}
@@ -763,14 +834,14 @@ jobs:
 
   manage-pr:
     name: 'Manage Pull Request'
-    needs: [determine-source-branch, update-platform, commit-changes]
+    needs: [determine-source-branch, update-platform-descriptor, update-package-json, generate-reports, commit-changes]
     if: |
       always() &&
       !inputs.dry_run &&
       !cancelled() &&
-      needs.update-platform.result == 'success' &&
+      needs.update-platform-descriptor.result == 'success' &&
       (
-        needs.update-platform.outputs.updated == 'true' ||
+        needs.update-platform-descriptor.outputs.updated == 'true' ||
         (
           needs.determine-source-branch.outputs.pr_exists != 'true' &&
           needs.determine-source-branch.outputs.update_branch_exists == 'true'
@@ -788,14 +859,14 @@ jobs:
       - name: 'Build collapsed PR body'
         id: build-pr-body
         if: |
-          needs.update-platform.outputs.updated == 'true' ||
+          needs.update-platform-descriptor.outputs.updated == 'true' ||
           needs.determine-source-branch.outputs.update_branch_exists == 'true'
         env:
-          NEW_VERSION: ${{ needs.update-platform.outputs.new_version }}
-          UPDATES_CNT: ${{ needs.update-platform.outputs.updates_cnt }}
-          UPDATES_MARKDOWN: ${{ needs.update-platform.outputs.updates_markdown }}
-          UI_UPDATES_MARKDOWN: ${{ needs.update-platform.outputs.ui_updates_markdown }}
-          MISSING_UI_MARKDOWN: ${{ needs.update-platform.outputs.missing_ui_markdown }}
+          NEW_VERSION: ${{ needs.update-platform-descriptor.outputs.new_version }}
+          UPDATES_CNT: ${{ needs.generate-reports.outputs.updates_cnt }}
+          UPDATES_MARKDOWN: ${{ needs.generate-reports.outputs.updates_markdown }}
+          UI_UPDATES_MARKDOWN: ${{ needs.generate-reports.outputs.ui_updates_markdown }}
+          MISSING_UI_MARKDOWN: ${{ needs.generate-reports.outputs.missing_ui_markdown }}
           RELEASE_BRANCH: ${{ inputs.release_branch }}
           UPDATE_BRANCH: ${{ inputs.update_branch }}
         run: |
@@ -855,7 +926,7 @@ jobs:
           repo: ${{ inputs.repo }}
           base_branch: ${{ inputs.release_branch }}
           head_branch: ${{ inputs.update_branch }}
-          pr_title: "Release: Update to ${{ needs.update-platform.outputs.new_version || 'No updates' }}"
+          pr_title: "Release: Update to ${{ needs.update-platform-descriptor.outputs.new_version || 'No updates' }}"
           pr_body: ${{ steps.build-pr-body.outputs.pr_body }}
           pr_labels: ${{ inputs.pr_labels }}
           pr_reviewers: ${{ inputs.pr_reviewers }}
@@ -868,7 +939,7 @@ jobs:
         with:
           repo: ${{ inputs.repo }}
           pr_number: ${{ needs.determine-source-branch.outputs.pr_number }}
-          pr_title: "Release: Update to ${{ needs.update-platform.outputs.new_version }}"
+          pr_title: "Release: Update to ${{ needs.update-platform-descriptor.outputs.new_version }}"
           pr_body: ${{ steps.build-pr-body.outputs.pr_body }}
           pr_labels: ${{ inputs.pr_labels }}
           pr_reviewers: ${{ inputs.pr_reviewers }}

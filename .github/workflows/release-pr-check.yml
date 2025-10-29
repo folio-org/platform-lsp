@@ -346,18 +346,21 @@ jobs:
             **Commit:** \`${{ inputs.head_sha }}\`
             **Pull Request:** [#${{ inputs.pr_number }}](https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/pull/${{ inputs.pr_number }})
 
-            ### Validation Status
-            - **Result:** ${{ needs.pre-check.outputs.validation_status || 'unknown' }}
+            ### Configuration Check
+            - **Status:** ✅ ${{ needs.pre-check.outputs.validation_status || 'unknown' }}
             - **Message:** ${{ needs.pre-check.outputs.validation_message || 'No message' }}
-            - **Validation Passed:** ${validationPassed || 'unknown'}
 
-            ### Stripes Compilation Status
-            - **Job Result:** ${stripesBuildResult || 'unknown'}
+            ### Platform Validation
+            - **Status:** ${validationPassed === 'true' ? '✅ Passed' : validationPassed === 'false' ? '❌ Failed' : '⏭️ Unknown'}
+            ${validationPassed === 'false' ? '- **Failure Reason:** ' + failureReason : ''}
+
+            ### Stripes Compilation
+            - **Status:** ${stripesBuildResult === 'success' ? '✅ Success' : stripesBuildResult === 'failure' ? '❌ Failed' : stripesBuildResult === 'skipped' ? '⏭️ Skipped' : stripesBuildResult === 'cancelled' ? '⚠️ Cancelled' : '⏭️ ' + stripesBuildResult}
             - **Node Version:** ${{ inputs.node-version }}
             - **Registry:** ${{ inputs.folio-npm-registry }}
             - **Yarn Lock Artifact:** Uploaded (retention: ${{ inputs.yarn-lock-retention-days }} day(s))
-            ${stripesBuildResult === 'failure' ? '- **Failure Hint:** Review yarn install and dependency resolution logs.' : ''}
-            ${stripesBuildResult === 'cancelled' ? '- **Cancellation Hint:** Job was cancelled before completion.' : ''}
+            ${stripesBuildResult === 'failure' ? '- **Hint:** Review yarn install and dependency resolution logs.' : ''}
+            ${stripesBuildResult === 'cancelled' ? '- **Hint:** Job was cancelled before completion.' : ''}
 
             ### Workflow Run
             - **Run ID:** ${{ github.run_id }}
@@ -383,7 +386,7 @@ jobs:
             if (validationPassed === 'false' || (validationPassed === 'true' && stripesBuildResult === 'failure')) {
               updateParams.actions = [{
                 label: 'Re-run Checks',
-                description: 'Trigger platform validation and Stripes compilation again',
+                description: 'Re-run platform validation',
                 identifier: 're-run-validation'
               }];
             }
