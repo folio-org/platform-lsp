@@ -272,33 +272,10 @@ jobs:
 
       - name: 'Calculate New Version'
         id: calculate-new-version
-        env:
-          PREVIOUS_VERSION: ${{ steps.compare-components.outputs.previous_version }}
-          CHANGES_DETECTED: ${{ steps.compare-components.outputs.changes_detected }}
-        run: |
-          set -euo pipefail
-          IFS=$'\n\t'
-          UPDATED=false
-          FAILURE_REASON=''
-          NEW_VERSION="$PREVIOUS_VERSION"
-          if [ "$CHANGES_DETECTED" = 'true' ]; then
-            if [[ "$PREVIOUS_VERSION" =~ ^(R[0-9]+-[0-9]+)\.([0-9]+)$ ]]; then
-              BASE_VERSION="${BASH_REMATCH[1]}"
-              PATCH_VERSION="${BASH_REMATCH[2]}"
-              NEW_VERSION="${BASE_VERSION}.$((PATCH_VERSION + 1))"
-              UPDATED=true
-              echo "::notice::Calculated new version $NEW_VERSION from previous $PREVIOUS_VERSION"
-            else
-              FAILURE_REASON="Previous version '$PREVIOUS_VERSION' does not match expected format 'R<iteration>-<year>.<patch>'"
-              echo "::warning::$FAILURE_REASON (no update applied)"
-              UPDATED=false
-            fi
-          else
-            echo '::notice::No component/application changes detected; version unchanged'
-          fi
-          echo "updated=$UPDATED" >> "$GITHUB_OUTPUT"
-          echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
-          echo "failure_reason=$FAILURE_REASON" >> "$GITHUB_OUTPUT"
+        uses: folio-org/platform-lsp/.github/actions/calculate-version-increment@RANCHER-2324
+        with:
+          current_version: ${{ steps.compare-components.outputs.previous_version }}
+          changes_detected: ${{ steps.compare-components.outputs.changes_detected }}
 
       - name: 'Apply Descriptor Updates'
         id: apply-updates
