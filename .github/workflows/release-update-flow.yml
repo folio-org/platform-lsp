@@ -449,15 +449,13 @@ jobs:
           path: .
         continue-on-error: true
 
-      - name: 'Build Collapsed Diff Report (Base vs Head)'
-        id: build-change-report
+      - name: 'Find base descriptor file'
+        id: find-base-descriptor
         env:
           STATE_FILE: ${{ env.STATE_FILE }}
         run: |
           set -euo pipefail
           IFS=$'\n\t'
-          echo '::notice::Building collapsed diff between base and head descriptors'
-
           # Determine base descriptor file name
           BASE_STATE_FILE=$(find . -maxdepth 1 -name "platform-descriptor.base.json" -o -name "*.base.json" | head -n 1)
           if [ -z "$BASE_STATE_FILE" ]; then
@@ -466,63 +464,17 @@ jobs:
             exit 1
           fi
           echo "::notice::Using base descriptor: $BASE_STATE_FILE"
+          echo "base_file=$BASE_STATE_FILE" >> "$GITHUB_OUTPUT"
 
-          # Function to collapse changes for a given list (base vs head)
-          collapse_lists() {
-            local base_json="$1"
-            local head_json="$2"
-            local label="$3"
-            jq -n \
-              --argjson B "$base_json" \
-              --argjson H "$head_json" \
-              --arg label "$label" '
-              def to_map: map({key:.name, value:.version}) | from_entries;
-              ($B | to_map) as $BM |
-              ($H | to_map) as $HM |
-              [
-                ($BM | keys[]) as $k |
-                select(($HM | has($k)) and ($BM[$k] != $HM[$k])) |
-                {
-                  name: $k,
-                  change: { old: $BM[$k], new: $HM[$k] },
-                  group: $label
-                }
-              ]
-            '
-          }
-
-          # Extract components and applications from base
-          BASE_EC=$(jq -c '."eureka-components"' "$BASE_STATE_FILE")
-          BASE_REQ=$(jq -c '.applications.required' "$BASE_STATE_FILE")
-          BASE_OPT=$(jq -c '.applications.optional' "$BASE_STATE_FILE")
-
-          # Extract components and applications from head
-          HEAD_EC=$(jq -c '."eureka-components"' "$STATE_FILE")
-          HEAD_REQ=$(jq -c '.applications.required' "$STATE_FILE")
-          HEAD_OPT=$(jq -c '.applications.optional' "$STATE_FILE")
-
-          # Build collapsed diffs
-          EC_DIFF=$(collapse_lists "$BASE_EC" "$HEAD_EC" "Eureka Components")
-          REQ_DIFF=$(collapse_lists "$BASE_REQ" "$HEAD_REQ" "Applications (required)")
-          OPT_DIFF=$(collapse_lists "$BASE_OPT" "$HEAD_OPT" "Applications (optional)")
-
-          # Combine all diffs
-          COLLAPSED_REPORT=$(jq -n \
-            --argjson a "$EC_DIFF" \
-            --argjson b "$REQ_DIFF" \
-            --argjson c "$OPT_DIFF" \
-            '$a + $b + $c')
-
-          UPDATES_CNT=$(jq 'length' <<< "$COLLAPSED_REPORT")
-
-          echo "::notice::Found $UPDATES_CNT total changes between base and head"
-
-          {
-            echo 'updated_report<<EOF'
-            echo "$COLLAPSED_REPORT"
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
-          echo "updates_cnt=$UPDATES_CNT" >> "$GITHUB_OUTPUT"
+      - name: 'Generate platform diff report'
+        id: build-change-report
+        uses: folio-org/platform-lsp/.github/actions/generate-platform-diff-report@RANCHER-2324
+        with:
+          base_descriptor_path: ${{ steps.find-base-descriptor.outputs.base_file }}
+          head_descriptor_path: ${{ env.STATE_FILE }}
+          release_branch: ${{ inputs.release_branch }}
+          update_branch: ${{ inputs.update_branch }}
+          platform_version: ${{ needs.update-platform-descriptor.outputs.new_version }}
 
       - name: 'Build collapsed UI dependencies diff'
         id: build-ui-diff
@@ -593,10 +545,7 @@ jobs:
         env:
           UPDATED: ${{ needs.update-platform-descriptor.outputs.updated }}
           FAILURE_REASON: ${{ needs.update-platform-descriptor.outputs.failure_reason }}
-          PREVIOUS_VERSION: ${{ needs.update-platform-descriptor.outputs.new_version }}
-          NEW_VERSION: ${{ needs.update-platform-descriptor.outputs.new_version }}
-          UPDATED_REPORT: ${{ steps.build-change-report.outputs.updated_report }}
-          UPDATES_CNT: ${{ steps.build-change-report.outputs.updates_cnt }}
+          DESCRIPTOR_MARKDOWN: ${{ steps.build-change-report.outputs.updates_markdown }}
           COLLAPSED_UI_DIFF: ${{ steps.build-ui-diff.outputs.collapsed_ui_diff }}
           UI_UPDATES_CNT: ${{ steps.build-ui-diff.outputs.ui_updates_cnt }}
           NOT_FOUND_UI_REPORT: ${{ needs.update-package-json.outputs.not_found_ui_report }}
@@ -607,25 +556,6 @@ jobs:
           set -euo pipefail
           IFS=$'\n\t'
 
-          render_collapsed_table() {
-            local json="$1"
-            if [ -z "${json:-}" ] || [ "$json" = "[]" ]; then
-              echo ''
-              return 0
-            fi
-            local count
-            if ! count=$(jq 'length' <<< "$json" 2>/dev/null); then
-              echo ''
-              return 0
-            fi
-            if [ "$count" -eq 0 ]; then
-              echo ''
-              return 0
-            fi
-            echo '| Name | Old Version | New Version | Group |'
-            echo '| ---- | ----------- | ----------- | ----- |'
-            jq -r '.[] | "| \(.name) | \(.change.old) | \(.change.new) | \(.group) |"' <<< "$json"
-          }
 
           render_ui_table() {
             local json="$1"
@@ -667,6 +597,7 @@ jobs:
             jq -r 'to_entries[] | "| \(.key) | \(.value) |"' <<< "$json"
           }
 
+          # Use descriptor markdown from the action
           if [ "$UPDATED" != 'true' ]; then
             reason='No updates detected.'
             [ -n "${FAILURE_REASON:-}" ] && reason="$FAILURE_REASON"
@@ -674,25 +605,8 @@ jobs:
             ui_updates_markdown=$'### UI Dependency Updates\n\nNo UI dependencies were updated.'
             missing_ui_markdown=$'### Missing UI Dependencies\n\nNo missing UI dependencies detected.'
           else
-            # Build descriptor changes table
-            descriptor_table=$(render_collapsed_table "${UPDATED_REPORT}")
-            if [ -z "$descriptor_table" ]; then
-              descriptor_markdown=$'### Application & Component Updates\n\n_No changes between base and head descriptor._'
-            else
-              descriptor_markdown=$(cat <<EOF
-          ### Application & Component Updates
-
-          **Base branch:** ${RELEASE_BRANCH}
-          **Head branch:** ${UPDATE_BRANCH}
-          **Platform version:** ${NEW_VERSION}
-          **Changed entries:** ${UPDATES_CNT}
-
-          ${descriptor_table}
-
-          > This table shows the collapsed diff of \`platform-descriptor.json\` between base and head branches.
-          EOF
-              )
-            fi
+            # Use the markdown generated by the action
+            descriptor_markdown="${DESCRIPTOR_MARKDOWN}"
 
             # Build UI updates table (using collapsed diff if available)
             if [ "${BASE_PACKAGE_JSON_EXISTS}" = "true" ]; then
