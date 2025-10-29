@@ -652,67 +652,20 @@ jobs:
       successful_reviewers: ${{ steps.create-pr.outputs.successful_reviewers || steps.update-pr.outputs.successful_reviewers || '' }}
       failed_reviewers: ${{ steps.create-pr.outputs.failed_reviewers || steps.update-pr.outputs.failed_reviewers || '' }}
     steps:
-      - name: 'Build collapsed PR body'
+      - name: 'Build PR body'
         id: build-pr-body
         if: |
           needs.update-platform-descriptor.outputs.updated == 'true' ||
           needs.determine-source-branch.outputs.update_branch_exists == 'true'
-        env:
-          NEW_VERSION: ${{ needs.update-platform-descriptor.outputs.new_version }}
-          UPDATES_CNT: ${{ needs.generate-reports.outputs.updates_cnt }}
-          UPDATES_MARKDOWN: ${{ needs.generate-reports.outputs.updates_markdown }}
-          UI_UPDATES_MARKDOWN: ${{ needs.generate-reports.outputs.ui_updates_markdown }}
-          MISSING_UI_MARKDOWN: ${{ needs.generate-reports.outputs.missing_ui_markdown }}
-          RELEASE_BRANCH: ${{ inputs.release_branch }}
-          UPDATE_BRANCH: ${{ inputs.update_branch }}
-        run: |
-          set -euo pipefail
-          IFS=$'\n\t'
-
-          version_display="${NEW_VERSION:-No version change}"
-          count_display="${UPDATES_CNT:-0}"
-
-          # Build complete PR body with collapsed report
-          pr_body=$(cat <<EOF
-          ## Automated Release Update
-
-          **Base branch:** ${RELEASE_BRANCH}
-          **Head branch:** ${UPDATE_BRANCH}
-          **Platform version:** ${version_display}
-          **Total changes:** ${count_display}
-
-          ---
-
-          ${UPDATES_MARKDOWN:-### Application & Component Updates
-
-          No applications or eureka components were updated.}
-
-          ---
-
-          ${UI_UPDATES_MARKDOWN:-### UI Dependency Updates
-
-          No UI dependencies were updated.}
-
-          ---
-
-          ${MISSING_UI_MARKDOWN:-### Missing UI Dependencies
-
-          No missing UI dependencies detected.}
-
-          ---
-
-          > This PR description is auto-generated from a collapsed diff between the base and head branches.
-          > Re-running the workflow with the same base/head state produces an identical description.
-          EOF
-          )
-
-          {
-            echo 'pr_body<<EOF'
-            echo "$pr_body"
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
-
-          echo "::notice::Built collapsed PR body (${#pr_body} bytes)"
+        uses: folio-org/platform-lsp/.github/actions/build-pr-body@RANCHER-2324
+        with:
+          new_version: ${{ needs.update-platform-descriptor.outputs.new_version }}
+          updates_cnt: ${{ needs.generate-reports.outputs.updates_cnt }}
+          updates_markdown: ${{ needs.generate-reports.outputs.updates_markdown }}
+          ui_updates_markdown: ${{ needs.generate-reports.outputs.ui_updates_markdown }}
+          missing_ui_markdown: ${{ needs.generate-reports.outputs.missing_ui_markdown }}
+          release_branch: ${{ inputs.release_branch }}
+          update_branch: ${{ inputs.update_branch }}
 
       - name: 'Create PR if needed'
         id: create-pr
