@@ -1,0 +1,146 @@
+name: 'Fetch Base File'
+description: 'Fetches and validates a file from a base branch using git show'
+author: 'FOLIO DevOps'
+
+inputs:
+  base_branch:
+    description: 'Base branch to fetch file from'
+    required: true
+  file_path:
+    description: 'Path to file in repository (e.g., platform-descriptor.json)'
+    required: true
+  output_filename:
+    description: 'Name for the fetched file (default: <basename>.base.<extension>)'
+    required: false
+    default: ''
+  validate_json:
+    description: 'Whether to validate file as JSON'
+    required: false
+    default: 'true'
+  fail_on_missing:
+    description: 'Whether to fail if file is missing (false = warning only)'
+    required: false
+    default: 'true'
+  output_content:
+    description: 'Whether to output file content as output variable'
+    required: false
+    default: 'false'
+
+outputs:
+  file_path:
+    description: 'Path to the fetched base file'
+    value: ${{ steps.fetch.outputs.file_path }}
+  file_exists:
+    description: 'Whether the file was successfully fetched (true/false)'
+    value: ${{ steps.fetch.outputs.file_exists }}
+  file_content:
+    description: 'File content (if output_content=true and file is JSON)'
+    value: ${{ steps.fetch.outputs.file_content }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Fetch file from base branch'
+      id: fetch
+      shell: bash
+      env:
+        BASE_BRANCH: ${{ inputs.base_branch }}
+        FILE_PATH: ${{ inputs.file_path }}
+        OUTPUT_FILENAME: ${{ inputs.output_filename }}
+        VALIDATE_JSON: ${{ inputs.validate_json }}
+        FAIL_ON_MISSING: ${{ inputs.fail_on_missing }}
+        OUTPUT_CONTENT: ${{ inputs.output_content }}
+      run: |
+        set -euo pipefail
+        IFS=$'\n\t'
+
+        # Determine output filename
+        if [ -n "${OUTPUT_FILENAME}" ]; then
+          base_file="$OUTPUT_FILENAME"
+        else
+          filename=$(basename "$FILE_PATH")
+          if [[ "$filename" == *.* ]]; then
+            name="${filename%.*}"
+            ext="${filename##*.}"
+            base_file="${name}.base.${ext}"
+          else
+            base_file="${filename}.base"
+          fi
+        fi
+
+        echo "::notice::Fetching $FILE_PATH from base branch: $BASE_BRANCH"
+
+        # Ensure we have the latest base branch
+        git fetch origin "$BASE_BRANCH" --depth=1 2>/dev/null || true
+
+        # Attempt to fetch the file
+        if ! git show "origin/$BASE_BRANCH:$FILE_PATH" > "$base_file" 2>/dev/null; then
+          if [ "$FAIL_ON_MISSING" = "true" ]; then
+            echo "::error::Failed to fetch $FILE_PATH from base branch $BASE_BRANCH"
+            exit 1
+          else
+            echo "::warning::Failed to fetch $FILE_PATH from base branch $BASE_BRANCH"
+            echo "file_exists=false" >> "$GITHUB_OUTPUT"
+            echo "file_path=" >> "$GITHUB_OUTPUT"
+            echo "file_content=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+        fi
+
+        # Check if file is empty
+        if [ ! -s "$base_file" ]; then
+          if [ "$FAIL_ON_MISSING" = "true" ]; then
+            echo "::error::Fetched file $base_file is empty"
+            exit 1
+          else
+            echo "::warning::Fetched file $base_file is empty"
+            echo "file_exists=false" >> "$GITHUB_OUTPUT"
+            echo "file_path=" >> "$GITHUB_OUTPUT"
+            echo "file_content=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+        fi
+
+        # Validate JSON if requested
+        if [ "$VALIDATE_JSON" = "true" ]; then
+          if ! jq empty "$base_file" 2>/dev/null; then
+            if [ "$FAIL_ON_MISSING" = "true" ]; then
+              echo "::error::File $base_file is not valid JSON"
+              cat "$base_file"
+              exit 1
+            else
+              echo "::warning::File $base_file is not valid JSON"
+              echo "file_exists=false" >> "$GITHUB_OUTPUT"
+              echo "file_path=" >> "$GITHUB_OUTPUT"
+              echo "file_content=" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
+        fi
+
+        # Output file path
+        echo "file_path=$base_file" >> "$GITHUB_OUTPUT"
+        echo "file_exists=true" >> "$GITHUB_OUTPUT"
+
+        # Output content if requested
+        if [ "$OUTPUT_CONTENT" = "true" ]; then
+          if [ "$VALIDATE_JSON" = "true" ]; then
+            content=$(jq -c . "$base_file")
+            {
+              echo 'file_content<<EOF'
+              echo "$content"
+              echo 'EOF'
+            } >> "$GITHUB_OUTPUT"
+          else
+            {
+              echo 'file_content<<EOF'
+              cat "$base_file"
+              echo 'EOF'
+            } >> "$GITHUB_OUTPUT"
+          fi
+        else
+          echo "file_content=" >> "$GITHUB_OUTPUT"
+        fi
+
+        echo "::notice::Successfully fetched $FILE_PATH to $base_file"
+

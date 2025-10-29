@@ -171,32 +171,15 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      - name: 'Fetch and save base branch descriptor'
+      - name: 'Fetch base descriptor'
         id: fetch-base-descriptor
-        env:
-          RELEASE_BRANCH: ${{ inputs.release_branch }}
-          STATE_FILE: ${{ env.STATE_FILE }}
-        run: |
-          set -euo pipefail
-          IFS=$'\n\t'
-          echo "::notice::Fetching base descriptor from release branch: $RELEASE_BRANCH"
-          git fetch origin "$RELEASE_BRANCH" --depth=1
-          BASE_STATE_FILE="platform-descriptor.base.json"
-          if ! git show "origin/$RELEASE_BRANCH:$STATE_FILE" > "$BASE_STATE_FILE" 2>/dev/null; then
-            echo "::error::Failed to fetch $STATE_FILE from base branch $RELEASE_BRANCH"
-            exit 1
-          fi
-          if [ ! -s "$BASE_STATE_FILE" ]; then
-            echo "::error::Base descriptor file is empty"
-            exit 1
-          fi
-          if ! jq empty "$BASE_STATE_FILE" 2>/dev/null; then
-            echo "::error::Base descriptor is not valid JSON"
-            cat "$BASE_STATE_FILE"
-            exit 1
-          fi
-          echo "base_state_file=$BASE_STATE_FILE" >> "$GITHUB_OUTPUT"
-          echo "::notice::Base descriptor saved to $BASE_STATE_FILE"
+        uses: folio-org/platform-lsp/.github/actions/fetch-base-file@RANCHER-2324
+        with:
+          base_branch: ${{ inputs.release_branch }}
+          file_path: ${{ env.STATE_FILE }}
+          output_filename: platform-descriptor.base.json
+          validate_json: true
+          fail_on_missing: true
 
       - name: 'Read descriptor file'
         id: read-descriptor
@@ -344,7 +327,7 @@ jobs:
           name: 'platform-descriptor-files-${{ github.run_id }}'
           path: |
             ${{ env.STATE_FILE }}
-            ${{ steps.fetch-base-descriptor.outputs.base_state_file }}
+            ${{ steps.fetch-base-descriptor.outputs.file_path }}
           retention-days: 1
 
   update-package-json:
@@ -398,39 +381,16 @@ jobs:
           } >> "$GITHUB_OUTPUT"
           echo '::notice::Read package.json content'
 
-      - name: 'Fetch base branch package.json'
+      - name: 'Fetch base package.json'
         id: fetch-base-package-json
-        env:
-          RELEASE_BRANCH: ${{ inputs.release_branch }}
-        run: |
-          set -euo pipefail
-          IFS=$'\n\t'
-          echo "::notice::Fetching base package.json from release branch: $RELEASE_BRANCH"
-          BASE_PACKAGE_JSON="package.json.base"
-          if ! git show "origin/$RELEASE_BRANCH:package.json" > "$BASE_PACKAGE_JSON" 2>/dev/null; then
-            echo "::warning::Failed to fetch package.json from base branch $RELEASE_BRANCH"
-            echo "base_package_json_exists=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          if [ ! -s "$BASE_PACKAGE_JSON" ]; then
-            echo "::warning::Base package.json file is empty"
-            echo "base_package_json_exists=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          if ! jq empty "$BASE_PACKAGE_JSON" 2>/dev/null; then
-            echo "::warning::Base package.json is not valid JSON"
-            echo "base_package_json_exists=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          BASE_PACKAGE_JSON_CONTENT=$(jq -c . "$BASE_PACKAGE_JSON")
-          {
-            echo 'base_package_json_content<<EOF'
-            echo "$BASE_PACKAGE_JSON_CONTENT"
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
-          echo "base_package_json_file=$BASE_PACKAGE_JSON" >> "$GITHUB_OUTPUT"
-          echo "base_package_json_exists=true" >> "$GITHUB_OUTPUT"
-          echo "::notice::Base package.json saved to $BASE_PACKAGE_JSON"
+        uses: folio-org/platform-lsp/.github/actions/fetch-base-file@RANCHER-2324
+        with:
+          base_branch: ${{ inputs.release_branch }}
+          file_path: package.json
+          output_filename: package.json.base
+          validate_json: true
+          fail_on_missing: false
+          output_content: true
 
       - name: 'Update package.json dependencies'
         id: update-package-json
@@ -460,7 +420,7 @@ jobs:
           name: 'package-json-files-${{ github.run_id }}'
           path: |
             package.json
-            ${{ steps.fetch-base-package-json.outputs.base_package_json_file }}
+            ${{ steps.fetch-base-package-json.outputs.file_path }}
           retention-days: 1
 
   generate-reports:
