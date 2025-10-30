@@ -113,7 +113,7 @@ jobs:
           if [[ "$CONFIG_EXISTS" != "true" ]]; then
             echo "status=skipped" >> "$GITHUB_OUTPUT"
             echo "message=Release configuration file not found" >> "$GITHUB_OUTPUT"
-            echo "::warning::Configuration file not found: .github/release-config.yml"
+            echo "::warning::Configuration file not found: .github/update-config.yml"
             exit 0
           fi
 
