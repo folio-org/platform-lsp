@@ -3,8 +3,9 @@ name: Platform scan for release scheduler
 run-name: Release update scheduler ${{ github.event_name == 'workflow_dispatch' && '[manual]' || '' }}
 
 on:
-  schedule:
-    - cron: '0 * * * *'
+  # TODO: Enable scheduled runs once ready
+  # schedule:
+  #   - cron: '0 * * * *'
 
   workflow_dispatch:
     inputs:

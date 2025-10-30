@@ -59,6 +59,7 @@ on:
       pr_number:
         description: 'PR number if created or updated'
         value: ${{ jobs.manage-pr.outputs.pr_number }}
+  # TODO: Remove before merging (only for testing purposes)
   workflow_dispatch:
     inputs:
       repo:
@@ -97,12 +98,10 @@ permissions:
   contents: write
   pull-requests: write
 
-# Prevent overlapping runs for the same repo / release & update branch combination
 concurrency:
   group: release-update-${{ inputs.repo }}-${{ inputs.release_branch }}-${{ inputs.update_branch }}
   cancel-in-progress: true
 
-# Consistent shell usage & safer defaults
 defaults:
   run:
     shell: bash
