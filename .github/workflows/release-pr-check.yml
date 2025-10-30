@@ -1,26 +1,32 @@
 name: Release PR Check
 
 run-name: >-
-  Release platform check • PR #${{ inputs.pr_number }} • ${{ inputs.repo_name }}
+  Release platform check • PR #${{ inputs.pr_number || github.event.pull_request.number }} • ${{ inputs.repo_name || github.event.repository.name }}
 
 on:
+  # TODO: Re-enable pull_request trigger when ready
+  # pull_request:
+  #   types: [opened, synchronize, reopened, labeled]
+  # pull_request_target:
+  #   types: [opened, synchronize, reopened, labeled]
+  # TODO: Remove workflow_dispatch trigger inputs when pull_request is re-enabled
   workflow_dispatch:
     inputs:
       repo_owner:
         description: 'Repository owner'
-        required: true
+        required: false
         type: string
       repo_name:
         description: 'Repository name'
-        required: true
+        required: false
         type: string
       pr_number:
         description: 'Pull request number'
-        required: true
+        required: false
         type: string
       head_sha:
         description: 'Head commit SHA that triggered the check suite'
-        required: true
+        required: false
         type: string
       node-version:
         description: 'Node.js version to use'
@@ -51,6 +57,11 @@ permissions:
 env:
   PLATFORM_DESCRIPTOR_FILE: 'platform-descriptor.json'
   GH_TOKEN: ${{ github.token }}
+  # Compute values for both workflow_dispatch and pull_request triggers
+  REPO_OWNER: ${{ inputs.repo_owner || github.event.pull_request.base.repo.owner.login || github.repository_owner }}
+  REPO_NAME: ${{ inputs.repo_name || github.event.pull_request.base.repo.name || github.event.repository.name }}
+  PR_NUMBER: ${{ inputs.pr_number || github.event.pull_request.number }}
+  HEAD_SHA: ${{ inputs.head_sha || github.event.pull_request.head.sha || github.sha }}
 
 jobs:
   pre-check:
@@ -66,8 +77,8 @@ jobs:
         id: pr-info
         uses: folio-org/kitfox-github/.github/actions/get-pr-info@master
         with:
-          repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
-          pr_number: ${{ inputs.pr_number }}
+          repository: ${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}
+          pr_number: ${{ env.PR_NUMBER }}
           github_token: ${{ env.GH_TOKEN }}
 
       - name: Check Commit in PR
@@ -75,17 +86,17 @@ jobs:
         if: steps.pr-info.outputs.pr_exists == 'true'
         uses: folio-org/kitfox-github/.github/actions/is-commit-in-pr@master
         with:
-          repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
-          pr_number: ${{ inputs.pr_number }}
-          commit_sha: ${{ inputs.head_sha }}
+          repository: ${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}
+          pr_number: ${{ env.PR_NUMBER }}
+          commit_sha: ${{ env.HEAD_SHA }}
           github_token: ${{ env.GH_TOKEN }}
 
       - name: Checkout Repository
         if: steps.pr-info.outputs.pr_exists == 'true' && steps.check-commit.outputs.commit_found == 'true'
         uses: actions/checkout@v4
         with:
-          repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
-          ref: ${{ inputs.head_sha }}
+          repository: ${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}
+          ref: ${{ env.HEAD_SHA }}
           token: ${{ env.GH_TOKEN }}
 
       - name: Get Update Configuration
@@ -93,7 +104,7 @@ jobs:
         if: steps.pr-info.outputs.pr_exists == 'true' && steps.check-commit.outputs.commit_found == 'true'
         uses: folio-org/kitfox-github/.github/actions/get-update-config@master
         with:
-          repo: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
+          repo: ${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}
           branch: master
           github_token: ${{ env.GH_TOKEN }}
 
@@ -171,8 +182,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
-          ref: ${{ inputs.head_sha }}
+          repository: ${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}
+          ref: ${{ env.HEAD_SHA }}
           token: ${{ env.GH_TOKEN }}
 
       - name: Upload Platform Descriptor
@@ -189,17 +200,17 @@ jobs:
           github-token: ${{ env.GH_TOKEN }}
           script: |
             const { data: checkRun } = await github.rest.checks.create({
-              owner: '${{ inputs.repo_owner }}',
-              repo: '${{ inputs.repo_name }}',
+              owner: '${{ env.REPO_OWNER }}',
+              repo: '${{ env.REPO_NAME }}',
               name: 'eureka-ci/release-platform-validation',
-              head_sha: '${{ inputs.head_sha }}',
+              head_sha: '${{ env.HEAD_SHA }}',
               status: 'in_progress',
               started_at: new Date().toISOString(),
               output: {
                 title: 'Platform Verification',
-                summary: 'Starting platform verification for PR #${{ inputs.pr_number }}...'
+                summary: 'Starting platform verification for PR #${{ env.PR_NUMBER }}...'
               },
-              details_url: `https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/pull/${{ inputs.pr_number }}`
+              details_url: `https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/pull/${{ env.PR_NUMBER }}`
             });
 
             console.log(`Created check run with ID: ${checkRun.id}`);
@@ -220,8 +231,8 @@ jobs:
           github-token: ${{ env.GH_TOKEN }}
           script: |
             await github.rest.checks.update({
-              owner: '${{ inputs.repo_owner }}',
-              repo: '${{ inputs.repo_name }}',
+              owner: '${{ env.REPO_OWNER }}',
+              repo: '${{ env.REPO_NAME }}',
               check_run_id: ${{ needs.create-check-run.outputs.check_run_id }},
               status: 'in_progress',
               output: {
@@ -246,8 +257,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
-          ref: ${{ inputs.head_sha }}
+          repository: ${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}
+          ref: ${{ env.HEAD_SHA }}
           token: ${{ env.GH_TOKEN }}
 
       - name: Update Check Run - Compiling stripes (UI)
@@ -256,8 +267,8 @@ jobs:
           github-token: ${{ env.GH_TOKEN }}
           script: |
             await github.rest.checks.update({
-              owner: '${{ inputs.repo_owner }}',
-              repo: '${{ inputs.repo_name }}',
+              owner: '${{ env.REPO_OWNER }}',
+              repo: '${{ env.REPO_NAME }}',
               check_run_id: ${{ needs.create-check-run.outputs.check_run_id }},
               status: 'in_progress',
               output: {
@@ -343,8 +354,8 @@ jobs:
             ## Platform Verification Results
 
             **Branch:** \`${{ needs.pre-check.outputs.head_branch }}\`
-            **Commit:** \`${{ inputs.head_sha }}\`
-            **Pull Request:** [#${{ inputs.pr_number }}](https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/pull/${{ inputs.pr_number }})
+            **Commit:** \`${{ env.HEAD_SHA }}\`
+            **Pull Request:** [#${{ env.PR_NUMBER }}](https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/pull/${{ env.PR_NUMBER }})
 
             ### Configuration Check
             - **Status:** ✅ ${{ needs.pre-check.outputs.validation_status || 'unknown' }}
@@ -369,8 +380,8 @@ jobs:
             `;
 
             const updateParams = {
-              owner: '${{ inputs.repo_owner }}',
-              repo: '${{ inputs.repo_name }}',
+              owner: '${{ env.REPO_OWNER }}',
+              repo: '${{ env.REPO_NAME }}',
               check_run_id: ${{ needs.create-check-run.outputs.check_run_id }},
               status: 'completed',
               conclusion: conclusion,
@@ -402,13 +413,13 @@ jobs:
     outputs:
       team_channel: ${{ steps.get-vars.outputs.team_channel }}
     env:
-      TITLE_TEXT: "${{ inputs.repo_name }} release update check ${{ (needs.validate-platform.outputs.validation_passed == 'true' && needs.build-stripes.result == 'success') && 'passed' || 'failed' }}"
+      TITLE_TEXT: "${{ env.REPO_NAME }} release update check ${{ (needs.validate-platform.outputs.validation_passed == 'true' && needs.build-stripes.result == 'success') && 'passed' || 'failed' }}"
       TITLE_BLOCK: |
         {
           "type": "section",
           "text": {
             "type": "mrkdwn",
-            "text": "*${{ inputs.repo_name }} release update check ${{ (needs.validate-platform.outputs.validation_passed == 'true' && needs.build-stripes.result == 'success') && 'passed' || 'failed' }} <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+            "text": "*${{ env.REPO_NAME }} release update check ${{ (needs.validate-platform.outputs.validation_passed == 'true' && needs.build-stripes.result == 'success') && 'passed' || 'failed' }} <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
           }
         }
       ATTACHMENT: |
@@ -417,7 +428,7 @@ jobs:
           "fields": [
             {
               "title": "Repository",
-              "value": "${{ inputs.repo_owner }}/${{ inputs.repo_name }}",
+              "value": "${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}",
               "short": true
             },
             {
@@ -432,12 +443,12 @@ jobs:
             },
             {
               "title": "PR Number",
-              "value": "<https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/pull/${{ inputs.pr_number }}|#${{ inputs.pr_number }}>",
+              "value": "<https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/pull/${{ env.PR_NUMBER }}|#${{ env.PR_NUMBER }}>",
               "short": true
             },
             {
               "title": "Commit",
-              "value": "<https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/commit/${{ inputs.head_sha }}|${{ inputs.head_sha }}>",
+              "value": "<https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/commit/${{ env.HEAD_SHA }}|${{ env.HEAD_SHA }}>",
               "short": true
             }${{ (needs.validate-platform.outputs.validation_passed != 'true' || needs.build-stripes.result != 'success') && format(',\n            {{\n              "title": "Failure Reason",\n              "value": "{0}",\n              "short": false\n            }}', needs.validate-platform.outputs.failure_reason || 'Check workflow logs for details') || '' }}
           ],
@@ -452,8 +463,8 @@ jobs:
           script: |
             try {
               const { data: variable } = await github.rest.actions.getRepoVariable({
-                owner: '${{ inputs.repo_owner }}',
-                repo: '${{ inputs.repo_name }}',
+                owner: '${{ env.REPO_OWNER }}',
+                repo: '${{ env.REPO_NAME }}',
                 name: 'SLACK_NOTIF_CHANNEL'
               });
               console.log(`Found SLACK_NOTIF_CHANNEL: ${variable.value}`);
@@ -503,9 +514,9 @@ jobs:
           {
             echo "### 🎯 Release PR Check Summary"
             echo ""
-            echo "**Repository:** \`${{ inputs.repo_owner }}/${{ inputs.repo_name }}\`"
-            echo "**PR:** [#${{ inputs.pr_number }}](https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/pull/${{ inputs.pr_number }})"
-            echo "**Commit:** [\`${{ inputs.head_sha }}\`](https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/commit/${{ inputs.head_sha }})"
+            echo "**Repository:** \`${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}\`"
+            echo "**PR:** [#${{ env.PR_NUMBER }}](https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/pull/${{ env.PR_NUMBER }})"
+            echo "**Commit:** [\`${{ env.HEAD_SHA }}\`](https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/commit/${{ env.HEAD_SHA }})"
             echo ""
 
             echo "### 📋 Pre-Check Status"
