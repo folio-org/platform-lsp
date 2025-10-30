@@ -57,7 +57,6 @@ permissions:
 env:
   PLATFORM_DESCRIPTOR_FILE: 'platform-descriptor.json'
   GH_TOKEN: ${{ github.token }}
-  # Compute values for both workflow_dispatch and pull_request triggers
   REPO_OWNER: ${{ inputs.repo_owner || github.event.pull_request.base.repo.owner.login || github.repository_owner }}
   REPO_NAME: ${{ inputs.repo_name || github.event.pull_request.base.repo.name || github.event.repository.name }}
   PR_NUMBER: ${{ inputs.pr_number || github.event.pull_request.number }}
@@ -413,13 +412,13 @@ jobs:
     outputs:
       team_channel: ${{ steps.get-vars.outputs.team_channel }}
     env:
-      TITLE_TEXT: "${{ env.REPO_NAME }} release update check ${{ (needs.validate-platform.outputs.validation_passed == 'true' && needs.build-stripes.result == 'success') && 'passed' || 'failed' }}"
+      TITLE_TEXT: "${{ inputs.repo_name || github.event.pull_request.base.repo.name || github.event.repository.name }} release update check ${{ (needs.validate-platform.outputs.validation_passed == 'true' && needs.build-stripes.result == 'success') && 'passed' || 'failed' }}"
       TITLE_BLOCK: |
         {
           "type": "section",
           "text": {
             "type": "mrkdwn",
-            "text": "*${{ env.REPO_NAME }} release update check ${{ (needs.validate-platform.outputs.validation_passed == 'true' && needs.build-stripes.result == 'success') && 'passed' || 'failed' }} <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+            "text": "*${{ inputs.repo_name || github.event.pull_request.base.repo.name || github.event.repository.name }} release update check ${{ (needs.validate-platform.outputs.validation_passed == 'true' && needs.build-stripes.result == 'success') && 'passed' || 'failed' }} <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
           }
         }
       ATTACHMENT: |
@@ -428,7 +427,7 @@ jobs:
           "fields": [
             {
               "title": "Repository",
-              "value": "${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}",
+              "value": "${{ inputs.repo_owner || github.event.pull_request.base.repo.owner.login || github.repository_owner }}/${{ inputs.repo_name || github.event.pull_request.base.repo.name || github.event.repository.name }}",
               "short": true
             },
             {
@@ -443,12 +442,12 @@ jobs:
             },
             {
               "title": "PR Number",
-              "value": "<https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/pull/${{ env.PR_NUMBER }}|#${{ env.PR_NUMBER }}>",
+              "value": "<https://github.com/${{ inputs.repo_owner || github.event.pull_request.base.repo.owner.login || github.repository_owner }}/${{ inputs.repo_name || github.event.pull_request.base.repo.name || github.event.repository.name }}/pull/${{ inputs.pr_number || github.event.pull_request.number }}|#${{ inputs.pr_number || github.event.pull_request.number }}>",
               "short": true
             },
             {
               "title": "Commit",
-              "value": "<https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/commit/${{ env.HEAD_SHA }}|${{ env.HEAD_SHA }}>",
+              "value": "<https://github.com/${{ inputs.repo_owner || github.event.pull_request.base.repo.owner.login || github.repository_owner }}/${{ inputs.repo_name || github.event.pull_request.base.repo.name || github.event.repository.name }}/commit/${{ inputs.head_sha || github.event.pull_request.head.sha || github.sha }}|${{ inputs.head_sha || github.event.pull_request.head.sha || github.sha }}>",
               "short": true
             }${{ (needs.validate-platform.outputs.validation_passed != 'true' || needs.build-stripes.result != 'success') && format(',\n            {{\n              "title": "Failure Reason",\n              "value": "{0}",\n              "short": false\n            }}', needs.validate-platform.outputs.failure_reason || 'Check workflow logs for details') || '' }}
           ],
