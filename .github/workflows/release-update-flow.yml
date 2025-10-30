@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       repo:
-        description: 'Application repository name (org/repo format)'
+        description: 'Repository name (org/repo format)'
         required: true
         type: string
       release_branch:
@@ -63,7 +63,7 @@ on:
   workflow_dispatch:
     inputs:
       repo:
-        description: 'Application repository name (org/repo format)'
+        description: 'Repository name (org/repo format)'
         required: true
         type: string
       release_branch:
