@@ -1,126 +1,125 @@
-# Update Applications (Composite GitHub Action)
+# Update Applications
 
-Queries the FOLIO Application Registry (FAR) to discover newer versions for provided application entries and returns an updated JSON structure.
+Update application versions by consulting the FOLIO Application Registry (FAR) respecting semver scope rules.
 
-## What it does
-1. Accepts input JSON: either
-   - Flat array: `[{"name":"app-platform-minimal","version":"2.0.19"}, ... ]`
-   - Grouped object: `{ "required":[...], "optional":[...], "other":[...] }`
-2. For each application `name`, calls FAR `GET /applications` with filters.
-3. Extracts version list from typical FAR payload shapes.
-4. Filters candidates by semantic scope (`major|minor|patch`).
-5. Chooses a newer version (if any) based on selected sort order.
-6. Mutates versions in-place and outputs JSON shaped like the input.
+## Description
+
+This action queries the FOLIO Application Registry (FAR) to discover newer versions for provided application entries and returns an updated JSON structure. It accepts either a flat array or grouped object of applications, fetches available versions from FAR, filters candidates by semantic versioning scope (major/minor/patch), and selects the appropriate newer version based on sort order. The action preserves the original input structure and updates versions in place where qualifying upgrades are found.
 
 ## Inputs
-| Name | Required | Default | Type | Description |
-|------|----------|---------|------|-------------|
-| applications | yes | — | JSON string | Flat array or grouped object of objects with `name` and `version` |
-| far-base-url | no | https://far.ci.folio.org | string | FAR base endpoint (HTTPS) |
-| filter-scope | no | patch | choice | `major`, `minor`, or `patch` scope constraint |
-| sort-order | no | asc | choice | `asc` picks last after ascending sort; `desc` picks first after descending sort |
-| far-limit | no | 500 | integer (string) | FAR `limit` parameter (max records) |
-| far-latest | no | 50 | integer (string) | FAR `latest` parameter (server-side) |
-| far-pre-release | no | false | boolean (string) | Include pre-release versions in FAR query |
-| request-timeout | no | 10.0 | float (string) | Per-request timeout seconds |
-| max-retries | no | 3 | integer (string) | Retry attempts on network errors (total attempts = `max-retries + 1`) |
-| retry-backoff | no | 1.0 | float (string) | Base backoff seconds; exponential growth with small jitter |
-| log-level | no | INFO | choice | `DEBUG`, `INFO`, `WARNING`, `ERROR` logging verbosity |
 
-## Output
-| Name | Description |
-|------|-------------|
-| updated-applications | JSON matching original shape (grouped or flat) with updated versions where upgrades found |
+| Input | Description | Required | Default |
+|-------|-------------|----------|---------|
+| `applications` | JSON: either an array of `{"name":"app","version":"x.y.z"}` or grouped object `{"required":[...],"optional":[...],"<group>":[...]}` | Yes | - |
+| `far-base-url` | FAR base URL | No | `https://far.ci.folio.org` |
+| `filter-scope` | SemVer scope to consider (major\|minor\|patch) | No | `patch` |
+| `sort-order` | Sort order for candidate versions within scope (asc\|desc) | No | `asc` |
+| `far-limit` | FAR query limit (max records) | No | `500` |
+| `far-latest` | FAR 'latest' query parameter (server side) | No | `50` |
+| `far-pre-release` | Include pre-release versions (true\|false) | No | `false` |
+| `request-timeout` | HTTP request timeout (seconds) | No | `10.0` |
+| `max-retries` | Maximum number of HTTP request retries | No | `3` |
+| `retry-backoff` | Base backoff time in seconds for retries | No | `1.0` |
+| `log-level` | Level of logging verbosity (INFO, DEBUG, WARNING, ERROR) | No | `INFO` |
 
-## Example (grouped input)
+## Outputs
+
+| Output | Description |
+|--------|-------------|
+| `updated-applications` | JSON (shape matches input) with possibly updated versions |
+
+## Usage
+
+### Basic Example with Grouped Input
+
 ```yaml
-- name: Update app versions
-  id: apps
-  uses: ./.github/actions/update-applications
+- name: Update application versions
+  id: update-apps
+  uses: folio-org/platform-lsp/.github/actions/update-applications@master
   with:
     applications: >-
-      {"required":[{"name":"app-platform-minimal","version":"2.0.19"}],"optional":[{"name":"app-consortia","version":"1.2.1"}]}
-    filter-scope: patch
-    sort-order: asc
+      {
+        "required": [
+          {"name": "app-platform-minimal", "version": "2.0.19"},
+          {"name": "app-platform-complete", "version": "10.1.0"}
+        ],
+        "optional": [
+          {"name": "app-consortia", "version": "1.2.1"}
+        ]
+      }
+    filter-scope: 'patch'
+    sort-order: 'asc'
+
+- name: Display updated applications
+  run: echo '${{ steps.update-apps.outputs.updated-applications }}'
 ```
 
-## Example (flat input)
+### Basic Example with Flat Array Input
+
 ```yaml
-- name: Update flat list
-  id: appsflat
-  uses: ./.github/actions/update-applications
+- name: Update application versions (flat)
+  id: update-apps-flat
+  uses: folio-org/platform-lsp/.github/actions/update-applications@master
   with:
     applications: >-
-      [{"name":"app-platform-minimal","version":"2.0.19"},{"name":"app-consortia","version":"1.2.1"}]
+      [
+        {"name": "app-platform-minimal", "version": "2.0.19"},
+        {"name": "app-consortia", "version": "1.2.1"}
+      ]
+    filter-scope: 'minor'
+    log-level: 'DEBUG'
 ```
 
-## Sample follow-up usage
-```yaml
-- name: Print updated
-  run: echo '${{ steps.apps.outputs.updated-applications }}'
+### Integration with Platform Update Workflow
 
-- name: Use specific apps
+```yaml
+- name: Update applications from FAR
+  id: update-apps
+  uses: folio-org/platform-lsp/.github/actions/update-applications@master
+  with:
+    applications: ${{ steps.read-descriptor.outputs.applications }}
+    filter-scope: ${{ inputs.scope }}
+    sort-order: 'asc'
+    far-pre-release: ${{ inputs.include_prerelease }}
+    log-level: 'INFO'
+
+- name: Parse updated platform version
+  id: parse-version
   run: |
-    APPS='${{ steps.apps.outputs.updated-applications }}'
+    APPS='${{ steps.update-apps.outputs.updated-applications }}'
     PLATFORM_VERSION=$(echo "$APPS" | jq -r '.required[] | select(.name=="app-platform-minimal") | .version')
-    echo "Using platform version $PLATFORM_VERSION"
+    echo "platform_version=$PLATFORM_VERSION" >> "$GITHUB_OUTPUT"
 ```
 
-## SemVer handling
-- Only numeric segments considered: `major.minor.patch`
-- Non-numeric parts coerced to `0` (e.g. `1.2.alpha` -> `(1,2,0)`)
-- Pre-release ordering is not computed; enabling `far-pre-release: true` only broadens the candidate pool.
+## Behavior
 
-## Edge cases
-| Scenario | Behavior |
-|----------|----------|
-| FAR unreachable | Application left unchanged (empty version list) |
-| No versions returned | Unchanged |
-| No candidate in scope | Unchanged |
-| Invalid JSON input | Action fails early with clear error message |
-| Mixed grouping keys | All preserved and updated in-place |
-| Network issues | Automatic retries (total attempts = `max-retries + 1`) with exponential backoff |
+### SemVer Filtering
 
-## Performance
-- Each app triggers one FAR request (cached per unique `name`).
-- Caching prevents duplicate API calls within run.
-- Batch all apps in a single action step to limit overhead.
-- Dependency caching accelerates repeated pipeline usage.
+- **patch scope**: Only considers versions that differ in the patch segment (e.g., 1.2.3 → 1.2.4)
+- **minor scope**: Considers versions that differ in minor or patch segments (e.g., 1.2.3 → 1.3.0)
+- **major scope**: Considers all newer versions (e.g., 1.2.3 → 2.0.0)
 
-## Local development
-```bash
-cd .github/actions/update-applications
-python3 update-applications.py  # demo mode (requires APPLICATIONS_JSON env)
+### Sort Order
 
-APPLICATIONS_JSON='[{"name":"app-platform-minimal","version":"2.0.19"}]' \
-FILTER_SCOPE=patch SORT_ORDER=asc python3 update-applications.py
-```
+- **asc**: Sorts candidates ascending and selects the last (most conservative upgrade)
+- **desc**: Sorts candidates descending and selects the first (most aggressive upgrade)
 
-Install dependencies:
-```bash
-pip install 'requests>=2.31.0,<3.0.0'
-```
+### Error Handling
 
-## Troubleshooting
-| Symptom | Possible Cause | Mitigation |
-|---------|----------------|-----------|
-| HTTP non-200 | FAR base URL incorrect / service issue | Verify `far-base-url`, retry |
-| No updates found | Scope too narrow | Try `filter-scope: minor` or `major` |
-| Timeout | Network latency | Increase `request-timeout` |
-| Pre-releases missing | Not included | Set `far-pre-release: true` |
-| Network failures | Transient connectivity | Increase `max-retries` |
-| Unexpected version order | Sort semantics | Adjust `sort-order` |
+- FAR unreachable or non-200 response: Application version left unchanged
+- No qualifying versions found: Application version unchanged
+- Invalid JSON input: Action fails with clear error message
+- Network failures: Automatic retries with exponential backoff (total attempts = `max-retries + 1`)
 
-## Security and Reliability
-- Validates scope & sort inputs; fails closed on malformed JSON.
-- Automatic retries with exponential backoff and jitter.
-- Timeouts prevent hanging requests.
-- GitHub Step Summary provides run metadata.
-- No secrets processed; FAR queries are public.
+## Implementation Notes
 
-## Notes
-- Output groups may appear key-sorted due to JSON serialization (ordering is not guaranteed for consumers).
-- Logic intentionally leaves unchanged apps when FAR data is unavailable.
+- Each unique application name triggers one FAR request (results cached within run)
+- Only numeric `major.minor.patch` segments are considered for version comparison
+- Non-numeric parts are coerced to `0` (e.g., `1.2.alpha` becomes `1.2.0`)
+- Pre-release ordering is not computed; `far-pre-release: true` only broadens the candidate pool
+- Output preserves original structure (flat array or grouped object)
+- GitHub Step Summary displays run metadata when available
 
 ## License
-Inherits repository license.
+
+Uses the repository license.

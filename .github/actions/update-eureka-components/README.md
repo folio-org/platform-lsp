@@ -1,129 +1,126 @@
-# Update Eureka Components (Composite GitHub Action)
+# Update Eureka Components
 
-Resolve and propose newer versions for FOLIO Eureka components based on GitHub releases and existing Docker Hub images.
+Resolve newer component versions from GitHub releases (respecting scope/order) when Docker images exist.
 
-## What it does
-1. Reads an input JSON array of components: [{"name":"repo","version":"x.y.z"}, ...]
-2. Fetches GitHub release tags for each repository in org `folio-org` (strips leading `v`).
-3. Filters candidate versions within a chosen semantic scope (major / minor / patch).
-4. Sorts candidates (asc/desc) and selects the newest that is strictly greater than current.
-5. Verifies the Docker image tag exists in `folioorg/<name>:<version>` on Docker Hub.
-6. Emits an updated JSON array (possibly unchanged) as the `updated-components` output.
+## Description
+
+This action resolves and proposes newer versions for FOLIO Eureka components based on GitHub releases and Docker Hub image availability. It reads an input JSON array of components, fetches GitHub release tags for each repository under `folio-org`, filters candidate versions within a chosen semantic scope (major/minor/patch), sorts candidates and selects the newest version that is strictly greater than the current version, then verifies the Docker image exists on Docker Hub before including it in the output. The action ensures only validated, buildable versions are proposed for updates.
 
 ## Inputs
-- components (required)  
-  JSON array: e.g. `[ {"name":"folio-kong","version":"3.9.1"} ]`
-- filter-scope (default: patch)  
-  One of: major | minor | patch
-- sort-order (default: asc)  
-  `asc` sorts ascending and uses the last element (newest); `desc` sorts descending and uses the first element.
-- github-token (default: workflow GITHUB_TOKEN)  
-  Needs repo read access to list releases (default token usually sufficient)
-- docker-username / docker-password (optional)  
-  Only needed if private or rate‑limited access appears; otherwise anonymous queries are attempted.
-- log-level (default: INFO)  
-  Controls verbosity (`INFO`, `DEBUG`, `WARNING`, `ERROR`). Passed via env and respected by the Python script.
 
-## Output
-- updated-components  
-  JSON array mirroring input order with any upgraded version numbers.
+| Input | Description | Required | Default |
+|-------|-------------|----------|---------|
+| `components` | JSON array of component objects, e.g. `[{"name":"folio-kong","version":"3.9.1"}]` | Yes | - |
+| `filter-scope` | SemVer scope to consider (major\|minor\|patch) | No | `patch` |
+| `sort-order` | Sort order for candidate versions within scope (asc\|desc) | No | `asc` |
+| `github-token` | GitHub token with at least read access (defaults to workflow GITHUB_TOKEN) | No | `${{ github.token }}` |
+| `docker-username` | Docker Hub username (optional for authenticated lookups) | No | - |
+| `docker-password` | Docker Hub password (optional for authenticated lookups) | No | - |
+| `log-level` | Level of logging verbosity (INFO, DEBUG, WARNING, ERROR) | No | `INFO` |
 
-## Example workflow usage
+## Outputs
+
+| Output | Description |
+|--------|-------------|
+| `updated-components` | JSON array with updated component versions |
+
+## Usage
+
+### Basic Example
+
 ```yaml
-name: Update Eureka Components
-on:
-  workflow_dispatch: {}
-  schedule:
-    - cron: '0 6 * * *'
+- name: Update Eureka components
+  id: update-components
+  uses: folio-org/platform-lsp/.github/actions/update-eureka-components@master
+  with:
+    components: >-
+      [
+        {"name": "folio-kong", "version": "3.9.1"},
+        {"name": "folio-keycloak", "version": "26.1.3"}
+      ]
+    filter-scope: 'patch'
+    sort-order: 'asc'
 
-jobs:
-  update:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Compute updates
-        id: eureka
-        uses: ./.github/actions/update-eureka-components
-        with:
-          components: >-
-            [{"name":"folio-kong","version":"3.9.1"},{"name":"folio-keycloak","version":"26.1.3"}]
-          filter-scope: patch
-          sort-order: asc
-          log-level: INFO
-
-      - name: Show result
-        run: |
-          echo "Updated components: ${{ steps.eureka.outputs.updated-components }}"
+- name: Display updated components
+  run: echo '${{ steps.update-components.outputs.updated-components }}'
 ```
 
-## Interpreting results
-If `updated-components` equals the original input, no qualifying newer images were found (or none passed Docker image existence check). Differences indicate candidate upgrades.
+### With Custom GitHub Token
 
-## SemVer notes / limitations
-- Only numeric `major.minor.patch` parts are considered.
-- Non-numeric segments (e.g. `1.2.3-RC1`) are coerced with non-numeric portions treated as 0.
-- Pre-release ordering is not implemented; such tags may produce unexpected ordering if present.
-
-## Edge cases handled
-- Missing repo: logged and skipped, original version retained.
-- No releases: component unchanged.
-- Docker image for candidate version missing: candidate skipped.
-- Empty input array: returns `[]`.
-- Invalid JSON input: action fails fast with clear message.
-
-## Security & permissions
-- Uses provided `github-token` (defaults to ephemeral workflow token) for release listing.
-- Avoids exposing secrets in logs; Docker credentials are optional.
-- No write operations (no commits / tags) performed—purely computational.
-
-## Performance considerations
-- Each component triggers: 1 repo metadata call + 1 releases call + (at most) 1 Docker Hub tag probe.
-- For many components, network latency dominates; consider batching or caching externally if scaling.
-
-## Local development
-```bash
-cd .github/actions/update-eureka-components
-python3 update-eureka-components.py  # demo mode (will error without data)
-
-# Provide explicit JSON input
-COMPONENTS_JSON='[{"name":"folio-kong","version":"3.9.1"}]' \
-  FILTER_SCOPE=patch SORT_ORDER=asc LOG_LEVEL=DEBUG \
-  python3 update-eureka-components.py --filter-scope "$FILTER_SCOPE" --sort-order "$SORT_ORDER" --data "$COMPONENTS_JSON"
-```
-Install deps locally:
-```bash
-pip install -r requirements.txt
-```
-
-## Troubleshooting
-| Symptom | Cause | Action |
-|---------|-------|--------|
-| Invalid JSON error | Malformed `components` input | Validate JSON string (lint / echo / jq) |
-| Repository not found | Name mismatch / private repo | Confirm repo exists under `folio-org` |
-| No updates found when expected | Scope too restrictive | Try `filter-scope: minor` or `major` |
-| Candidate skipped (Docker image missing) | Release created before image published | Re-run later or verify CI build |
-| Excessive retries / slow | Transient API/network issues | Examine logs at `DEBUG` level |
-
-## Updating / version pinning
-Reference by commit SHA in consuming workflows for deterministic behavior. Example:
 ```yaml
-uses: folio-org/platform-lsp/.github/actions/update-eureka-components@<commit-sha>
+- name: Update Eureka components with custom token
+  id: update-components
+  uses: folio-org/platform-lsp/.github/actions/update-eureka-components@master
+  with:
+    components: ${{ steps.read-descriptor.outputs.eureka_components }}
+    filter-scope: 'minor'
+    github-token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+    log-level: 'DEBUG'
 ```
 
-## Exit codes
-- 0 success (even if no updates)
-- Non-zero for invalid input or unrecoverable environment misconfiguration.
+### Integration with Platform Update Workflow
 
-## Future enhancements (ideas)
-- Support pre-release / build metadata ordering.
-- Add option to emit changelog URLs.
-- Optional matrix expansion for downstream jobs.
+```yaml
+- name: Read current Eureka components
+  id: read-components
+  run: |
+    COMPONENTS=$(jq -c '.eurekaComponents' platform-descriptor.json)
+    echo "components=$COMPONENTS" >> "$GITHUB_OUTPUT"
+
+- name: Update Eureka components
+  id: update-components
+  uses: folio-org/platform-lsp/.github/actions/update-eureka-components@master
+  with:
+    components: ${{ steps.read-components.outputs.components }}
+    filter-scope: ${{ inputs.scope }}
+    sort-order: 'asc'
+
+- name: Check if updates available
+  id: check-updates
+  run: |
+    ORIGINAL='${{ steps.read-components.outputs.components }}'
+    UPDATED='${{ steps.update-components.outputs.updated-components }}'
+    if [[ "$ORIGINAL" != "$UPDATED" ]]; then
+      echo "has_updates=true" >> "$GITHUB_OUTPUT"
+    else
+      echo "has_updates=false" >> "$GITHUB_OUTPUT"
+    fi
+```
+
+## Behavior
+
+### SemVer Filtering
+
+- **patch scope**: Only considers versions that differ in the patch segment (e.g., 3.9.1 → 3.9.2)
+- **minor scope**: Considers versions that differ in minor or patch segments (e.g., 3.9.1 → 3.10.0)
+- **major scope**: Considers all newer versions (e.g., 3.9.1 → 4.0.0)
+
+### Sort Order
+
+- **asc**: Sorts candidates ascending and selects the last (most conservative upgrade)
+- **desc**: Sorts candidates descending and selects the first (most aggressive upgrade)
+
+### Docker Image Verification
+
+Each candidate version is validated against Docker Hub before inclusion. Only versions with existing Docker images at `folioorg/<component-name>:<version>` are considered valid upgrades. This ensures proposed updates are buildable and deployable.
+
+### Error Handling
+
+- Missing repository: Component logged and skipped, original version retained
+- No releases available: Component version unchanged
+- Docker image missing for candidate: Candidate skipped, next version evaluated
+- Empty input array: Returns `[]`
+- Invalid JSON input: Action fails with clear error message
+
+## Implementation Notes
+
+- Each component triggers: 1 repository metadata call + 1 releases listing + 1 Docker Hub tag verification per candidate
+- Only numeric `major.minor.patch` segments are considered for version comparison
+- Non-numeric parts are coerced to `0` (e.g., `1.2.3-RC1` treated as `1.2.3`)
+- Pre-release ordering is not implemented; such tags may produce unexpected ordering
+- Docker authentication is optional and only needed for private images or rate-limited scenarios
+- GitHub Step Summary displays run metadata when available
 
 ## License
-This action inherits the repository's license. Review root LICENSE file.
 
----
-### Maintenance Notes
-- Business logic intentionally unchanged during refactoring; improvements limited to clarity & logging.
-- Retry strategy uses exponential backoff with lightweight jitter; adjust constants near top if needed.
+Uses the repository license.

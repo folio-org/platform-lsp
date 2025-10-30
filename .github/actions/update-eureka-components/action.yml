@@ -10,11 +10,20 @@ inputs:
   filter-scope:
     description: SemVer scope to consider (major|minor|patch)
     required: false
-    default: patch
+    default: 'patch'
+    type: choice
+    options:
+      - major
+      - minor
+      - patch
   sort-order:
     description: Sort order for candidate versions within scope (asc|desc)
     required: false
-    default: asc
+    default: 'asc'
+    type: choice
+    options:
+      - asc
+      - desc
   github-token:
     description: GitHub token with at least read access (defaults to workflow GITHUB_TOKEN)
     required: false
@@ -28,7 +37,7 @@ inputs:
   log-level:
     description: Level of logging verbosity (INFO, DEBUG, WARNING, ERROR)
     required: false
-    default: INFO
+    default: 'INFO'
 
 outputs:
   updated-components:
@@ -41,34 +50,57 @@ runs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: "3.11"
-        cache: pip
-        # cache-dependency-path: "${{ github.action_path }}/requirements.txt"
+        python-version: '3.x'
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: pip-${{ runner.os }}-${{ hashFiles(format('{0}/requirements.txt', github.action_path)) }}
+        restore-keys: |
+          pip-${{ runner.os }}-
 
     - name: Install dependencies
       shell: bash
       run: |
         set -euo pipefail
-        echo "Installing dependencies..."
-        python -m pip install --disable-pip-version-check --no-cache-dir -r "${GITHUB_ACTION_PATH}/requirements.txt"
+        IFS=$'\n\t'
+        echo 'Installing dependencies...'
+        mkdir -p ~/.cache/pip
+        python -m pip install --disable-pip-version-check --no-cache-dir -r "${{ github.action_path }}/requirements.txt"
 
     - id: update
       name: Run update script
       shell: bash
       env:
-        GITHUB_TOKEN: "${{ inputs.github-token }}"
-        DOCKER_USERNAME: "${{ inputs.docker-username }}"
-        DOCKER_PASSWORD: "${{ inputs.docker-password }}"
-        PYTHONUNBUFFERED: "1"
-        LOG_LEVEL: "${{ inputs.log-level }}"  # ensure script picks up desired verbosity
-        COMPONENTS_JSON: "${{ inputs.components }}"
-        FILTER_SCOPE: "${{ inputs.filter-scope }}"
-        SORT_ORDER: "${{ inputs.sort-order }}"
+        GITHUB_TOKEN: '${{ inputs.github-token }}'
+        DOCKER_USERNAME: '${{ inputs.docker-username }}'
+        DOCKER_PASSWORD: '${{ inputs.docker-password }}'
+        PYTHONUNBUFFERED: '1'
+        LOG_LEVEL: '${{ inputs.log-level }}'
+        COMPONENTS_JSON: '${{ inputs.components }}'
+        FILTER_SCOPE: '${{ inputs.filter-scope }}'
+        SORT_ORDER: '${{ inputs.sort-order }}'
       run: |
         set -euo pipefail
-        echo "Running component update script..."
+        IFS=$'\n\t'
+        echo 'Running component update script...'
+
+        # Log to GitHub step summary if available (metadata only; business logic unchanged)
+        if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+          {
+            echo '## Update Eureka Components'
+            echo "- Filter scope: $FILTER_SCOPE"
+            echo "- Sort order: $SORT_ORDER"
+            echo "- Log level: $LOG_LEVEL"
+          } >> "$GITHUB_STEP_SUMMARY"
+        fi
+
+        # Write components to temporary file to avoid command line length issues
         TEMP_JSON_FILE="$(mktemp)"
         printf '%s' "$COMPONENTS_JSON" > "$TEMP_JSON_FILE"
+
+        # Run the script and capture its output
         python "${GITHUB_ACTION_PATH}/update-eureka-components.py" \
           --filter-scope "$FILTER_SCOPE" \
           --sort-order "$SORT_ORDER" \
