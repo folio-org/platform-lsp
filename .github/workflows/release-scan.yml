@@ -1,10 +1,9 @@
-name: Platform scan for release
+name: Platform scan for release scheduler
 
 run-name: Release update scheduler ${{ github.event_name == 'workflow_dispatch' && '[manual]' || '' }}
 
 on:
   schedule:
-    # Run every hour
     - cron: '0 * * * *'
 
   workflow_dispatch:
@@ -21,7 +20,7 @@ on:
   #     - 'platform-descriptor.json'
 
 concurrency:
-  group: platform-scan-${{ github.ref }}
+  group: platform-scan-${{ github.event_name == 'schedule' && 'scheduled' || github.ref }}
   cancel-in-progress: false
 
 permissions:
@@ -45,7 +44,7 @@ jobs:
 
       - name: Get Release Configuration
         id: get-config
-        uses: folio-org/kitfox-github/.github/actions/get-release-config@master
+        uses: folio-org/kitfox-github/.github/actions/get-update-config@master
         with:
           repo: ${{ github.repository }}
           branch: ${{ github.ref_name }}

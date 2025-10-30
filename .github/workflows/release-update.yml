@@ -41,17 +41,25 @@ on:
       pr_url:
         description: 'URL of the created PR'
         value: ${{ jobs.scan.outputs.pr_url }}
+      pr_number:
+        description: 'PR number if created or updated'
+        value: ${{ jobs.scan.outputs.pr_number }}
       workflow_status:
         description: 'Overall workflow status'
         value: ${{ jobs.scan.outputs.workflow_status }}
       failure_reason:
         description: 'Reason for workflow failure if any'
         value: ${{ jobs.scan.outputs.failure_reason }}
+      new_version:
+        description: 'New platform version if updated'
+        value: ${{ jobs.scan.outputs.new_version }}
+      updates_cnt:
+        description: 'Number of modules/components updated'
+        value: ${{ jobs.scan.outputs.updates_cnt }}
 
 permissions:
   contents: write
   pull-requests: write
-  issues: write
 
 concurrency:
   group: release-scan-${{ github.repository }}-${{ inputs.release_branch }}
@@ -62,7 +70,6 @@ jobs:
     name: Scan Branch
     uses: ./.github/workflows/release-update-flow.yml
     with:
-      app_name: ${{ github.event.repository.name }}
       repo: ${{ github.repository }}
       release_branch: ${{ inputs.release_branch }}
       update_branch: ${{ inputs.update_branch }}
