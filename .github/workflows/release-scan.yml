@@ -1,0 +1,36 @@
+name: Platform scan for release scheduler
+
+run-name: Release update scheduler ${{ github.event_name == 'workflow_dispatch' && '[manual]' || '' }}
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Perform dry run without creating PRs'
+        required: false
+        type: boolean
+        default: false
+
+  # Optional: Enable for ad-hoc runs when descriptor changes
+  # push:
+  #   paths:
+  #     - 'platform-descriptor.json'
+
+concurrency:
+  group: platform-scan-${{ github.event_name == 'schedule' && 'scheduled' || github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  hello-world:
+    name: Hello World
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hello world action step
+        uses: actions/hello-world-javascript-action@v1
