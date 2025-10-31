@@ -1409,10 +1409,10 @@
     react-final-form-arrays "^3.1.4"
     utility-types "^3.10.0"
 
-"@folio/checkin@11.0.2":
-  version "11.0.2"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/checkin/-/checkin-11.0.2.tgz#5ec958005e043e75f57166c4012f1d14137fa5bf"
-  integrity sha512-aY1uIjBLJhn8i/avaSwTrxrV5kvw+jRAwdUTxgB3TZD3tsy3bq/nSoaJpkWn4fhI1XnUk/DX3rVAzqe6Em2gFQ==
+"@folio/checkin@11.0.3":
+  version "11.0.3"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/checkin/-/checkin-11.0.3.tgz#70de99133e302165ca0cb3a64e8d717235342c53"
+  integrity sha512-BnMwuTXVwfqm+7U0zFTEPyrHwHt4QnMMoGkh4COrqiVgGMf0xzk4dvm0Ca3a7ZnRTmL+R5DYO6LqULNPk5QQ3w==
   dependencies:
     dateformat "^2.0.0"
     dompurify "^3.0.9"
@@ -1427,10 +1427,10 @@
     react-to-print "^2.3.2"
     uuid "^9.0.0"
 
-"@folio/checkout@12.0.1":
-  version "12.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/checkout/-/checkout-12.0.1.tgz#f78406ff8f48f5e1c32c36aec9cd0dcf9829f396"
-  integrity sha512-irhy9dRTWBk9/ghbmFUrWYc2c5aggiadoCSQYwGgjh3zxCavI2XvvREoSuu+ezYRob8AoiqgZ5gksLiYXJYFrw==
+"@folio/checkout@12.0.2":
+  version "12.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/checkout/-/checkout-12.0.2.tgz#8b5b41f89c8d8399748780e63a6ffb499f5b5f77"
+  integrity sha512-io1ajdb1WqCNqVEzw8VgwtsFwXbNbv9K45F9Hm5ZwBIidSFKf/spaG3rjIeRP3l46LBlq/xFNG8BIOnMXuQOPA==
   dependencies:
     final-form "^4.19.1"
     inactivity-timer "^1.0.0"
@@ -2292,10 +2292,10 @@
     react-final-form "^6.5.2"
     react-router-prop-types "^1.0.4"
 
-"@folio/requests@12.0.3":
-  version "12.0.3"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/requests/-/requests-12.0.3.tgz#54427fe2c9562c0fddd8958f89338c80e6bf8227"
-  integrity sha512-LigluU1FNfb/lHNLkE6jHl9n0lFPzE911yyYT53o0NqLWcWWgQ81fJ+f11vXaGLm7YU0WTgCQW5xSXbku3fqCg==
+"@folio/requests@12.0.4":
+  version "12.0.4"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/requests/-/requests-12.0.4.tgz#57d8319e985ea1c63506f0dda325bdaaef19709e"
+  integrity sha512-7Rh9HzjPWXroxe2xrqJ3BFWPfQVEG91lW8PSwWeMh1ZZmZTWqw9zkC8WtjcPRJFkMKGMST0odQIppUfR9lrbaA==
   dependencies:
     dompurify "^3.0.9"
     final-form "^4.20.7"
