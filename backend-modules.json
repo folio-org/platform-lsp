@@ -3,19 +3,19 @@
     "id": "mod-okapi-facade-3.0.0"
   },
   {
-    "id": "mod-consortia-keycloak-1.7.1"
+    "id": "mod-consortia-keycloak-1.7.2"
   },
   {
-    "id": "mod-login-keycloak-3.0.1"
+    "id": "mod-login-keycloak-3.0.3"
   },
   {
-    "id": "mod-roles-keycloak-3.0.7"
+    "id": "mod-roles-keycloak-3.0.9"
   },
   {
     "id": "mod-scheduler-3.0.4"
   },
   {
-    "id": "mod-users-keycloak-3.0.7"
+    "id": "mod-users-keycloak-3.0.8"
   },
   {
     "id": "edge-inventory-2.2.0"
