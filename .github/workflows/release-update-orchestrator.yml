@@ -285,73 +285,57 @@ jobs:
       pr_created_count: ${{ steps.gather-results.outputs.pr_created_count }}
       updated_applications: ${{ steps.gather-results.outputs.updated_applications }}
     steps:
+      - name: Download Application Results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "result-*"
+          path: /tmp/all-results
+          merge-multiple: true
+
       - name: Gather Application Results
         id: gather-results
-        env:
-          MATRIX_OUTPUTS: ${{ toJSON(needs.update-applications.outputs) }}
-          MATRIX_INCLUDES: ${{ needs.build-matrix.outputs.matrix_includes }}
         run: |
           set -eo pipefail
 
-          echo "::notice::Analyzing application results from matrix outputs"
+          shopt -s nullglob
+          result_files=(/tmp/all-results/*.json)
 
-          # Initialize counters
-          success_count=0
-          failure_count=0
-          updated_count=0
-          pr_created_count=0
-          failed_apps=""
-          failed_apps_reason=""
-          updated_applications=""
+          if [[ ${#result_files[@]} -eq 0 ]]; then
+            echo "::warning::No result artifacts found"
+            {
+              echo "failed_apps="
+              echo "failed_apps_reason="
+              echo "success_count=0"
+              echo "failure_count=0"
+              echo "updated_count=0"
+              echo "pr_created_count=0"
+              echo "updated_applications="
+            } >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
 
-          # Process matrix includes to get all app+branch combinations
-          echo "$MATRIX_INCLUDES" | jq -c '.[]' | while IFS= read -r entry; do
-            app=$(echo "$entry" | jq -r '.application')
-            branch=$(echo "$entry" | jq -r '.release_branch')
+          all_results=$(jq -s '.' "${result_files[@]}")
 
-            # Create unique key for this combination
-            key="${app}_${branch}"
+          success_count=$(jq '[.[] | select(.status=="success")] | length' <<<"$all_results")
+          failure_count=$(jq '[.[] | select(.status!="success")] | length' <<<"$all_results")
+          updated_count=$(jq '[.[] | select(.updated==true)] | length' <<<"$all_results")
+          pr_created_count=$(jq '[.[] | select(.pr_created==true)] | length' <<<"$all_results")
 
-            # Extract outputs for this specific matrix entry
-            workflow_status=$(echo "$MATRIX_OUTPUTS" | jq -r --arg key "$key" '.[$key].workflow_status // "unknown"')
-            updated=$(echo "$MATRIX_OUTPUTS" | jq -r --arg key "$key" '.[$key].updated // "false"')
-            pr_created=$(echo "$MATRIX_OUTPUTS" | jq -r --arg key "$key" '.[$key].pr_created // "false"')
-            pr_url=$(echo "$MATRIX_OUTPUTS" | jq -r --arg key "$key" '.[$key].pr_url // ""')
-            pr_number=$(echo "$MATRIX_OUTPUTS" | jq -r --arg key "$key" '.[$key].pr_number // ""')
-            new_version=$(echo "$MATRIX_OUTPUTS" | jq -r --arg key "$key" '.[$key].new_version // ""')
-            updates_cnt=$(echo "$MATRIX_OUTPUTS" | jq -r --arg key "$key" '.[$key].updates_cnt // "0"')
-            failure_reason=$(echo "$MATRIX_OUTPUTS" | jq -r --arg key "$key" '.[$key].failure_reason // ""')
+          failed_apps=$(jq -r '
+            [.[] | select(.status!="success") | "\(.application)/\(.release_branch)"] | join(", ")
+          ' <<<"$all_results")
 
-            if [[ "$workflow_status" == "success" ]]; then
-              ((success_count++))
+          failed_apps_reason=$(jq -r '
+            [.[] | select(.status!="success") | "\(.application)/\(.release_branch): \((.failure_reason | length > 0) and .failure_reason or "unknown")"]
+            | join("\n")
+          ' <<<"$all_results")
 
-              if [[ "$updated" == "true" ]]; then
-                ((updated_count++))
-
-                # Build updated applications list with PR links
-                if [[ -n "$pr_url" ]]; then
-                  if [[ -n "$updated_applications" ]]; then
-                    updated_applications="${updated_applications}\n"
-                  fi
-                  updated_applications="${updated_applications}<${pr_url}|${app}/${branch} (${updates_cnt})>"
-                fi
-
-                if [[ "$pr_created" == "true" ]]; then
-                  ((pr_created_count++))
-                fi
-              fi
-            else
-              ((failure_count++))
-
-              # Add to failed apps list
-              if [[ -n "$failed_apps" ]]; then
-                failed_apps="${failed_apps}, "
-                failed_apps_reason="${failed_apps_reason}\n"
-              fi
-              failed_apps="${failed_apps}${app}/${branch}"
-              failed_apps_reason="${failed_apps_reason}${app}/${branch}: ${failure_reason:-unknown}"
-            fi
-          done
+          updated_applications=$(jq -r '
+            [.[] | select(.updated==true and (.pr_url | length > 0))
+              | "<\(.pr_url)|\(.application)/\(.release_branch) (\(.updates_cnt))>"
+            ]
+            | join("\n")
+          ' <<<"$all_results")
 
           echo "::notice::Results Summary - Success: $success_count, Failures: $failure_count, Updated: $updated_count, PRs Created: $pr_created_count"
 
