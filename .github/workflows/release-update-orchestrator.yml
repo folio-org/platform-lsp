@@ -122,11 +122,11 @@ jobs:
       max-parallel: 10
     outputs:
       enabled: ${{ steps.get-config.outputs.enabled }}
-      release_branches: ${{ steps.get-config.outputs.release_branches }}
+      branches: ${{ steps.get-config.outputs.branches }}
       branch_count: ${{ steps.get-config.outputs.branch_count }}
       pr_reviewers: ${{ steps.get-config.outputs.pr_reviewers }}
       pr_labels: ${{ steps.get-config.outputs.pr_labels }}
-      update_branches_map: ${{ steps.get-config.outputs.update_branches_map }}
+      branch_config: ${{ steps.get-config.outputs.branch_config }}
     steps:
       - name: Get Update Configuration
         id: get-config
@@ -141,15 +141,17 @@ jobs:
         env:
           APP_NAME: ${{ matrix.application }}
           ENABLED: ${{ steps.get-config.outputs.enabled }}
-          BRANCHES: ${{ steps.get-config.outputs.release_branches }}
+          BRANCHES: ${{ steps.get-config.outputs.branches }}
           BRANCH_COUNT: ${{ steps.get-config.outputs.branch_count }}
           PR_REVIEWERS: ${{ steps.get-config.outputs.pr_reviewers }}
           PR_LABELS: ${{ steps.get-config.outputs.pr_labels }}
-          UPDATE_MAP: ${{ steps.get-config.outputs.update_branches_map }}
+          BRANCH_CONFIG: ${{ steps.get-config.outputs.branch_config }}
         run: |
           set -eo pipefail
 
           mkdir -p /tmp/configs
+
+          [[ -z "$BRANCH_CONFIG" ]] && BRANCH_CONFIG="[]"
 
           jq -n \
             --arg app "$APP_NAME" \
@@ -158,15 +160,15 @@ jobs:
             --arg branch_count "$BRANCH_COUNT" \
             --arg pr_reviewers "$PR_REVIEWERS" \
             --arg pr_labels "$PR_LABELS" \
-            --argjson update_map "$UPDATE_MAP" \
+            --argjson branch_configs "$BRANCH_CONFIG" \
             '{
               application: $app,
               enabled: $enabled,
               release_branches: $branches,
-              branch_count: ($branch_count | tonumber),
+              branch_configs: $branch_configs,
+              branch_count: ($branch_configs | length),
               pr_reviewers: $pr_reviewers,
-              pr_labels: $pr_labels,
-              update_branches_map: $update_map
+              pr_labels: $pr_labels
             }' > "/tmp/configs/$APP_NAME.json"
 
           echo "::notice::Configuration for $APP_NAME:"
@@ -215,20 +217,23 @@ jobs:
           matrix_includes=$(echo "$all_configs" | jq -c '
             [
               .[]
-              | select(.enabled == true and .branch_count > 0)
-              | .update_branches_map as $update_map
+              | select(.enabled == true)
+              | . as $appConfig
               | .pr_reviewers as $reviewers
               | .pr_labels as $labels
-              | .release_branches[]
-              | {
-                  application: .application,
-                  release_branch: .,
-                  update_branch: ($update_map[.] // ""),
+              | (.branch_configs // [])
+              | map({
+                  application: $appConfig.application,
+                  release_branch: (.branch // ""),
+                  update_branch: (.update_branch // ""),
+                  need_pr: (.need_pr // false),
+                  pre_release: (.pre_release // ""),
                   pr_reviewers: $reviewers,
                   pr_labels: $labels
-                }
+                })
             ]
-          ' <<< "$all_configs")
+            | add // []
+          ')
 
           matrix_count=$(echo "$matrix_includes" | jq 'length')
 
