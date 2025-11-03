@@ -1,0 +1,54 @@
+name: Validate and Approve Run
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Environment to require manual approval for'
+        required: true
+        type: string
+      team:
+        description: 'GitHub team to validate membership'
+        required: true
+        type: string
+      organization:
+        description: 'Organization name'
+        required: true
+        type: string
+    outputs:
+      authorized:
+        description: 'Whether the actor is authorized'
+        value: ${{ jobs.validate-actor.outputs.authorized }}
+
+jobs:
+  validate-actor:
+    runs-on: ubuntu-latest
+    outputs:
+      authorized: ${{ steps.validate.outputs.authorized }}
+    steps:
+      - name: Generate App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.EUREKA_CI_APP_ID }}
+          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+
+      - name: Validate Actor
+        id: validate
+        uses: folio-org/kitfox-github/.github/actions/validate-team-membership@master
+        with:
+          username: ${{ github.actor }}
+          organization: ${{ inputs.organization }}
+          team: ${{ inputs.team }}
+          token: ${{ steps.app-token.outputs.token }}
+
+  approve-run:
+    needs: validate-actor
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    if: needs.validate-actor.outputs.authorized == 'false'
+    steps:
+      - name: Wait for manual approval
+        run: |
+          echo "::notice::This run was approved by $(gh api /repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/approvals \
+            --jq '.[] | select(.environments[]?.name == "${{ inputs.environment }}") | .user.login')"
