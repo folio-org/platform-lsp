@@ -1,4 +1,4 @@
-name: Validate and Approve Run
+name: Approve Run
 
 on:
   workflow_call:
