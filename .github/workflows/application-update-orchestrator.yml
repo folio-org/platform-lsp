@@ -26,7 +26,7 @@ permissions:
 
 jobs:
   validate-and-approve:
-    uses: ./.github/workflows/validate-and-approve.yml
+    uses: ./.github/workflows/approve-run.yml
     with:
       environment: 'Eureka CI'
       organization: 'folio-org'
