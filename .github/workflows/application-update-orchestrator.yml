@@ -268,7 +268,7 @@ jobs:
         include: ${{ fromJson(needs.build-matrix.outputs.matrix_includes) }}
       fail-fast: false
       max-parallel: 10
-    uses: folio-org/kitfox-github/.github/workflows/application-update.yml@master
+    uses: folio-org/kitfox-github/.github/workflows/application-update-flow.yml@master
     with:
       app_name: ${{ matrix.application }}
       repo: folio-org/${{ matrix.application }}
@@ -280,6 +280,7 @@ jobs:
       descriptor_build_offset: ${{ matrix.descriptor_build_offset }}
       rely_on_FAR: ${{ matrix.rely_on_FAR }}
       dry_run: ${{ inputs.dry_run }}
+      use_github_app: true
       pr_reviewers: ${{ matrix.pr_reviewers }}
       pr_labels: ${{ matrix.pr_labels }}
     secrets: inherit
