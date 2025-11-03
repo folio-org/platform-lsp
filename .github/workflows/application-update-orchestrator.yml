@@ -1,0 +1,113 @@
+name: Application Update Orchestrator
+
+run-name: Platform applications update on ${{ inputs.platform_branch }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform_branch:
+        description: 'Platform branch to get application list from (e.g., snapshot, R1-2025)'
+        required: true
+        type: string
+      dry_run:
+        description: 'Perform dry run without making changes'
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: app-update-orchestrator-${{ inputs.platform_branch }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  validate-actor:
+    name: Validate Actor
+    runs-on: ubuntu-latest
+    outputs:
+      authorized: ${{ steps.validate-actor.outputs.authorized }}
+    steps:
+      - name: Generate App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.EUREKA_CI_APP_ID }}
+          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+
+      - name: Validate Actor
+        id: validate-actor
+        uses: folio-org/kitfox-github/.github/actions/validate-team-membership@master
+        with:
+          username: ${{ github.actor }}
+          organization: 'folio-org'
+          team: 'kitfox'
+          token: ${{ steps.app-token.outputs.token }}
+
+  approve-run:
+    name: Approve Run
+    needs: validate-actor
+    runs-on: ubuntu-latest
+    environment: Eureka CI
+    if: needs.validate-actor.outputs.authorized == 'false'
+    steps:
+      - name: Run approvement
+        run: |
+          echo "::notice::This run was approved by $(
+            gh api \
+              /repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/approvals \
+              --jq \
+                '.[]
+                | select(.environments[]?.name == "Eureka CI")
+                | .user.login')"
+
+  get-applications:
+    name: Extract Application List
+    runs-on: ubuntu-latest
+    needs: [validate-actor, approve-run]
+    if: always() && (needs.validate-actor.outputs.authorized == 'true' || needs.approve-run.result == 'success')
+    outputs:
+      applications: ${{ steps.extract-applications.outputs.applications }}
+      application_count: ${{ steps.extract-applications.outputs.application_count }}
+    steps:
+      - name: Checkout Platform Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.platform_branch }}
+          fetch-depth: 0
+
+      - name: Extract Applications from Platform Descriptor
+        id: extract-applications
+        env:
+          FILE: "platform-descriptor.json"
+          PLATFORM_BRANCH: ${{ inputs.platform_branch }}
+        run: |
+          set -eo pipefail
+
+          if [ ! -f "$FILE" ]; then
+            echo "::error::$FILE not found in the $PLATFORM_BRANCH branch"
+            exit 1
+          fi
+
+          existing_apps=$(jq -c '
+            [.applications.required[]?, .applications.optional[]?]
+            | map(select(.name | startswith("app-"))
+            | .name)
+            | sort
+            | unique
+          ' "$FILE")
+
+          existing_count=$(jq -r 'length' <<<"$existing_apps")
+          if ! [[ "$existing_count" -gt 0 ]]; then
+            echo "::error::Could not find any applications in $FILE, or the file is malformed."
+            exit 1
+          fi
+
+          echo "::notice::Platform descriptor verified. Found $existing_count application(s) in $PLATFORM_BRANCH"
+          jq -r '.[]' <<<"$existing_apps" | sed 's/^/  - /'
+
+          echo "applications=$existing_apps" >> "$GITHUB_OUTPUT"
+          echo "application_count=$existing_count" >> "$GITHUB_OUTPUT"
