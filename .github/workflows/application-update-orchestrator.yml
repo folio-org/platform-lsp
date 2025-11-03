@@ -26,7 +26,7 @@ permissions:
 
 jobs:
   validate-and-approve:
-    uses: folio-org/kitfox-github/.github/workflows/validate-and-approve.yml@master
+    uses: ./.github/workflows/validate-and-approve.yml@master
     with:
       environment: 'Eureka CI'
       organization: 'folio-org'
