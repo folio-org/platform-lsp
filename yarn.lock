@@ -1444,10 +1444,10 @@
     "@folio/plugin-create-inventory-records" "^6.0.0"
     "@folio/plugin-find-user" "^8.0.0"
 
-"@folio/circulation-log@6.0.1":
-  version "6.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/circulation-log/-/circulation-log-6.0.1.tgz#35e6167b7ed7e0c9d027e66eea9a902a5f26f7ff"
-  integrity sha512-YLfmN6a1wLckKCp9IBxOudxRPh/JTfBnjuslaAGYK78P/h3KYstgsxCr2rMjw+csbBX2Npcl5pftjl2WY70VlQ==
+"@folio/circulation-log@6.0.2":
+  version "6.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/circulation-log/-/circulation-log-6.0.2.tgz#d7d94511951830ca401e1763d16190bb12075297"
+  integrity sha512-uXvpO2gYqEZXYrVE3lO/hNsXt3IbL3MHG7auioWnCW7pPX+p/A2/pvgvkt/PPXzNmTkToxM92RgtKVjK5eGI1A==
   dependencies:
     "@folio/stripes-acq-components" "~7.0.0"
     dayjs "^1.11.9"
