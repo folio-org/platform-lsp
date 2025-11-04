@@ -286,7 +286,7 @@ jobs:
           echo "| Repository | Status | Details |" >> $GITHUB_STEP_SUMMARY
           echo "|------------|--------|---------|" >> $GITHUB_STEP_SUMMARY
 
-          find /tmp/results -name "*_result.json" -type f | sort | while read -r result_file; do
+          while read -r result_file; do
             if [ -f "$result_file" ]; then
               repo=$(jq -r '.repo' "$result_file")
               status=$(jq -r '.status' "$result_file")
@@ -295,30 +295,30 @@ jobs:
               case "$status" in
                 success)
                   icon="✅"
-                  ((success_count++)) || true
+                  ((++success_count))
                   ;;
                 not_found)
                   icon="⚠️"
-                  ((not_found_count++)) || true
+                  ((++not_found_count))
                   ;;
                 already_set)
                   icon="ℹ️"
-                  ((already_set_count++)) || true
+                  ((++already_set_count))
                   ;;
                 error)
                   icon="❌"
-                  ((error_count++)) || true
+                  ((++error_count))
                   ;;
                 *)
                   icon="❓"
                   ;;
               esac
 
-              ((total_count++)) || true
+              ((++total_count))
 
               echo "| \`$repo\` | $icon $status | $message |" >> $GITHUB_STEP_SUMMARY
             fi
-          done
+          done < <(find /tmp/results -name "*_result.json" -type f | sort)
 
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Statistics" >> $GITHUB_STEP_SUMMARY
