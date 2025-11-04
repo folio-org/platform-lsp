@@ -4,6 +4,38 @@ run-name: Toggle ${{ inputs.workflow_name }} to ${{ inputs.action }} (${{ inputs
 
 on:
   workflow_dispatch:
+    inputs:
+      source_type:
+        description: 'Source of application list'
+        required: true
+        type: choice
+        options:
+          - platform-descriptor
+          - explicit-list
+      platform_branch:
+        description: 'Platform branch (required if source_type=platform-descriptor, e.g., snapshot, R1-2025)'
+        required: false
+        type: string
+      app_list:
+        description: 'App repos comma-separated (required if source_type=explicit-list, e.g., app-acquisitions,app-bulk-edit)'
+        required: false
+        type: string
+      workflow_name:
+        description: 'Workflow filename to toggle (e.g., update-scheduler.yml)'
+        required: true
+        type: string
+      action:
+        description: 'Action to perform on the workflow'
+        required: true
+        type: choice
+        options:
+          - enable
+          - disable
+      dry_run:
+        description: 'Preview changes without applying them'
+        required: false
+        type: boolean
+        default: false
 
 concurrency:
   group: toggle-app-workflow-${{ github.run_id }}
@@ -19,5 +51,289 @@ jobs:
     with:
       environment: 'Eureka CI'
       organization: 'folio-org'
-      team: 'fitfox'
+      team: 'kitfox'
     secrets: inherit
+
+  get-applications:
+    name: Get Application List
+    runs-on: ubuntu-latest
+    needs: validate-and-approve
+    outputs:
+      applications: ${{ steps.build-list.outputs.applications }}
+      application_count: ${{ steps.build-list.outputs.application_count }}
+    steps:
+      - name: Validate Inputs
+        env:
+          SOURCE_TYPE: ${{ inputs.source_type }}
+          PLATFORM_BRANCH: ${{ inputs.platform_branch }}
+          APP_LIST: ${{ inputs.app_list }}
+        run: |
+          set -eo pipefail
+
+          if [ "$SOURCE_TYPE" = "platform-descriptor" ] && [ -z "$PLATFORM_BRANCH" ]; then
+            echo "::error::platform_branch is required when source_type is 'platform-descriptor'"
+            exit 1
+          fi
+
+          if [ "$SOURCE_TYPE" = "explicit-list" ] && [ -z "$APP_LIST" ]; then
+            echo "::error::app_list is required when source_type is 'explicit-list'"
+            exit 1
+          fi
+
+          echo "::notice::Input validation passed"
+
+      - name: Fetch Platform Descriptor
+        id: fetch-descriptor
+        if: inputs.source_type == 'platform-descriptor'
+        uses: folio-org/kitfox-github/.github/actions/fetch-platform-descriptor@master
+        with:
+          branch: ${{ inputs.platform_branch }}
+
+      - name: Build Application List
+        id: build-list
+        env:
+          SOURCE_TYPE: ${{ inputs.source_type }}
+          DESCRIPTOR_PATH: ${{ steps.fetch-descriptor.outputs.descriptor_path }}
+          PLATFORM_BRANCH: ${{ inputs.platform_branch }}
+          APP_LIST: ${{ inputs.app_list }}
+        run: |
+          set -eo pipefail
+
+          if [ "$SOURCE_TYPE" = "platform-descriptor" ]; then
+            echo "::notice::Extracting applications from platform descriptor (branch: $PLATFORM_BRANCH)"
+
+            if [ ! -f "$DESCRIPTOR_PATH" ]; then
+              echo "::error::Platform descriptor not found at $DESCRIPTOR_PATH"
+              exit 1
+            fi
+
+            apps=$(jq -c '
+              [.applications.required[]?, .applications.optional[]?]
+              | map(select(.name | startswith("app-")))
+              | map(.name)
+              | sort
+              | unique
+            ' "$DESCRIPTOR_PATH")
+
+            app_count=$(jq -r 'length' <<<"$apps")
+
+            if ! [[ "$app_count" -gt 0 ]]; then
+              echo "::error::Could not find any applications in platform descriptor"
+              exit 1
+            fi
+
+            echo "::notice::Found $app_count application(s) from platform descriptor:"
+            jq -r '.[]' <<<"$apps" | sed 's/^/  - /'
+
+          else
+            echo "::notice::Using explicit repository list"
+
+            IFS=',' read -ra REPO_ARRAY <<< "$APP_LIST"
+            apps=$(printf '%s\n' "${REPO_ARRAY[@]}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | jq -R . | jq -s -c 'sort | unique')
+
+            app_count=$(jq -r 'length' <<<"$apps")
+
+            if ! [[ "$app_count" -gt 0 ]]; then
+              echo "::error::No valid repositories provided in app_list"
+              exit 1
+            fi
+
+            echo "::notice::Processing $app_count repository/repositories:"
+            jq -r '.[]' <<<"$apps" | sed 's/^/  - /'
+          fi
+
+          echo "applications=$apps" >> "$GITHUB_OUTPUT"
+          echo "application_count=$app_count" >> "$GITHUB_OUTPUT"
+
+  toggle-workflows:
+    name: ${{ inputs.action }} ${{ inputs.workflow_name }} in ${{ matrix.app }}
+    needs: get-applications
+    if: needs.get-applications.outputs.application_count > 0
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app: ${{ fromJson(needs.get-applications.outputs.applications) }}
+      fail-fast: false
+      max-parallel: 5
+    steps:
+      - name: Generate App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.EUREKA_CI_APP_ID }}
+          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+          owner: folio-org
+          repositories: ${{ matrix.app }}
+
+      - name: Toggle Workflow
+        id: toggle
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          APP_REPO: ${{ matrix.app }}
+          WORKFLOW_NAME: ${{ inputs.workflow_name }}
+          ACTION: ${{ inputs.action }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set +e
+
+          FULL_REPO="folio-org/$APP_REPO"
+
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "::notice::[DRY RUN] Would $ACTION workflow '$WORKFLOW_NAME' in $FULL_REPO"
+
+            if gh workflow view "$WORKFLOW_NAME" -R "$FULL_REPO" &>/dev/null; then
+              STATUS="success"
+              MESSAGE="[DRY RUN] Workflow exists and would be toggled"
+              echo "::notice::$MESSAGE"
+            else
+              STATUS="not_found"
+              MESSAGE="[DRY RUN] Workflow '$WORKFLOW_NAME' not found"
+              echo "::warning::$MESSAGE"
+            fi
+          else
+            output=$(gh workflow "$ACTION" "$WORKFLOW_NAME" -R "$FULL_REPO" 2>&1)
+            exit_code=$?
+
+            if [ $exit_code -eq 0 ]; then
+              STATUS="success"
+              MESSAGE="Successfully ${ACTION}d workflow '$WORKFLOW_NAME'"
+              echo "::notice::$MESSAGE"
+            else
+              if echo "$output" | grep -qi "could not find"; then
+                STATUS="not_found"
+                MESSAGE="Workflow '$WORKFLOW_NAME' not found"
+                echo "::warning::$MESSAGE"
+              elif echo "$output" | grep -qi "already"; then
+                STATUS="already_set"
+                MESSAGE="Workflow '$WORKFLOW_NAME' already ${ACTION}d"
+                echo "::notice::$MESSAGE"
+              else
+                STATUS="error"
+                MESSAGE="Failed to $ACTION workflow: $output"
+                echo "::error::$MESSAGE"
+                echo "status=$STATUS" >> "$GITHUB_OUTPUT"
+                echo "message=$MESSAGE" >> "$GITHUB_OUTPUT"
+                exit 1
+              fi
+            fi
+          fi
+
+          echo "status=$STATUS" >> "$GITHUB_OUTPUT"
+          echo "message=$MESSAGE" >> "$GITHUB_OUTPUT"
+
+      - name: Save Result
+        if: always()
+        env:
+          APP_REPO: ${{ matrix.app }}
+          STATUS: ${{ steps.toggle.outputs.status }}
+          MESSAGE: ${{ steps.toggle.outputs.message }}
+        run: |
+          RESULT_FILE="/tmp/${APP_REPO//\//_}_result.json"
+
+          jq -n \
+            --arg repo "$APP_REPO" \
+            --arg status "$STATUS" \
+            --arg message "$MESSAGE" \
+            '{repo: $repo, status: $status, message: $message}' > "$RESULT_FILE"
+
+      - name: Upload Result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: result-${{ matrix.app }}
+          path: /tmp/${{ matrix.app }}_result.json
+          retention-days: 1
+
+  summary:
+    name: Generate Summary
+    needs: [get-applications, toggle-workflows]
+    if: always() && needs.get-applications.outputs.application_count > 0
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download All Results
+        uses: actions/download-artifact@v4
+        with:
+          path: /tmp/results
+          pattern: result-*
+
+      - name: Generate Summary Report
+        env:
+          WORKFLOW_NAME: ${{ inputs.workflow_name }}
+          ACTION: ${{ inputs.action }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          SOURCE_TYPE: ${{ inputs.source_type }}
+          PLATFORM_BRANCH: ${{ inputs.platform_branch }}
+          APP_LIST: ${{ inputs.app_list }}
+        run: |
+          echo "## Workflow Toggle Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "> **DRY RUN MODE** - No changes were applied" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "**Workflow:** \`$WORKFLOW_NAME\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Action:** \`$ACTION\`" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$SOURCE_TYPE" = "platform-descriptor" ]; then
+            echo "**Source:** Platform Descriptor (\`$PLATFORM_BRANCH\`)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**Source:** Explicit List" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          success_count=0
+          not_found_count=0
+          already_set_count=0
+          error_count=0
+          total_count=0
+
+          echo "### Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Repository | Status | Details |" >> $GITHUB_STEP_SUMMARY
+          echo "|------------|--------|---------|" >> $GITHUB_STEP_SUMMARY
+
+          while read -r result_file; do
+            if [ -f "$result_file" ]; then
+              repo=$(jq -r '.repo' "$result_file")
+              status=$(jq -r '.status' "$result_file")
+              message=$(jq -r '.message' "$result_file")
+
+              case "$status" in
+                success)
+                  icon="✅"
+                  ((++success_count))
+                  ;;
+                not_found)
+                  icon="⚠️"
+                  ((++not_found_count))
+                  ;;
+                already_set)
+                  icon="ℹ️"
+                  ((++already_set_count))
+                  ;;
+                error)
+                  icon="❌"
+                  ((++error_count))
+                  ;;
+                *)
+                  icon="❓"
+                  ;;
+              esac
+
+              ((++total_count))
+
+              echo "| \`$repo\` | $icon $status | $message |" >> $GITHUB_STEP_SUMMARY
+            fi
+          done < <(find /tmp/results -name "*_result.json" -type f | sort)
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Statistics" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Total Processed:** $total_count" >> $GITHUB_STEP_SUMMARY
+          echo "- **Successful:** $success_count" >> $GITHUB_STEP_SUMMARY
+          echo "- **Already Set:** $already_set_count" >> $GITHUB_STEP_SUMMARY
+          echo "- **Not Found:** $not_found_count" >> $GITHUB_STEP_SUMMARY
+          echo "- **Errors:** $error_count" >> $GITHUB_STEP_SUMMARY
