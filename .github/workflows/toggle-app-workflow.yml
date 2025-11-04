@@ -173,7 +173,7 @@ jobs:
           if [ "$DRY_RUN" = "true" ]; then
             echo "::notice::[DRY RUN] Would $ACTION workflow '$WORKFLOW_NAME' in $FULL_REPO"
 
-            if gh workflow list -R "$FULL_REPO" 2>&1 | grep -q "$WORKFLOW_NAME"; then
+            if gh workflow view "$WORKFLOW_NAME" -R "$FULL_REPO" &>/dev/null; then
               STATUS="success"
               MESSAGE="[DRY RUN] Workflow exists and would be toggled"
               echo "::notice::$MESSAGE"
