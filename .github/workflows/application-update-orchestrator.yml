@@ -199,7 +199,7 @@ jobs:
                   update_branch: (.update_branch // ""),
                   need_pr: (.need_pr // false),
                   pre_release: (.pre_release // "false"),
-                  descriptor_build_offset: (.descriptor_build_offset // "100100000000000"),
+                  descriptor_build_offset: (.descriptor_build_offset // ""),
                   rely_on_FAR: (.rely_on_FAR // false),
                   pr_reviewers: $reviewers,
                   pr_labels: $labels
