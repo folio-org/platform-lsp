@@ -156,10 +156,19 @@ jobs:
       fail-fast: false
       max-parallel: 5
     steps:
+      - name: Generate App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.EUREKA_CI_APP_ID }}
+          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+          owner: folio-org
+          repositories: ${{ matrix.app }}
+
       - name: Toggle Workflow
         id: toggle
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
           APP_REPO: ${{ matrix.app }}
           WORKFLOW_NAME: ${{ inputs.workflow_name }}
           ACTION: ${{ inputs.action }}
