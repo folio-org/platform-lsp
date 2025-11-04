@@ -106,35 +106,37 @@ The Release Flow produces final consumable artifacts for FOLIO releases by:
 
 **Process Components**:
 
-##### Scan Flow
-- **Automated Detection**: Continuous monitoring for new module releases
-- **Version Analysis**: Compatibility checking with available module versions
-- **Pull Request Generation**: Automated PR creation for application updates
+##### Configuration-Driven Updates
+- **Update Configuration**: Each application's `update-config.yml` defines release branch update behavior
+- **Orchestrated Scanning**: Platform orchestrator triggers updates based on configuration
+- **PR-Based Workflow**: Release branches use pull request workflow for review
+- **Version Filtering**: Release-only module versions (`pre_release: 'false'`)
 
 ##### Pull Request Update Flow
-**Trigger**: PR updates in application repositories
+**Trigger**: Application update orchestrator or scheduled execution
 
 **Process**:
-1. **Platform Descriptor Retrieval**: Fetch current platform state
-2. **Application Configuration Update**: Update application descriptor with new module versions
+1. **Module Version Discovery**: Query FOLIO registry for release-only module versions
+2. **Application Descriptor Update**: Update with new stable module versions
 3. **Validation Pipeline**:
-   - **Descriptor Syntax Check**: JSON structure validation
-   - **Module Compatibility**: Dependency resolution verification
-   - **Build Testing**: Application composition validation
-4. **Status Reporting**: 
-   - **Success**: Commit updated descriptor to PR branch
-   - **Failure**: Report errors and notify maintainers
-5. **Notification System**: Slack notifications for status updates
+   - **Descriptor Generation**: Maven-based descriptor creation
+   - **Interface Validation**: Module interface integrity checks via FAR
+   - **Dependency Validation**: Platform descriptor-based dependency verification
+4. **Pull Request Management**:
+   - **PR Creation/Update**: Automated PR creation or update with changes
+   - **Reviewer Assignment**: Configured team reviewers assigned
+   - **Label Application**: Automated labels for tracking
+5. **Status Reporting**: Comprehensive validation results and notifications
 
 ##### Pull Request Merge Flow
-**Trigger**: PR approval and merge
+**Trigger**: PR approval and merge to release branch
 
 **Process**:
-1. **Final Validation**: Last validation check before merge
-2. **Registry Publishing**: Application descriptor published to external registry
-3. **Version Tagging**: New version tag created for the release
-4. **Branch Cleanup**: Remove temporary references and clean up
-5. **Team Notification**: Final release notification to stakeholders
+1. **Final Validation**: Release PR check validates changes
+2. **Merge Completion**: Changes merged to release branch
+3. **Registry Publishing**: Application descriptor published to FAR
+4. **Version Management**: Application version incremented
+5. **Team Notification**: Release completion notifications
 
 ### 3. Platform Release Flow
 
@@ -274,6 +276,6 @@ platform-lsp-R2-2025.1.tar.gz
 
 ---
 
-**Status**: Production Active  
-**Maintained by**: Kitfox Team DevOps  
-**Last Updated**: August 2025
+**Status**: Production Active
+**Maintained by**: Kitfox Team DevOps
+**Last Updated**: November 2025

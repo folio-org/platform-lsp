@@ -25,18 +25,19 @@ permissions:
   issues: write
 
 jobs:
-  validate-and-approve:
+  approve-run:
+    name: Approve Run
     uses: ./.github/workflows/approve-run.yml
     with:
       environment: 'Eureka CI'
+      team: 'kitfox'
       organization: 'folio-org'
-      team: 'fitfox'
     secrets: inherit
 
   get-applications:
     name: Extract Application List
     runs-on: ubuntu-latest
-    needs: validate-and-approve
+    needs: [approve-run]
     outputs:
       applications: ${{ steps.extract-applications.outputs.applications }}
       application_count: ${{ steps.extract-applications.outputs.application_count }}
@@ -79,3 +80,530 @@ jobs:
 
           echo "applications=$existing_apps" >> "$GITHUB_OUTPUT"
           echo "application_count=$existing_count" >> "$GITHUB_OUTPUT"
+
+  get-app-configurations:
+    name: Get ${{ matrix.application }} Configuration
+    needs: get-applications
+    if: always() && needs.get-applications.result == 'success'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        application: ${{ fromJson(needs.get-applications.outputs.applications) }}
+      fail-fast: false
+      max-parallel: 10
+    outputs:
+      enabled: ${{ steps.get-config.outputs.enabled }}
+      branches: ${{ steps.get-config.outputs.branches }}
+      branch_count: ${{ steps.get-config.outputs.branch_count }}
+      pr_reviewers: ${{ steps.get-config.outputs.pr_reviewers }}
+      pr_labels: ${{ steps.get-config.outputs.pr_labels }}
+      branch_config: ${{ steps.get-config.outputs.branch_config }}
+    steps:
+      - name: Get Update Configuration
+        id: get-config
+        uses: folio-org/kitfox-github/.github/actions/get-update-config@master
+        with:
+          repo: folio-org/${{ matrix.application }}
+          github_token: ${{ github.token }}
+
+      - name: Prepare Configuration Artifact
+        id: prepare-artifact
+        if: always()
+        env:
+          APP_NAME: ${{ matrix.application }}
+          ENABLED: ${{ steps.get-config.outputs.enabled }}
+          BRANCHES: ${{ steps.get-config.outputs.branches }}
+          BRANCH_COUNT: ${{ steps.get-config.outputs.branch_count }}
+          PR_REVIEWERS: ${{ steps.get-config.outputs.pr_reviewers }}
+          PR_LABELS: ${{ steps.get-config.outputs.pr_labels }}
+          BRANCH_CONFIG: ${{ steps.get-config.outputs.branch_config }}
+        run: |
+          set -eo pipefail
+
+          mkdir -p /tmp/configs
+
+          [[ -z "$BRANCH_CONFIG" ]] && BRANCH_CONFIG="[]"
+
+          jq -n \
+            --arg app "$APP_NAME" \
+            --argjson enabled "$ENABLED" \
+            --argjson branches "$BRANCHES" \
+            --arg branch_count "$BRANCH_COUNT" \
+            --arg pr_reviewers "$PR_REVIEWERS" \
+            --arg pr_labels "$PR_LABELS" \
+            --argjson branch_configs "$BRANCH_CONFIG" \
+            '{
+              application: $app,
+              enabled: $enabled,
+              branches: $branches,
+              branch_configs: $branch_configs,
+              branch_count: ($branch_configs | length),
+              pr_reviewers: $pr_reviewers,
+              pr_labels: $pr_labels
+            }' > "/tmp/configs/$APP_NAME.json"
+
+          echo "::notice::Configuration for $APP_NAME:"
+          cat "/tmp/configs/$APP_NAME.json"
+
+      - name: Upload Configuration Artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: "config-${{ matrix.application }}"
+          path: "/tmp/configs/${{ matrix.application }}.json"
+          retention-days: 1
+
+  build-matrix:
+    name: Build Update Matrix
+    needs: [get-applications, get-app-configurations]
+    runs-on: ubuntu-latest
+    if: always() && needs.get-app-configurations.result != 'skipped'
+    outputs:
+      matrix_includes: ${{ steps.build-matrix.outputs.includes }}
+      matrix_count: ${{ steps.build-matrix.outputs.count }}
+      enabled_apps: ${{ steps.build-matrix.outputs.enabled_apps }}
+      disabled_apps: ${{ steps.build-matrix.outputs.disabled_apps }}
+    steps:
+      - name: Download All Configuration Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "config-*"
+          path: /tmp/all-configs
+          merge-multiple: true
+
+      - name: Build Matrix from Configurations
+        id: build-matrix
+        run: |
+          set -eo pipefail
+
+          echo "::notice::Building matrix from application configurations"
+
+          all_configs=$(jq -s '.' /tmp/all-configs/*.json)
+
+          echo "::group::All configurations"
+          echo "$all_configs" | jq .
+          echo "::endgroup::"
+
+          # Build matrix includes with app + branch combinations
+          matrix_includes=$(echo "$all_configs" | jq -c '
+            [
+              .[]
+              | select(.enabled == true)
+              | . as $appConfig
+              | .pr_reviewers as $reviewers
+              | .pr_labels as $labels
+              | (.branch_configs // [])
+              | map({
+                  application: $appConfig.application,
+                  branch: (.branch // ""),
+                  update_branch: (.update_branch // ""),
+                  need_pr: (.need_pr // false),
+                  pre_release: (.pre_release // "false"),
+                  descriptor_build_offset: (.descriptor_build_offset // "100100000000000"),
+                  rely_on_FAR: (.rely_on_FAR // false),
+                  pr_reviewers: $reviewers,
+                  pr_labels: $labels
+                })
+            ]
+            | add // []
+          ')
+
+          matrix_count=$(echo "$matrix_includes" | jq 'length')
+
+          enabled_apps=$(echo "$all_configs" | jq -r '[.[] | select(.enabled == true) | .application] | join(", ")')
+          disabled_apps=$(echo "$all_configs" | jq -r '[.[] | select(.enabled == false) | .application] | join(", ")')
+
+          echo "::notice::Matrix built with $matrix_count entries"
+          echo "::notice::Enabled applications: $enabled_apps"
+          if [[ -n "$disabled_apps" ]]; then
+            echo "::warning::Disabled applications: $disabled_apps"
+          fi
+
+          echo "::group::Matrix includes"
+          echo "$matrix_includes" | jq .
+          echo "::endgroup::"
+
+          echo "includes=$matrix_includes" >> "$GITHUB_OUTPUT"
+          echo "count=$matrix_count" >> "$GITHUB_OUTPUT"
+          echo "enabled_apps=$enabled_apps" >> "$GITHUB_OUTPUT"
+          echo "disabled_apps=$disabled_apps" >> "$GITHUB_OUTPUT"
+
+  update-applications:
+    name: Update ${{ matrix.application }} (${{ matrix.branch }})
+    needs: build-matrix
+    if: always() && needs.build-matrix.outputs.matrix_count > 0
+    strategy:
+      matrix:
+        include: ${{ fromJson(needs.build-matrix.outputs.matrix_includes) }}
+      fail-fast: false
+      max-parallel: 10
+    uses: folio-org/kitfox-github/.github/workflows/application-update-flow.yml@master
+    with:
+      app_name: ${{ matrix.application }}
+      repo: folio-org/${{ matrix.application }}
+      branch: ${{ matrix.branch }}
+      update_branch: ${{ matrix.update_branch }}
+      need_pr: ${{ matrix.need_pr }}
+      pre_release: ${{ matrix.pre_release }}
+      workflow_run_number: ${{ github.run_number }}
+      descriptor_build_offset: ${{ matrix.descriptor_build_offset }}
+      rely_on_FAR: ${{ matrix.rely_on_FAR }}
+      dry_run: ${{ inputs.dry_run }}
+      use_github_app: true
+      pr_reviewers: ${{ matrix.pr_reviewers }}
+      pr_labels: ${{ matrix.pr_labels }}
+    secrets: inherit
+
+  collect-results:
+    name: Collect Application Results
+    needs: [get-applications, update-applications]
+    runs-on: ubuntu-latest
+    if: always() && needs.update-applications.result != 'skipped' && !inputs.dry_run
+    outputs:
+      failed_apps: ${{ steps.gather-results.outputs.failed_apps }}
+      failed_apps_reason: ${{ steps.gather-results.outputs.failed_apps_reason }}
+      success_count: ${{ steps.gather-results.outputs.success_count }}
+      failure_count: ${{ steps.gather-results.outputs.failure_count }}
+      updated_count: ${{ steps.gather-results.outputs.updated_count }}
+      pr_created_count: ${{ steps.gather-results.outputs.pr_created_count }}
+      updated_applications: ${{ steps.gather-results.outputs.updated_applications }}
+    steps:
+      - name: Download Application Results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "result-*"
+          path: /tmp/all-results
+          merge-multiple: true
+
+      - name: Gather Application Results
+        id: gather-results
+        run: |
+          set -eo pipefail
+
+          shopt -s nullglob
+          result_files=(/tmp/all-results/*.json)
+
+          if [[ ${#result_files[@]} -eq 0 ]]; then
+            echo "::warning::No result artifacts found"
+            {
+              echo "failed_apps="
+              echo "failed_apps_reason="
+              echo "success_count=0"
+              echo "failure_count=0"
+              echo "updated_count=0"
+              echo "pr_created_count=0"
+              echo "updated_applications="
+            } >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          all_results=$(jq -s '.' "${result_files[@]}")
+
+          success_count=$(jq '[.[] | select(.workflow_status=="success")] | length' <<<"$all_results")
+          failure_count=$(jq '[.[] | select(.workflow_status!="success")] | length' <<<"$all_results")
+          updated_count=$(jq '[.[] | select(.updated==true)] | length' <<<"$all_results")
+          pr_created_count=$(jq '[.[] | select(.pr_created==true)] | length' <<<"$all_results")
+
+          failed_apps=$(jq -r '
+            [.[] | select(.workflow_status!="success") | "\(.application)/\(.base_branch)"] | join(", ")
+          ' <<<"$all_results")
+
+          failed_apps_reason=$(jq -r '
+            [.[] | select(.workflow_status!="success")
+              | "\(.application)/\(.base_branch): \((.failure_reason | length > 0) and .failure_reason or "unknown")"]
+            | join("\n")
+          ' <<<"$all_results")
+
+          updated_applications=$(jq -r '
+            [.[]
+              | select(.updated==true)
+              | if .pr_url and (.pr_url | length > 0) then
+                  "<\(.pr_url)|\(.application)/\(.base_branch) (\(.updated_cnt))>"
+                else
+                  "<\(env.GITHUB_SERVER_URL)/\(env.GITHUB_REPOSITORY_OWNER)/\(.application)/commit/\(.commit_sha)|\(.application)/\(.base_branch) (\(.updated_cnt))>"
+                end
+            ]
+            | join("\n")
+          ' <<<"$all_results")
+
+          echo "::notice::Results Summary - Success: $success_count, Failures: $failure_count, Updated: $updated_count, PRs Created: $pr_created_count"
+
+          echo "failed_apps=$failed_apps" >> "$GITHUB_OUTPUT"
+          echo "success_count=$success_count" >> "$GITHUB_OUTPUT"
+          echo "failure_count=$failure_count" >> "$GITHUB_OUTPUT"
+          echo "updated_count=$updated_count" >> "$GITHUB_OUTPUT"
+          echo "pr_created_count=$pr_created_count" >> "$GITHUB_OUTPUT"
+          {
+            echo "failed_apps_reason<<EOF"
+            printf '%s\n' "$failed_apps_reason"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          {
+            echo "updated_applications<<EOF"
+            printf '%s\n' "$updated_applications"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+  slack_notification:
+    name: Slack Notification
+    runs-on: ubuntu-latest
+    needs: [get-applications, update-applications, collect-results]
+    if: always() && !cancelled() && needs.collect-results.result == 'success' && !inputs.dry_run
+    outputs:
+      notification_outcome: ${{ steps.send-success.outcome || steps.send-failure.outcome }}
+    env:
+      IS_SUCCESS: ${{ needs.update-applications.result == 'success' && 'true' || 'false' }}
+    steps:
+      - name: Prepare Multiline Strings
+        id: prepare-multiline
+        env:
+          REASONS: "${{ needs.collect-results.outputs.failed_apps_reason }}"
+          UPDATED: "${{ needs.collect-results.outputs.updated_applications }}"
+        run: |
+          set -eo pipefail
+
+          echo "::notice::Build fail reasons info string"
+          echo "failed_reasons<<EOF"$'\n'"$REASONS"$'\n'EOF >> "$GITHUB_OUTPUT"
+
+          echo "::notice::Build updated applications info string"
+          echo "updated_applications<<EOF"$'\n'"$UPDATED"$'\n'EOF >> "$GITHUB_OUTPUT"
+
+      - name: Send SUCCESS Slack Notification
+        id: send-success
+        if: env.IS_SUCCESS == 'true'
+        continue-on-error: true
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+          errors: false
+          payload: |
+            channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
+            text: "Platform Applications Update SUCCESS (${{ inputs.platform_branch }})"
+            blocks:
+              - type: section
+                text:
+                  type: mrkdwn
+                  text: "*Platform Applications Update SUCCESS <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+            attachments:
+              - color: "good"
+                fields:
+                  - title: "Platform Branch"
+                    value: "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.platform_branch }}|${{ inputs.platform_branch }}>"
+                    short: true
+                  - title: "Applications"
+                    value: "${{ needs.get-applications.outputs.application_count }}"
+                    short: true
+                  - title: "Updated / PRs Created"
+                    value: "${{ needs.collect-results.outputs.updated_count }} / ${{ needs.collect-results.outputs.pr_created_count }}"
+                    short: true
+                  - title: "Successfully Processed"
+                    value: "${{ needs.collect-results.outputs.success_count }}"
+                    short: true
+              - color: "good"
+                mrkdwn_in: ["text"]
+                text: ${{ toJSON(steps.prepare-multiline.outputs.updated_applications) }}
+                footer: "Eureka CI/CD"
+
+      - name: Send FAILED Slack Notification
+        id: send-failure
+        if: env.IS_SUCCESS == 'false'
+        continue-on-error: true
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+          errors: false
+          payload: |
+            channel: "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}"
+            text: "Platform Applications Update FAILED (${{ inputs.platform_branch }})"
+            blocks:
+              - type: section
+                text:
+                  type: mrkdwn
+                  text: "*Platform Applications Update FAILED <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+            attachments:
+              - color: "danger"
+                fields:
+                  - title: "Platform Branch"
+                    value: "<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.platform_branch }}|${{ inputs.platform_branch }}>"
+                    short: true
+                  - title: "Applications"
+                    value: "${{ needs.get-applications.outputs.application_count }}"
+                    short: true
+                  - title: "Failed"
+                    value: "${{ needs.collect-results.outputs.failure_count }}"
+                    short: true
+                  - title: "Successfully Processed"
+                    value: "${{ needs.collect-results.outputs.success_count }}"
+                    short: true
+              - color: "danger"
+                mrkdwn_in: ["text"]
+                title: "Failure Reasons"
+                text: ${{ toJSON(steps.prepare-multiline.outputs.failed_reasons) }}
+                footer: "Eureka CI/CD"
+
+  workflow-summary:
+    name: Workflow Summary
+    runs-on: ubuntu-latest
+    needs: [get-applications, build-matrix, update-applications, collect-results, slack_notification]
+    if: always()
+    steps:
+      - name: Generate Workflow Summary
+        env:
+          TOTAL_APPS: ${{ needs.get-applications.outputs.application_count }}
+          PLATFORM_BRANCH: ${{ inputs.platform_branch }}
+          MATRIX_COUNT: ${{ needs.build-matrix.outputs.matrix_count || '0' }}
+          ENABLED_APPS: ${{ needs.build-matrix.outputs.enabled_apps }}
+          DISABLED_APPS: ${{ needs.build-matrix.outputs.disabled_apps }}
+          SUCCESS_COUNT: ${{ needs.collect-results.outputs.success_count || '0' }}
+          FAILURE_COUNT: ${{ needs.collect-results.outputs.failure_count || '0' }}
+          UPDATED_COUNT: ${{ needs.collect-results.outputs.updated_count || '0' }}
+          PR_CREATED_COUNT: ${{ needs.collect-results.outputs.pr_created_count || '0' }}
+          FAILED_APPS: ${{ needs.collect-results.outputs.failed_apps }}
+          FAILED_REASONS: ${{ needs.collect-results.outputs.failed_apps_reason }}
+          UPDATED_APPS: ${{ needs.collect-results.outputs.updated_applications }}
+          SLACK_NOTIF_OUTCOME: ${{ needs.slack_notification.outputs.notification_outcome }}
+          SLACK_NOTIF_STATUS_ICON: >-
+            ${{
+              needs.slack_notification.outputs.notification_outcome == 'success' && '✅'
+              || needs.slack_notification.outputs.notification_outcome == 'failure' && '⚠️'
+              || 'ℹ️'
+            }}
+        run: |
+          {
+            echo "## 🎯 Platform Applications Update Summary"
+            echo ""
+            echo "### 📊 Overall Statistics"
+            echo "- **Platform Branch**: [\`$PLATFORM_BRANCH\`](${{ github.server_url }}/${{ github.repository }}/tree/$PLATFORM_BRANCH)"
+            echo "- **Total Applications in Platform**: $TOTAL_APPS"
+            echo "- **Enabled for Update Scanning**: $MATRIX_COUNT"
+            echo "- **Triggered by**: ${{ github.actor }}"
+            echo "- **Run Number**: ${{ github.run_number }}"
+            echo ""
+
+            if [[ -n "$DISABLED_APPS" ]]; then
+              echo "#### ⏭️ Applications with Scanning Disabled"
+              echo "$DISABLED_APPS"
+              echo ""
+            fi
+
+            # Check if this is a dry run first
+            if [[ "${{ inputs.dry_run }}" == "true" ]]; then
+              echo "### 🏃 Dry Run Mode"
+              echo ""
+              echo "This was a dry run to validate the update process."
+              echo "- Module updates were checked but not committed"
+              echo "- No pull requests were created"
+              echo "- No actual changes were made to any applications"
+              echo ""
+              echo "Set \`dry_run=false\` to apply changes."
+              echo ""
+            elif [[ "${{ needs.update-applications.result }}" == "success" ]]; then
+              echo "- **Successfully Processed**: $SUCCESS_COUNT"
+              echo "- **Updated Applications**: $UPDATED_COUNT"
+              echo "- **Pull Requests Created**: $PR_CREATED_COUNT"
+              echo "- **Failed Applications**: $FAILURE_COUNT"
+              echo ""
+              echo "### ✅ All Applications Processed Successfully"
+              echo ""
+
+              if [[ "$UPDATED_COUNT" -gt 0 ]]; then
+                echo "### 📦 Updated Applications"
+                echo ""
+                echo "$UPDATED_APPS" | while IFS= read -r line; do
+                  if [[ "$line" =~ \<([^|]+)\|([^>]+)\> ]]; then
+                    url="${BASH_REMATCH[1]}"
+                    text="${BASH_REMATCH[2]}"
+                    echo "- [$text]($url)"
+                  fi
+                done
+                echo ""
+              else
+                echo "### ✨ No Updates Available"
+                echo "All applications are already up to date with the latest module versions."
+                echo ""
+              fi
+
+            elif [[ "${{ needs.update-applications.result }}" == "skipped" ]]; then
+              echo "### ⏭️ Update Skipped"
+              echo "The update process was skipped. This may be due to:"
+              echo "- Authorization check failure"
+              echo "- No applications found with update scanning enabled"
+              echo "- Conditional logic"
+              echo ""
+
+            else
+              echo "- **Successfully Processed**: $SUCCESS_COUNT"
+              echo "- **Updated Applications**: $UPDATED_COUNT"
+              echo "- **Pull Requests Created**: $PR_CREATED_COUNT"
+              echo "- **Failed Applications**: $FAILURE_COUNT"
+              echo ""
+              echo "### ⚠️ Some Applications Failed to Update"
+              echo ""
+
+              if [[ "$SUCCESS_COUNT" -gt 0 ]]; then
+                echo "#### ✅ Successfully Processed: $SUCCESS_COUNT applications"
+                if [[ "$UPDATED_COUNT" -gt 0 ]]; then
+                  echo ""
+                  echo "**Updated Applications:**"
+                  echo "$UPDATED_APPS" | while IFS= read -r line; do
+                    if [[ "$line" =~ \<([^|]+)\|([^>]+)\> ]]; then
+                      url="${BASH_REMATCH[1]}"
+                      text="${BASH_REMATCH[2]}"
+                      echo "- [$text]($url)"
+                    fi
+                  done
+                fi
+                echo ""
+              fi
+
+              if [[ -n "$FAILED_APPS" ]]; then
+                echo "#### ❌ Failed Applications: $FAILED_APPS"
+                echo ""
+                if [[ -n "$FAILED_REASONS" ]]; then
+                  echo "**Failure Details:**"
+                  echo "\`\`\`"
+                  echo "$FAILED_REASONS"
+                  echo "\`\`\`"
+                  echo ""
+                fi
+              fi
+
+              echo "### 🔧 Troubleshooting"
+              echo "- Check individual application workflow logs for detailed error information"
+              echo "- Verify module registry accessibility"
+              echo "- Ensure GitHub App has proper permissions for all repositories"
+              echo "- Verify application update-config.yml files are properly configured"
+              echo ""
+            fi
+
+            echo "### 🔄 Workflow Options Used"
+            echo "- **Platform Branch:** $PLATFORM_BRANCH"
+            echo "- **Dry Run:** ${{ inputs.dry_run }}"
+            echo "- **Workflow Run:** [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+
+            echo ""
+            echo "### 📨 Notification Status"
+            echo ""
+
+            if [[ "${{ inputs.dry_run }}" == "true" ]]; then
+              echo "ℹ️ **Slack Notification:** Skipped (dry run mode)"
+            elif [[ -n "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}" ]]; then
+              if [[ "$SLACK_NOTIF_OUTCOME" == "success" ]]; then
+                echo "$SLACK_NOTIF_STATUS_ICON **Slack Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Notification sent successfully"
+              elif [[ "$SLACK_NOTIF_OUTCOME" == "failure" ]]; then
+                echo "$SLACK_NOTIF_STATUS_ICON **Slack Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Failed to send notification"
+              elif [[ "$SLACK_NOTIF_OUTCOME" == "skipped" ]]; then
+                echo "$SLACK_NOTIF_STATUS_ICON **Slack Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): Notification skipped"
+              else
+                echo "ℹ️ **Slack Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): No notification sent"
+              fi
+            else
+              echo "ℹ️ **Slack Notification:** Channel not configured"
+            fi
+
+            echo ""
+            echo "---"
+            echo "*Generated by ${{ github.workflow }} at $(date -u +'%Y-%m-%d %H:%M:%S UTC')*"
+          } >> $GITHUB_STEP_SUMMARY

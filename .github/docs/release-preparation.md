@@ -105,24 +105,25 @@ inputs:
 
 ### Authorization Architecture
 
-**Security Model**: Kitfox team-controlled initiation with distributed authorization
+**Security Model**: Kitfox team-controlled initiation with reusable authorization workflow
 
 ```yaml
-# Team validation at orchestrator level (platform-lsp)
 jobs:
-  validate-actor:
-    steps:
-      - name: Validate Kitfox Team Membership
-        uses: folio-org/kitfox-github/.github/actions/validate-team-membership@master
-        with:
-          username: ${{ github.actor }}
-          team: kitfox
+  authorize:
+    name: Authorize Run
+    uses: ./.github/workflows/approve-run.yml
+    with:
+      environment: 'Eureka CI'
+      team: 'kitfox'
+      organization: 'folio-org'
+    secrets: inherit
 ```
 
-**Fallback Authorization**: Environment-based approval for non-team members
-- **Environment**: "Eureka CI" 
-- **Manual Approval**: Required for non-Kitfox team members
-- **Audit Trail**: All approvals logged and tracked
+**Authorization Features**:
+- **Team Validation**: Automatic Kitfox team membership check
+- **Environment Protection**: Manual approval required for non-team members
+- **Reusable Pattern**: Consistent authorization across all orchestrators
+- **Audit Trail**: All authorization decisions logged
 
 ### Distributed Workflow Architecture
 
@@ -243,7 +244,7 @@ check-applications:
 update-applications:
   name: Prepare ${{ matrix.application }} Application
   needs: [initial-check, check-applications]
-  if: always() && needs.check-applications.result == 'success' && inputs.dry_run != true
+  if: inputs.dry_run != true
   strategy:
     matrix:
       application: ${{ fromJson(needs.initial-check.outputs.applications) }}
@@ -522,16 +523,16 @@ strategy:
 - [Eureka CI Flow Documentation](https://folio-org.atlassian.net/wiki/spaces/FOLIJET/pages/887488514/CI+flow+release)
 
 ### Technical Implementation Guides
-The release preparation process relies heavily on the shared infrastructure provided by kitfox-github. For detailed technical documentation on the reusable components:
+The release preparation process relies heavily on the shared infrastructure provided by kitfox-github:
 
-- **[Workflow Implementation Guide](https://github.com/folio-org/kitfox-github/blob/master/.github/README.md)** - Entry point for all workflow documentation
-- **[Application Release Preparation](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/app-release-preparation.md)** - Detailed guide to the individual application workflow
-- **[Distributed Orchestration Patterns](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/distributed-orchestration.md)** - Cross-repository coordination architecture
-- **[Security Implementation](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/security-implementation.md)** - Team authorization and access control patterns
-- **[Application Notifications](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/app-notification.md)** - Slack notification standards
+- **[Release Preparation Workflow](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/release-preparation.md)** - Individual application release preparation workflow
+- **[Release Preparation Flow](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/release-preparation-flow.md)** - Core release preparation logic workflow
+- **[Application Update](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/application-update.md)** - Application update orchestrator workflow
+- **[Commit and Push Changes](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/commit-and-push-changes.md)** - Reusable commit workflow
 
 ### Implementation References
 - [Release Preparation Orchestrator](../workflows/release-preparation-orchestrator.yml) - Platform-level orchestration workflow
+- [Approve Run Workflow](approve-run.md) - Reusable authorization workflow
 - [Kitfox GitHub Infrastructure](https://github.com/folio-org/kitfox-github) - Centralized reusable workflows and actions
 - [Universal Action: validate-team-membership](https://github.com/folio-org/kitfox-github/tree/master/.github/actions/validate-team-membership) - Team authorization
 - [Reusable Workflow: release-preparation-flow.yml](https://github.com/folio-org/kitfox-github/blob/master/.github/workflows/release-preparation-flow.yml) - Core logic workflow
@@ -541,5 +542,5 @@ The release preparation process relies heavily on the shared infrastructure prov
 
 **Status**: Production Ready  
 **Maintained by**: Kitfox Team DevOps  
-**Last Updated**: October 2025
+**Last Updated**: November 2025
 **Implementation**: Fully Deployed Across FOLIO Ecosystem

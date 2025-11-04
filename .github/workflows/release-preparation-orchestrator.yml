@@ -65,50 +65,19 @@ env:
   UPDATE_CONFIG_TEMPLATE_PATH: '.github/templates/update-config.yml.template'
 
 jobs:
-  validate-actor:
-    name: Validate Actor
-    runs-on: ubuntu-latest
-    outputs:
-      authorized: ${{ steps.validate-actor.outputs.authorized }}
-    steps:
-      - name: Generate App Token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ vars.EUREKA_CI_APP_ID }}
-          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
-
-      - name: Validate Actor
-        id: validate-actor
-        uses: folio-org/kitfox-github/.github/actions/validate-team-membership@master
-        with:
-          username: ${{ github.actor }}
-          organization: 'folio-org'
-          team: 'kitfox'
-          token: ${{ steps.app-token.outputs.token }}
-
-  approve-run:
-    name: Approve Run
-    needs: validate-actor
-    runs-on: ubuntu-latest
-    environment: Eureka CI
-    if: needs.validate-actor.outputs.authorized == 'false'
-    steps:
-      - name: Run approvement
-        run: |
-          echo "::notice::This run was approved by $(
-            gh api \
-              /repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/approvals \
-              --jq \
-                '.[]
-                | select(.environments[]?.name == "Eureka CI")
-                | .user.login')"
+  authorize:
+    name: Authorize Run
+    uses: ./.github/workflows/approve-run.yml
+    with:
+      environment: 'Eureka CI'
+      team: 'kitfox'
+      organization: 'folio-org'
+    secrets: inherit
 
   initial-check:
     name: Initial Check
     runs-on: ubuntu-latest
-    needs: [ validate-actor, approve-run ]
-    if: always() && (needs.validate-actor.outputs.authorized == 'true' || needs.approve-run.result == 'success')
+    needs: authorize
     outputs:
       applications: ${{ steps.merge-applications.outputs.applications }}
       application_count: ${{ steps.merge-applications.outputs.application_count }}
@@ -260,7 +229,6 @@ jobs:
   check-applications:
     name: Check ${{ matrix.application }} Application
     needs: initial-check
-    if: always() && needs.initial-check.result == 'success'
     strategy:
       matrix:
         application: ${{ fromJson(needs.initial-check.outputs.applications) }}
@@ -280,7 +248,7 @@ jobs:
   update-applications:
     name: Update ${{ matrix.application }} Application
     needs: [initial-check, check-applications]
-    if: always() && needs.check-applications.result == 'success' && inputs.dry_run != true
+    if: inputs.dry_run != true
     strategy:
       matrix:
         application: ${{ fromJson(needs.initial-check.outputs.applications) }}
@@ -565,7 +533,6 @@ jobs:
   commit-platform-changes:
     name: Commit Platform Release Branch
     needs: [initial-check, prepare-platform]
-    if: always() && needs.prepare-platform.result == 'success'
     uses: folio-org/kitfox-github/.github/workflows/commit-and-push-changes.yml@master
     with:
       repo: ${{ github.repository }}
@@ -589,7 +556,6 @@ jobs:
   commit-platform-config:
     name: Commit Platform Config to Default Branch
     needs: [initial-check, update-platform-config, commit-platform-changes]
-    if: always() && needs.update-platform-config.result == 'success'
     uses: folio-org/kitfox-github/.github/workflows/commit-and-push-changes.yml@master
     with:
       repo: ${{ github.repository }}
