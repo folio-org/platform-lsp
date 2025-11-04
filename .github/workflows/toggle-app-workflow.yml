@@ -51,7 +51,7 @@ jobs:
     with:
       environment: 'Eureka CI'
       organization: 'folio-org'
-      team: 'fitfox'
+      team: 'kitfox'
     secrets: inherit
 
   get-applications:
