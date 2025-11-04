@@ -84,32 +84,30 @@ The Snapshot Flow handles continuous integration of ongoing development (snapsho
 ### 2. Application Flows
 
 #### Application Snapshot Updates - Platform Orchestrator
-*Implemented via `apps-snapshot-update.yml` workflow in platform-lsp*
+*Implemented via `application-update-orchestrator.yml` workflow in platform-lsp*
 
-**Trigger**: Manual workflow dispatch or scheduled execution
+**Trigger**: Scheduled execution (every 20 minutes) or manual workflow dispatch
 
 **Authorization**: Kitfox team members or approved environment access
 
 **Process Flow**:
-1. **Actor Validation**: 
+1. **Actor Validation**:
    - Generate GitHub App token for cross-repository access
    - Validate team membership (Kitfox team) or require environment approval
 2. **Application Discovery**:
    - Extract application list from platform-descriptor.json (snapshot branch)
    - Identify all app-* repositories (required + optional applications)
-   - Upload platform descriptor as artifact for downstream workflows
-3. **Parallel Application Updates**:
-   - **Matrix Strategy**: Process all applications concurrently (max 5 parallel)
-   - **Individual Workflows**: Each application triggers `snapshot-update-flow.yml` from kitfox-github
+   - Merge with configuration from each application's `update-config.yml`
+3. **Configuration-Based Updates**:
+   - **Configuration Reading**: Each application's `update-config.yml` defines update behavior
+   - **Matrix Building**: Combine all enabled branches from all applications into unified matrix
+   - **Parallel Processing**: Process all application branches concurrently (max 10 parallel)
+   - **Individual Workflows**: Each application branch triggers `application-update-flow.yml` from kitfox-github
    - **Fail-Safe Processing**: Continue processing other apps even if some fail
-   - **Parameters**: 
-     - `descriptor_build_offset`: Version offset for application artifacts
-     - `rely_on_FAR`: Whether to use FAR (FOLIO Application Registry) for dependencies
-     - `dry_run`: Validation-only mode without making changes
 4. **Result Collection**:
    - Download and analyze results from all application workflows
    - Categorize outcomes: success, failure, updated applications
-   - Generate comprehensive failure reports with specific reasons
+   - Generate comprehensive reports with specific reasons
 5. **Slack Notifications**:
    - **Success**: Report updated application count and total processed
    - **Failure**: Detailed failure reasons and affected applications
@@ -118,10 +116,11 @@ The Snapshot Flow handles continuous integration of ongoing development (snapsho
 **Affected Repositories**: All 31+ app-* repositories processed in parallel
 
 **Key Features**:
-- **Distributed Processing**: Uses proven matrix strategy for concurrent updates
+- **Configuration-Driven**: Each application controls its update behavior via `update-config.yml`
+- **Unified Architecture**: Same workflow handles snapshot and release branches
+- **Distributed Processing**: Matrix strategy for concurrent updates
 - **Authorization Separation**: Team validation in orchestrator, pure functionality in workers
 - **Comprehensive Monitoring**: Detailed success/failure tracking and reporting
-- **Flexible Configuration**: Support for dry runs, FAR integration, and custom offsets
 
 ### 3. Platform Flow
 
@@ -240,70 +239,11 @@ Registry        App Descriptor     Platform Descriptor
 - ✅ **Notification System**: Slack integration with rich status reporting
 
 ### Platform-LSP Snapshot Integration
-- ✅ **Orchestrated Updates**: `apps-snapshot-update.yml` coordinates all application updates
+- ✅ **Unified Architecture**: `application-update-orchestrator.yml` handles all application updates
+- ✅ **Configuration-Driven**: Each application defines update behavior via `update-config.yml`
 - ✅ **Matrix Processing**: Concurrent processing with fail-safe mechanisms
 - ✅ **Result Aggregation**: Comprehensive success/failure analysis and reporting
-- ✅ **Flexible Configuration**: Support for dry runs, FAR integration, and custom parameters
 - ✅ **Team Notifications**: Rich Slack notifications with detailed status information
-
-## 🏗️ Workflow Architecture
-
-### Apps Snapshot Update Orchestrator (`apps-snapshot-update.yml`)
-
-**Location**: `platform-lsp/.github/workflows/apps-snapshot-update.yml`  
-**Documentation**: [📚 Detailed Workflow Documentation](apps-snapshot-update.md)
-
-**Key Components**:
-
-#### 1. Authorization Layer
-```yaml
-validate-actor:
-  # GitHub App token generation for cross-repo access
-  # Kitfox team membership validation
-  # Fallback to environment approval for non-team members
-```
-
-#### 2. Application Discovery
-```yaml
-get-applications:
-  # Extract applications from platform-descriptor.json
-  # Support for both required and optional applications
-  # Artifact upload for downstream workflow consumption
-```
-
-#### 3. Distributed Processing
-```yaml
-update-applications:
-  strategy:
-    matrix:
-      application: ${{ fromJson(needs.get-applications.outputs.applications) }}
-    fail-fast: false
-    max-parallel: 5
-  # Calls kitfox-github/.github/workflows/snapshot-update-flow.yml for each application
-```
-
-#### 4. Result Aggregation
-```yaml
-collect-results:
-  # Download and analyze all application results
-  # Generate comprehensive success/failure statistics
-  # Prepare detailed failure reasons for notifications
-```
-
-#### 5. Notification System
-```yaml
-slack_notification:
-  # Rich Slack notifications with workflow status
-  # Detailed success metrics and failure analysis
-  # Configurable notification channels
-```
-
-**Input Parameters**:
-- `descriptor_build_offset`: Version offset for application artifacts (default: '100100000000000')
-- `rely_on_FAR`: Use FOLIO Application Registry for dependencies (default: false)
-- `dry_run`: Validation-only mode without making changes (default: false)
-
-**Concurrency Control**: Single workflow execution per repository to prevent conflicts
 
 ## 🔗 Related Documentation
 
@@ -312,9 +252,8 @@ slack_notification:
 - [Eureka CI Overview](../CI.md)
 
 ### Workflow Implementation
-- [`apps-snapshot-update.yml`](../workflows/snapshot-update-orchestrator.yml) - Platform-LSP application orchestrator
-- [Apps Snapshot Update Documentation](apps-snapshot-update.md) - Detailed orchestrator workflow documentation
-- [`snapshot-update-flow.yml`](https://github.com/folio-org/kitfox-github/blob/master/.github/workflows/snapshot-update-flow.yml) - Individual application update workflow
+- [Application Update Orchestrator](application-update-orchestrator.md) - Configuration-driven application update orchestrator
+- [`application-update-flow.yml`](../../kitfox-github/.github/docs/application-update-flow.md) - Individual application update flow
 
 ### External References
 - [Eureka CI Flow [Snapshot]](https://folio-org.atlassian.net/wiki/spaces/FOLIJET/pages/887193724/CI+flow+snapshot)
@@ -322,6 +261,6 @@ slack_notification:
 
 ---
 
-**Status**: Production Active  
-**Maintained by**: Kitfox Team DevOps  
-**Last Updated**: September 2025
+**Status**: Production Active
+**Maintained by**: Kitfox Team DevOps
+**Last Updated**: November 2025

@@ -41,14 +41,14 @@ The snapshot flow handles the continuous integration of daily development work, 
 
 **Key Processes**:
 - **Module CI**: Backend, edge and UI/Stripes module builds
-- **Application Sync**: Automatic application descriptor updates via orchestrated workflows
+- **Application Sync**: Automatic application descriptor updates via configuration-driven orchestration
 - **Platform Refresh**: Continuous platform state updates with parallel processing
 - **Version Management**: SNAPSHOT version increments and build IDs
 - **Orchestrated Updates**: Platform-LSP coordinates updates across 31+ application repositories
 
 **Key Workflows**:
-- **`snapshot-update-orchestrator.yml`**: Platform-LSP orchestrator for application snapshot updates
-- **`snapshot-update-flow.yml`**: Individual application update workflow (kitfox-github)
+- **`application-update-orchestrator.yml`**: Unified configuration-driven orchestrator for all application updates
+- **`application-update-flow.yml`**: Individual application update workflow (kitfox-github)
 
 **Documentation**: [📖 Detailed Snapshot Flow Guide](docs/snapshot-flow.md)
 
@@ -64,15 +64,15 @@ The release preparation process coordinates the creation of release branches, ve
 - **Branch Orchestration**: Automated creation of release branches across 31+ repositories
 - **Version Coordination**: Alignment of component and application versions
 - **Distributed Workflows**: Parallel processing with comprehensive monitoring
-- **Release Maintenance**: Continuous updates to release branches with compatible module versions
+- **Release Maintenance**: Configuration-driven updates to release branches with compatible module versions
 
 **Key Workflows**:
-- **`release-preparation.yml`**: Initial release branch creation orchestrator
-- **`release-update-orchestrator.yml`**: Ongoing release branch maintenance orchestrator
+- **`release-preparation-orchestrator.yml`**: Initial release branch creation orchestrator
+- **`application-update-orchestrator.yml`**: Unified orchestrator for all branch updates (snapshot and release)
 
 **Documentation**:
-- [📖 Detailed Release Preparation Guide](docs/release-preparation.md)
-- [📖 Release Update Orchestrator Guide](docs/release-update-orchestrator.md)
+- [📖 Release Preparation Guide](docs/release-preparation.md)
+- [📖 Application Update Orchestrator Guide](docs/application-update-orchestrator.md)
 
 ---
 
@@ -115,11 +115,11 @@ As the **central orchestrator**, `platform-lsp` plays a critical role in each CI
 
 ### Trigger Matrix
 
-| **Flow** | **Trigger** | **Frequency** | **Scope** | **Authorization** |
-|----------|-------------|---------------|-----------|------------------|
-| **Snapshot** | Code Push | Continuous | Per-module/app | Automatic |
-| **Release Prep** | Manual | Per-release | Platform-wide | Kitfox Team |
-| **Release** | Tag Creation | Per-release | Per-component | Automatic |
+| **Flow**         | **Trigger**  | **Frequency** | **Scope**       | **Authorization** |
+|------------------|--------------|---------------|-----------------|-------------------|
+| **Snapshot**     | Code Push    | Continuous    | Per-module/app  | Automatic         |
+| **Release Prep** | Manual       | Per-release   | Platform-wide   | Kitfox Team       |
+| **Release**      | Tag Creation | Per-release   | Per-component   | Automatic         |
 
 ### Platform State Transitions
 
@@ -135,10 +135,11 @@ Version Evolution:
 
 ### Distributed Workflow System
 
-The platform-lsp implements a **proven distributed workflow architecture**:
+The platform-lsp implements a **unified configuration-driven workflow architecture**:
 
-- **Universal Actions**: Shared composite actions for authorization, orchestration, and version management
-- **Reusable Workflows**: Centralized workflow templates for consistent processing
+- **Configuration-Driven**: Each application defines update behavior via `update-config.yml`
+- **Universal Orchestrator**: Single workflow handles all branch types (snapshot, release)
+- **Reusable Workflows**: Centralized workflow templates in kitfox-github
 - **Matrix Processing**: Parallel execution across 31+ application repositories
 - **Result Aggregation**: Comprehensive monitoring and failure reporting
 - **Dual Notifications**: Platform-level and individual component notifications
@@ -156,7 +157,8 @@ The platform-lsp implements a **proven distributed workflow architecture**:
 ### Primary Documentation
 - [🔄 Snapshot Flow Documentation](docs/snapshot-flow.md)
 - [📋 Release Preparation Documentation](docs/release-preparation.md)
-- [📋 Release Update Orchestrator Documentation](docs/release-update-orchestrator.md)
+- [📋 Application Update Orchestrator Documentation](docs/application-update-orchestrator.md)
+- [🔄 Approve Run Documentation](docs/approve-run.md)
 - [🚀 Release Flow Documentation](docs/release-flow.md)
 
 ### Implementation References
@@ -172,8 +174,8 @@ The platform-lsp implements a **proven distributed workflow architecture**:
 
 ---
 
-**Maintained by**: Kitfox Team DevOps  
-**Last Updated**: August 2025  
+**Maintained by**: Kitfox Team DevOps
+**Last Updated**: November 2025
 **Status**: Production Ready
 
 *This documentation serves as the definitive guide for understanding and implementing FOLIO Eureka CI/CD processes.*
