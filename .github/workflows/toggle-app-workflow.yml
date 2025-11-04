@@ -170,8 +170,6 @@ jobs:
           FULL_REPO="folio-org/$APP_REPO"
           RESULT_FILE="/tmp/${APP_REPO//\//_}_result.json"
 
-          echo "::group::Processing $FULL_REPO"
-
           if [ "$DRY_RUN" = "true" ]; then
             echo "::notice::[DRY RUN] Would $ACTION workflow '$WORKFLOW_NAME' in $FULL_REPO"
 
@@ -208,8 +206,6 @@ jobs:
               fi
             fi
           fi
-
-          echo "::endgroup::"
 
           jq -n \
             --arg repo "$APP_REPO" \
