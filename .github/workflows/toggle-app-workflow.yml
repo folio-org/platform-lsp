@@ -47,7 +47,7 @@ permissions:
 
 jobs:
   validate-and-approve:
-    uses: ./.github/workflows/approve-run.yml@RANCHER-2601 #TODO: Remove before the merge
+    uses: folio-org/platform-lsp/.github/workflows/approve-run.yml@RANCHER-2601 #TODO: Remove before the merge
     with:
       environment: 'Eureka CI'
       organization: 'folio-org'
