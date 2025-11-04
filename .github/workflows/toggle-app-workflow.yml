@@ -47,7 +47,7 @@ permissions:
 
 jobs:
   validate-and-approve:
-    uses: ./.github/workflows/approve-run.yml
+    uses: ./.github/workflows/approve-run.yml@RANCHER-2601 #TODO: Remove before the merge
     with:
       environment: 'Eureka CI'
       organization: 'folio-org'
@@ -85,7 +85,7 @@ jobs:
       - name: Fetch Platform Descriptor
         id: fetch-descriptor
         if: inputs.source_type == 'platform-descriptor'
-        uses: folio-org/kitfox-github/.github/actions/fetch-platform-descriptor@master
+        uses: folio-org/kitfox-github/.github/actions/fetch-platform-descriptor@RANCHER-2601 #TODO: Switch to master
         with:
           branch: ${{ inputs.platform_branch }}
 
