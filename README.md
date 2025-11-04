@@ -188,7 +188,7 @@ Platform Release: R2-2025.1
 - Specialized workflow applications
 - Integration applications (Edge services)
 
-**Infrastructure Components**: Eureka-specific enhancements
+**Eureka Components**: Eureka-specific enhancements
 - Authentication (Keycloak)
 - API Gateway (Kong) 
 - Application Management (mgr-applications)
