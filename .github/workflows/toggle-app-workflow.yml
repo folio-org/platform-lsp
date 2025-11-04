@@ -1,0 +1,23 @@
+name: Toggle App Workflow
+
+run-name: Toggle ${{ inputs.workflow_name }} to ${{ inputs.action }} (${{ inputs.source_type }})
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: toggle-app-workflow-${{ github.run_id }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  validate-and-approve:
+    uses: ./.github/workflows/approve-run.yml
+    with:
+      environment: 'Eureka CI'
+      organization: 'folio-org'
+      team: 'fitfox'
+    secrets: inherit
