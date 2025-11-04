@@ -168,7 +168,6 @@ jobs:
           set +e
 
           FULL_REPO="folio-org/$APP_REPO"
-          RESULT_FILE="/tmp/${APP_REPO//\//_}_result.json"
 
           if [ "$DRY_RUN" = "true" ]; then
             echo "::notice::[DRY RUN] Would $ACTION workflow '$WORKFLOW_NAME' in $FULL_REPO"
@@ -203,9 +202,24 @@ jobs:
                 STATUS="error"
                 MESSAGE="Failed to $ACTION workflow: $output"
                 echo "::error::$MESSAGE"
+                echo "status=$STATUS" >> "$GITHUB_OUTPUT"
+                echo "message=$MESSAGE" >> "$GITHUB_OUTPUT"
+                exit 1
               fi
             fi
           fi
+
+          echo "status=$STATUS" >> "$GITHUB_OUTPUT"
+          echo "message=$MESSAGE" >> "$GITHUB_OUTPUT"
+
+      - name: Save Result
+        if: always()
+        env:
+          APP_REPO: ${{ matrix.app }}
+          STATUS: ${{ steps.toggle.outputs.status }}
+          MESSAGE: ${{ steps.toggle.outputs.message }}
+        run: |
+          RESULT_FILE="/tmp/${APP_REPO//\//_}_result.json"
 
           jq -n \
             --arg repo "$APP_REPO" \
