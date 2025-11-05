@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100100000002751"
+        "version": "2.1.0-SNAPSHOT.100200000000001"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.1.0-SNAPSHOT.100100000002811"
+        "version": "3.1.0-SNAPSHOT.100200000000001"
       }
     ],
     "optional": [
@@ -66,7 +66,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100100000000219"
+        "version": "1.0.0-SNAPSHOT.100200000000001"
       },
       {
         "name": "app-dcb",
@@ -82,7 +82,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100100000002438"
+        "version": "1.1.0-SNAPSHOT.100200000000001"
       },
       {
         "name": "app-erm-usage",
