@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.1.0-SNAPSHOT.100200000000098"
+        "version": "3.1.0-SNAPSHOT.100200000000105"
       }
     ],
     "optional": [
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.3.0-SNAPSHOT.100200000000104"
+        "version": "1.3.0-SNAPSHOT.100200000000107"
       },
       {
         "name": "app-ebsconet",
