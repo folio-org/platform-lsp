@@ -103,6 +103,8 @@
     "@folio/mosaic-settings": "1.0.0"
   },
   "resolutions":   {
+    "@babel/helpers": "7.26.10",
+    "@babel/runtime": "7.26.10",
     "@rehooks/local-storage": "2.4.5",
     "@folio/stripes-acq-components": "7.0.5",
     "@folio/stripes-authorization-components": "2.0.4",
