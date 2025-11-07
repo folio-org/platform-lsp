@@ -1,0 +1,89 @@
+name: 'Check Branch and PR Status'
+description: 'Determines source branch and checks for existing pull request'
+author: 'FOLIO DevOps'
+
+inputs:
+  repo:
+    description: 'Repository in org/repo format'
+    required: true
+  release_branch:
+    description: 'Base release branch name'
+    required: true
+  update_branch:
+    description: 'Update branch name to check'
+    required: true
+  github_token:
+    description: 'GitHub token for API access'
+    required: false
+    default: ${{ github.token }}
+
+outputs:
+  source_branch:
+    description: 'Branch to scan (update_branch if exists, else release_branch)'
+    value: ${{ steps.check.outputs.source_branch }}
+  update_branch_exists:
+    description: 'Whether the update branch exists'
+    value: ${{ steps.check.outputs.update_branch_exists }}
+  pr_exists:
+    description: 'Whether a PR exists'
+    value: ${{ steps.check.outputs.pr_exists }}
+  pr_number:
+    description: 'PR number if found'
+    value: ${{ steps.check.outputs.pr_number }}
+  pr_url:
+    description: 'PR URL if found'
+    value: ${{ steps.check.outputs.pr_url }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Check branch and PR status'
+      id: check
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github_token }}
+        REPO: ${{ inputs.repo }}
+        RELEASE_BRANCH: ${{ inputs.release_branch }}
+        UPDATE_BRANCH: ${{ inputs.update_branch }}
+      run: |
+        set -euo pipefail
+        IFS=$'\n\t'
+
+        # Check if update branch exists
+        echo "::notice::Checking if update branch exists: $UPDATE_BRANCH"
+        if gh api "repos/$REPO/branches/$UPDATE_BRANCH" >/dev/null 2>&1; then
+          echo "::notice::Update branch exists, will scan: $UPDATE_BRANCH"
+          echo "source_branch=$UPDATE_BRANCH" >> "$GITHUB_OUTPUT"
+          echo "update_branch_exists=true" >> "$GITHUB_OUTPUT"
+
+          # Check for existing PR
+          echo "::notice::Checking for existing PR from $UPDATE_BRANCH to $RELEASE_BRANCH"
+          pr_json=$(gh pr list \
+            --repo "$REPO" \
+            --base "$RELEASE_BRANCH" \
+            --head "$UPDATE_BRANCH" \
+            --json number,url \
+            --jq '.[0]' || echo '{}')
+
+          if [ "$pr_json" != "{}" ] && [ -n "$pr_json" ] && [ "$(echo "$pr_json" | jq -r '.url // ""')" != "" ]; then
+            pr_number=$(echo "$pr_json" | jq -r '.number // ""')
+            pr_url=$(echo "$pr_json" | jq -r '.url // ""')
+            echo "::notice::Found existing PR #$pr_number: $pr_url"
+            echo "pr_exists=true" >> "$GITHUB_OUTPUT"
+            echo "pr_number=$pr_number" >> "$GITHUB_OUTPUT"
+            echo "pr_url=$pr_url" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::No existing PR found"
+            echo "pr_exists=false" >> "$GITHUB_OUTPUT"
+            echo "pr_number=" >> "$GITHUB_OUTPUT"
+            echo "pr_url=" >> "$GITHUB_OUTPUT"
+          fi
+        else
+          echo "::notice::Update branch does not exist, will scan: $RELEASE_BRANCH"
+          echo "source_branch=$RELEASE_BRANCH" >> "$GITHUB_OUTPUT"
+          echo "update_branch_exists=false" >> "$GITHUB_OUTPUT"
+          echo "pr_exists=false" >> "$GITHUB_OUTPUT"
+          echo "pr_number=" >> "$GITHUB_OUTPUT"
+          echo "pr_url=" >> "$GITHUB_OUTPUT"
+        fi
+
