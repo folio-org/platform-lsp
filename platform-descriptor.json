@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000000368"
+        "version": "2.1.0-SNAPSHOT.100200000000377"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.1.0-SNAPSHOT.100200000000368"
+        "version": "3.1.0-SNAPSHOT.100200000000372"
       }
     ],
     "optional": [
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000000118"
+        "version": "1.2.0-SNAPSHOT.100200000000378"
       },
       {
         "name": "app-gobi",
