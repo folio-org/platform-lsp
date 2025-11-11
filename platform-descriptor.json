@@ -50,7 +50,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100100000002519"
+        "version": "1.2.0-SNAPSHOT.100200000000442"
       },
       {
         "name": "app-consortia",
@@ -122,7 +122,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100200000000386"
+        "version": "1.2.0-SNAPSHOT.100200000000441"
       },
       {
         "name": "app-reading-room",
