@@ -50,7 +50,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000000443"
+        "version": "1.2.0-SNAPSHOT.100200000000505"
       },
       {
         "name": "app-consortia",
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.3.0-SNAPSHOT.100200000000369"
+        "version": "1.3.0-SNAPSHOT.100200000000505"
       },
       {
         "name": "app-ebsconet",
