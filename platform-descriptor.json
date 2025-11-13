@@ -118,7 +118,7 @@
       },
       {
         "name": "app-oa",
-        "version": "1.0.0-SNAPSHOT.100100000002475"
+        "version": "1.0.0-SNAPSHOT.100200000000569"
       },
       {
         "name": "app-oai-pmh",
@@ -154,7 +154,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100000000000001"
+        "version": "1.0.0-SNAPSHOT.100200000000566"
       }
     ]
   },
