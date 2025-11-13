@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000000514"
+        "version": "2.1.0-SNAPSHOT.100200000000591"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.1.0-SNAPSHOT.100200000000571"
+        "version": "3.1.0-SNAPSHOT.100200000000580"
       }
     ],
     "optional": [
