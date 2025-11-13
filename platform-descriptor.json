@@ -36,13 +36,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.1.0-SNAPSHOT.100200000000505"
+        "version": "3.1.0-SNAPSHOT.100200000000569"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000000587"
+        "version": "1.2.0-SNAPSHOT.100200000000596"
       },
       {
         "name": "app-agreements",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000000568"
+        "version": "2.2.0-SNAPSHOT.100200000000579"
       },
       {
         "name": "app-fqm",
@@ -134,7 +134,7 @@
       },
       {
         "name": "app-requests-ecs",
-        "version": "1.3.0-SNAPSHOT.100200000000549"
+        "version": "1.3.0-SNAPSHOT.100200000000569"
       },
       {
         "name": "app-requests-mediated",
