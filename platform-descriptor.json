@@ -86,7 +86,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100100000002440"
+        "version": "2.2.0-SNAPSHOT.100200000000568"
       },
       {
         "name": "app-fqm",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-oa",
-        "version": "1.0.0-SNAPSHOT.100200000000569"
+        "version": "1.0.0-SNAPSHOT.100200000000572"
       },
       {
         "name": "app-oai-pmh",
