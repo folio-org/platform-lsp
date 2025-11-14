@@ -42,7 +42,7 @@
     "@folio/oai-pmh": "6.0.0",
     "@folio/orders": "8.0.5",
     "@folio/organizations": "6.0.1",
-    "@folio/plugin-bursar-export": "4.0.3",
+    "@folio/plugin-bursar-export": "5.0.1",
     "@folio/plugin-create-inventory-records": "6.0.0",
     "@folio/plugin-find-agreement": "12.0.0",
     "@folio/plugin-find-authority": "5.0.1",
@@ -103,6 +103,8 @@
     "@folio/mosaic-settings": "1.0.0"
   },
   "resolutions":   {
+    "@babel/helpers": "7.26.10",
+    "@babel/runtime": "7.26.10",
     "@rehooks/local-storage": "2.4.5",
     "@folio/stripes-acq-components": "7.0.5",
     "@folio/stripes-authorization-components": "2.0.5",
