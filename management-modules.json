@@ -1,6 +1,6 @@
 [
   {
-    "id": "kong-3.9.1"
+    "id": "kong-3.9.2"
   },
   {
     "id": "folio-keycloak-26.3.4"
@@ -15,6 +15,6 @@
     "id": "mgr-tenant-entitlements-3.1.8"
   },
   {
-    "id": "folio-module-sidecar-3.0.13.nb"
+    "id": "folio-module-sidecar-3.0.15.nb"
   }
 ]
