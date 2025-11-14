@@ -106,7 +106,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000000596"
+        "version": "1.1.0-SNAPSHOT.100200000000643"
       },
       {
         "name": "app-lists",
@@ -138,7 +138,7 @@
       },
       {
         "name": "app-requests-mediated",
-        "version": "1.2.0-SNAPSHOT.100100000002585"
+        "version": "1.2.0-SNAPSHOT.100200000000649"
       },
       {
         "name": "app-requests-mediated-ui",
