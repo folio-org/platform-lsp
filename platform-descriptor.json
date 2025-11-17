@@ -90,7 +90,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000000589"
+        "version": "1.2.0-SNAPSHOT.100200000000859"
       },
       {
         "name": "app-gobi",
@@ -102,7 +102,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100100000002520"
+        "version": "1.0.0-SNAPSHOT.100200000000853"
       },
       {
         "name": "app-linked-data",
@@ -118,11 +118,11 @@
       },
       {
         "name": "app-oa",
-        "version": "1.0.0-SNAPSHOT.100200000000572"
+        "version": "1.0.0-SNAPSHOT.100200000000861"
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100200000000835"
+        "version": "1.2.0-SNAPSHOT.100200000000857"
       },
       {
         "name": "app-reading-room",
