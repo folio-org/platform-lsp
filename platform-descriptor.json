@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000000846"
+        "version": "1.2.0-SNAPSHOT.100200000000869"
       },
       {
         "name": "app-agreements",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000000859"
+        "version": "1.2.0-SNAPSHOT.100200000000861"
       },
       {
         "name": "app-gobi",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-oa",
-        "version": "1.0.0-SNAPSHOT.100200000000861"
+        "version": "1.0.0-SNAPSHOT.100200000000864"
       },
       {
         "name": "app-oai-pmh",
@@ -150,11 +150,11 @@
       },
       {
         "name": "app-service-interaction",
-        "version": "1.0.0-SNAPSHOT.100200000000824"
+        "version": "1.0.0-SNAPSHOT.100200000000841"
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100200000000566"
+        "version": "1.0.0-SNAPSHOT.100200000000860"
       }
     ]
   },
