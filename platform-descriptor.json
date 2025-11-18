@@ -32,17 +32,17 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000000827"
+        "version": "2.1.0-SNAPSHOT.100200000000900"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.1.0-SNAPSHOT.100200000000847"
+        "version": "3.1.0-SNAPSHOT.100200000000879"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000000905"
+        "version": "1.2.0-SNAPSHOT.100200000000909"
       },
       {
         "name": "app-agreements",
@@ -82,7 +82,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000000634"
+        "version": "1.1.0-SNAPSHOT.100200000000891"
       },
       {
         "name": "app-erm-usage",
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-requests-mediated-ui",
-        "version": "1.3.0-SNAPSHOT.100100000002441"
+        "version": "1.3.0-SNAPSHOT.100200000000903"
       },
       {
         "name": "app-rtac",
