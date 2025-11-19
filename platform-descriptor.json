@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000000972"
+        "version": "1.0.0-SNAPSHOT.100200000000976"
       },
       {
         "name": "app-bulk-edit",
@@ -102,7 +102,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100200000000853"
+        "version": "1.0.0-SNAPSHOT.100200000000972"
       },
       {
         "name": "app-linked-data",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-oa",
-        "version": "1.0.0-SNAPSHOT.100200000000864"
+        "version": "1.0.0-SNAPSHOT.100200000000978"
       },
       {
         "name": "app-oai-pmh",
@@ -154,7 +154,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100200000000860"
+        "version": "1.0.0-SNAPSHOT.100200000000976"
       }
     ]
   },
