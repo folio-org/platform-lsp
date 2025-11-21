@@ -86,7 +86,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000001082"
+        "version": "2.2.0-SNAPSHOT.100200000001100"
       },
       {
         "name": "app-fqm",
@@ -130,7 +130,7 @@
       },
       {
         "name": "app-reporting",
-        "version": "1.3.0-SNAPSHOT.100200000001082"
+        "version": "1.3.0-SNAPSHOT.100200000001099"
       },
       {
         "name": "app-requests-ecs",
