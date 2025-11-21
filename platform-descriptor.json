@@ -32,17 +32,17 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000001042"
+        "version": "2.1.0-SNAPSHOT.100200000001081"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.1.0-SNAPSHOT.100200000001056"
+        "version": "3.1.0-SNAPSHOT.100200000001059"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000001083"
+        "version": "1.2.0-SNAPSHOT.100200000001086"
       },
       {
         "name": "app-agreements",
@@ -82,11 +82,11 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000000891"
+        "version": "1.1.0-SNAPSHOT.100200000001069"
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000000579"
+        "version": "2.2.0-SNAPSHOT.100200000001081"
       },
       {
         "name": "app-fqm",
@@ -118,11 +118,11 @@
       },
       {
         "name": "app-oa",
-        "version": "1.0.0-SNAPSHOT.100200000000978"
+        "version": "1.0.0-SNAPSHOT.100200000001087"
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100200000001074"
+        "version": "1.2.0-SNAPSHOT.100200000001085"
       },
       {
         "name": "app-reading-room",
