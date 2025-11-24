@@ -36,13 +36,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.1.0-SNAPSHOT.100200000001123"
+        "version": "3.1.0-SNAPSHOT.100200000001271"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000001114"
+        "version": "1.2.0-SNAPSHOT.100200000001302"
       },
       {
         "name": "app-agreements",
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000001085"
+        "version": "1.2.0-SNAPSHOT.100200000001303"
       },
       {
         "name": "app-consortia",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000001148"
+        "version": "1.2.0-SNAPSHOT.100200000001302"
       },
       {
         "name": "app-gobi",
