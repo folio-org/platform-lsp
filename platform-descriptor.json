@@ -90,7 +90,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000001302"
+        "version": "1.2.0-SNAPSHOT.100200000001318"
       },
       {
         "name": "app-gobi",
@@ -122,7 +122,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100200000001085"
+        "version": "1.2.0-SNAPSHOT.100200000001319"
       },
       {
         "name": "app-reading-room",
