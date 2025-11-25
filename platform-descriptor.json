@@ -90,7 +90,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000001323"
+        "version": "1.2.0-SNAPSHOT.100200000001349"
       },
       {
         "name": "app-gobi",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000000964"
+        "version": "1.1.0-SNAPSHOT.100200000001344"
       },
       {
         "name": "app-lists",
