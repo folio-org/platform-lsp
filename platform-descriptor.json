@@ -50,7 +50,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000001303"
+        "version": "1.2.0-SNAPSHOT.100200000001390"
       },
       {
         "name": "app-consortia",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000001350"
+        "version": "1.2.0-SNAPSHOT.100200000001391"
       },
       {
         "name": "app-gobi",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.1.0-SNAPSHOT.100200000001082"
+        "version": "1.1.0-SNAPSHOT.100200000001387"
       },
       {
         "name": "app-mosaic",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-oa",
-        "version": "1.0.0-SNAPSHOT.100200000001087"
+        "version": "1.0.0-SNAPSHOT.100200000001393"
       },
       {
         "name": "app-oai-pmh",
