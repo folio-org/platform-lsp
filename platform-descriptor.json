@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.1.0-SNAPSHOT.100200000001368"
+        "version": "3.1.0-SNAPSHOT.100200000001412"
       }
     ],
     "optional": [
@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000001386"
+        "version": "1.0.0-SNAPSHOT.100200000001446"
       },
       {
         "name": "app-bulk-edit",
