@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000001446"
+        "version": "1.0.0-SNAPSHOT.100200000001450"
       },
       {
         "name": "app-bulk-edit",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000001100"
+        "version": "2.2.0-SNAPSHOT.100200000001448"
       },
       {
         "name": "app-fqm",
