@@ -36,13 +36,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.1.0-SNAPSHOT.100200000001425"
+        "version": "3.1.0-SNAPSHOT.100200000001478"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000001504"
+        "version": "1.2.0-SNAPSHOT.100200000001510"
       },
       {
         "name": "app-agreements",
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000001457"
+        "version": "1.2.0-SNAPSHOT.100200000001516"
       },
       {
         "name": "app-consortia",
