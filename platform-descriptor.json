@@ -86,7 +86,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000001448"
+        "version": "2.2.0-SNAPSHOT.100200000001510"
       },
       {
         "name": "app-fqm",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000001507"
+        "version": "1.1.0-SNAPSHOT.100200000001512"
       },
       {
         "name": "app-lists",
