@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000001450"
+        "version": "1.0.0-SNAPSHOT.100200000001595"
       },
       {
         "name": "app-bulk-edit",
@@ -102,7 +102,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100200000001389"
+        "version": "1.0.0-SNAPSHOT.100200000001591"
       },
       {
         "name": "app-linked-data",
