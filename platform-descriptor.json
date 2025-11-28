@@ -134,11 +134,11 @@
       },
       {
         "name": "app-requests-ecs",
-        "version": "1.3.0-SNAPSHOT.100200000001419"
+        "version": "1.3.0-SNAPSHOT.100200000001562"
       },
       {
         "name": "app-requests-mediated",
-        "version": "1.2.0-SNAPSHOT.100200000001458"
+        "version": "1.2.0-SNAPSHOT.100200000001606"
       },
       {
         "name": "app-requests-mediated-ui",
@@ -154,7 +154,7 @@
       },
       {
         "name": "app-service-interaction",
-        "version": "1.0.0-SNAPSHOT.100200000001059"
+        "version": "1.0.0-SNAPSHOT.100200000001562"
       },
       {
         "name": "app-serials-management",
