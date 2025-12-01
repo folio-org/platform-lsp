@@ -66,7 +66,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000001580"
+        "version": "1.0.0-SNAPSHOT.100200000001778"
       },
       {
         "name": "app-dcb",
@@ -82,7 +82,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000001069"
+        "version": "1.1.0-SNAPSHOT.100200000001759"
       },
       {
         "name": "app-erm-usage",
