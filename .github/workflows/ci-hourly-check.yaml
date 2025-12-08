@@ -96,6 +96,11 @@ jobs:
             echo "UPDATES_MADE=false" >> $GITHUB_OUTPUT
           fi
 
+      - name: Get final commit SHA
+        if: success()
+        id: final-sha
+        run: echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+
       - name: Notify on Failure
         if: failure()
         uses: slackapi/slack-github-action@v2.1.1
@@ -166,7 +171,7 @@ jobs:
                   - type: mrkdwn
                     text: "*Checked out:*\n<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.branch || 'snapshot' }}|${{ inputs.branch || 'snapshot' }}>"
                   - type: mrkdwn
-                    text: "*Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ steps.checkout-sha.outputs.sha }}|${{ steps.checkout-sha.outputs.sha }}>"
+                    text: "*Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ steps.final-sha.outputs.sha }}|${{ steps.final-sha.outputs.sha }}>"
                   - type: mrkdwn
                     text: "*Duration:*\n${{ steps.duration.outputs.duration }}"
                   - type: mrkdwn
