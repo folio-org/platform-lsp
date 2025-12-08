@@ -36,13 +36,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.1.0-SNAPSHOT.100200000002119"
+        "version": "3.1.0-SNAPSHOT.100200000002125"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000001902"
+        "version": "1.2.0-SNAPSHOT.100200000002191"
       },
       {
         "name": "app-agreements",
@@ -82,7 +82,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000001877"
+        "version": "1.1.0-SNAPSHOT.100200000002138"
       },
       {
         "name": "app-erm-usage",
