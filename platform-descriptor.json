@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.1.0-SNAPSHOT.100200000002134"
+        "version": "3.1.0-SNAPSHOT.100200000002151"
       }
     ],
     "optional": [
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.3.0-SNAPSHOT.100200000002187"
+        "version": "1.3.0-SNAPSHOT.100200000002188"
       },
       {
         "name": "app-ebsconet",
@@ -118,15 +118,15 @@
       },
       {
         "name": "app-oa",
-        "version": "1.0.0-SNAPSHOT.100200000001393"
+        "version": "1.0.0-SNAPSHOT.100200000002196"
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100200000002183"
+        "version": "1.2.0-SNAPSHOT.100200000002197"
       },
       {
         "name": "app-reading-room",
-        "version": "1.3.0-SNAPSHOT.100200000002144"
+        "version": "1.3.0-SNAPSHOT.100200000002145"
       },
       {
         "name": "app-reporting",
@@ -154,11 +154,11 @@
       },
       {
         "name": "app-service-interaction",
-        "version": "1.0.0-SNAPSHOT.100200000002139"
+        "version": "1.0.0-SNAPSHOT.100200000002140"
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100200000002193"
+        "version": "1.0.0-SNAPSHOT.100200000002194"
       }
     ]
   },
