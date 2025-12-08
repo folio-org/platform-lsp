@@ -1,0 +1,50 @@
+name: 'Generate Platform Diff Report'
+description: 'Generates collapsed diff and markdown report comparing platform descriptors between base and head branches'
+author: 'FOLIO DevOps'
+
+inputs:
+  base_descriptor_path:
+    description: 'Path to base platform descriptor JSON file'
+    required: true
+  head_descriptor_path:
+    description: 'Path to head platform descriptor JSON file'
+    required: true
+  release_branch:
+    description: 'Base branch name for display in markdown'
+    required: true
+  update_branch:
+    description: 'Head branch name for display in markdown'
+    required: true
+  platform_version:
+    description: 'Platform version for display in markdown (optional)'
+    required: false
+    default: ''
+
+outputs:
+  updates_markdown:
+    description: 'Formatted markdown report of changes between base and head descriptors'
+    value: ${{ steps.generate.outputs.updates_markdown }}
+  updates_cnt:
+    description: 'Total number of changes detected across all sections'
+    value: ${{ steps.generate.outputs.updates_cnt }}
+  diff_json:
+    description: 'JSON array of all changes with old/new versions and grouping'
+    value: ${{ steps.generate.outputs.diff_json }}
+  has_changes:
+    description: 'Whether any changes were detected (true/false)'
+    value: ${{ steps.generate.outputs.has_changes }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Generate diff and markdown report'
+      id: generate
+      shell: bash
+      env:
+        BASE_DESCRIPTOR: ${{ inputs.base_descriptor_path }}
+        HEAD_DESCRIPTOR: ${{ inputs.head_descriptor_path }}
+        RELEASE_BRANCH: ${{ inputs.release_branch }}
+        UPDATE_BRANCH: ${{ inputs.update_branch }}
+        PLATFORM_VERSION: ${{ inputs.platform_version }}
+      run: ${{ github.action_path }}/scripts/generate-diff.sh
+

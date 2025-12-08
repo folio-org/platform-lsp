@@ -1,11 +1,69 @@
-name: Release update (Flow)
+name: 'Release update (Flow)'
 
 on:
-#   workflow_call:
+  workflow_call:
+    inputs:
+      repo:
+        description: 'Repository name (org/repo format)'
+        required: true
+        type: string
+      release_branch:
+        description: 'Release branch to scan (e.g., R1-2025)'
+        required: true
+        type: string
+      update_branch:
+        description: 'Update branch name for this release branch'
+        required: true
+        type: string
+      workflow_run_number:
+        description: 'GitHub run number for display'
+        required: true
+        type: string
+      dry_run:
+        description: 'Perform dry run without creating PRs'
+        required: false
+        type: boolean
+        default: false
+      pr_reviewers:
+        description: 'Comma-separated list of reviewers (users or teams with org/ prefix)'
+        required: false
+        type: string
+        default: ''
+      pr_labels:
+        description: 'Comma-separated list of labels to add to PR'
+        required: false
+        type: string
+        default: ''
+    outputs:
+      updated:
+        description: 'Whether the platform descriptor was updated'
+        value: ${{ jobs.update-platform-descriptor.outputs.updated }}
+      pr_created:
+        description: 'Whether a PR was created or updated'
+        value: ${{ jobs.manage-pr.outputs.pr_created == 'true' || jobs.manage-pr.outputs.pr_updated == 'true' }}
+      pr_url:
+        description: 'PR URL if created or updated'
+        value: ${{ jobs.manage-pr.outputs.pr_url }}
+      workflow_status:
+        description: 'Overall workflow status (success/failure)'
+        value: ${{ (jobs.update-platform-descriptor.result == 'failure' || jobs.commit-changes.result == 'failure' || jobs.manage-pr.result == 'failure') && 'failure' || 'success' }}
+      failure_reason:
+        description: 'Reason for workflow failure if any'
+        value: ${{ jobs.update-platform-descriptor.outputs.failure_reason || '' }}
+      new_version:
+        description: 'New platform version if updated'
+        value: ${{ jobs.update-platform-descriptor.outputs.new_version }}
+      updates_cnt:
+        description: 'Number of modules/components updated'
+        value: ${{ jobs.generate-reports.outputs.updates_cnt }}
+      pr_number:
+        description: 'PR number if created or updated'
+        value: ${{ jobs.manage-pr.outputs.pr_number }}
+  # TODO: Remove before merging (only for testing purposes)
   workflow_dispatch:
     inputs:
       repo:
-        description: 'Application repository name (org/repo format)'
+        description: 'Repository name (org/repo format)'
         required: true
         type: string
       release_branch:
@@ -40,23 +98,473 @@ permissions:
   contents: write
   pull-requests: write
 
-# Prevent overlapping runs for the same repo / release branch
 concurrency:
-  group: release-update-${{ inputs.repo }}-${{ inputs.release_branch }}
-  cancel-in-progress: false
+  group: release-update-${{ inputs.repo }}-${{ inputs.release_branch }}-${{ inputs.update_branch }}
+  cancel-in-progress: true
 
-# Consistent shell usage & safer defaults
 defaults:
   run:
     shell: bash
 
 env:
   STATE_FILE: platform-descriptor.json
+  FAR_URL: 'https://far.ci.folio.org'
+  ARTIFACT_NAME: platform-lsp-update-files
   GH_TOKEN: ${{ github.token }}
 
 jobs:
-  hello-world:
+  determine-source-branch:
+    name: 'Determine Source Branch and PR Status'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      source_branch: ${{ steps.check-status.outputs.source_branch }}
+      update_branch_exists: ${{ steps.check-status.outputs.update_branch_exists }}
+      pr_exists: ${{ steps.check-status.outputs.pr_exists }}
+      pr_number: ${{ steps.check-status.outputs.pr_number }}
+      pr_url: ${{ steps.check-status.outputs.pr_url }}
     steps:
-      - name: Hello world step
-        run: echo "Hello, world!"
+      - name: 'Check branch and PR status'
+        id: check-status
+        uses: folio-org/platform-lsp/.github/actions/check-branch-and-pr-status@master
+        with:
+          repo: ${{ inputs.repo }}
+          release_branch: ${{ inputs.release_branch }}
+          update_branch: ${{ inputs.update_branch }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  update-platform-descriptor:
+    name: 'Update Platform Descriptor'
+    needs: determine-source-branch
+    runs-on: ubuntu-latest
+    outputs:
+      updated: ${{ steps.calculate-new-version.outputs.updated }}
+      updated_components: ${{ steps.compare-components.outputs.updated_eureka_components }}
+      updated_applications: ${{ steps.compare-components.outputs.updated_applications }}
+      new_version: ${{ steps.calculate-new-version.outputs.new_version }}
+      failure_reason: ${{ steps.calculate-new-version.outputs.failure_reason }}
+    steps:
+      - name: 'Checkout Platform Repository'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repo }}
+          ref: ${{ needs.determine-source-branch.outputs.source_branch }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: 'Fetch base descriptor'
+        id: fetch-base-descriptor
+        uses: folio-org/platform-lsp/.github/actions/fetch-base-file@master
+        with:
+          base_branch: ${{ inputs.release_branch }}
+          file_path: ${{ env.STATE_FILE }}
+          output_filename: platform-descriptor.base.json
+          validate_json: true
+          fail_on_missing: true
+
+      - name: 'Read descriptor file'
+        id: read-descriptor
+        env:
+          SOURCE_BRANCH: ${{ needs.determine-source-branch.outputs.source_branch }}
+          STATE_FILE: ${{ env.STATE_FILE }}
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          echo '::notice::Reading descriptor file from checked-out branch: '$SOURCE_BRANCH
+          if [ ! -f "$STATE_FILE" ] || [ ! -s "$STATE_FILE" ]; then
+            echo "::error::Descriptor file '$STATE_FILE' is missing or empty in branch '$SOURCE_BRANCH'"
+            ls -al || true
+            exit 1
+          fi
+          for field in eureka-components applications; do
+            if ! jq -e "has(\"$field\")" "$STATE_FILE" >/dev/null; then
+              echo "::error::Descriptor file does not contain '$field' field"
+              echo 'File content:' && cat "$STATE_FILE"
+              exit 1
+            fi
+          done
+          EUREKA_COMPONENTS=$(jq -c '."eureka-components"' "$STATE_FILE")
+          {
+            echo 'eureka_components<<EOF'
+            echo "$EUREKA_COMPONENTS"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+          APPLICATIONS=$(jq -c '.applications' "$STATE_FILE")
+          {
+            echo 'applications<<EOF'
+            echo "$APPLICATIONS"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+          echo '::notice::Extracted eureka-components and applications from descriptor file'
+
+      - name: 'Update Eureka Components'
+        id: update-eureka-components
+        uses: folio-org/platform-lsp/.github/actions/update-eureka-components@master
+        with:
+          components: ${{ steps.read-descriptor.outputs.eureka_components }}
+
+      - name: 'Update Applications'
+        id: update-applications
+        uses: folio-org/platform-lsp/.github/actions/update-applications@master
+        with:
+          applications: ${{ steps.read-descriptor.outputs.applications }}
+
+      - name: 'Compare Components & Applications'
+        id: compare-components
+        env:
+          STATE_FILE: ${{ env.STATE_FILE }}
+          UPDATED_EUREKA_COMPONENTS: ${{ steps.update-eureka-components.outputs.updated-components }}
+          UPDATED_APPLICATIONS: ${{ steps.update-applications.outputs.updated-applications }}
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          echo '::notice::Comparing descriptor eureka-components & applications with updated results'
+          PREVIOUS_VERSION=$(jq -r '.version // "unknown"' "$STATE_FILE")
+          CURRENT_EUREKA_COMPONENTS=$(jq -c '."eureka-components"' "$STATE_FILE")
+          CURRENT_APPLICATIONS=$(jq -c '.applications' "$STATE_FILE")
+          changes_detected=false
+          if [ "$UPDATED_EUREKA_COMPONENTS" != "$CURRENT_EUREKA_COMPONENTS" ] || [ "$UPDATED_APPLICATIONS" != "$CURRENT_APPLICATIONS" ]; then
+            changes_detected=true
+            [ "$UPDATED_EUREKA_COMPONENTS" != "$CURRENT_EUREKA_COMPONENTS" ] && echo '::notice::Eureka components changed'
+            [ "$UPDATED_APPLICATIONS" != "$CURRENT_APPLICATIONS" ] && echo '::notice::Applications changed'
+          fi
+          echo "previous_version=$PREVIOUS_VERSION" >> "$GITHUB_OUTPUT"
+          echo "changes_detected=$changes_detected" >> "$GITHUB_OUTPUT"
+          {
+            echo 'current_eureka_components<<EOF'
+            echo "$CURRENT_EUREKA_COMPONENTS"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+          {
+            echo 'current_applications<<EOF'
+            echo "$CURRENT_APPLICATIONS"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+          {
+            echo 'updated_eureka_components<<EOF'
+            echo "$UPDATED_EUREKA_COMPONENTS"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+          {
+            echo 'updated_applications<<EOF'
+            echo "$UPDATED_APPLICATIONS"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: 'Calculate New Version'
+        id: calculate-new-version
+        uses: folio-org/platform-lsp/.github/actions/calculate-version-increment@master
+        with:
+          current_version: ${{ steps.compare-components.outputs.previous_version }}
+          changes_detected: ${{ steps.compare-components.outputs.changes_detected }}
+
+      - name: 'Apply Descriptor Updates'
+        id: apply-updates
+        if: steps.calculate-new-version.outputs.updated == 'true'
+        env:
+          STATE_FILE: ${{ env.STATE_FILE }}
+          NEW_VERSION: ${{ steps.calculate-new-version.outputs.new_version }}
+          UPDATED_EUREKA_COMPONENTS: ${{ steps.compare-components.outputs.updated_eureka_components }}
+          UPDATED_APPLICATIONS: ${{ steps.compare-components.outputs.updated_applications }}
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          echo '::notice::Applying descriptor updates'
+          # Simple in-place update without reordering logic; Python update scripts now preserve original key order.
+          jq --arg version "$NEW_VERSION" \
+             --argjson components "$UPDATED_EUREKA_COMPONENTS" \
+             --argjson applications "$UPDATED_APPLICATIONS" '.version = $version | ."eureka-components" = $components | .applications = $applications' "$STATE_FILE" > "${STATE_FILE}.tmp"
+          mv "${STATE_FILE}.tmp" "$STATE_FILE"
+          echo '::notice::Descriptor file updated'
+          echo 'applied=true' >> "$GITHUB_OUTPUT"
+
+      - name: 'Upload Platform Descriptor Artifact'
+        if: steps.calculate-new-version.outputs.updated == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'platform-descriptor-files-${{ github.run_id }}'
+          path: |
+            ${{ env.STATE_FILE }}
+            ${{ steps.fetch-base-descriptor.outputs.file_path }}
+          retention-days: 1
+
+  update-package-json:
+    name: 'Update Package JSON'
+    needs: [determine-source-branch, update-platform-descriptor]
+    if: needs.update-platform-descriptor.outputs.updated == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      has_updates: ${{ steps.update-package-json.outputs.has-updates }}
+      updated_count: ${{ steps.update-package-json.outputs.updated-count }}
+      not_found_ui_report: ${{ steps.update-package-json.outputs.not-found-ui-report }}
+    steps:
+      - name: 'Checkout Platform Repository'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repo }}
+          ref: ${{ needs.determine-source-branch.outputs.source_branch }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: 'Fetch updated UI modules list'
+        id: fetch-updated-ui-modules
+        uses: folio-org/platform-lsp/.github/actions/fetch-updated-ui-modules@master
+        with:
+          applications: ${{ needs.update-platform-descriptor.outputs.updated_applications }}
+          far-url: ${{ env.FAR_URL }}
+
+      - name: 'Read package.json content'
+        id: read-package-json
+        env:
+          SOURCE_BRANCH: ${{ needs.determine-source-branch.outputs.source_branch }}
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          echo "::notice::Reading package.json from checked-out branch: $SOURCE_BRANCH"
+          if [ ! -f package.json ] || [ ! -s package.json ]; then
+            echo "::error::package.json file is missing or empty in branch '$SOURCE_BRANCH'"
+            ls -al || true
+            exit 1
+          fi
+          if ! jq empty package.json 2>/dev/null; then
+            echo '::error::package.json is not valid JSON'
+            cat package.json
+            exit 1
+          fi
+          PACKAGE_JSON_CONTENT=$(jq -c . package.json)
+          {
+            echo 'package_json_content<<EOF'
+            echo "$PACKAGE_JSON_CONTENT"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+          echo '::notice::Read package.json content'
+
+      - name: 'Fetch base package.json'
+        id: fetch-base-package-json
+        uses: folio-org/platform-lsp/.github/actions/fetch-base-file@master
+        with:
+          base_branch: ${{ inputs.release_branch }}
+          file_path: package.json
+          output_filename: package.json.base
+          validate_json: true
+          fail_on_missing: false
+          output_content: true
+
+      - name: 'Update package.json dependencies'
+        id: update-package-json
+        if: steps.fetch-updated-ui-modules.outputs.ui-modules != ''
+        uses: folio-org/platform-lsp/.github/actions/update-package-json@master
+        with:
+          package-json: ${{ steps.read-package-json.outputs.package_json_content }}
+          ui-modules: ${{ steps.fetch-updated-ui-modules.outputs.ui-modules }}
+
+      - name: 'Write updated package.json'
+        id: write-package-json
+        if: steps.update-package-json.outputs.has-updates == 'true'
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          echo "::notice::Writing updated package.json content"
+          echo '${{ steps.update-package-json.outputs.package-json }}' | jq . > package.json
+          if [ ! -s package.json ]; then
+            echo "::error::Failed to write updated package.json"
+            exit 1
+          fi
+          echo "::notice::Successfully updated package.json with ${{ steps.update-package-json.outputs.updated-count }} dependency changes"
+
+      - name: 'Upload Package JSON Artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'package-json-files-${{ github.run_id }}'
+          path: |
+            package.json
+            ${{ steps.fetch-base-package-json.outputs.file_path }}
+          retention-days: 1
+
+  generate-reports:
+    name: 'Generate Diff Reports'
+    needs: [determine-source-branch, update-platform-descriptor, update-package-json]
+    if: always() && !cancelled() && needs.update-platform-descriptor.result == 'success'
+    runs-on: ubuntu-latest
+    outputs:
+      updates_markdown: ${{ steps.generate-markdown-reports.outputs.updates_markdown }}
+      ui_updates_markdown: ${{ steps.generate-markdown-reports.outputs.ui_updates_markdown }}
+      missing_ui_markdown: ${{ steps.generate-markdown-reports.outputs.missing_ui_markdown }}
+      updates_cnt: ${{ steps.build-change-report.outputs.updates_cnt }}
+      artifact_name: ${{ env.ARTIFACT_NAME }}
+    steps:
+      - name: 'Download Platform Descriptor Artifact'
+        uses: actions/download-artifact@v4
+        with:
+          name: 'platform-descriptor-files-${{ github.run_id }}'
+          path: .
+
+      - name: 'Download Package JSON Artifact'
+        if: needs.update-package-json.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: 'package-json-files-${{ github.run_id }}'
+          path: .
+        continue-on-error: true
+
+      - name: 'Find base descriptor file'
+        id: find-base-descriptor
+        env:
+          STATE_FILE: ${{ env.STATE_FILE }}
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          # Determine base descriptor file name
+          BASE_STATE_FILE=$(find . -maxdepth 1 -name "platform-descriptor.base.json" -o -name "*.base.json" | head -n 1)
+          if [ -z "$BASE_STATE_FILE" ]; then
+            echo "::error::Could not find base descriptor file in artifact"
+            ls -la
+            exit 1
+          fi
+          echo "::notice::Using base descriptor: $BASE_STATE_FILE"
+          echo "base_file=$BASE_STATE_FILE" >> "$GITHUB_OUTPUT"
+
+      - name: 'Find base package.json file'
+        id: find-base-package
+        if: needs.update-package-json.result == 'success'
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          # Determine base package.json file name
+          BASE_PACKAGE_FILE=$(find . -maxdepth 1 -name "package.json.base" -o -name "package.*.base" | head -n 1)
+          if [ -z "$BASE_PACKAGE_FILE" ]; then
+            echo "::warning::Could not find base package.json file in artifact"
+            echo "base_file=" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::Using base package.json: $BASE_PACKAGE_FILE"
+            echo "base_file=$BASE_PACKAGE_FILE" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 'Generate platform diff report'
+        id: build-change-report
+        uses: folio-org/platform-lsp/.github/actions/generate-platform-diff-report@master
+        with:
+          base_descriptor_path: ${{ steps.find-base-descriptor.outputs.base_file }}
+          head_descriptor_path: ${{ env.STATE_FILE }}
+          release_branch: ${{ inputs.release_branch }}
+          update_branch: ${{ inputs.update_branch }}
+          platform_version: ${{ needs.update-platform-descriptor.outputs.new_version }}
+
+      - name: 'Generate package diff report'
+        id: build-ui-diff
+        if: needs.update-package-json.result == 'success' && steps.find-base-package.outputs.base_file != ''
+        uses: folio-org/platform-lsp/.github/actions/generate-package-diff-report@master
+        with:
+          base_package_path: ${{ steps.find-base-package.outputs.base_file }}
+          head_package_path: package.json
+          release_branch: ${{ inputs.release_branch }}
+          update_branch: ${{ inputs.update_branch }}
+          dependency_type: dependencies
+
+      - name: 'Generate Collapsed Markdown Report'
+        id: generate-markdown-reports
+        uses: folio-org/platform-lsp/.github/actions/generate-markdown-reports@master
+        with:
+          updated: ${{ needs.update-platform-descriptor.outputs.updated }}
+          failure_reason: ${{ needs.update-platform-descriptor.outputs.failure_reason }}
+          descriptor_markdown: ${{ steps.build-change-report.outputs.updates_markdown }}
+          ui_updates_markdown: ${{ steps.build-ui-diff.outputs.ui_updates_markdown }}
+          not_found_ui_report: ${{ needs.update-package-json.outputs.not_found_ui_report }}
+          package_diff_available: ${{ steps.build-ui-diff.outputs.has_changes != '' && 'true' || 'false' }}
+          write_to_summary: 'true'
+
+      - name: 'Upload Combined Artifact for Commit'
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{ env.ARTIFACT_NAME }}"
+          path: |
+            ${{ env.STATE_FILE }}
+            package.json
+          retention-days: 1
+
+  commit-changes:
+    name: 'Commit and Push Changes'
+    needs: [determine-source-branch, update-platform-descriptor, update-package-json, generate-reports]
+    if: needs.update-platform-descriptor.outputs.updated == 'true'
+    uses: folio-org/kitfox-github/.github/workflows/commit-and-push-changes.yml@master
+    with:
+      repo: ${{ inputs.repo }}
+      branch: ${{ inputs.update_branch }}
+      artifact_name: ${{ needs.generate-reports.outputs.artifact_name || 'platform-lsp-update-files' }}
+      commit_message: |
+        Update platform to ${{ needs.update-platform-descriptor.outputs.new_version }}.
+
+        **Total applications/components updated:** ${{ needs.generate-reports.outputs.updates_cnt || '0' }}
+        ${{ needs.generate-reports.outputs.updates_markdown }}
+      dry_run: ${{ inputs.dry_run }}
+      use_github_app: true
+      source_branch: ${{ needs.determine-source-branch.outputs.source_branch }}
+    secrets: inherit
+
+  manage-pr:
+    name: 'Manage Pull Request'
+    needs: [determine-source-branch, update-platform-descriptor, update-package-json, generate-reports, commit-changes]
+    if: |
+      always() &&
+      !inputs.dry_run &&
+      !cancelled() &&
+      needs.update-platform-descriptor.result == 'success' &&
+      (
+        needs.update-platform-descriptor.outputs.updated == 'true' ||
+        (
+          needs.determine-source-branch.outputs.pr_exists != 'true' &&
+          needs.determine-source-branch.outputs.update_branch_exists == 'true'
+        )
+      )
+    runs-on: ubuntu-latest
+    outputs:
+      pr_created: ${{ steps.create-pr.outputs.pr_created == 'true' }}
+      pr_updated: ${{ steps.update-pr.outputs.pr_updated == 'true' }}
+      pr_number: ${{ steps.create-pr.outputs.pr_number || steps.update-pr.outputs.pr_number || needs.determine-source-branch.outputs.pr_number || '' }}
+      pr_url: ${{ steps.create-pr.outputs.pr_url || steps.update-pr.outputs.pr_url || needs.determine-source-branch.outputs.pr_url || '' }}
+      successful_reviewers: ${{ steps.create-pr.outputs.successful_reviewers || steps.update-pr.outputs.successful_reviewers || '' }}
+      failed_reviewers: ${{ steps.create-pr.outputs.failed_reviewers || steps.update-pr.outputs.failed_reviewers || '' }}
+    steps:
+      - name: 'Build PR body'
+        id: build-pr-body
+        if: |
+          needs.update-platform-descriptor.outputs.updated == 'true' ||
+          needs.determine-source-branch.outputs.update_branch_exists == 'true'
+        uses: folio-org/platform-lsp/.github/actions/build-pr-body@master
+        with:
+          new_version: ${{ needs.update-platform-descriptor.outputs.new_version }}
+          updates_cnt: ${{ needs.generate-reports.outputs.updates_cnt }}
+          updates_markdown: ${{ needs.generate-reports.outputs.updates_markdown }}
+          ui_updates_markdown: ${{ needs.generate-reports.outputs.ui_updates_markdown }}
+          missing_ui_markdown: ${{ needs.generate-reports.outputs.missing_ui_markdown }}
+          release_branch: ${{ inputs.release_branch }}
+          update_branch: ${{ inputs.update_branch }}
+
+      - name: 'Create PR if needed'
+        id: create-pr
+        if: needs.determine-source-branch.outputs.pr_exists != 'true'
+        uses: folio-org/kitfox-github/.github/actions/create-pr@master
+        with:
+          repo: ${{ inputs.repo }}
+          base_branch: ${{ inputs.release_branch }}
+          head_branch: ${{ inputs.update_branch }}
+          pr_title: "Release: Update to ${{ needs.update-platform-descriptor.outputs.new_version || 'No updates' }}"
+          pr_body: ${{ steps.build-pr-body.outputs.pr_body }}
+          pr_labels: ${{ inputs.pr_labels }}
+          pr_reviewers: ${{ inputs.pr_reviewers }}
+          github_token: ${{ env.GH_TOKEN }}
+
+      - name: 'Update existing PR if needed'
+        id: update-pr
+        if: needs.determine-source-branch.outputs.pr_exists == 'true'
+        uses: folio-org/kitfox-github/.github/actions/update-pr@master
+        with:
+          repo: ${{ inputs.repo }}
+          pr_number: ${{ needs.determine-source-branch.outputs.pr_number }}
+          pr_title: "Release: Update to ${{ needs.update-platform-descriptor.outputs.new_version }}"
+          pr_body: ${{ steps.build-pr-body.outputs.pr_body }}
+          pr_labels: ${{ inputs.pr_labels }}
+          pr_reviewers: ${{ inputs.pr_reviewers }}
+          github_token: ${{ env.GH_TOKEN }}

@@ -66,9 +66,15 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  hello-world:
-    name: Hello World
-    runs-on: ubuntu-latest
-    steps:
-      - name: Hello world action step
-        uses: actions/hello-world-javascript-action@v1
+  scan:
+    name: Scan Branch
+    uses: ./.github/workflows/release-update-flow.yml
+    with:
+      repo: ${{ github.repository }}
+      release_branch: ${{ inputs.release_branch }}
+      update_branch: ${{ inputs.update_branch }}
+      workflow_run_number: ${{ github.run_number }}
+      dry_run: ${{ inputs.dry_run }}
+      pr_reviewers: ${{ inputs.pr_reviewers }}
+      pr_labels: ${{ inputs.pr_labels }}
+    secrets: inherit

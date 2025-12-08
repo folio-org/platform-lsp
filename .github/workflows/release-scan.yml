@@ -3,6 +3,7 @@ name: Platform scan for release scheduler
 run-name: Release update scheduler ${{ github.event_name == 'workflow_dispatch' && '[manual]' || '' }}
 
 on:
+  # TODO: Enable scheduled runs once ready
   # schedule:
   #   - cron: '0 * * * *'
 
@@ -28,9 +29,52 @@ permissions:
   pull-requests: write
 
 jobs:
-  hello-world:
-    name: Hello World
+  get-config:
+    name: Get Configuration
     runs-on: ubuntu-latest
+    outputs:
+      branches: ${{ steps.get-config.outputs.release_branches }}
+      branch_count: ${{ steps.get-config.outputs.branch_count }}
+      pr_reviewers: ${{ steps.get-config.outputs.pr_reviewers }}
+      pr_labels: ${{ steps.get-config.outputs.pr_labels }}
+      matrix_includes: ${{ steps.build-matrix.outputs.includes }}
     steps:
-      - name: Hello world action step
-        uses: actions/hello-world-javascript-action@v1
+      - name: Ensure gh CLI # TODO: Remove before merging if using a self-hosted runner with gh pre-installed
+        run: sudo apt-get update && sudo apt-get install -y gh
+
+      - name: Get Release Configuration
+        id: get-config
+        uses: folio-org/kitfox-github/.github/actions/get-update-config@master
+        with:
+          repo: ${{ github.repository }}
+          branch: ${{ github.ref_name }}
+          github_token: ${{ github.token }}
+
+      - name: Build Matrix Includes
+        id: build-matrix
+        env:
+          UPDATE_MAP: ${{ steps.get-config.outputs.update_branches_map }}
+        run: |
+          INCLUDES=$(echo "$UPDATE_MAP" | jq -c '[to_entries[] | {branch: .key, update_branch: .value}]')
+
+          echo "includes=$INCLUDES" >> "$GITHUB_OUTPUT"
+          echo "::notice::Matrix includes: $INCLUDES"
+
+  update-branches:
+    name: Update ${{ matrix.branch }}
+    needs: get-config
+    if: needs.get-config.outputs.branch_count > 0
+    strategy:
+      matrix:
+        branch: ${{ fromJson(needs.get-config.outputs.branches) }}
+        include: ${{ fromJson(needs.get-config.outputs.matrix_includes) }}
+      fail-fast: false
+      max-parallel: 3
+    uses: ./.github/workflows/release-update.yml
+    with:
+      release_branch: ${{ matrix.branch }}
+      update_branch: ${{ matrix.update_branch }}
+      dry_run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+      pr_reviewers: ${{ needs.get-config.outputs.pr_reviewers }}
+      pr_labels: ${{ needs.get-config.outputs.pr_labels }}
+    secrets: inherit

@@ -1,0 +1,79 @@
+name: 'Calculate Version Increment'
+description: 'Calculates new semantic version based on detected changes using FOLIO release versioning pattern'
+author: 'FOLIO DevOps'
+
+inputs:
+  current_version:
+    description: 'Current version string (e.g., R1-2025.3)'
+    required: true
+  changes_detected:
+    description: 'Whether changes were detected (true/false)'
+    required: true
+  version_pattern:
+    description: 'Regex pattern for version matching (default: FOLIO pattern R<iteration>-<year>.<patch>)'
+    required: false
+    default: '^(R[0-9]+-[0-9]+)\.([0-9]+)$'
+  increment_type:
+    description: 'Type of increment to apply (currently only "patch" is supported)'
+    required: false
+    default: 'patch'
+
+outputs:
+  new_version:
+    description: 'Calculated new version (unchanged if no changes detected or pattern match failed)'
+    value: ${{ steps.calculate.outputs.new_version }}
+  updated:
+    description: 'Whether version was successfully incremented (true/false)'
+    value: ${{ steps.calculate.outputs.updated }}
+  failure_reason:
+    description: 'Error message if version calculation failed (empty if successful)'
+    value: ${{ steps.calculate.outputs.failure_reason }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Calculate version increment'
+      id: calculate
+      shell: bash
+      env:
+        CURRENT_VERSION: ${{ inputs.current_version }}
+        CHANGES_DETECTED: ${{ inputs.changes_detected }}
+        VERSION_PATTERN: ${{ inputs.version_pattern }}
+        INCREMENT_TYPE: ${{ inputs.increment_type }}
+      run: |
+        set -euo pipefail
+        IFS=$'\n\t'
+
+        UPDATED=false
+        FAILURE_REASON=''
+        NEW_VERSION="$CURRENT_VERSION"
+
+        if [ "$CHANGES_DETECTED" = 'true' ]; then
+          if [[ "$CURRENT_VERSION" =~ $VERSION_PATTERN ]]; then
+            BASE_VERSION="${BASH_REMATCH[1]}"
+            PATCH_VERSION="${BASH_REMATCH[2]}"
+
+            case "$INCREMENT_TYPE" in
+              patch)
+                NEW_VERSION="${BASE_VERSION}.$((PATCH_VERSION + 1))"
+                UPDATED=true
+                echo "::notice::Calculated new version $NEW_VERSION from previous $CURRENT_VERSION"
+                ;;
+              *)
+                FAILURE_REASON="Unsupported increment type: $INCREMENT_TYPE"
+                echo "::warning::$FAILURE_REASON"
+                ;;
+            esac
+          else
+            FAILURE_REASON="Previous version '$CURRENT_VERSION' does not match expected format 'R<iteration>-<year>.<patch>'"
+            echo "::warning::$FAILURE_REASON (no update applied)"
+            UPDATED=false
+          fi
+        else
+          echo '::notice::No component/application changes detected; version unchanged'
+        fi
+
+        echo "updated=$UPDATED" >> "$GITHUB_OUTPUT"
+        echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+        echo "failure_reason=$FAILURE_REASON" >> "$GITHUB_OUTPUT"
+
