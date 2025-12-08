@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000001961"
+        "version": "2.1.0-SNAPSHOT.100200000002182"
       },
       {
         "name": "app-platform-complete",
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.3.0-SNAPSHOT.100200000002068"
+        "version": "1.3.0-SNAPSHOT.100200000002187"
       },
       {
         "name": "app-ebsconet",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-reading-room",
-        "version": "1.3.0-SNAPSHOT.100200000001756"
+        "version": "1.3.0-SNAPSHOT.100200000002144"
       },
       {
         "name": "app-reporting",
@@ -146,7 +146,7 @@
       },
       {
         "name": "app-rtac",
-        "version": "1.1.0-SNAPSHOT.100200000000533"
+        "version": "1.1.0-SNAPSHOT.100200000002189"
       },
       {
         "name": "app-search",
@@ -154,11 +154,11 @@
       },
       {
         "name": "app-service-interaction",
-        "version": "1.0.0-SNAPSHOT.100200000001755"
+        "version": "1.0.0-SNAPSHOT.100200000002139"
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100200000001900"
+        "version": "1.0.0-SNAPSHOT.100200000002193"
       }
     ]
   },
