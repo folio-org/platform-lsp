@@ -70,7 +70,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.3.0-SNAPSHOT.100200000002188"
+        "version": "1.3.0-SNAPSHOT.100200000002234"
       },
       {
         "name": "app-ebsconet",
@@ -78,11 +78,11 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.0-SNAPSHOT.100200000000525"
+        "version": "2.2.0-SNAPSHOT.100200000002188"
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000002156"
+        "version": "1.1.0-SNAPSHOT.100200000002207"
       },
       {
         "name": "app-erm-usage",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000002198"
+        "version": "1.2.0-SNAPSHOT.100200000002242"
       },
       {
         "name": "app-gobi",
@@ -102,11 +102,11 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100200000001591"
+        "version": "1.0.0-SNAPSHOT.100200000002225"
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000002166"
+        "version": "1.1.0-SNAPSHOT.100200000002233"
       },
       {
         "name": "app-lists",
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-requests-ecs",
-        "version": "1.3.0-SNAPSHOT.100200000001755"
+        "version": "1.3.0-SNAPSHOT.100200000002187"
       },
       {
         "name": "app-requests-mediated",
