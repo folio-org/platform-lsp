@@ -115,7 +115,11 @@
       {
         "name": "app-marc-migrations",
         "version": "2.2.0-SNAPSHOT.100200000001901"
-      },      
+      },
+      {
+        "name": "app-marc-storage",
+        "version": "1.0.0-SNAPSHOT.100200000000995"
+      },
       {
         "name": "app-mosaic",
         "version": "1.1.0-SNAPSHOT.100200000001059"
