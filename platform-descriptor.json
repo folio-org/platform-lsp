@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000002236"
+        "version": "1.0.0-SNAPSHOT.100200000002275"
       },
       {
         "name": "app-bulk-edit",
@@ -62,7 +62,7 @@
       },
       {
         "name": "app-dashboard",
-        "version": "1.0.0-SNAPSHOT.100200000002233"
+        "version": "1.0.0-SNAPSHOT.100200000002271"
       },
       {
         "name": "app-data-export",
@@ -162,7 +162,7 @@
       },
       {
         "name": "app-service-interaction",
-        "version": "1.0.0-SNAPSHOT.100200000002185"
+        "version": "1.0.0-SNAPSHOT.100200000002223"
       },
       {
         "name": "app-serials-management",
