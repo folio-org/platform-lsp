@@ -36,13 +36,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.2.0-SNAPSHOT.100200000002379"
+        "version": "3.2.0-SNAPSHOT.100200000002382"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000002364"
+        "version": "1.2.0-SNAPSHOT.100200000002452"
       },
       {
         "name": "app-agreements",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000002409"
+        "version": "1.2.0-SNAPSHOT.100200000002412"
       },
       {
         "name": "app-gobi",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000002401"
+        "version": "1.1.0-SNAPSHOT.100200000002404"
       },
       {
         "name": "app-lists",
@@ -154,7 +154,7 @@
       },
       {
         "name": "app-rtac",
-        "version": "1.1.0-SNAPSHOT.100200000002354"
+        "version": "1.1.0-SNAPSHOT.100200000002415"
       },
       {
         "name": "app-search",
