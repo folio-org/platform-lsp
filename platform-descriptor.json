@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.2.0-SNAPSHOT.100200000002382"
+        "version": "3.2.0-SNAPSHOT.100200000002386"
       }
     ],
     "optional": [
@@ -54,7 +54,7 @@
       },
       {
         "name": "app-consortia",
-        "version": "1.4.0-SNAPSHOT.100200000002238"
+        "version": "1.4.0-SNAPSHOT.100200000002422"
       },
       {
         "name": "app-consortia-manager",
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.0-SNAPSHOT.100200000002188"
+        "version": "2.2.0-SNAPSHOT.100200000002368"
       },
       {
         "name": "app-eholdings",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.0.0-SNAPSHOT.100200000001167"
+        "version": "1.0.0-SNAPSHOT.100200000001177"
       },
       {
         "name": "app-mosaic",
@@ -146,7 +146,7 @@
       },
       {
         "name": "app-requests-mediated",
-        "version": "1.2.0-SNAPSHOT.100200000002235"
+        "version": "1.2.0-SNAPSHOT.100200000002420"
       },
       {
         "name": "app-requests-mediated-ui",
