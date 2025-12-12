@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.2.0-SNAPSHOT.100200000002327"
+        "version": "3.2.0-SNAPSHOT.100200000002379"
       }
     ],
     "optional": [
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000002406"
+        "version": "1.2.0-SNAPSHOT.100200000002409"
       },
       {
         "name": "app-gobi",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.0.0-SNAPSHOT.100200000001153"
+        "version": "1.0.0-SNAPSHOT.100200000001167"
       },
       {
         "name": "app-mosaic",
