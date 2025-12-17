@@ -36,13 +36,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.2.0-SNAPSHOT.100200000002623"
+        "version": "3.2.0-SNAPSHOT.100200000002644"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000002697"
+        "version": "1.2.0-SNAPSHOT.100200000002726"
       },
       {
         "name": "app-agreements",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000002612"
+        "version": "1.2.0-SNAPSHOT.100200000002672"
       },
       {
         "name": "app-gobi",
