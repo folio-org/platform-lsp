@@ -32,21 +32,21 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000002715"
+        "version": "2.1.0-SNAPSHOT.100200000002716"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.2.0-SNAPSHOT.100200000002691"
+        "version": "3.2.0-SNAPSHOT.100200000002692"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000002771"
+        "version": "1.2.0-SNAPSHOT.100200000002772"
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000002723"
+        "version": "1.0.0-SNAPSHOT.100200000002724"
       },
       {
         "name": "app-bulk-edit",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-gobi",
-        "version": "1.1.0-SNAPSHOT.100200000002682"
+        "version": "1.1.0-SNAPSHOT.100200000002683"
       },
       {
         "name": "app-inn-reach",
