@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000002620"
+        "version": "1.0.0-SNAPSHOT.100200000002719"
       },
       {
         "name": "app-bulk-edit",
@@ -66,7 +66,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000002606"
+        "version": "1.0.0-SNAPSHOT.100200000002707"
       },
       {
         "name": "app-dcb",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000002683"
+        "version": "1.1.0-SNAPSHOT.100200000002705"
       },
       {
         "name": "app-lists",
