@@ -32,29 +32,29 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000002692"
+        "version": "2.1.0-SNAPSHOT.100200000002715"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.2.0-SNAPSHOT.100200000002683"
+        "version": "3.2.0-SNAPSHOT.100200000002691"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000002747"
+        "version": "1.2.0-SNAPSHOT.100200000002771"
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000002719"
+        "version": "1.0.0-SNAPSHOT.100200000002723"
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000002241"
+        "version": "1.2.0-SNAPSHOT.100200000002347"
       },
       {
         "name": "app-consortia",
-        "version": "1.4.0-SNAPSHOT.100200000002422"
+        "version": "1.4.0-SNAPSHOT.100200000002723"
       },
       {
         "name": "app-consortia-manager",
@@ -66,7 +66,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000002707"
+        "version": "1.0.0-SNAPSHOT.100200000002712"
       },
       {
         "name": "app-dcb",
@@ -94,15 +94,15 @@
       },
       {
         "name": "app-gobi",
-        "version": "1.1.0-SNAPSHOT.100200000002579"
+        "version": "1.1.0-SNAPSHOT.100200000002682"
       },
       {
         "name": "app-inn-reach",
-        "version": "1.1.0-SNAPSHOT.100200000002573"
+        "version": "1.1.0-SNAPSHOT.100200000002679"
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100200000002597"
+        "version": "1.0.0-SNAPSHOT.100200000002703"
       },
       {
         "name": "app-linked-data",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "2.2.0-SNAPSHOT.100200000002288"
+        "version": "2.2.0-SNAPSHOT.100200000002771"
       },
       {
         "name": "app-marc-storage",
@@ -166,7 +166,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100200000002713"
+        "version": "1.0.0-SNAPSHOT.100200000002725"
       }
     ]
   },
