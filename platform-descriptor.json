@@ -36,13 +36,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.2.0-SNAPSHOT.100200000002745"
+        "version": "3.2.0-SNAPSHOT.100200000002748"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000002772"
+        "version": "1.2.0-SNAPSHOT.100200000002826"
       },
       {
         "name": "app-agreements",
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000002389"
+        "version": "1.2.0-SNAPSHOT.100200000002402"
       },
       {
         "name": "app-consortia",
@@ -82,7 +82,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000002207"
+        "version": "1.1.0-SNAPSHOT.100200000002743"
       },
       {
         "name": "app-erm-usage",
