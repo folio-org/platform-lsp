@@ -32,17 +32,17 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000002819"
+        "version": "2.1.0-SNAPSHOT.100200000002824"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.2.0-SNAPSHOT.100200000002748"
+        "version": "3.2.0-SNAPSHOT.100200000002802"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000002830"
+        "version": "1.2.0-SNAPSHOT.100200000002878"
       },
       {
         "name": "app-agreements",
@@ -66,7 +66,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000002785"
+        "version": "1.0.0-SNAPSHOT.100200000002821"
       },
       {
         "name": "app-dcb",
@@ -86,11 +86,11 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000002727"
+        "version": "2.2.0-SNAPSHOT.100200000002822"
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000002796"
+        "version": "1.2.0-SNAPSHOT.100200000002822"
       },
       {
         "name": "app-gobi",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000002705"
+        "version": "1.1.0-SNAPSHOT.100200000002815"
       },
       {
         "name": "app-lists",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.0.0-SNAPSHOT.100200000001177"
+        "version": "1.0.0-SNAPSHOT.100200000001578"
       },
       {
         "name": "app-mosaic",
@@ -130,7 +130,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100200000002621"
+        "version": "1.2.0-SNAPSHOT.100200000002838"
       },
       {
         "name": "app-reading-room",
