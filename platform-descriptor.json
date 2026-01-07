@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000003507"
+        "version": "1.2.0-SNAPSHOT.100200000003550"
       },
       {
         "name": "app-agreements",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000003444"
+        "version": "2.2.0-SNAPSHOT.100200000003483"
       },
       {
         "name": "app-fqm",
