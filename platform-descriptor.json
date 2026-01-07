@@ -110,7 +110,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.1.0-SNAPSHOT.100200000003441"
+        "version": "1.1.0-SNAPSHOT.100200000003488"
       },
       {
         "name": "app-marc-migrations",
@@ -138,7 +138,7 @@
       },
       {
         "name": "app-reporting",
-        "version": "1.4.0-SNAPSHOT.100200000003493"
+        "version": "1.4.0-SNAPSHOT.100200000003501"
       },
       {
         "name": "app-requests-ecs",
