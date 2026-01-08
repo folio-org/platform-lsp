@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000003472"
+        "version": "2.1.0-SNAPSHOT.100200000003504"
       },
       {
         "name": "app-platform-complete",
@@ -130,7 +130,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100200000003463"
+        "version": "1.2.0-SNAPSHOT.100200000003528"
       },
       {
         "name": "app-reading-room",
