@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000003619"
+        "version": "1.2.0-SNAPSHOT.100200000003638"
       },
       {
         "name": "app-agreements",
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000003140"
+        "version": "1.2.0-SNAPSHOT.100200000003188"
       },
       {
         "name": "app-consortia",
