@@ -36,13 +36,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.2.0-SNAPSHOT.100200000003733"
+        "version": "3.2.0-SNAPSHOT.100200000003794"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000003892"
+        "version": "1.2.0-SNAPSHOT.100200000003899"
       },
       {
         "name": "app-agreements",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000003746"
+        "version": "1.1.0-SNAPSHOT.100200000003806"
       },
       {
         "name": "app-lists",
@@ -166,7 +166,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100200000003748"
+        "version": "1.0.0-SNAPSHOT.100200000003817"
       }
     ]
   },
