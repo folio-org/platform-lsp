@@ -36,13 +36,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.2.0-SNAPSHOT.100200000003794"
+        "version": "3.2.0-SNAPSHOT.100200000003798"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000003899"
+        "version": "1.2.0-SNAPSHOT.100200000003903"
       },
       {
         "name": "app-agreements",
@@ -54,7 +54,7 @@
       },
       {
         "name": "app-consortia",
-        "version": "1.4.0-SNAPSHOT.100200000003485"
+        "version": "1.4.0-SNAPSHOT.100200000003844"
       },
       {
         "name": "app-consortia-manager",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-ebsconet",
-        "version": "1.1.0-SNAPSHOT.100200000003666"
+        "version": "1.1.0-SNAPSHOT.100200000003732"
       },
       {
         "name": "app-edge-complete",
