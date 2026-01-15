@@ -50,7 +50,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000003481"
+        "version": "1.2.0-SNAPSHOT.100200000003606"
       },
       {
         "name": "app-consortia",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000003951"
+        "version": "1.2.0-SNAPSHOT.100200000003973"
       },
       {
         "name": "app-gobi",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.1.0-SNAPSHOT.100200000003966"
+        "version": "1.1.0-SNAPSHOT.100200000003976"
       },
       {
         "name": "app-marc-migrations",
