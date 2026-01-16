@@ -133,6 +133,10 @@
         "version": "1.2.0-SNAPSHOT.100200000003528"
       },
       {
+        "name": "app-quick-marc",
+        "version": "1.0.0-SNAPSHOT.100200000000003"
+      },
+      {
         "name": "app-reading-room",
         "version": "1.4.0-SNAPSHOT.100200000003923"
       },
