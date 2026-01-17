@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000004124"
+        "version": "1.2.0-SNAPSHOT.100200000004132"
       },
       {
         "name": "app-agreements",
@@ -82,7 +82,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000003727"
+        "version": "1.1.0-SNAPSHOT.100200000004037"
       },
       {
         "name": "app-erm-usage",
