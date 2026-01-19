@@ -82,7 +82,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000004037"
+        "version": "1.1.0-SNAPSHOT.100200000004186"
       },
       {
         "name": "app-erm-usage",
@@ -170,7 +170,7 @@
       },
       {
         "name": "app-service-interaction",
-        "version": "1.0.0-SNAPSHOT.100200000003995"
+        "version": "1.0.0-SNAPSHOT.100200000004138"
       },
       {
         "name": "app-serials-management",
