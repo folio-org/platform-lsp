@@ -36,13 +36,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000004030"
+        "version": "3.3.0-SNAPSHOT.100200000004040"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000004133"
+        "version": "1.2.0-SNAPSHOT.100200000004311"
       },
       {
         "name": "app-agreements",
