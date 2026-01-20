@@ -90,7 +90,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000004181"
+        "version": "1.2.0-SNAPSHOT.100200000004239"
       },
       {
         "name": "app-gobi",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.1.0-SNAPSHOT.100200000004053"
+        "version": "1.1.0-SNAPSHOT.100200000004242"
       },
       {
         "name": "app-marc-migrations",
