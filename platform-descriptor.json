@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000004081"
+        "version": "3.3.0-SNAPSHOT.100200000004088"
       }
     ],
     "optional": [
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000004239"
+        "version": "1.2.0-SNAPSHOT.100200000004279"
       },
       {
         "name": "app-gobi",
