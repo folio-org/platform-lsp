@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000004088"
+        "version": "3.3.0-SNAPSHOT.100200000004095"
       }
     ],
     "optional": [
@@ -102,7 +102,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100200000004194"
+        "version": "1.0.0-SNAPSHOT.100200000004261"
       },
       {
         "name": "app-linked-data",
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-requests-ecs",
-        "version": "1.4.0-SNAPSHOT.100200000003384"
+        "version": "1.4.0-SNAPSHOT.100200000004209"
       },
       {
         "name": "app-requests-mediated",
