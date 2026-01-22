@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000004170"
+        "version": "3.3.0-SNAPSHOT.100200000004174"
       }
     ],
     "optional": [
@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000004325"
+        "version": "1.0.0-SNAPSHOT.100200000004352"
       },
       {
         "name": "app-bulk-edit",
@@ -58,7 +58,7 @@
       },
       {
         "name": "app-consortia-manager",
-        "version": "1.4.0-SNAPSHOT.100200000004270"
+        "version": "1.4.0-SNAPSHOT.100200000004356"
       },
       {
         "name": "app-dashboard",
@@ -86,15 +86,15 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000004188"
+        "version": "2.2.0-SNAPSHOT.100200000004352"
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000004349"
+        "version": "1.2.0-SNAPSHOT.100200000004369"
       },
       {
         "name": "app-gobi",
-        "version": "1.1.0-SNAPSHOT.100200000003991"
+        "version": "1.1.0-SNAPSHOT.100200000004299"
       },
       {
         "name": "app-inn-reach",
@@ -130,7 +130,7 @@
       },
       {
         "name": "app-oa",
-        "version": "1.0.0-SNAPSHOT.100200000004059"
+        "version": "1.0.0-SNAPSHOT.100200000004369"
       },
       {
         "name": "app-oai-pmh",
@@ -142,11 +142,11 @@
       },
       {
         "name": "app-reading-room",
-        "version": "1.4.0-SNAPSHOT.100200000004024"
+        "version": "1.4.0-SNAPSHOT.100200000004341"
       },
       {
         "name": "app-reporting",
-        "version": "1.4.0-SNAPSHOT.100200000004054"
+        "version": "1.4.0-SNAPSHOT.100200000004365"
       },
       {
         "name": "app-requests-ecs",
@@ -174,7 +174,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100200000004328"
+        "version": "1.0.0-SNAPSHOT.100200000004367"
       }
     ]
   },
