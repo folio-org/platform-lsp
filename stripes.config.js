@@ -1,5 +1,4 @@
-const apps = require("./stripes.apps");
-const plugins = require("./stripes.plugins");
+const apps = require("./stripes.modules");
 const extra = require("./stripes.extra");
 const { merge } = require('lodash');
 
