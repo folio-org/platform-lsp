@@ -57,7 +57,7 @@ updates_needed=()
 
 echo "Checking Eureka Components:"
 components=$(jq -c '.["eureka-components"][]' platform-descriptor.json)
-echo "$components" | while IFS= read -r component; do
+while IFS= read -r component; do
     component_name=$(echo "$component" | jq -r '.name')
     current_version=$(echo "$component" | jq -r '.version')
     
@@ -76,7 +76,7 @@ echo "$components" | while IFS= read -r component; do
         fi
         echo ""
     fi
-done
+done <<< "$components"
 
 echo "=== Summary ==="
 echo "Total components checked: $total_components"
