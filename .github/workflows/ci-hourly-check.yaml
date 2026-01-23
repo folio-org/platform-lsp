@@ -47,8 +47,22 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Make script executable
-        run: chmod +x scripts/check-apps.sh
+      - name: Make scripts executable
+        run: chmod +x scripts/check-apps.sh scripts/check-core.sh
+
+      - name: Check Eureka Components Versions
+        id: check-core
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          echo "Running Eureka components version check..."
+          set +e
+          ./scripts/check-core.sh 2>&1 | tee /tmp/check-core-output.log
+          exit_code=${PIPESTATUS[0]}
+          set -e
+          echo "SCRIPT_EXIT_CODE=${exit_code}" >> $GITHUB_OUTPUT
+          exit $exit_code
 
       - name: Check and Update Application Versions
         id: check-apps
