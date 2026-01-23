@@ -14,13 +14,19 @@ get_latest_docker_tag() {
     echo "Checking latest tag for: $component_name" >&2
     
     local response=$(curl -s -u "$DOCKERHUB_USERNAME:$DOCKERHUB_TOKEN" "$url")
-    local latest_tag=$(echo "$response" | jq -r '.results[0].name // empty')
+    local latest_date=$(echo "$response" | jq -r '[.results[] | select(.name == "latest") | .last_updated] | first // empty')
+    local latest_day=$(echo "$latest_date" | cut -d"T" -f1)
+    local matched_tag=$(echo "$response" | jq -r --arg day "$latest_day" '[.results[] | select(.name != "latest") | select(.last_updated | startswith($day)) | .name] | first // empty')
     
-    if [ -z "$latest_tag" ]; then
+    if [ -z "$matched_tag" ]; then
+        matched_tag=$(echo "$response" | jq -r '[.results[] | select(.name != "latest") | .name] | first // empty')
+    fi
+
+    if [ -z "$matched_tag" ]; then
         echo "No tags found for $component_name" >&2
         echo ""
     else
-        echo "$latest_tag"
+        echo "$matched_tag"
     fi
 }
 
