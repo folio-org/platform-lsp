@@ -5,27 +5,27 @@
   "eureka-components": [
     {
       "name": "folio-kong",
-      "version": "3.10.0-SNAPSHOT.20"
+      "version": "latest"
     },
     {
       "name": "folio-keycloak",
-      "version": "26.5.0-SNAPSHOT.86"
+      "version": "latest"
     },
     {
       "name": "folio-module-sidecar",
-      "version": "3.1.0-SNAPSHOT.280"
+      "version": "latest"
     },
     {
       "name": "mgr-applications",
-      "version": "4.0.0-SNAPSHOT.239"
+      "version": "latest"
     },
     {
       "name": "mgr-tenants",
-      "version": "3.1.0-SNAPSHOT.185"
+      "version": "latest"
     },
     {
       "name": "mgr-tenant-entitlements",
-      "version": "4.0.0-SNAPSHOT.242"
+      "version": "latest"
     }
   ],
   "applications": {
