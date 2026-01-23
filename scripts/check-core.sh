@@ -83,14 +83,61 @@ echo "Total components checked: $total_components"
 echo "Up to date: $up_to_date"
 echo "Outdated: $outdated"
 echo "Failed to check: $failed"
-echo ""
 
 if [ $failed -gt 0 ]; then
+    echo ""
     echo "[FAILED] Some components failed to process!"
     exit 1
 else
+    if [ ${#updates_needed[@]} -gt 0 ]; then
+        echo ""
+        echo "=== Updating platform-descriptor.json ==="
+        
+        cp platform-descriptor.json platform-descriptor.json.backup
+        echo "Created backup: platform-descriptor.json.backup"
+        
+        for update in "${updates_needed[@]}"; do
+            IFS=':' read -r component_name current_version new_version <<< "$update"
+            echo "Updating $component_name: $current_version → $new_version"
+            
+            jq --arg name "$component_name" --arg new_ver "$new_version" '
+                (."eureka-components"[] | select(.name == $name) | .version) = $new_ver
+            ' platform-descriptor.json > platform-descriptor.json.tmp && mv platform-descriptor.json.tmp platform-descriptor.json
+        done
+        
+        echo "Updated platform-descriptor.json with ${#updates_needed[@]} version changes"
+        
+        if git rev-parse --git-dir > /dev/null 2>&1; then
+            echo ""
+            echo "=== Committing and pushing changes ==="
+            
+            git add platform-descriptor.json
+            
+            commit_message="Update Eureka component versions
+
+Updated components:
+$(printf '%s\n' "${updates_needed[@]}" | while IFS=':' read -r comp current new; do
+    echo "- $comp: $current → $new"
+done)"
+            
+            git commit -m "$commit_message"
+            
+            current_branch=$(git branch --show-current)
+            echo "Pushing changes to $current_branch branch..."
+            git push origin "$current_branch"
+            
+            echo "[SUCCESS] Successfully committed and pushed changes to $current_branch branch!"
+        else
+            echo "[WARNING] Not in a git repository - skipping commit and push"
+        fi
+    else
+        echo ""
+        echo "[INFO] No version updates needed - all components are up to date"
+    fi
+    
+    echo ""
     if [ $outdated -gt 0 ]; then
-        echo "[SUCCESS] All components checked! $outdated component(s) have updates available."
+        echo "[SUCCESS] Successfully updated $outdated component(s)!"
     else
         echo "[SUCCESS] All components are up to date!"
     fi
