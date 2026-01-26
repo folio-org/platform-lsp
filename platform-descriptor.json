@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000004444"
+        "version": "3.3.0-SNAPSHOT.100200000004449"
       }
     ],
     "optional": [
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000004522"
+        "version": "2.2.0-SNAPSHOT.100200000004628"
       },
       {
         "name": "app-fqm",
