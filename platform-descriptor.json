@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000004686"
+        "version": "2.1.0-SNAPSHOT.100200000004687"
       },
       {
         "name": "app-platform-complete",
@@ -166,7 +166,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000003722"
+        "version": "1.0.0-SNAPSHOT.100200000004500"
       },
       {
         "name": "app-service-interaction",
@@ -174,7 +174,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100200000004367"
+        "version": "1.0.0-SNAPSHOT.100200000004713"
       }
     ]
   },
