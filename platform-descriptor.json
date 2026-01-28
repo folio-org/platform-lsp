@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000004694"
+        "version": "2.1.0-SNAPSHOT.100200000004749"
       },
       {
         "name": "app-platform-complete",
@@ -82,7 +82,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000004703"
+        "version": "1.1.0-SNAPSHOT.100200000004773"
       },
       {
         "name": "app-erm-usage",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000004774"
+        "version": "1.1.0-SNAPSHOT.100200000004775"
       },
       {
         "name": "app-lists",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "2.2.0-SNAPSHOT.100200000003497"
+        "version": "2.2.0-SNAPSHOT.100200000004804"
       },
       {
         "name": "app-marc-storage",
