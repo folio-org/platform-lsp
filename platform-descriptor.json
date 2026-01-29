@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000004786"
+        "version": "2.1.0-SNAPSHOT.100200000004804"
       },
       {
         "name": "app-platform-complete",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100200000004755"
+        "version": "1.0.0-SNAPSHOT.100200000004802"
       },
       {
         "name": "app-linked-data",
@@ -154,7 +154,7 @@
       },
       {
         "name": "app-requests-ecs",
-        "version": "1.4.0-SNAPSHOT.100200000004209"
+        "version": "1.4.0-SNAPSHOT.100200000004748"
       },
       {
         "name": "app-requests-mediated",
