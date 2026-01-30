@@ -71,7 +71,7 @@
     "@folio/stripes-authority-components": "6.0.3",
     "@folio/stripes-build": "1.0.0",
     "@folio/stripes-erm-components": "10.0.0",
-    "@folio/stripes-inventory-components": "2.0.8",
+    "@folio/stripes-inventory-components": "2.0.9",
     "@folio/stripes-marc-components": "2.0.2",
     "@folio/serials-management": "2.0.4",
     "@folio/tags": "9.0.0",
@@ -112,6 +112,7 @@
     "final-form": "^4.20.4",
     "minimist": "^1.2.3",
     "moment": "~2.29.0",
+    "qs": "^6.14.1",
     "redux-form": "^8.0.0",
     "typescript": "~5.5",
     "@types/react": "^18"
