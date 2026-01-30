@@ -82,7 +82,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.0-SNAPSHOT.100200000004060"
+        "version": "2.2.0-SNAPSHOT.100200000004074"
       },
       {
         "name": "app-eholdings",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000004910"
+        "version": "1.2.0-SNAPSHOT.100200000004914"
       },
       {
         "name": "app-gobi",
@@ -158,7 +158,7 @@
       },
       {
         "name": "app-requests-mediated",
-        "version": "1.2.0-SNAPSHOT.100200000004863"
+        "version": "1.2.0-SNAPSHOT.100200000004925"
       },
       {
         "name": "app-requests-mediated-ui",
