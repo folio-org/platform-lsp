@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000004982"
+        "version": "2.1.0-SNAPSHOT.100200000004987"
       },
       {
         "name": "app-platform-complete",
@@ -42,15 +42,15 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000004985"
+        "version": "1.2.0-SNAPSHOT.100200000005111"
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000004352"
+        "version": "1.0.0-SNAPSHOT.100200000004995"
       },
       {
         "name": "app-authority-records",
-        "version": "1.0.0-SNAPSHOT.100200000000003"
+        "version": "1.0.0-SNAPSHOT.100200000000229"
       },
       {
         "name": "app-bulk-edit",
@@ -86,11 +86,11 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000004773"
+        "version": "1.1.0-SNAPSHOT.100200000005027"
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000004628"
+        "version": "2.2.0-SNAPSHOT.100200000005001"
       },
       {
         "name": "app-fqm",
@@ -98,7 +98,7 @@
       },
       {
         "name": "app-gobi",
-        "version": "1.1.0-SNAPSHOT.100200000004299"
+        "version": "1.1.0-SNAPSHOT.100200000004931"
       },
       {
         "name": "app-inn-reach",
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-reporting",
-        "version": "1.4.0-SNAPSHOT.100200000004365"
+        "version": "1.4.0-SNAPSHOT.100200000005011"
       },
       {
         "name": "app-requests-ecs",
