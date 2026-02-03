@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000005031"
+        "version": "2.1.0-SNAPSHOT.100200000005077"
       },
       {
         "name": "app-platform-complete",
@@ -122,7 +122,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.0.0-SNAPSHOT.100200000003463"
+        "version": "1.0.0-SNAPSHOT.100200000003833"
       },
       {
         "name": "app-mosaic",
