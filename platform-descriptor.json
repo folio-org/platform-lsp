@@ -110,7 +110,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000005125"
+        "version": "1.1.0-SNAPSHOT.100200000005138"
       },
       {
         "name": "app-lists",
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000000003"
+        "version": "1.0.0-SNAPSHOT.100200000000004"
       },
       {
         "name": "app-reading-room",
@@ -170,7 +170,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000004565"
+        "version": "1.0.0-SNAPSHOT.100200000004925"
       },
       {
         "name": "app-service-interaction",
