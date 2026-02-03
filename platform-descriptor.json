@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000004572"
+        "version": "3.3.0-SNAPSHOT.100200000004575"
       }
     ],
     "optional": [
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000003434"
+        "version": "1.0.0-SNAPSHOT.100200000003518"
       },
       {
         "name": "app-dcb",
@@ -162,7 +162,7 @@
       },
       {
         "name": "app-requests-mediated-ui",
-        "version": "1.4.0-SNAPSHOT.100200000003454"
+        "version": "1.4.0-SNAPSHOT.100200000003538"
       },
       {
         "name": "app-rtac",
