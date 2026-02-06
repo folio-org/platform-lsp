@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000005220"
+        "version": "2.1.0-SNAPSHOT.100200000005224"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000004695"
+        "version": "3.3.0-SNAPSHOT.100200000004729"
       }
     ],
     "optional": [
@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000004906"
+        "version": "1.2.0-SNAPSHOT.100200000004913"
       },
       {
         "name": "app-consortia",
@@ -138,7 +138,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100200000005195"
+        "version": "1.2.0-SNAPSHOT.100200000005248"
       },
       {
         "name": "app-quick-marc",
