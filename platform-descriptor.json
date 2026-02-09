@@ -74,7 +74,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.4.0-SNAPSHOT.100200000003940"
+        "version": "1.4.0-SNAPSHOT.100200000005406"
       },
       {
         "name": "app-ebsconet",
@@ -82,7 +82,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.0-SNAPSHOT.100200000004342"
+        "version": "2.2.0-SNAPSHOT.100200000004586"
       },
       {
         "name": "app-eholdings",
