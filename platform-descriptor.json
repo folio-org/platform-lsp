@@ -106,7 +106,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100200000005241"
+        "version": "1.0.0-SNAPSHOT.100200000005403"
       },
       {
         "name": "app-linked-data",
@@ -170,7 +170,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000005279"
+        "version": "1.0.0-SNAPSHOT.100200000005282"
       },
       {
         "name": "app-service-interaction",
