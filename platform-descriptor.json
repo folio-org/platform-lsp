@@ -86,7 +86,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000005226"
+        "version": "1.1.0-SNAPSHOT.100200000005527"
       },
       {
         "name": "app-erm-usage",
@@ -122,7 +122,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.0.0-SNAPSHOT.100200000003833"
+        "version": "1.0.0-SNAPSHOT.100200000004185"
       },
       {
         "name": "app-mosaic",
