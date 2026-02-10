@@ -82,7 +82,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.0-SNAPSHOT.100200000004632"
+        "version": "2.2.0-SNAPSHOT.100200000004638"
       },
       {
         "name": "app-eholdings",
@@ -130,7 +130,7 @@
       },
       {
         "name": "app-notification",
-        "version": "1.0.0-SNAPSHOT.100200000001271"
+        "version": "1.0.0-SNAPSHOT.100200000001317"
       },
       {
         "name": "app-oa",
