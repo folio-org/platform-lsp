@@ -36,13 +36,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000004941"
+        "version": "3.3.0-SNAPSHOT.100200000004946"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000005572"
+        "version": "1.2.0-SNAPSHOT.100200000005582"
       },
       {
         "name": "app-agreements",
@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000004913"
+        "version": "1.2.0-SNAPSHOT.100200000005138"
       },
       {
         "name": "app-consortia",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000005447"
+        "version": "2.2.0-SNAPSHOT.100200000005456"
       },
       {
         "name": "app-fqm",
@@ -170,7 +170,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000005282"
+        "version": "1.0.0-SNAPSHOT.100200000005327"
       },
       {
         "name": "app-service-interaction",
