@@ -490,7 +490,10 @@ jobs:
               ($branch): {
                 enabled: true,
                 need_pr: $need_pr,
-                preRelease: $prerelease
+                preRelease: $prerelease,
+                ruleset: {
+                  enabled: $need_pr
+                }
               }
               | (if $name != "" then . + {name: $name} else . end)
               | (if $desc != "" then . + {description: $desc} else . end)
