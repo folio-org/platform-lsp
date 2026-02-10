@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.0.0-SNAPSHOT.100200000000380"
+        "version": "1.0.0-SNAPSHOT.100200000000678"
       },
       {
         "name": "app-bulk-edit",
@@ -82,7 +82,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.0-SNAPSHOT.100200000004586"
+        "version": "2.2.0-SNAPSHOT.100200000004632"
       },
       {
         "name": "app-eholdings",
@@ -122,7 +122,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.0.0-SNAPSHOT.100200000004185"
+        "version": "1.0.0-SNAPSHOT.100200000004186"
       },
       {
         "name": "app-mosaic",
