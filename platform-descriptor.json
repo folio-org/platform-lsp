@@ -74,7 +74,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.4.0-SNAPSHOT.100200000005494"
+        "version": "1.4.0-SNAPSHOT.100200000005497"
       },
       {
         "name": "app-ebsconet",
@@ -170,7 +170,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000005371"
+        "version": "1.0.0-SNAPSHOT.100200000005376"
       },
       {
         "name": "app-service-interaction",
