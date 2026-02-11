@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000003903"
+        "version": "1.0.0-SNAPSHOT.100200000003906"
       },
       {
         "name": "app-dcb",
@@ -130,7 +130,7 @@
       },
       {
         "name": "app-notification",
-        "version": "1.0.0-SNAPSHOT.100200000001317"
+        "version": "1.0.0-SNAPSHOT.100200000001344"
       },
       {
         "name": "app-oa",
@@ -170,7 +170,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000005327"
+        "version": "1.0.0-SNAPSHOT.100200000005367"
       },
       {
         "name": "app-service-interaction",
