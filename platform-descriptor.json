@@ -36,13 +36,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000004983"
+        "version": "3.3.0-SNAPSHOT.100200000004986"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000005582"
+        "version": "1.2.0-SNAPSHOT.100200000005624"
       },
       {
         "name": "app-agreements",
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000000082"
+        "version": "1.0.0-SNAPSHOT.100200000000382"
       },
       {
         "name": "app-reading-room",
