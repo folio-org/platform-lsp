@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000003906"
+        "version": "1.0.0-SNAPSHOT.100200000003919"
       },
       {
         "name": "app-dcb",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000005456"
+        "version": "2.2.0-SNAPSHOT.100200000005500"
       },
       {
         "name": "app-fqm",
