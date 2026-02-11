@@ -74,7 +74,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.4.0-SNAPSHOT.100200000005406"
+        "version": "1.4.0-SNAPSHOT.100200000005492"
       },
       {
         "name": "app-ebsconet",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000005529"
+        "version": "1.1.0-SNAPSHOT.100200000005569"
       },
       {
         "name": "app-lists",
@@ -170,11 +170,11 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000005367"
+        "version": "1.0.0-SNAPSHOT.100200000005371"
       },
       {
         "name": "app-service-interaction",
-        "version": "1.0.0-SNAPSHOT.100200000005109"
+        "version": "1.0.0-SNAPSHOT.100200000005403"
       },
       {
         "name": "app-serials-management",
