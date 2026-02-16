@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000005086"
+        "version": "3.3.0-SNAPSHOT.100200000005234"
       }
     ],
     "optional": [
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "2.2.0-SNAPSHOT.100200000005540"
+        "version": "2.2.0-SNAPSHOT.100200000005737"
       },
       {
         "name": "app-marc-storage",
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000000406"
+        "version": "1.0.0-SNAPSHOT.100200000000618"
       },
       {
         "name": "app-reading-room",
@@ -170,7 +170,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000005489"
+        "version": "1.0.0-SNAPSHOT.100200000005653"
       },
       {
         "name": "app-service-interaction",
