@@ -3,7 +3,7 @@
     "id": "kong-3.9.2"
   },
   {
-    "id": "folio-keycloak-26.4.3"
+    "id": "folio-keycloak-26.5.1"
   },
   {
     "id": "mgr-applications-3.0.6"
@@ -12,7 +12,7 @@
     "id": "mgr-tenants-3.0.6"
   },
   {
-    "id": "mgr-tenant-entitlements-3.1.9"
+    "id": "mgr-tenant-entitlements-3.1.10"
   },
   {
     "id": "folio-module-sidecar-3.0.18.nb"
