@@ -86,11 +86,11 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000005896"
+        "version": "1.1.0-SNAPSHOT.100200000005911"
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000005784"
+        "version": "2.2.0-SNAPSHOT.100200000005795"
       },
       {
         "name": "app-fqm",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000005872"
+        "version": "1.1.0-SNAPSHOT.100200000005904"
       },
       {
         "name": "app-lists",
@@ -154,7 +154,7 @@
       },
       {
         "name": "app-requests-ecs",
-        "version": "1.4.0-SNAPSHOT.100200000004748"
+        "version": "1.4.0-SNAPSHOT.100200000005692"
       },
       {
         "name": "app-requests-mediated",
