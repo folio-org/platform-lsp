@@ -36,13 +36,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000005293"
+        "version": "3.3.0-SNAPSHOT.100200000005296"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000005934"
+        "version": "1.2.0-SNAPSHOT.100200000005938"
       },
       {
         "name": "app-agreements",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.4.0-SNAPSHOT.100200000005799"
+        "version": "1.4.0-SNAPSHOT.100200000005801"
       },
       {
         "name": "app-ebsconet",
@@ -170,7 +170,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000005711"
+        "version": "1.0.0-SNAPSHOT.100200000005723"
       },
       {
         "name": "app-service-interaction",
