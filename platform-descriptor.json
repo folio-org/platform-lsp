@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000005922"
+        "version": "1.2.0-SNAPSHOT.100200000005934"
       },
       {
         "name": "app-agreements",
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000004207"
+        "version": "1.0.0-SNAPSHOT.100200000004212"
       },
       {
         "name": "app-dcb",
@@ -162,7 +162,7 @@
       },
       {
         "name": "app-requests-mediated-ui",
-        "version": "1.4.0-SNAPSHOT.100200000004207"
+        "version": "1.4.0-SNAPSHOT.100200000004222"
       },
       {
         "name": "app-rtac",
