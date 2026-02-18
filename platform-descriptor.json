@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000005314"
+        "version": "3.3.0-SNAPSHOT.100200000005317"
       }
     ],
     "optional": [
@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000005764"
+        "version": "1.0.0-SNAPSHOT.100200000005806"
       },
       {
         "name": "app-authority-records",
