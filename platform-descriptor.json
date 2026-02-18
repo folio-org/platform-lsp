@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000005766"
+        "version": "2.1.0-SNAPSHOT.100200000005812"
       },
       {
         "name": "app-platform-complete",
@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000005938"
+        "version": "1.2.0-SNAPSHOT.100200000005986"
       },
       {
         "name": "app-agreements",
@@ -82,7 +82,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.0-SNAPSHOT.100200000004774"
+        "version": "2.2.0-SNAPSHOT.100200000005014"
       },
       {
         "name": "app-eholdings",
