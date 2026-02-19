@@ -94,7 +94,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000006024"
+        "version": "1.2.0-SNAPSHOT.100200000006028"
       },
       {
         "name": "app-gobi",
@@ -154,7 +154,7 @@
       },
       {
         "name": "app-requests-ecs",
-        "version": "1.4.0-SNAPSHOT.100200000005692"
+        "version": "1.4.0-SNAPSHOT.100200000005796"
       },
       {
         "name": "app-requests-mediated",
