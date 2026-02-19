@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000005812"
+        "version": "2.1.0-SNAPSHOT.100200000005859"
       },
       {
         "name": "app-platform-complete",
@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000005493"
+        "version": "1.2.0-SNAPSHOT.100200000005597"
       },
       {
         "name": "app-consortia",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000005987"
+        "version": "1.2.0-SNAPSHOT.100200000006024"
       },
       {
         "name": "app-gobi",
