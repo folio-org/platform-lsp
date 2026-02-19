@@ -70,7 +70,7 @@ jobs:
     uses: ./.github/workflows/approve-run.yml
     with:
       environment: 'Eureka CI'
-      team: 'kitfox'
+      team: 'fitfox'
       organization: 'folio-org'
     secrets: inherit
 
