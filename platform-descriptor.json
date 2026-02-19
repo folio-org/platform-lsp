@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000005387"
+        "version": "3.3.0-SNAPSHOT.100200000005395"
       }
     ],
     "optional": [
@@ -170,7 +170,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000005723"
+        "version": "1.0.0-SNAPSHOT.100200000005838"
       },
       {
         "name": "app-service-interaction",
