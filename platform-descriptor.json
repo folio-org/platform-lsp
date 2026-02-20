@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000005442"
+        "version": "3.3.0-SNAPSHOT.100200000005443"
       }
     ],
     "optional": [
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000006028"
+        "version": "1.2.0-SNAPSHOT.100200000006078"
       },
       {
         "name": "app-gobi",
@@ -102,7 +102,7 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "1.1.0-SNAPSHOT.100200000005735"
+        "version": "1.1.0-SNAPSHOT.100200000005899"
       },
       {
         "name": "app-licenses",
