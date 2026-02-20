@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000005405"
+        "version": "3.3.0-SNAPSHOT.100200000005428"
       }
     ],
     "optional": [
@@ -122,7 +122,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.0.0-SNAPSHOT.100200000004478"
+        "version": "1.0.0-SNAPSHOT.100200000004662"
       },
       {
         "name": "app-mosaic",
