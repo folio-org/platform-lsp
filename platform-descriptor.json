@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000005428"
+        "version": "3.3.0-SNAPSHOT.100200000005440"
       }
     ],
     "optional": [
@@ -98,7 +98,7 @@
       },
       {
         "name": "app-gobi",
-        "version": "1.1.0-SNAPSHOT.100200000005775"
+        "version": "1.1.0-SNAPSHOT.100200000005820"
       },
       {
         "name": "app-inn-reach",
