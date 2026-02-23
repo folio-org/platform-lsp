@@ -32,17 +32,17 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000006068"
+        "version": "2.1.0-SNAPSHOT.100200000006072"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000005583"
+        "version": "3.3.0-SNAPSHOT.100200000005614"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000006255"
+        "version": "1.2.0-SNAPSHOT.100200000006259"
       },
       {
         "name": "app-agreements",
@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000005789"
+        "version": "1.2.0-SNAPSHOT.100200000005822"
       },
       {
         "name": "app-consortia",
@@ -102,7 +102,7 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "1.1.0-SNAPSHOT.100200000005899"
+        "version": "1.1.0-SNAPSHOT.100200000006067"
       },
       {
         "name": "app-licenses",
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-reporting",
-        "version": "1.4.0-SNAPSHOT.100200000005789"
+        "version": "1.4.0-SNAPSHOT.100200000006121"
       },
       {
         "name": "app-requests-ecs",
@@ -170,7 +170,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000006061"
+        "version": "1.0.0-SNAPSHOT.100200000006069"
       },
       {
         "name": "app-service-interaction",
