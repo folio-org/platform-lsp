@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000005901"
+        "version": "2.1.0-SNAPSHOT.100200000006064"
       },
       {
         "name": "app-platform-complete",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.4.0-SNAPSHOT.100200000005837"
+        "version": "1.4.0-SNAPSHOT.100200000006104"
       },
       {
         "name": "app-ebsconet",
@@ -170,7 +170,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000005838"
+        "version": "1.0.0-SNAPSHOT.100200000006061"
       },
       {
         "name": "app-service-interaction",
