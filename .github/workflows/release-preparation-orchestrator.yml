@@ -413,10 +413,10 @@ jobs:
           echo "::notice::Updating platform version and eureka-components with preRelease flags"
           tmp2=$(mktemp)
           jq --arg newVer "${{ inputs.new_release_branch }}" '
-            .version = $newVer                                                            #update platform version to release branch
-            | ."eureka-components" |= map(.version = "^VERSION" | .preRelease = "false")  #placeholder all eureka-component versions with preRelease
-          ' "$PLATFORM_TEMPLATE_FILE" > "$tmp2" \
-          && mv "$tmp2" "$PLATFORM_TEMPLATE_FILE"
+            .version = $newVer
+            | if ."eureka-components" then ."eureka-components" |= map(.version = "^VERSION" | .preRelease = "false") else . end
+          ' "$PLATFORM_TEMPLATE_FILE" > "$tmp2"
+          mv "$tmp2" "$PLATFORM_TEMPLATE_FILE"
 
           echo "::group::Updated platform template"
           cat "$PLATFORM_TEMPLATE_FILE"
