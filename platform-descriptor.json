@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000006074"
+        "version": "2.1.0-SNAPSHOT.100200000006077"
       },
       {
         "name": "app-platform-complete",
@@ -42,11 +42,11 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000006259"
+        "version": "1.2.0-SNAPSHOT.100200000006264"
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000005806"
+        "version": "1.0.0-SNAPSHOT.100200000006096"
       },
       {
         "name": "app-authority-records",
@@ -122,7 +122,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.0.0-SNAPSHOT.100200000004666"
+        "version": "1.0.0-SNAPSHOT.100200000004847"
       },
       {
         "name": "app-mosaic",
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000000969"
+        "version": "1.0.0-SNAPSHOT.100200000000972"
       },
       {
         "name": "app-reading-room",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100200000005825"
+        "version": "1.0.0-SNAPSHOT.100200000006170"
       }
     ]
   },
