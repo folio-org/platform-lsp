@@ -32,21 +32,21 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000006082"
+        "version": "2.1.0-SNAPSHOT.100200000006097"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000005623"
+        "version": "3.3.0-SNAPSHOT.100200000005638"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000006267"
+        "version": "1.2.0-SNAPSHOT.100200000006283"
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000006096"
+        "version": "1.0.0-SNAPSHOT.100200000006116"
       },
       {
         "name": "app-authority-records",
@@ -62,15 +62,15 @@
       },
       {
         "name": "app-consortia-manager",
-        "version": "1.4.0-SNAPSHOT.100200000005881"
+        "version": "1.4.0-SNAPSHOT.100200000006270"
       },
       {
         "name": "app-dashboard",
-        "version": "1.0.0-SNAPSHOT.100200000005560"
+        "version": "1.0.0-SNAPSHOT.100200000006196"
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000004322"
+        "version": "1.0.0-SNAPSHOT.100200000004551"
       },
       {
         "name": "app-dcb",
@@ -86,11 +86,11 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000006262"
+        "version": "1.1.0-SNAPSHOT.100200000006290"
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000006114"
+        "version": "2.2.0-SNAPSHOT.100200000006141"
       },
       {
         "name": "app-fqm",
@@ -98,15 +98,15 @@
       },
       {
         "name": "app-gobi",
-        "version": "1.1.0-SNAPSHOT.100200000005820"
+        "version": "1.1.0-SNAPSHOT.100200000006008"
       },
       {
         "name": "app-inn-reach",
-        "version": "1.1.0-SNAPSHOT.100200000006067"
+        "version": "1.1.0-SNAPSHOT.100200000006092"
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100200000005766"
+        "version": "1.0.0-SNAPSHOT.100200000006123"
       },
       {
         "name": "app-linked-data",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.1.0-SNAPSHOT.100200000005906"
+        "version": "1.1.0-SNAPSHOT.100200000006242"
       },
       {
         "name": "app-marc-migrations",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-mosaic",
-        "version": "1.1.0-SNAPSHOT.100200000005896"
+        "version": "1.1.0-SNAPSHOT.100200000006196"
       },
       {
         "name": "app-notification",
@@ -134,23 +134,23 @@
       },
       {
         "name": "app-oa",
-        "version": "1.0.0-SNAPSHOT.100200000005813"
+        "version": "1.0.0-SNAPSHOT.100200000006174"
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100200000005772"
+        "version": "1.2.0-SNAPSHOT.100200000006121"
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000000972"
+        "version": "1.0.0-SNAPSHOT.100200000000990"
       },
       {
         "name": "app-reading-room",
-        "version": "1.4.0-SNAPSHOT.100200000006155"
+        "version": "1.4.0-SNAPSHOT.100200000006186"
       },
       {
         "name": "app-reporting",
-        "version": "1.4.0-SNAPSHOT.100200000006121"
+        "version": "1.4.0-SNAPSHOT.100200000006146"
       },
       {
         "name": "app-requests-ecs",
@@ -162,7 +162,7 @@
       },
       {
         "name": "app-requests-mediated-ui",
-        "version": "1.4.0-SNAPSHOT.100200000004222"
+        "version": "1.4.0-SNAPSHOT.100200000004555"
       },
       {
         "name": "app-rtac",
@@ -174,11 +174,11 @@
       },
       {
         "name": "app-service-interaction",
-        "version": "1.0.0-SNAPSHOT.100200000005403"
+        "version": "1.0.0-SNAPSHOT.100200000006018"
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100200000006170"
+        "version": "1.0.0-SNAPSHOT.100200000006190"
       }
     ]
   },
