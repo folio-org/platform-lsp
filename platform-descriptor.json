@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000005822"
+        "version": "1.2.0-SNAPSHOT.100200000005856"
       },
       {
         "name": "app-consortia",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000006141"
+        "version": "2.2.0-SNAPSHOT.100200000006150"
       },
       {
         "name": "app-fqm",
