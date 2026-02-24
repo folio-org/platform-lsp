@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000005657"
+        "version": "3.3.0-SNAPSHOT.100200000005661"
       }
     ],
     "optional": [
@@ -62,7 +62,7 @@
       },
       {
         "name": "app-consortia-manager",
-        "version": "1.4.0-SNAPSHOT.100200000006270"
+        "version": "1.4.0-SNAPSHOT.100200000006294"
       },
       {
         "name": "app-dashboard",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.4.0-SNAPSHOT.100200000006108"
+        "version": "1.4.0-SNAPSHOT.100200000006159"
       },
       {
         "name": "app-ebsconet",
