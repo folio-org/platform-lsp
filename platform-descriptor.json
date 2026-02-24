@@ -90,7 +90,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000006153"
+        "version": "2.2.0-SNAPSHOT.100200000006172"
       },
       {
         "name": "app-fqm",
@@ -138,7 +138,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100200000006121"
+        "version": "1.2.0-SNAPSHOT.100200000006152"
       },
       {
         "name": "app-quick-marc",
