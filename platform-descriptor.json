@@ -32,17 +32,17 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000006107"
+        "version": "2.1.0-SNAPSHOT.100200000006108"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000005649"
+        "version": "3.3.0-SNAPSHOT.100200000005651"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000006283"
+        "version": "1.2.0-SNAPSHOT.100200000006296"
       },
       {
         "name": "app-agreements",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000006150"
+        "version": "2.2.0-SNAPSHOT.100200000006153"
       },
       {
         "name": "app-fqm",
