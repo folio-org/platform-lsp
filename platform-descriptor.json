@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000006108"
+        "version": "2.1.0-SNAPSHOT.100200000006110"
       },
       {
         "name": "app-platform-complete",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-mosaic",
-        "version": "1.1.0-SNAPSHOT.100200000006196"
+        "version": "1.1.0-SNAPSHOT.100200000006209"
       },
       {
         "name": "app-notification",
