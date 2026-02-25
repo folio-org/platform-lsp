@@ -1988,9 +1988,9 @@
     "@folio/stripes-acq-components" "^7.0.0"
 
 "@folio/myprofile@>=1.0.0":
-  version "11.0.1099000000000175"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/myprofile/-/myprofile-11.0.1099000000000175.tgz#98ad71215e4264750c5073a06d401e808aee1b32"
-  integrity sha512-BJt4Sz3F/K5+pLpIyx6ssYP5elgSdx7RhxSlFtkkeo77gwOuz3htx2LGMNqLZElR+llAOj4BgkTWbeD1KWEJTQ==
+  version "11.0.1099000000000178"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/myprofile/-/myprofile-11.0.1099000000000178.tgz#a49540117ed4e1b025030ef507a8b4805be7a33c"
+  integrity sha512-ovOifh01pIoOogd3LgBFtIG9NixlzlfmwzE52jW3PufFP4IfJzOCCbXElykVyY3ldU7t01L0RakE2doORjwn8g==
   dependencies:
     "@dnd-kit/core" "^6.2.0"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -4004,9 +4004,9 @@ author-regex@^1.0.0:
   integrity sha512-KbWgR8wOYRAPekEmMXrYYdc7BRyhn2Ftk7KWfMUnQ43hFdojWEFRxhhRUm3/OFEdPa1r0KAvTTg9YQK57xTe0g==
 
 autoprefixer@^10.4.13:
-  version "10.4.25"
-  resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-10.4.25.tgz#68c2423faa4fe0c25fe4259c98f81bfe00d6165d"
-  integrity sha512-haPdJifHzYbmnDxx0be44kvj89RWIe+1DZBUyM5BIsT/1bpI5pwK+v30cqz+EfxsxanHq8q2YUvy7LfdRXd/rQ==
+  version "10.4.26"
+  resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-10.4.26.tgz#b0c5fce689744844532ed5700e291f5b83b864e3"
+  integrity sha512-c6Hxv5eR12gQmANICaAGM967LGOXZ4SVAuwkiDrqPqZ5oReOnj/ZBtj3dyfwAnEV5qbzspNzjMM8lZENDK8f5A==
   dependencies:
     browserslist "^4.28.1"
     caniuse-lite "^1.0.30001774"
