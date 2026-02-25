@@ -94,7 +94,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000006324"
+        "version": "1.2.0-SNAPSHOT.100200000006354"
       },
       {
         "name": "app-gobi",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000006321"
+        "version": "1.1.0-SNAPSHOT.100200000006356"
       },
       {
         "name": "app-lists",
@@ -138,7 +138,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100200000006152"
+        "version": "1.2.0-SNAPSHOT.100200000006185"
       },
       {
         "name": "app-quick-marc",
