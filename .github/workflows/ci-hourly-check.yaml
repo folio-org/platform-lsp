@@ -11,6 +11,11 @@ on:
         required: false
         default: "snapshot"
         type: string
+      node-version:
+        description: 'Node.js version to use'
+        required: false
+        default: '20.x'
+        type: string
 
 jobs:
   check-and-update:
@@ -82,6 +87,38 @@ jobs:
           # Exit with the original code to fail the step if script failed
           exit $exit_code
 
+      - name: Install Node ${{ inputs.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          check-latest: true
+          always-auth: true
+
+      - name: Build stripes
+        id: build-stripes
+        run: |
+          set +e
+          {
+            rm -f yarn.lock
+            yarn install
+            
+            {
+              echo "## Yarn Dependencies"
+              echo '```'
+              yarn list --pattern @folio
+              echo '```'
+            } >> $GITHUB_STEP_SUMMARY
+
+            current_branch=$(git branch --show-current)
+            git add yarn.lock
+            git commit -m "[CI] Update yarn.lock" || echo "No changes to commit"
+            git push origin $current_branch
+          } 2>&1 | tee /tmp/build-stripes-output.log
+          exit_code=${PIPESTATUS[0]}
+          set -e
+          echo "SCRIPT_EXIT_CODE=${exit_code}" >> $GITHUB_OUTPUT
+          exit $exit_code
+
       - name: Capture error details
         if: always()
         id: error-details
@@ -89,8 +126,15 @@ jobs:
           if [ "${{ steps.check-apps.outputs.SCRIPT_EXIT_CODE }}" != "0" ]; then
             echo "FAILED_STEP=Check and Update Application Versions" >> $GITHUB_OUTPUT
             if [ -f /tmp/check-apps-output.log ]; then
-              # Get the last 10 lines of output for error context
               ERROR_DETAILS=$(tail -n 10 /tmp/check-apps-output.log | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+              echo "ERROR_DETAILS=${ERROR_DETAILS}" >> $GITHUB_OUTPUT
+            else
+              echo "ERROR_DETAILS=No error log available" >> $GITHUB_OUTPUT
+            fi
+          elif [ "${{ steps.build-stripes.outputs.SCRIPT_EXIT_CODE }}" != "0" ]; then
+            echo "FAILED_STEP=Build stripes" >> $GITHUB_OUTPUT
+            if [ -f /tmp/build-stripes-output.log ]; then
+              ERROR_DETAILS=$(tail -n 20 /tmp/build-stripes-output.log | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
               echo "ERROR_DETAILS=${ERROR_DETAILS}" >> $GITHUB_OUTPUT
             else
               echo "ERROR_DETAILS=No error log available" >> $GITHUB_OUTPUT
