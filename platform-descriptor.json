@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000006349"
+        "version": "1.2.0-SNAPSHOT.100200000006355"
       },
       {
         "name": "app-agreements",
@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000005910"
+        "version": "1.2.0-SNAPSHOT.100200000005920"
       },
       {
         "name": "app-consortia",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000006358"
+        "version": "1.2.0-SNAPSHOT.100200000006359"
       },
       {
         "name": "app-gobi",
