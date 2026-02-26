@@ -1817,9 +1817,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/inventory@>=1.4.0":
-  version "14.0.1099000000001710"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.0.1099000000001710.tgz#6154d4dccc3971be6ea3ab5bc71286199c90fb0c"
-  integrity sha512-RSwoRU+haRAXtXnbmONqXx1ltOqRvBmdrbottyyCnNpZuEt96DVsxmjjER0Vr3yjWd68mhkTFPewlJCtLtPRfA==
+  version "14.0.1099000000001718"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.0.1099000000001718.tgz#8a9fc172c5792a96b367a2bfbe90fd5e4078b577"
+  integrity sha512-Uixk+q0mU/qSdQfuuKGXfnAaHNkxXfVFiaE7PIDijR0Ogu8HQnp8oMHzeh1R8P8Pg/61MwnMK4ITH7Rpal5FMA==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -2276,9 +2276,9 @@
     prop-types "^15.6.0"
 
 "@folio/plugin-query-builder@>=1.0.0", "@folio/plugin-query-builder@^3.0.0":
-  version "3.0.1099000000001286"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-query-builder/-/plugin-query-builder-3.0.1099000000001286.tgz#7d9dfee1bdf3b2d815c8cc19fae22ba610d5f0fc"
-  integrity sha512-WwmDTRT5xQQuCY8rAQjS7s35hmMYjlaGSEGldJd4f2wk+CEwwz1gqbZOxOf6Fs8zDTOqS5z5rRq2cb3T+YKEFA==
+  version "3.0.1099000000001289"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-query-builder/-/plugin-query-builder-3.0.1099000000001289.tgz#45495b1ddb1c879248a6f134a0d0bac3e913a652"
+  integrity sha512-D5QSXKcOEHTcs52wIylKdfLD6oUdA4MAQ/xP2jQFy6RDfUIGM6FRZBMhRAx4yJmO4A1aMfny77Db+Q3LODpPJw==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
