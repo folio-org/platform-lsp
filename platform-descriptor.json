@@ -58,7 +58,7 @@
       },
       {
         "name": "app-consortia",
-        "version": "1.4.0-SNAPSHOT.100200000003955"
+        "version": "1.4.0-SNAPSHOT.100200000006418"
       },
       {
         "name": "app-consortia-manager",
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-ebsconet",
-        "version": "1.1.0-SNAPSHOT.100200000003732"
+        "version": "1.1.0-SNAPSHOT.100200000006257"
       },
       {
         "name": "app-edge-complete",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-mosaic",
-        "version": "1.1.0-SNAPSHOT.100200000006209"
+        "version": "1.1.0-SNAPSHOT.100200000006299"
       },
       {
         "name": "app-notification",
