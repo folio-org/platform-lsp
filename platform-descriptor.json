@@ -36,13 +36,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000005761"
+        "version": "3.3.0-SNAPSHOT.100200000005803"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000006438"
+        "version": "1.2.0-SNAPSHOT.100200000006447"
       },
       {
         "name": "app-agreements",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000006293"
+        "version": "2.2.0-SNAPSHOT.100200000006304"
       },
       {
         "name": "app-fqm",
