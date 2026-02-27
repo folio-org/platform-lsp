@@ -2888,9 +2888,9 @@
     webpack-virtual-modules "^0.4.3"
 
 "@folio/stripes@^10.0.0":
-  version "10.1.109900000000168"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes/-/stripes-10.1.109900000000168.tgz#434443766b70f64d76d0a7e835a39cf985e82037"
-  integrity sha512-+zvSnrN5Df23y9RmLo8U+FLkoGRo5RZczgtS3fZYxSFJ/Luj7epxt5Z8hyhdShkFhlQqE0TGFM8lXtqNKYpMjg==
+  version "10.1.1099000000000220"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes/-/stripes-10.1.1099000000000220.tgz#79840113cadf5173f43ac3300d102edc673a0e14"
+  integrity sha512-gk2xMR3WbfW3UaswjV/J2IvtI8CjA4e0lVQRQIXmXmAw/hHAKC+h4knrObRcNyxKj6elAfJoT7s/uSSVtnNVHg==
   dependencies:
     "@folio/stripes-components" "^13.0.0"
     "@folio/stripes-connect" "^10.0.0"
