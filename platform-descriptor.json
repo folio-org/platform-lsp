@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000005803"
+        "version": "3.3.0-SNAPSHOT.100200000005809"
       }
     ],
     "optional": [
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.4.0-SNAPSHOT.100200000006159"
+        "version": "1.4.0-SNAPSHOT.100200000006303"
       },
       {
         "name": "app-ebsconet",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000006304"
+        "version": "2.2.0-SNAPSHOT.100200000006308"
       },
       {
         "name": "app-fqm",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000006398"
+        "version": "1.1.0-SNAPSHOT.100200000006463"
       },
       {
         "name": "app-lists",
