@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000006447"
+        "version": "1.2.0-SNAPSHOT.100200000006449"
       },
       {
         "name": "app-agreements",
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.0.0-SNAPSHOT.100200000001422"
+        "version": "1.0.0-SNAPSHOT.100200000001529"
       },
       {
         "name": "app-bulk-edit",
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000001026"
+        "version": "1.0.0-SNAPSHOT.100200000001139"
       },
       {
         "name": "app-reading-room",
