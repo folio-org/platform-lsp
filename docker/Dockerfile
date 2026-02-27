@@ -1,4 +1,4 @@
-FROM node:18-alpine AS stripes_build
+FROM node:22-alpine AS stripes_build
 
 # Set build arguments with default values
 ARG OKAPI_URL=http://localhost:9130
