@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000006420"
+        "version": "2.1.0-SNAPSHOT.100200000006438"
       },
       {
         "name": "app-platform-complete",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000006474"
+        "version": "2.2.0-SNAPSHOT.100200000006496"
       },
       {
         "name": "app-fqm",
