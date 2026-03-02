@@ -24,6 +24,11 @@ on:
         required: false
         type: boolean
         default: false
+      use_github_app:
+        description: 'Use GitHub App for authentication'
+        required: false
+        type: boolean
+        default: true
       pr_reviewers:
         description: 'Comma-separated list of reviewers (users or teams with org/ prefix)'
         required: false
@@ -59,40 +64,6 @@ on:
       pr_number:
         description: 'PR number if created or updated'
         value: ${{ jobs.manage-pr.outputs.pr_number }}
-  # TODO: Remove before merging (only for testing purposes)
-  workflow_dispatch:
-    inputs:
-      repo:
-        description: 'Repository name (org/repo format)'
-        required: true
-        type: string
-      release_branch:
-        description: 'Release branch to scan (e.g., R1-2025)'
-        required: true
-        type: string
-      update_branch:
-        description: 'Update branch name for this release branch'
-        required: true
-        type: string
-      workflow_run_number:
-        description: 'GitHub run number for display'
-        required: true
-        type: string
-      dry_run:
-        description: 'Perform dry run without creating PRs'
-        required: false
-        type: boolean
-        default: false
-      pr_reviewers:
-        description: 'Comma-separated list of reviewers (users or teams with org/ prefix)'
-        required: false
-        type: string
-        default: ''
-      pr_labels:
-        description: 'Comma-separated list of labels to add to PR'
-        required: false
-        type: string
-        default: ''
 
 permissions:
   contents: write
@@ -114,7 +85,7 @@ env:
 
 jobs:
   determine-source-branch:
-    name: 'Determine Source Branch and PR Status'
+    name: 'Check branches and PR Status'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -133,7 +104,6 @@ jobs:
           repo: ${{ inputs.repo }}
           release_branch: ${{ inputs.release_branch }}
           update_branch: ${{ inputs.update_branch }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
 
   update-platform-descriptor:
     name: 'Update Platform Descriptor'
@@ -386,7 +356,7 @@ jobs:
   generate-reports:
     name: 'Generate Diff Reports'
     needs: [determine-source-branch, update-platform-descriptor, update-package-json]
-    if: always() && !cancelled() && needs.update-platform-descriptor.result == 'success'
+    if: always() && !cancelled() && needs.update-platform-descriptor.result == 'success' && needs.update-platform-descriptor.outputs.updated == 'true'
     runs-on: ubuntu-latest
     outputs:
       updates_markdown: ${{ steps.generate-markdown-reports.outputs.updates_markdown }}

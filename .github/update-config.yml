@@ -9,13 +9,13 @@ update_config:
 branches:
   - snapshot:
       enabled: false
-      name: "FOLIO Sunflower Version"
+      name: "FOLIO Snapshot Version"
       description: "FOLIO Snapshot LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system."
       need_pr: false
       pre_release: "only"
-  - R1-1994:
+  - R1-2025-ci:
       enabled: true
-      name: "FOLIO R1-1994 Version"
-      description: "FOLIO R1-1994 is a major release that includes significant updates and new features for the FOLIO platform."
+      name: "FOLIO R1-2025 (Sunflower) Version"
+      description: "FOLIO R1-2025 (Sunflower) is a major release that includes significant updates and new features for the FOLIO platform."
       need_pr: true
       pre_release: "false"

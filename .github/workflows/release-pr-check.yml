@@ -1,7 +1,7 @@
 name: Release PR Check
 
 run-name: >-
-  Release platform check • PR #${{ inputs.pr_number || github.event.pull_request.number }} • ${{ inputs.repo_name || github.event.repository.name }}
+  ${{ inputs.pr_number != '' && format('PR check #{0} - {1}', inputs.pr_number, inputs.repo_name) || format('PR check - {0}', inputs.repo_name) }}
 
 on:
   # TODO: Re-enable pull_request trigger when ready
