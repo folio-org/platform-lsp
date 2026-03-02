@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000006447"
+        "version": "1.0.0-SNAPSHOT.100200000006449"
       },
       {
         "name": "app-authority-records",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000006465"
+        "version": "1.2.0-SNAPSHOT.100200000006647"
       },
       {
         "name": "app-gobi",
