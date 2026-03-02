@@ -86,7 +86,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000006290"
+        "version": "1.1.0-SNAPSHOT.100200000006655"
       },
       {
         "name": "app-erm-usage",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "2.2.0-SNAPSHOT.100200000006089"
+        "version": "2.2.0-SNAPSHOT.100200000006426"
       },
       {
         "name": "app-marc-storage",
@@ -170,7 +170,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000006113"
+        "version": "1.0.0-SNAPSHOT.100200000006469"
       },
       {
         "name": "app-service-interaction",
