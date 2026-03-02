@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000006417"
+        "version": "2.1.0-SNAPSHOT.100200000006420"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000005972"
+        "version": "3.3.0-SNAPSHOT.100200000005973"
       }
     ],
     "optional": [
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.4.0-SNAPSHOT.100200000006303"
+        "version": "1.4.0-SNAPSHOT.100200000006467"
       },
       {
         "name": "app-ebsconet",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000006308"
+        "version": "2.2.0-SNAPSHOT.100200000006474"
       },
       {
         "name": "app-fqm",
@@ -102,7 +102,7 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "1.1.0-SNAPSHOT.100200000006092"
+        "version": "1.1.0-SNAPSHOT.100200000006420"
       },
       {
         "name": "app-licenses",
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000001139"
+        "version": "1.0.0-SNAPSHOT.100200000001304"
       },
       {
         "name": "app-reading-room",
