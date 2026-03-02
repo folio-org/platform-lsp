@@ -1,10 +1,10 @@
-FROM node:22-alpine AS stripes_build
+FROM node:18-alpine AS stripes_build
 
 # Set build arguments with default values
 ARG OKAPI_URL=http://localhost:9130
 ARG TENANT_ID=diku
 ARG BUILD_ARGS="--okapi $OKAPI_URL --tenant $TENANT_ID"
-ARG REGISTRY=folioci
+ARG REGISTRY=folio
 ARG CXXFLAGS="-std=c++17"
 
 # Define the home directory for Stripes
