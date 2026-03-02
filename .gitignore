@@ -44,3 +44,6 @@ claude*
 
 # Ignore copilot instructions file
 copilot-*
+
+# Ignore local development configuration files
+local-dev
