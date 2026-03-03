@@ -142,32 +142,73 @@ jobs:
         run: |
           set -euo pipefail
           IFS=$'\n\t'
-          echo '::notice::Reading descriptor file from checked-out branch: '$SOURCE_BRANCH
+          echo "::notice::Reading descriptor file from checked-out branch: $SOURCE_BRANCH"
+          
+          # Validate file existence and non-empty
           if [ ! -f "$STATE_FILE" ] || [ ! -s "$STATE_FILE" ]; then
             echo "::error::Descriptor file '$STATE_FILE' is missing or empty in branch '$SOURCE_BRANCH'"
             ls -al || true
             exit 1
           fi
+          
+          # Validate JSON syntax
+          if ! jq empty "$STATE_FILE" 2>/dev/null; then
+            echo "::error::Descriptor file is not valid JSON"
+            cat "$STATE_FILE" || true
+            exit 1
+          fi
+          
+          # Validate required fields exist and are arrays
           for field in eureka-components applications; do
             if ! jq -e "has(\"$field\")" "$STATE_FILE" >/dev/null; then
               echo "::error::Descriptor file does not contain '$field' field"
-              echo 'File content:' && cat "$STATE_FILE"
+              echo "File content:" && cat "$STATE_FILE"
+              exit 1
+            fi
+            if ! jq -e ".\"$field\" | type == \"array\"" "$STATE_FILE" >/dev/null; then
+              echo "::error::Field '$field' exists but is not an array"
+              jq ".\"$field\"" "$STATE_FILE" || true
               exit 1
             fi
           done
+          
+          # Extract components and applications with compact formatting
           EUREKA_COMPONENTS=$(jq -c '."eureka-components"' "$STATE_FILE")
-          {
-            echo 'eureka_components<<EOF'
-            echo "$EUREKA_COMPONENTS"
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
           APPLICATIONS=$(jq -c '.applications' "$STATE_FILE")
+          
+          # Validate extraction succeeded
+          if [ -z "$EUREKA_COMPONENTS" ] || [ "$EUREKA_COMPONENTS" = "null" ]; then
+            echo "::error::Failed to extract eureka-components"
+            exit 1
+          fi
+          if [ -z "$APPLICATIONS" ] || [ "$APPLICATIONS" = "null" ]; then
+            echo "::error::Failed to extract applications"
+            exit 1
+          fi
+          
+          # Check output size (GitHub Actions limit: ~1MB per output)
+          EUREKA_SIZE=$(echo "$EUREKA_COMPONENTS" | wc -c | tr -d ' ')
+          APPS_SIZE=$(echo "$APPLICATIONS" | wc -c | tr -d ' ')
+          if [ "$EUREKA_SIZE" -gt 524288 ] || [ "$APPS_SIZE" -gt 524288 ]; then
+            echo "::warning::Output size approaching limits (eureka: ${EUREKA_SIZE} bytes, apps: ${APPS_SIZE} bytes)"
+          fi
+          
+          # Use unique delimiter to prevent data collision
+          DELIMITER="EOF_$(uuidgen 2>/dev/null || echo "${RANDOM}${RANDOM}${RANDOM}")"
           {
-            echo 'applications<<EOF'
-            echo "$APPLICATIONS"
-            echo 'EOF'
+            echo "eureka_components<<${DELIMITER}"
+            echo "$EUREKA_COMPONENTS"
+            echo "${DELIMITER}"
           } >> "$GITHUB_OUTPUT"
-          echo '::notice::Extracted eureka-components and applications from descriptor file'
+          
+          {
+            echo "applications<<${DELIMITER}"
+            echo "$APPLICATIONS"
+            echo "${DELIMITER}"
+          } >> "$GITHUB_OUTPUT"
+          
+          echo "::notice::Extracted eureka-components ($(echo "$EUREKA_COMPONENTS" | jq '. | length') items, ${EUREKA_SIZE} bytes)"
+          echo "::notice::Extracted applications ($(echo "$APPLICATIONS" | jq '. | length') items, ${APPS_SIZE} bytes)"
 
       - name: 'Update Eureka Components'
         id: update-eureka-components
