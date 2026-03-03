@@ -36,13 +36,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000006002"
+        "version": "3.3.0-SNAPSHOT.100200000006032"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000006640"
+        "version": "1.2.0-SNAPSHOT.100200000006679"
       },
       {
         "name": "app-agreements",
@@ -82,7 +82,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.0-SNAPSHOT.100200000005460"
+        "version": "2.2.0-SNAPSHOT.100200000005670"
       },
       {
         "name": "app-eholdings",
