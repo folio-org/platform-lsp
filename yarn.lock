@@ -1920,9 +1920,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/linked-data@^2.0.0":
-  version "2.0.1099000000002106"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.1099000000002106.tgz#7bad2eec26c55195e7939fdad90603896b94d665"
-  integrity sha512-07G03Bj3+4TdwkxhiwhVlqKI97g2/aanOrXXO6/feGNKgXFmH37oGXi5as2H5QG8pJ+6qQTZ5WUw/1sEZ0BF+A==
+  version "2.0.1099000000002109"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.1099000000002109.tgz#a93076f3f89df1e3e9dbae584986522dae307356"
+  integrity sha512-eXA4lrIN+0aFvTeSzRhfy7OTOBEBU5J3u+FbFV/9fLGtuFGK6o0IceaTfkMRqpL7tKVhJ7hcSw46LDrW2tJ5mw==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -2605,9 +2605,9 @@
     uuid "^9.0.0"
 
 "@folio/stripes-core@^11.0.0":
-  version "11.1.1099000000001562"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.1.1099000000001562.tgz#c0e91da43b01dfd567f3c595ad44c0a3ddef677c"
-  integrity sha512-iGr+MRfR/WpcmHh5UAV9Uj2Kn/2b1JwwejtsYv5DimfJjjBrF8wM9uR7EA5hiw72gC0LmFU+t2kSTGIow8kKQw==
+  version "11.1.1099000000001571"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.1.1099000000001571.tgz#1f359e47c02f6ccaf9c04bbead68cbc83aeac3ef"
+  integrity sha512-8Ky233/Q/FGGSDURkiB8DcZ04+mwmfz4EXWc2PEH99VVeqUZafDahjZv5uu8Edg4AWP5J3e0up+zh6Nu2QQxGw==
   dependencies:
     "@apollo/client" "^3.2.1"
     classnames "^2.2.5"
