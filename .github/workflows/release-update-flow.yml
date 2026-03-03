@@ -134,96 +134,20 @@ jobs:
           validate_json: true
           fail_on_missing: true
 
-      - name: 'Read descriptor file'
+      - name: 'Extract descriptor fields'
         id: read-descriptor
-        env:
-          SOURCE_BRANCH: ${{ needs.determine-source-branch.outputs.source_branch }}
-          STATE_FILE: ${{ env.STATE_FILE }}
-        run: |
-          set -euo pipefail
-          IFS=$'\n\t'
-          echo "::notice::Reading descriptor file from checked-out branch: $SOURCE_BRANCH"
-          
-          # Validate file existence and non-empty
-          if [ ! -f "$STATE_FILE" ] || [ ! -s "$STATE_FILE" ]; then
-            echo "::error::Descriptor file '$STATE_FILE' is missing or empty in branch '$SOURCE_BRANCH'"
-            ls -al || true
-            exit 1
-          fi
-          
-          # Validate JSON syntax
-          if ! jq empty "$STATE_FILE" 2>/dev/null; then
-            echo "::error::Descriptor file is not valid JSON"
-            cat "$STATE_FILE" || true
-            exit 1
-          fi
-          
-          # Validate required fields exist with correct types
-          if ! jq -e 'has("eureka-components")' "$STATE_FILE" >/dev/null; then
-            echo "::error::Descriptor file does not contain 'eureka-components' field"
-            echo "File content:" && cat "$STATE_FILE"
-            exit 1
-          fi
-          if ! jq -e '."eureka-components" | type == "array"' "$STATE_FILE" >/dev/null; then
-            echo "::error::Field 'eureka-components' exists but is not an array"
-            jq '."eureka-components"' "$STATE_FILE" || true
-            exit 1
-          fi
-          
-          if ! jq -e 'has("applications")' "$STATE_FILE" >/dev/null; then
-            echo "::error::Descriptor file does not contain 'applications' field"
-            echo "File content:" && cat "$STATE_FILE"
-            exit 1
-          fi
-          if ! jq -e '.applications | type == "object"' "$STATE_FILE" >/dev/null; then
-            echo "::error::Field 'applications' exists but is not an object"
-            jq '.applications' "$STATE_FILE" || true
-            exit 1
-          fi
-          
-          # Extract components and applications with compact formatting
-          EUREKA_COMPONENTS=$(jq -c '."eureka-components"' "$STATE_FILE")
-          APPLICATIONS=$(jq -c '.applications' "$STATE_FILE")
-          
-          # Validate extraction succeeded
-          if [ -z "$EUREKA_COMPONENTS" ] || [ "$EUREKA_COMPONENTS" = "null" ]; then
-            echo "::error::Failed to extract eureka-components"
-            exit 1
-          fi
-          if [ -z "$APPLICATIONS" ] || [ "$APPLICATIONS" = "null" ]; then
-            echo "::error::Failed to extract applications"
-            exit 1
-          fi
-          
-          # Check output size (GitHub Actions limit: ~1MB per output)
-          EUREKA_SIZE=$(echo "$EUREKA_COMPONENTS" | wc -c | tr -d ' ')
-          APPS_SIZE=$(echo "$APPLICATIONS" | wc -c | tr -d ' ')
-          if [ "$EUREKA_SIZE" -gt 524288 ] || [ "$APPS_SIZE" -gt 524288 ]; then
-            echo "::warning::Output size approaching limits (eureka: ${EUREKA_SIZE} bytes, apps: ${APPS_SIZE} bytes)"
-          fi
-          
-          # Use unique delimiter to prevent data collision
-          DELIMITER="EOF_$(uuidgen 2>/dev/null || echo "${RANDOM}${RANDOM}${RANDOM}")"
-          {
-            echo "eureka_components<<${DELIMITER}"
-            echo "$EUREKA_COMPONENTS"
-            echo "${DELIMITER}"
-          } >> "$GITHUB_OUTPUT"
-          
-          {
-            echo "applications<<${DELIMITER}"
-            echo "$APPLICATIONS"
-            echo "${DELIMITER}"
-          } >> "$GITHUB_OUTPUT"
-          
-          echo "::notice::Extracted eureka-components ($(echo "$EUREKA_COMPONENTS" | jq '. | length') items, ${EUREKA_SIZE} bytes)"
-          echo "::notice::Extracted applications ($(echo "$APPLICATIONS" | jq '. | length') items, ${APPS_SIZE} bytes)"
+        uses: folio-org/platform-lsp/.github/actions/extract-descriptor-fields@master
+        with:
+          file-path: ${{ env.STATE_FILE }}
+          fields: 'eureka-components,applications'
+          validate-schema: 'true'
+          expected-types: '{"eureka-components":"array","applications":"object"}'
 
       - name: 'Update Eureka Components'
         id: update-eureka-components
         uses: folio-org/platform-lsp/.github/actions/update-eureka-components@master
         with:
-          components: ${{ steps.read-descriptor.outputs.eureka_components }}
+          components: ${{ steps.read-descriptor.outputs.eureka-components }}
 
       - name: 'Update Applications'
         id: update-applications

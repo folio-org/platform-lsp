@@ -1,0 +1,207 @@
+name: 'Extract Platform Descriptor Fields'
+description: 'Universal action to extract and validate fields from platform-descriptor.json'
+author: 'FOLIO Kitfox'
+
+inputs:
+  file-path:
+    description: 'Path to descriptor JSON file'
+    required: false
+    default: ''
+  file-content:
+    description: 'JSON content as string (alternative to file-path, mutually exclusive)'
+    required: false
+    default: ''
+  fields:
+    description: 'Comma-separated fields to extract (e.g., "eureka-components,applications,version")'
+    required: true
+  validate-schema:
+    description: 'Validate JSON schema and field types'
+    required: false
+    default: 'true'
+  expected-types:
+    description: 'JSON object mapping field to expected type: {"eureka-components":"array","applications":"object"}'
+    required: false
+    default: '{}'
+
+outputs:
+  extracted-data:
+    description: 'JSON object with all extracted fields: {"eureka-components":[...],"applications":{...}}'
+    value: ${{ steps.extract.outputs.extracted-data }}
+  eureka-components:
+    description: 'Extracted eureka-components field (if requested)'
+    value: ${{ steps.extract.outputs.eureka-components }}
+  applications:
+    description: 'Extracted applications field (if requested)'
+    value: ${{ steps.extract.outputs.applications }}
+  version:
+    description: 'Extracted version field (if requested)'
+    value: ${{ steps.extract.outputs.version }}
+  field-count:
+    description: 'Number of fields successfully extracted'
+    value: ${{ steps.extract.outputs.field-count }}
+  total-size:
+    description: 'Total size of extracted data in bytes'
+    value: ${{ steps.extract.outputs.total-size }}
+  success:
+    description: 'Whether extraction succeeded (true/false)'
+    value: ${{ steps.extract.outputs.success }}
+
+runs:
+  using: 'composite'
+  steps:
+  - name: 'Extract and validate descriptor fields'
+    id: extract
+    shell: bash
+    env:
+      FILE_PATH: ${{ inputs.file-path }}
+      FILE_CONTENT: ${{ inputs.file-content }}
+      FIELDS: ${{ inputs.fields }}
+      VALIDATE_SCHEMA: ${{ inputs.validate-schema }}
+      EXPECTED_TYPES: ${{ inputs.expected-types }}
+    run: |
+      set -euo pipefail
+      IFS=$'\n\t'
+
+      echo "::group::Extract Platform Descriptor Fields"
+
+      # Validate inputs - must have either file-path or file-content
+      if [ -z "$FILE_PATH" ] && [ -z "$FILE_CONTENT" ]; then
+        echo "::error::Either 'file-path' or 'file-content' input must be provided"
+        exit 1
+      fi
+
+      if [ -n "$FILE_PATH" ] && [ -n "$FILE_CONTENT" ]; then
+        echo "::error::Only one of 'file-path' or 'file-content' should be provided, not both"
+        exit 1
+      fi
+
+      # Parse fields list
+      IFS=',' read -ra FIELD_ARRAY <<< "$FIELDS"
+      FIELD_COUNT=${#FIELD_ARRAY[@]}
+      echo "::notice::Extracting $FIELD_COUNT fields: ${FIELD_ARRAY[*]}"
+
+      # Get JSON content
+      if [ -n "$FILE_PATH" ]; then
+        echo "::notice::Reading from file: $FILE_PATH"
+        
+        # Validate file existence and non-empty
+        if [ ! -f "$FILE_PATH" ] || [ ! -s "$FILE_PATH" ]; then
+          echo "::error::File '$FILE_PATH' is missing or empty"
+          ls -al "$(dirname "$FILE_PATH")" || true
+          exit 1
+        fi
+        
+        # Validate JSON syntax
+        if ! jq empty "$FILE_PATH" 2>/dev/null; then
+          echo "::error::File is not valid JSON"
+          cat "$FILE_PATH" || true
+          exit 1
+        fi
+        
+        JSON_CONTENT=$(jq -c . "$FILE_PATH")
+      else
+        echo "::notice::Using provided JSON content"
+        JSON_CONTENT="$FILE_CONTENT"
+        
+        # Validate JSON syntax
+        if ! echo "$JSON_CONTENT" | jq empty 2>/dev/null; then
+          echo "::error::Provided content is not valid JSON"
+          echo "$JSON_CONTENT"
+          exit 1
+        fi
+      fi
+
+      # Parse expected types if provided
+      if [ -n "$EXPECTED_TYPES" ] && [ "$EXPECTED_TYPES" != "{}" ]; then
+        echo "::debug::Using expected types: $EXPECTED_TYPES"
+      fi
+
+      # Initialize extracted data object and individual outputs
+      EXTRACTED_JSON="{}"
+      TOTAL_SIZE=0
+      EXTRACTED_COUNT=0
+
+      # Extract each field
+      for field in "${FIELD_ARRAY[@]}"; do
+        field=$(echo "$field" | xargs) # Trim whitespace
+        echo "::debug::Processing field: $field"
+        
+        # Check if field exists
+        if [ "$VALIDATE_SCHEMA" = "true" ]; then
+          if ! echo "$JSON_CONTENT" | jq -e "has(\"$field\")" >/dev/null 2>&1; then
+            echo "::error::Field '$field' does not exist in descriptor"
+            echo "$JSON_CONTENT" | jq . || true
+            exit 1
+          fi
+        fi
+        
+        # Extract field value
+        FIELD_VALUE=$(echo "$JSON_CONTENT" | jq -c ".\"$field\"")
+        
+        # Validate extraction succeeded
+        if [ -z "$FIELD_VALUE" ] || [ "$FIELD_VALUE" = "null" ]; then
+          echo "::error::Failed to extract field '$field' or field is null"
+          exit 1
+        fi
+        
+        # Validate type if specified
+        if [ "$VALIDATE_SCHEMA" = "true" ] && [ -n "$EXPECTED_TYPES" ] && [ "$EXPECTED_TYPES" != "{}" ]; then
+          EXPECTED_TYPE=$(echo "$EXPECTED_TYPES" | jq -r ".\"$field\" // \"\"")
+          if [ -n "$EXPECTED_TYPE" ] && [ "$EXPECTED_TYPE" != "null" ]; then
+            ACTUAL_TYPE=$(echo "$FIELD_VALUE" | jq -r 'type')
+            if [ "$ACTUAL_TYPE" != "$EXPECTED_TYPE" ]; then
+              echo "::error::Field '$field' has type '$ACTUAL_TYPE' but expected '$EXPECTED_TYPE'"
+              echo "$FIELD_VALUE" | jq . || true
+              exit 1
+            fi
+            echo "::debug::✓ Field '$field' type validated: $EXPECTED_TYPE"
+          fi
+        fi
+        
+        # Calculate size
+        FIELD_SIZE=$(echo "$FIELD_VALUE" | wc -c | tr -d ' ')
+        TOTAL_SIZE=$((TOTAL_SIZE + FIELD_SIZE))
+        
+        # Add to extracted data object
+        EXTRACTED_JSON=$(echo "$EXTRACTED_JSON" | jq --arg key "$field" --argjson value "$FIELD_VALUE" '. + {($key): $value}')
+        
+        # Set individual field output (for convenience)
+        DELIMITER="EOF_$(uuidgen 2>/dev/null || echo "${RANDOM}${RANDOM}${RANDOM}")"
+        {
+          echo "$field<<${DELIMITER}"
+          echo "$FIELD_VALUE"
+          echo "${DELIMITER}"
+        } >> "$GITHUB_OUTPUT"
+        
+        # Count items if array
+        if echo "$FIELD_VALUE" | jq -e 'type == "array"' >/dev/null 2>&1; then
+          ITEM_COUNT=$(echo "$FIELD_VALUE" | jq '. | length')
+          echo "::notice::✓ Extracted '$field' ($ITEM_COUNT items, $FIELD_SIZE bytes)"
+        else
+          echo "::notice::✓ Extracted '$field' ($FIELD_SIZE bytes)"
+        fi
+        
+        EXTRACTED_COUNT=$((EXTRACTED_COUNT + 1))
+      done
+
+      # Check output size limits (GitHub Actions limit: ~1MB per output)
+      if [ "$TOTAL_SIZE" -gt 524288 ]; then
+        echo "::warning::Total extracted data size ($TOTAL_SIZE bytes) approaching GitHub Actions output limit (1MB)"
+        echo "::warning::Consider extracting fewer fields or using artifacts for large data"
+      fi
+
+      # Output combined extracted data
+      DELIMITER="EOF_$(uuidgen 2>/dev/null || echo "${RANDOM}${RANDOM}${RANDOM}")"
+      {
+        echo "extracted-data<<${DELIMITER}"
+        echo "$EXTRACTED_JSON"
+        echo "${DELIMITER}"
+      } >> "$GITHUB_OUTPUT"
+
+      # Output metadata
+      echo "field-count=$EXTRACTED_COUNT" >> "$GITHUB_OUTPUT"
+      echo "total-size=$TOTAL_SIZE" >> "$GITHUB_OUTPUT"
+      echo "success=true" >> "$GITHUB_OUTPUT"
+
+      echo "::notice::Successfully extracted $EXTRACTED_COUNT fields (total: $TOTAL_SIZE bytes)"
+      echo "::endgroup::"
