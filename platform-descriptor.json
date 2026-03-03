@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000006438"
+        "version": "2.1.0-SNAPSHOT.100200000006464"
       },
       {
         "name": "app-platform-complete",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000006665"
+        "version": "1.1.0-SNAPSHOT.100200000006690"
       },
       {
         "name": "app-lists",
