@@ -158,19 +158,28 @@ jobs:
             exit 1
           fi
           
-          # Validate required fields exist and are arrays
-          for field in eureka-components applications; do
-            if ! jq -e "has(\"$field\")" "$STATE_FILE" >/dev/null; then
-              echo "::error::Descriptor file does not contain '$field' field"
-              echo "File content:" && cat "$STATE_FILE"
-              exit 1
-            fi
-            if ! jq -e ".\"$field\" | type == \"array\"" "$STATE_FILE" >/dev/null; then
-              echo "::error::Field '$field' exists but is not an array"
-              jq ".\"$field\"" "$STATE_FILE" || true
-              exit 1
-            fi
-          done
+          # Validate required fields exist with correct types
+          if ! jq -e 'has("eureka-components")' "$STATE_FILE" >/dev/null; then
+            echo "::error::Descriptor file does not contain 'eureka-components' field"
+            echo "File content:" && cat "$STATE_FILE"
+            exit 1
+          fi
+          if ! jq -e '."eureka-components" | type == "array"' "$STATE_FILE" >/dev/null; then
+            echo "::error::Field 'eureka-components' exists but is not an array"
+            jq '."eureka-components"' "$STATE_FILE" || true
+            exit 1
+          fi
+          
+          if ! jq -e 'has("applications")' "$STATE_FILE" >/dev/null; then
+            echo "::error::Descriptor file does not contain 'applications' field"
+            echo "File content:" && cat "$STATE_FILE"
+            exit 1
+          fi
+          if ! jq -e '.applications | type == "object"' "$STATE_FILE" >/dev/null; then
+            echo "::error::Field 'applications' exists but is not an object"
+            jq '.applications' "$STATE_FILE" || true
+            exit 1
+          fi
           
           # Extract components and applications with compact formatting
           EUREKA_COMPONENTS=$(jq -c '."eureka-components"' "$STATE_FILE")
@@ -243,25 +252,28 @@ jobs:
           fi
           echo "previous_version=$PREVIOUS_VERSION" >> "$GITHUB_OUTPUT"
           echo "changes_detected=$changes_detected" >> "$GITHUB_OUTPUT"
+          
+          # Use unique delimiter to prevent data collision
+          DELIMITER="EOF_$(uuidgen 2>/dev/null || echo "${RANDOM}${RANDOM}${RANDOM}")"
           {
-            echo 'current_eureka_components<<EOF'
+            echo "current_eureka_components<<${DELIMITER}"
             echo "$CURRENT_EUREKA_COMPONENTS"
-            echo 'EOF'
+            echo "${DELIMITER}"
           } >> "$GITHUB_OUTPUT"
           {
-            echo 'current_applications<<EOF'
+            echo "current_applications<<${DELIMITER}"
             echo "$CURRENT_APPLICATIONS"
-            echo 'EOF'
+            echo "${DELIMITER}"
           } >> "$GITHUB_OUTPUT"
           {
-            echo 'updated_eureka_components<<EOF'
+            echo "updated_eureka_components<<${DELIMITER}"
             echo "$UPDATED_EUREKA_COMPONENTS"
-            echo 'EOF'
+            echo "${DELIMITER}"
           } >> "$GITHUB_OUTPUT"
           {
-            echo 'updated_applications<<EOF'
+            echo "updated_applications<<${DELIMITER}"
             echo "$UPDATED_APPLICATIONS"
-            echo 'EOF'
+            echo "${DELIMITER}"
           } >> "$GITHUB_OUTPUT"
 
       - name: 'Calculate New Version'
@@ -345,10 +357,13 @@ jobs:
             exit 1
           fi
           PACKAGE_JSON_CONTENT=$(jq -c . package.json)
+          
+          # Use unique delimiter to prevent data collision
+          DELIMITER="EOF_$(uuidgen 2>/dev/null || echo "${RANDOM}${RANDOM}${RANDOM}")"
           {
-            echo 'package_json_content<<EOF'
+            echo "package_json_content<<${DELIMITER}"
             echo "$PACKAGE_JSON_CONTENT"
-            echo 'EOF'
+            echo "${DELIMITER}"
           } >> "$GITHUB_OUTPUT"
           echo '::notice::Read package.json content'
 
