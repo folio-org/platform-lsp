@@ -57,6 +57,7 @@ module.exports = {
   '@folio/plugin-find-package-title': {},
   '@folio/plugin-find-po-line': {},
   '@folio/plugin-find-user' : {},
+  '@folio/plugin-select-application': {},
   '@folio/plugin-query-builder' : {},
   '@folio/quick-marc' : {},
   '@folio/reading-room' : {},
