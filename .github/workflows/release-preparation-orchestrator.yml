@@ -553,6 +553,7 @@ jobs:
         Eureka component versions set to ^VERSION placeholder.
       deleted_files: |
         platform-descriptor.json
+        .github
       dry_run: ${{ inputs.dry_run }}
     secrets: inherit
 
