@@ -1,0 +1,209 @@
+name: 'Read File'
+description: 'Universal file reader supporting multiple sources: working tree, branches, commits, and tags with optional validation'
+author: 'FOLIO Kitfox'
+
+branding:
+  icon: 'file-text'
+  color: 'blue'
+
+inputs:
+  file_path:
+    description: 'Path to file in repository (e.g., platform-descriptor.json)'
+    required: true
+  source:
+    description: 'Source to read from: worktree (current files), branch, commit, or tag'
+    required: false
+    default: 'worktree'
+  ref:
+    description: 'Git reference (branch name, commit SHA, or tag) when source is branch/commit/tag'
+    required: false
+    default: ''
+  output_filename:
+    description: 'Output filename for fetched content. If empty, content is only available via outputs'
+    required: false
+    default: ''
+  validate_json:
+    description: 'Whether to validate file as JSON using jq'
+    required: false
+    default: 'false'
+  fail_on_missing:
+    description: 'Whether to fail if file is missing or invalid (false = warning only)'
+    required: false
+    default: 'true'
+  output_content:
+    description: 'Whether to output file content as output variable'
+    required: false
+    default: 'true'
+
+outputs:
+  file_path:
+    description: 'Path to the output file (if output_filename specified)'
+    value: ${{ steps.read.outputs.file_path }}
+  file_exists:
+    description: 'Whether the file was successfully read (true/false)'
+    value: ${{ steps.read.outputs.file_exists }}
+  file_content:
+    description: 'File content (if output_content=true)'
+    value: ${{ steps.read.outputs.file_content }}
+  source_info:
+    description: 'Information about the source (worktree, branch name, commit SHA, or tag)'
+    value: ${{ steps.read.outputs.source_info }}
+
+runs:
+  using: 'composite'
+  steps:
+  - name: 'Read file from specified source'
+    id: read
+    shell: bash
+    env:
+      FILE_PATH: ${{ inputs.file_path }}
+      SOURCE: ${{ inputs.source }}
+      REF: ${{ inputs.ref }}
+      OUTPUT_FILENAME: ${{ inputs.output_filename }}
+      VALIDATE_JSON: ${{ inputs.validate_json }}
+      FAIL_ON_MISSING: ${{ inputs.fail_on_missing }}
+      OUTPUT_CONTENT: ${{ inputs.output_content }}
+    run: |
+      set -euo pipefail
+      IFS=$'\n\t'
+
+      # Helper function for error handling
+      handle_error() {
+        local message="$1"
+        if [ "$FAIL_ON_MISSING" = "true" ]; then
+          echo "::error::$message"
+          exit 1
+        else
+          echo "::warning::$message"
+          echo "file_exists=false" >> "$GITHUB_OUTPUT"
+          echo "file_path=" >> "$GITHUB_OUTPUT"
+          echo "file_content=" >> "$GITHUB_OUTPUT"
+          echo "source_info=" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+      }
+
+      # Validate source type
+      if [[ ! "$SOURCE" =~ ^(worktree|branch|commit|tag)$ ]]; then
+        handle_error "Invalid source type: $SOURCE. Must be one of: worktree, branch, commit, tag"
+      fi
+
+      # Validate ref is provided when needed
+      if [[ "$SOURCE" != "worktree" && -z "$REF" ]]; then
+        handle_error "ref input is required when source is $SOURCE"
+      fi
+
+      # Determine temp file or output file
+      if [ -n "$OUTPUT_FILENAME" ]; then
+        output_file="$OUTPUT_FILENAME"
+      else
+        output_file=$(mktemp)
+        trap 'rm -f "$output_file"' EXIT
+      fi
+
+      # Source info for output
+      source_info="$SOURCE"
+
+      # Read file based on source type
+      case "$SOURCE" in
+        worktree)
+          echo "::notice::Reading $FILE_PATH from working tree"
+          if [ ! -f "$FILE_PATH" ]; then
+            handle_error "File $FILE_PATH not found in working tree"
+          fi
+          cp "$FILE_PATH" "$output_file"
+          source_info="worktree"
+          ;;
+
+        branch|commit|tag)
+          echo "::notice::Reading $FILE_PATH from $SOURCE: $REF"
+          
+          # Validate we're in a git repository
+          if ! git rev-parse --git-dir >/dev/null 2>&1; then
+            handle_error "Not in a git repository. Please ensure checkout action was run first"
+          fi
+
+          # For branches, try to fetch latest
+          if [ "$SOURCE" = "branch" ]; then
+            echo "::debug::Fetching $SOURCE: $REF"
+            if ! fetch_output=$(git fetch origin "$REF" --depth=50 2>&1); then
+              echo "::warning::Git fetch failed for $SOURCE $REF: $fetch_output"
+              echo "::warning::Continuing with existing local refs..."
+            else
+              echo "::debug::Successfully fetched $REF"
+            fi
+            git_ref="origin/$REF"
+          else
+            # For commits and tags, use directly
+            git_ref="$REF"
+          fi
+
+          # Fetch file using git show
+          if ! git show "$git_ref:$FILE_PATH" > "$output_file" 2>/dev/null; then
+            handle_error "Failed to read $FILE_PATH from $SOURCE: $REF"
+          fi
+          
+          # Get actual commit SHA for source info
+          if commit_sha=$(git rev-parse "$git_ref" 2>/dev/null); then
+            source_info="$SOURCE:$REF ($commit_sha)"
+          else
+            source_info="$SOURCE:$REF"
+          fi
+          ;;
+      esac
+
+      # Check if file is empty
+      if [ ! -s "$output_file" ]; then
+        handle_error "File $FILE_PATH is empty"
+      fi
+
+      # Validate JSON if requested
+      if [ "$VALIDATE_JSON" = "true" ]; then
+        if ! jq empty "$output_file" 2>/dev/null; then
+          if [ "$FAIL_ON_MISSING" = "true" ]; then
+            echo "::error::File $FILE_PATH is not valid JSON"
+            cat "$output_file"
+            exit 1
+          else
+            echo "::warning::File $FILE_PATH is not valid JSON"
+            echo "file_exists=false" >> "$GITHUB_OUTPUT"
+            echo "file_path=" >> "$GITHUB_OUTPUT"
+            echo "file_content=" >> "$GITHUB_OUTPUT"
+            echo "source_info=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+        fi
+      fi
+
+      # Output results
+      echo "file_exists=true" >> "$GITHUB_OUTPUT"
+
+      if [ -n "$OUTPUT_FILENAME" ]; then
+        echo "file_path=$output_file" >> "$GITHUB_OUTPUT"
+      else
+        echo "file_path=" >> "$GITHUB_OUTPUT"
+      fi
+
+      echo "source_info=$source_info" >> "$GITHUB_OUTPUT"
+
+      # Output content if requested
+      if [ "$OUTPUT_CONTENT" = "true" ]; then
+        if [ "$VALIDATE_JSON" = "true" ]; then
+          content=$(jq -c . "$output_file")
+          {
+            echo 'file_content<<EOF'
+            echo "$content"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+        else
+          {
+            echo 'file_content<<EOF'
+            cat "$output_file"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+        fi
+      else
+        echo "file_content=" >> "$GITHUB_OUTPUT"
+      fi
+
+      echo "::notice::Successfully read $FILE_PATH from $source_info"

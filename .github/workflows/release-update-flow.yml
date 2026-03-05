@@ -126,10 +126,11 @@ jobs:
 
       - name: 'Fetch base descriptor'
         id: fetch-base-descriptor
-        uses: folio-org/platform-lsp/.github/actions/fetch-base-file@master
+        uses: folio-org/platform-lsp/.github/actions/read-file@master
         with:
-          base_branch: ${{ inputs.release_branch }}
           file_path: ${{ env.STATE_FILE }}
+          source: branch
+          ref: ${{ inputs.release_branch }}
           output_filename: platform-descriptor.base.json
           validate_json: true
           fail_on_missing: true
@@ -293,10 +294,11 @@ jobs:
 
       - name: 'Fetch base package.json'
         id: fetch-base-package-json
-        uses: folio-org/platform-lsp/.github/actions/fetch-base-file@master
+        uses: folio-org/platform-lsp/.github/actions/read-file@master
         with:
-          base_branch: ${{ inputs.release_branch }}
           file_path: package.json
+          source: branch
+          ref: ${{ inputs.release_branch }}
           output_filename: package.json.base
           validate_json: true
           fail_on_missing: false
