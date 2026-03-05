@@ -1,0 +1,169 @@
+name: 'Compare Components'
+description: 'Compare current descriptor components/applications with updated versions to detect changes'
+author: 'FOLIO Kitfox'
+
+branding:
+  icon: 'git-branch'
+  color: 'purple'
+
+inputs:
+  descriptor_path:
+    description: 'Path to current platform descriptor JSON file'
+    required: true
+  updated_eureka_components:
+    description: 'JSON array of updated eureka-components'
+    required: true
+  updated_applications:
+    description: 'JSON object of updated applications'
+    required: true
+  output_size_limit:
+    description: 'Maximum output size in bytes (default: 900000 to stay under 1MB limit)'
+    required: false
+    default: '900000'
+
+outputs:
+  changes_detected:
+    description: 'Whether changes were detected (true/false)'
+    value: ${{ steps.compare.outputs.changes_detected }}
+  previous_version:
+    description: 'Version from current descriptor'
+    value: ${{ steps.compare.outputs.previous_version }}
+  current_eureka_components:
+    description: 'Current eureka-components JSON array'
+    value: ${{ steps.compare.outputs.current_eureka_components }}
+  current_applications:
+    description: 'Current applications JSON object'
+    value: ${{ steps.compare.outputs.current_applications }}
+  updated_eureka_components:
+    description: 'Updated eureka-components JSON array (pass-through)'
+    value: ${{ steps.compare.outputs.updated_eureka_components }}
+  updated_applications:
+    description: 'Updated applications JSON object (pass-through)'
+    value: ${{ steps.compare.outputs.updated_applications }}
+
+runs:
+  using: 'composite'
+  steps:
+  - name: 'Compare components and applications'
+    id: compare
+    shell: bash
+    env:
+      DESCRIPTOR_PATH: ${{ inputs.descriptor_path }}
+      UPDATED_EUREKA_COMPONENTS: ${{ inputs.updated_eureka_components }}
+      UPDATED_APPLICATIONS: ${{ inputs.updated_applications }}
+      OUTPUT_SIZE_LIMIT: ${{ inputs.output_size_limit }}
+    run: |
+      set -euo pipefail
+      IFS=$'\n\t'
+
+      echo '::notice::Comparing descriptor components & applications with updated results'
+
+      # Validate descriptor file exists
+      if [ ! -f "$DESCRIPTOR_PATH" ]; then
+        echo "::error::Descriptor file not found: $DESCRIPTOR_PATH"
+        exit 1
+      fi
+
+      # Validate descriptor is valid JSON
+      if ! jq empty "$DESCRIPTOR_PATH" 2>/dev/null; then
+        echo "::error::Descriptor file is not valid JSON: $DESCRIPTOR_PATH"
+        exit 1
+      fi
+
+      # Validate updated inputs are valid JSON
+      if ! echo "$UPDATED_EUREKA_COMPONENTS" | jq empty 2>/dev/null; then
+        echo "::error::Invalid JSON in updated_eureka_components input"
+        exit 1
+      fi
+
+      if ! echo "$UPDATED_APPLICATIONS" | jq empty 2>/dev/null; then
+        echo "::error::Invalid JSON in updated_applications input"
+        exit 1
+      fi
+
+      # Extract current version
+      PREVIOUS_VERSION=$(jq -r '.version // "unknown"' "$DESCRIPTOR_PATH")
+      echo "::notice::Current version: $PREVIOUS_VERSION"
+
+      # Extract current components and applications (compact JSON)
+      CURRENT_EUREKA_COMPONENTS=$(jq -c '."eureka-components"' "$DESCRIPTOR_PATH")
+      CURRENT_APPLICATIONS=$(jq -c '.applications' "$DESCRIPTOR_PATH")
+
+      # Semantic JSON comparison using jq
+      changes_detected=false
+
+      # Compare eureka-components
+      if ! jq -e --argjson current "$CURRENT_EUREKA_COMPONENTS" --argjson updated "$UPDATED_EUREKA_COMPONENTS" \
+           -n '$current == $updated' >/dev/null 2>&1; then
+        changes_detected=true
+        echo '::notice::Eureka components changed'
+      fi
+
+      # Compare applications
+      if ! jq -e --argjson current "$CURRENT_APPLICATIONS" --argjson updated "$UPDATED_APPLICATIONS" \
+           -n '$current == $updated' >/dev/null 2>&1; then
+        changes_detected=true
+        echo '::notice::Applications changed'
+      fi
+
+      if [ "$changes_detected" = "false" ]; then
+        echo '::notice::No changes detected in components or applications'
+      fi
+
+      # Validate output sizes before writing
+      validate_output_size() {
+        local name="$1"
+        local content="$2"
+        local size=${#content}
+        
+        if [ "$size" -gt "$OUTPUT_SIZE_LIMIT" ]; then
+          echo "::warning::Output '$name' size ($size bytes) exceeds limit ($OUTPUT_SIZE_LIMIT bytes)"
+          echo "::warning::Large JSON payloads may cause workflow failures"
+          return 1
+        fi
+        echo "::debug::Output '$name' size: $size bytes"
+        return 0
+      }
+
+      # Validate all outputs
+      validate_output_size "current_eureka_components" "$CURRENT_EUREKA_COMPONENTS"
+      validate_output_size "current_applications" "$CURRENT_APPLICATIONS"
+      validate_output_size "updated_eureka_components" "$UPDATED_EUREKA_COMPONENTS"
+      validate_output_size "updated_applications" "$UPDATED_APPLICATIONS"
+
+      # Write simple outputs
+      echo "previous_version=$PREVIOUS_VERSION" >> "$GITHUB_OUTPUT"
+      echo "changes_detected=$changes_detected" >> "$GITHUB_OUTPUT"
+
+      # Use robust delimiter for multiline outputs
+      DELIMITER="EOF_$(uuidgen 2>/dev/null || date +%s%N 2>/dev/null || echo "${RANDOM}${RANDOM}${RANDOM}")_$$"
+
+      # Write current eureka-components
+      {
+        echo "current_eureka_components<<${DELIMITER}"
+        echo "$CURRENT_EUREKA_COMPONENTS"
+        echo "${DELIMITER}"
+      } >> "$GITHUB_OUTPUT"
+
+      # Write current applications
+      {
+        echo "current_applications<<${DELIMITER}"
+        echo "$CURRENT_APPLICATIONS"
+        echo "${DELIMITER}"
+      } >> "$GITHUB_OUTPUT"
+
+      # Write updated eureka-components (pass-through)
+      {
+        echo "updated_eureka_components<<${DELIMITER}"
+        echo "$UPDATED_EUREKA_COMPONENTS"
+        echo "${DELIMITER}"
+      } >> "$GITHUB_OUTPUT"
+
+      # Write updated applications (pass-through)
+      {
+        echo "updated_applications<<${DELIMITER}"
+        echo "$UPDATED_APPLICATIONS"
+        echo "${DELIMITER}"
+      } >> "$GITHUB_OUTPUT"
+
+      echo '::notice::Comparison complete'

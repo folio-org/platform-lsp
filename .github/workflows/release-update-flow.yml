@@ -158,48 +158,11 @@ jobs:
 
       - name: 'Compare Components & Applications'
         id: compare-components
-        env:
-          STATE_FILE: ${{ env.STATE_FILE }}
-          UPDATED_EUREKA_COMPONENTS: ${{ steps.update-eureka-components.outputs.updated-components }}
-          UPDATED_APPLICATIONS: ${{ steps.update-applications.outputs.updated-applications }}
-        run: |
-          set -euo pipefail
-          IFS=$'\n\t'
-          echo '::notice::Comparing descriptor eureka-components & applications with updated results'
-          PREVIOUS_VERSION=$(jq -r '.version // "unknown"' "$STATE_FILE")
-          CURRENT_EUREKA_COMPONENTS=$(jq -c '."eureka-components"' "$STATE_FILE")
-          CURRENT_APPLICATIONS=$(jq -c '.applications' "$STATE_FILE")
-          changes_detected=false
-          if [ "$UPDATED_EUREKA_COMPONENTS" != "$CURRENT_EUREKA_COMPONENTS" ] || [ "$UPDATED_APPLICATIONS" != "$CURRENT_APPLICATIONS" ]; then
-            changes_detected=true
-            [ "$UPDATED_EUREKA_COMPONENTS" != "$CURRENT_EUREKA_COMPONENTS" ] && echo '::notice::Eureka components changed'
-            [ "$UPDATED_APPLICATIONS" != "$CURRENT_APPLICATIONS" ] && echo '::notice::Applications changed'
-          fi
-          echo "previous_version=$PREVIOUS_VERSION" >> "$GITHUB_OUTPUT"
-          echo "changes_detected=$changes_detected" >> "$GITHUB_OUTPUT"
-          
-          # Use unique delimiter to prevent data collision
-          DELIMITER="EOF_$(uuidgen 2>/dev/null || echo "${RANDOM}${RANDOM}${RANDOM}")"
-          {
-            echo "current_eureka_components<<${DELIMITER}"
-            echo "$CURRENT_EUREKA_COMPONENTS"
-            echo "${DELIMITER}"
-          } >> "$GITHUB_OUTPUT"
-          {
-            echo "current_applications<<${DELIMITER}"
-            echo "$CURRENT_APPLICATIONS"
-            echo "${DELIMITER}"
-          } >> "$GITHUB_OUTPUT"
-          {
-            echo "updated_eureka_components<<${DELIMITER}"
-            echo "$UPDATED_EUREKA_COMPONENTS"
-            echo "${DELIMITER}"
-          } >> "$GITHUB_OUTPUT"
-          {
-            echo "updated_applications<<${DELIMITER}"
-            echo "$UPDATED_APPLICATIONS"
-            echo "${DELIMITER}"
-          } >> "$GITHUB_OUTPUT"
+        uses: folio-org/platform-lsp/.github/actions/compare-components@master
+        with:
+          descriptor_path: ${{ env.STATE_FILE }}
+          updated_eureka_components: ${{ steps.update-eureka-components.outputs.updated-components }}
+          updated_applications: ${{ steps.update-applications.outputs.updated-applications }}
 
       - name: 'Calculate New Version'
         id: calculate-new-version
