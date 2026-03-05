@@ -414,7 +414,7 @@ jobs:
           tmp2=$(mktemp)
           jq --arg newVer "${{ inputs.new_release_branch }}" '
             .version = $newVer
-            | if ."eureka-components" then ."eureka-components" |= map(.version = "^VERSION" | .preRelease = "false") else . end
+            | if ."eureka-components" then ."eureka-components" |= map(.version = ("^VERSION_" + .version) | .preRelease = "false") else . end
           ' "$PLATFORM_TEMPLATE_FILE" > "$tmp2"
           mv "$tmp2" "$PLATFORM_TEMPLATE_FILE"
 
