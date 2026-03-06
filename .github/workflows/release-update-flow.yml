@@ -228,32 +228,13 @@ jobs:
 
       - name: 'Read package.json content'
         id: read-package-json
-        env:
-          SOURCE_BRANCH: ${{ needs.determine-source-branch.outputs.source_branch }}
-        run: |
-          set -euo pipefail
-          IFS=$'\n\t'
-          echo "::notice::Reading package.json from checked-out branch: $SOURCE_BRANCH"
-          if [ ! -f package.json ] || [ ! -s package.json ]; then
-            echo "::error::package.json file is missing or empty in branch '$SOURCE_BRANCH'"
-            ls -al || true
-            exit 1
-          fi
-          if ! jq empty package.json 2>/dev/null; then
-            echo '::error::package.json is not valid JSON'
-            cat package.json
-            exit 1
-          fi
-          PACKAGE_JSON_CONTENT=$(jq -c . package.json)
-          
-          # Use unique delimiter to prevent data collision
-          DELIMITER="EOF_$(uuidgen 2>/dev/null || echo "${RANDOM}${RANDOM}${RANDOM}")"
-          {
-            echo "package_json_content<<${DELIMITER}"
-            echo "$PACKAGE_JSON_CONTENT"
-            echo "${DELIMITER}"
-          } >> "$GITHUB_OUTPUT"
-          echo '::notice::Read package.json content'
+        uses: folio-org/platform-lsp/.github/actions/read-file@master
+        with:
+          file_path: package.json
+          source: worktree
+          validate_json: true
+          fail_on_missing: true
+          output_content: true
 
       - name: 'Fetch base package.json'
         id: fetch-base-package-json
@@ -272,7 +253,7 @@ jobs:
         if: steps.fetch-updated-ui-modules.outputs.ui-modules != ''
         uses: folio-org/platform-lsp/.github/actions/update-package-json@master
         with:
-          package-json: ${{ steps.read-package-json.outputs.package_json_content }}
+          package-json: ${{ steps.read-package-json.outputs.file_content }}
           ui-modules: ${{ steps.fetch-updated-ui-modules.outputs.ui-modules }}
 
       - name: 'Write updated package.json'
