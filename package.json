@@ -106,6 +106,7 @@
     "@folio/stripes-authorization-components": "2.0.4",
     "@folio/quick-marc": "https://github.com/folio-org/ui-quick-marc.git#feature/qm-unify",
     "colors": "1.4.0",
+    "dompurify": "3.3.1",
     "final-form": "^4.20.4",
     "minimist": "^1.2.3",
     "moment": "~2.29.0",
