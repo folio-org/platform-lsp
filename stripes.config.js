@@ -28,7 +28,7 @@ module.exports = {
     preserveConsole: true,
     useSecureTokens: true,
   },
-  modules: merge({}, apps, plugins, extra),
+  modules: merge({}, apps, extra),
   branding: {
     logo: {
       src: './tenant-assets/opentown-libraries-logo.png',
