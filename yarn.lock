@@ -1067,7 +1067,7 @@
   dependencies:
     tslib "^2.0.0"
 
-"@dnd-kit/core@^6.2.0":
+"@dnd-kit/core@^6.2.0", "@dnd-kit/core@^6.3.1":
   version "6.3.1"
   resolved "https://registry.yarnpkg.com/@dnd-kit/core/-/core-6.3.1.tgz#4c36406a62c7baac499726f899935f93f0e6d003"
   integrity sha512-xkGBRQQab4RLwgXxoqETICr6S5JlogafbhNsidmrkVv2YRs5MLwpjoF2qpiGjQt8S9AoxtIV603s0GIUpY5eYQ==
@@ -1080,6 +1080,14 @@
   version "9.0.0"
   resolved "https://registry.yarnpkg.com/@dnd-kit/modifiers/-/modifiers-9.0.0.tgz#96a0280c77b10c716ef79d9792ce7ad04370771d"
   integrity sha512-ybiLc66qRGuZoC20wdSSG6pDXFikui/dCNGthxv4Ndy8ylErY0N3KVxY2bgo7AWwIbxDmXDg3ylAFmnrjcbVvw==
+  dependencies:
+    "@dnd-kit/utilities" "^3.2.2"
+    tslib "^2.0.0"
+
+"@dnd-kit/sortable@^10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/sortable/-/sortable-10.0.0.tgz#1f9382b90d835cd5c65d92824fa9dafb78c4c3e8"
+  integrity sha512-+xqhmIIzvAYMGfBYYnbKuNicfSsk4RksY2XdmJhT+HAC01nix6fHCztU68jooFiMUB01Ky3F0FyOvhG/BZrWkg==
   dependencies:
     "@dnd-kit/utilities" "^3.2.2"
     tslib "^2.0.0"
@@ -1757,11 +1765,14 @@
     lodash "^4.17.11"
     prop-types "^15.6.0"
 
-"@folio/inventory@13.0.8":
-  version "13.0.8"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory/-/inventory-13.0.8.tgz#fb59abf3e4f68e48feed57ba20af6101ec7c0a6e"
-  integrity sha512-LCFKctl9gH7oZiLSPGAFASReh+2ckhJCJ5A9qlabQ1DVBbit+JMcQhUkIF8jIPhUweUFwbovC/GPmIYsxek2IA==
+"@folio/inventory@https://github.com/folio-org/ui-inventory.git#master":
+  version "14.0.0"
+  resolved "https://github.com/folio-org/ui-inventory.git#de2862f96274c8edc04916f402687685a53ab36e"
   dependencies:
+    "@dnd-kit/core" "^6.3.1"
+    "@dnd-kit/modifiers" "^9.0.0"
+    "@dnd-kit/sortable" "^10.0.0"
+    "@dnd-kit/utilities" "^3.2.2"
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.3.2"
     file-saver "^2.0.0"
@@ -1771,10 +1782,8 @@
     inflected "^2.1.0"
     ky "^0.23.0"
     lodash "^4.17.4"
-    moment "~2.29.4"
     prop-types "^15.5.10"
     query-string "^5.0.0"
-    react-beautiful-dnd "^13.0.0"
     react-copy-to-clipboard "^5.0.1"
     react-final-form "^6.5.6"
     react-final-form-arrays "^3.1.0"
@@ -1896,13 +1905,13 @@
     react-final-form "^6.3.0"
     react-final-form-arrays "^3.1.1"
 
-"@folio/marc-authorities@7.0.3":
-  version "7.0.3"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/marc-authorities/-/marc-authorities-7.0.3.tgz#d88a11f3838fbc0981dcd2424a2381d0b3632b41"
-  integrity sha512-+6WZG5Gusz/eXLFa3S8RHIj3W04f46kt7AVnkTpgtzWMu7XNLaXscZs9EIoMkqq41lMYAGF3dklxJfAtt72v2A==
+"@folio/marc-authorities@https://github.com/folio-org/ui-marc-authorities.git#master":
+  version "8.0.0"
+  resolved "https://github.com/folio-org/ui-marc-authorities.git#86bb3cefc9f445be03c5ee57a8d58e27b07c0118"
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     "@rehooks/local-storage" "^2.4.4"
+    file-saver "^2.0.0"
     query-string "^7.0.1"
   optionalDependencies:
     "@folio/quick-marc" "^10.0.0"
@@ -2343,10 +2352,9 @@
     react-virtualized-auto-sizer "^1.0.6"
     redux-form "^8.3.0"
 
-"@folio/stripes-authority-components@6.0.2":
-  version "6.0.2"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-authority-components/-/stripes-authority-components-6.0.2.tgz#3196511dec2056843f9049d573d86be7e18f3784"
-  integrity sha512-+k/zUwM5/pHdXG61FbDqHz7VRUevwVHOO3l7YtIWzDwnGqaD3OZZTNNVkPhRyQwc07qGt/mlAa14MmvfesQK6w==
+"@folio/stripes-authority-components@https://github.com/folio-org/stripes-authority-components.git#master":
+  version "6.1.0"
+  resolved "https://github.com/folio-org/stripes-authority-components.git#4d252d9599808d66a3716040854b9dcaccf61847"
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     "@rehooks/local-storage" "^2.4.4"
@@ -2525,10 +2533,9 @@
     prop-types "^15.5.10"
     redux-form "^8.3.0"
 
-"@folio/stripes-inventory-components@2.0.5":
-  version "2.0.5"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-inventory-components/-/stripes-inventory-components-2.0.5.tgz#b27329bf886606e23fa2305b459146dbf4cb47f8"
-  integrity sha512-FEV0wYIiRgLza/dQuxX8B3HINaEzTTncbLwvX+ioY2j+g+0fy89j2isLsOPEmSwpY4shitaTRYHlh6YdwaK/fg==
+"@folio/stripes-inventory-components@https://github.com/folio-org/stripes-inventory-components.git#main":
+  version "2.1.0"
+  resolved "https://github.com/folio-org/stripes-inventory-components.git#adb293fdae42e5759f8e1afea1cb99802feb792c"
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     history "^4.10.0"
@@ -7312,7 +7319,7 @@ react-barcode@^1.3.2, react-barcode@^1.5.3:
     jsbarcode "^3.8.0"
     prop-types "^15.6.2"
 
-react-beautiful-dnd@^13.0.0, react-beautiful-dnd@^13.1.0:
+react-beautiful-dnd@^13.1.0:
   version "13.1.1"
   resolved "https://registry.yarnpkg.com/react-beautiful-dnd/-/react-beautiful-dnd-13.1.1.tgz#b0f3087a5840920abf8bb2325f1ffa46d8c4d0a2"
   integrity sha512-0Lvs4tq2VcrEjEgDXHjT98r+63drkKEgqyxdA7qD3mvKwga6a5SscbdLPO2IExotU1jW8L0Ksdl0Cj2AF67nPQ==
