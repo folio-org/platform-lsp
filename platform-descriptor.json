@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000006576"
+        "version": "2.1.0-SNAPSHOT.100200000006606"
       },
       {
         "name": "app-platform-complete",
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000005023"
+        "version": "1.0.0-SNAPSHOT.100200000005064"
       },
       {
         "name": "app-dcb",
