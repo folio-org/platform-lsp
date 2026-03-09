@@ -3134,9 +3134,9 @@
   integrity sha512-q7qL4Mgjs1vByCaTnDFcBnV9HS7GVPJX5vyVoCgZHNSC9rjwIlmbXG5sUuorR5ndfHAIlJ8pVStxvjXHbNvtUg==
 
 "@k-int/stripes-kint-components@^5.0.0", "@k-int/stripes-kint-components@^5.1.1", "@k-int/stripes-kint-components@^5.11.0", "@k-int/stripes-kint-components@^5.15.0", "@k-int/stripes-kint-components@^5.28.3", "@k-int/stripes-kint-components@^5.30.0":
-  version "5.33.0"
-  resolved "https://registry.yarnpkg.com/@k-int/stripes-kint-components/-/stripes-kint-components-5.33.0.tgz#74ff6d1c0454f5cda29c9daca9eb6cf87614958f"
-  integrity sha512-AjS2LiHBaSLVfE50h2CF8d+m/P3ygQbsQkSu3fSAZa/Xn1OTFB3R6HtqmSknPt2PL8uKtLx7r7F2/TQ52EfmpQ==
+  version "5.33.1"
+  resolved "https://registry.yarnpkg.com/@k-int/stripes-kint-components/-/stripes-kint-components-5.33.1.tgz#b6501d831e6a16cc5d517120951435d926df6b75"
+  integrity sha512-pr4nXoiTnVHprhNBatGqrhL72NFFOpew/JrBHePY35DUK1JdlvQqL/oFuDs1E9PT3RaR8URZKDaQdmY4vd4mEA==
   dependencies:
     "@rehooks/local-storage" "^2.4.4"
     compose-function "^3.0.3"
