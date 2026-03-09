@@ -224,7 +224,6 @@ runs:
   - name: Send Slack notification
     id: send-notification
     uses: slackapi/slack-github-action@v2.1.1
-    continue-on-error: true
     with:
       method: chat.postMessage
       token: ${{ inputs.slack_token }}
