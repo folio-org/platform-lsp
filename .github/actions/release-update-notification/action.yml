@@ -38,10 +38,6 @@ inputs:
     description: 'JSON object of UI modules not found in package.json'
     required: false
     default: '{}'
-  missing_ui_count:
-    description: 'Number of UI modules not found in package.json'
-    required: false
-    default: '0'
   pr_created:
     description: 'Whether a PR was created'
     required: false
@@ -168,30 +164,37 @@ runs:
     shell: bash
     env:
       NOT_FOUND_UI_REPORT: ${{ inputs.not_found_ui_report }}
-      MISSING_UI_COUNT: ${{ inputs.missing_ui_count }}
     run: |
       set -euo pipefail
 
       # Parse not found UI report JSON and format as plain text for Slack
-      if [[ -n "$NOT_FOUND_UI_REPORT" && "$NOT_FOUND_UI_REPORT" != "{}" && "$MISSING_UI_COUNT" != "0" ]]; then
+      if [[ -n "$NOT_FOUND_UI_REPORT" && "$NOT_FOUND_UI_REPORT" != "{}" ]]; then
+        # Calculate count from JSON
+        MISSING_UI_COUNT=$(echo "$NOT_FOUND_UI_REPORT" | jq 'length')
+        
+        if [[ "$MISSING_UI_COUNT" -gt 0 ]]; then
         MISSING_MODULES=$(echo "$NOT_FOUND_UI_REPORT" | jq -r '
           to_entries | 
           map("\(.key) (\(.value))") | 
           join("\n")
         ')
         
-        # Build complete message including header and footer
-        {
-          echo "missing_text<<EOF"
-          echo "**Missing entries:** ${MISSING_UI_COUNT}"
-          echo ""
-          echo "$MISSING_MODULES"
-          echo ""
-          echo "_These UI modules are referenced by application descriptors but were NOT found in \`package.json\`._"
-          echo "EOF"
-        } >> "$GITHUB_OUTPUT"
-        
-        echo "has_missing_ui=true" >> "$GITHUB_OUTPUT"
+          # Build complete message including header and footer
+          {
+            echo "missing_text<<EOF"
+            echo "**Missing entries:** ${MISSING_UI_COUNT}"
+            echo ""
+            echo "$MISSING_MODULES"
+            echo ""
+            echo "_These UI modules are referenced by application descriptors but were NOT found in \`package.json\`._"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          
+          echo "has_missing_ui=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "missing_text=" >> "$GITHUB_OUTPUT"
+          echo "has_missing_ui=false" >> "$GITHUB_OUTPUT"
+        fi
       else
         echo "missing_text=" >> "$GITHUB_OUTPUT"
         echo "has_missing_ui=false" >> "$GITHUB_OUTPUT"

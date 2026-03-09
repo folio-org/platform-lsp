@@ -76,9 +76,6 @@ on:
       not_found_ui_report:
         description: 'JSON object of UI modules not found in package.json'
         value: ${{ jobs.update.outputs.not_found_ui_report }}
-      missing_ui_count:
-        description: 'Number of UI modules not found in package.json'
-        value: ${{ jobs.update.outputs.missing_ui_count }}
       notification_outcome:
         description: 'Outcome of notifications (success/failure/skipped)'
         value: ${{ jobs.notify.outputs.notification_outcome }}
