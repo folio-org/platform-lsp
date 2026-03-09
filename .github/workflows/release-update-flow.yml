@@ -267,6 +267,7 @@ jobs:
         with:
           package-json: ${{ steps.read-package-json.outputs.file_content }}
           ui-modules: ${{ steps.fetch-updated-ui-modules.outputs.ui-modules }}
+          ignore-not-found: '["folio_stripes-core", "folio_stripes-smart-components"]'
 
       - name: 'Write updated package.json'
         id: write-package-json

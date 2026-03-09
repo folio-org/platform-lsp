@@ -15,6 +15,8 @@ def parse_arguments() -> argparse.Namespace:
                       help="Content of package.json as JSON string")
   parser.add_argument("--ui-modules", required=True,
                       help="List of UI modules as JSON string")
+  parser.add_argument("--ignore-not-found", required=False, default='[]',
+                      help="JSON array of module names to exclude from not-found report")
   parser.add_argument("--output-file", required=True,
                       help="Output file path to save the structured JSON result")
   return parser.parse_args()
@@ -68,12 +70,16 @@ def validate_module(module: Dict[str, Any]) -> bool:
   return "name" in module and "version" in module
 
 
-def update_dependencies(package_json: Dict[str, Any], ui_modules: List[Dict[str, Any]]) -> Tuple[List[Dict[str, Any]], Dict[str, str]]:
+def update_dependencies(package_json: Dict[str, Any], ui_modules: List[Dict[str, Any]], ignore_list: List[str] = None) -> Tuple[List[Dict[str, Any]], Dict[str, str]]:
   """Update package_json dependencies based on ui_modules list.
 
   Returns a tuple of (updated_modules_list, not_found_modules_map).
   Business logic unchanged: only upgrade if new version is higher and dependency exists.
+  Modules in ignore_list are excluded from not_found_modules_map.
   """
+  if ignore_list is None:
+    ignore_list = []
+  
   if "dependencies" not in package_json:
     package_json["dependencies"] = {}
 
@@ -91,7 +97,8 @@ def update_dependencies(package_json: Dict[str, Any], ui_modules: List[Dict[str,
 
     if package_name not in package_json["dependencies"]:
       print(f"Skipping {package_name}: not in existing dependencies")
-      not_found_modules[module_name] = new_version
+      if module_name not in ignore_list:
+        not_found_modules[module_name] = new_version
       continue
 
     old_version = package_json["dependencies"][package_name]
@@ -146,13 +153,18 @@ def main() -> None:
   # Load and validate input data
   package_json = load_json_safely(args.package_json, "package.json")
   ui_modules = load_json_safely(args.ui_modules, "UI modules")
+  ignore_not_found = load_json_safely(args.ignore_not_found, "ignore-not-found list")
 
   if not isinstance(ui_modules, list):
     print("Error: UI modules must be a list", file=sys.stderr)
     sys.exit(1)
+  
+  if not isinstance(ignore_not_found, list):
+    print("Error: ignore-not-found must be a list", file=sys.stderr)
+    sys.exit(1)
 
   # Update dependencies
-  updated_modules, not_found_modules = update_dependencies(package_json, ui_modules)
+  updated_modules, not_found_modules = update_dependencies(package_json, ui_modules, ignore_not_found)
 
   # Save results
   save_results(args.output_file, package_json, updated_modules, not_found_modules)

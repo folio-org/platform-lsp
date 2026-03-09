@@ -8,6 +8,7 @@ Composite GitHub Action that updates `package.json` dependencies using an input 
 |------|-------------|----------|
 | `package-json` | Full `package.json` content as a JSON string | yes |
 | `ui-modules` | JSON string of an array of objects: `[{"name": "folio_some-module", "version": "x.y.z"}, ...]` | yes |
+| `ignore-not-found` | JSON array of module names to exclude from `not-found-ui-report` (e.g., `["folio_stripes-core", "folio_stripes-smart-components"]`) | no (default: `[]`) |
 
 ## Outputs
 
@@ -26,8 +27,9 @@ Composite GitHub Action that updates `package.json` dependencies using an input 
    - It already exists in `package.json.dependencies`.
    - The new version is strictly higher (numeric comparison of dotted segments; non-digit characters ignored except leading `v^~`).
 3. Equal or lower versions are ignored (skipped with log message).
-4. Missing dependencies are collected in `not-found-ui-report` but never added.
-5. Exit code is always `0` (action never fails solely due to no updates).
+4. Missing dependencies are collected in `not-found-ui-report` but never added, unless they are in the `ignore-not-found` list.
+5. Modules in the `ignore-not-found` list are still skipped if not found, but excluded from the `not-found-ui-report` output.
+6. Exit code is always `0` (action never fails solely due to no updates).
 
 ## Example Usage
 
@@ -57,6 +59,7 @@ jobs:
         with:
           package-json: ${{ steps.pkg.outputs.content }}
           ui-modules: ${{ steps.modules.outputs.list }}
+          ignore-not-found: '["folio_stripes-core", "folio_stripes-smart-components"]'
 
       - name: Show summary
         run: |
