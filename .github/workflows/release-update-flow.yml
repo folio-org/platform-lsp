@@ -76,6 +76,12 @@ on:
       package_diff_json:
         description: 'JSON array of package.json changes for Slack formatting'
         value: ${{ jobs.generate-reports.outputs.package_diff_json }}
+      not_found_ui_report:
+        description: 'JSON object of UI modules not found in package.json'
+        value: ${{ jobs.update-package-json.outputs.not_found_ui_report }}
+      missing_ui_count:
+        description: 'Number of UI modules not found in package.json'
+        value: ${{ jobs.generate-reports.outputs.missing_ui_count }}
 
 permissions:
   contents: write
@@ -304,6 +310,7 @@ jobs:
       updates_cnt: ${{ steps.build-change-report.outputs.updates_cnt }}
       descriptor_diff_json: ${{ steps.build-change-report.outputs.diff_json }}
       package_diff_json: ${{ steps.build-ui-diff.outputs.diff_json }}
+      missing_ui_count: ${{ steps.calculate-missing-ui-count.outputs.count }}
       artifact_name: ${{ env.ARTIFACT_NAME }}
     steps:
       - name: 'Download Platform Descriptor Artifact'
@@ -385,6 +392,20 @@ jobs:
           not_found_ui_report: ${{ needs.update-package-json.outputs.not_found_ui_report }}
           package_diff_available: ${{ steps.build-ui-diff.outputs.has_changes != '' && 'true' || 'false' }}
           write_to_summary: 'true'
+
+      - name: 'Calculate missing UI count'
+        id: calculate-missing-ui-count
+        shell: bash
+        env:
+          NOT_FOUND_UI_REPORT: ${{ needs.update-package-json.outputs.not_found_ui_report }}
+        run: |
+          set -euo pipefail
+          count=0
+          if [[ -n "${NOT_FOUND_UI_REPORT}" && "${NOT_FOUND_UI_REPORT}" != "{}" ]]; then
+            count=$(echo "${NOT_FOUND_UI_REPORT}" | jq 'length' || echo 0)
+          fi
+          echo "count=${count}" >> "$GITHUB_OUTPUT"
+          echo "::notice::Missing UI modules count: ${count}"
 
       - name: 'Upload Combined Artifact for Commit'
         uses: actions/upload-artifact@v4
