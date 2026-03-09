@@ -180,16 +180,21 @@ runs:
           join("\n")
         ')
         
-        echo "missing_modules<<EOF" >> "$GITHUB_OUTPUT"
-        echo "$MISSING_MODULES" >> "$GITHUB_OUTPUT"
-        echo "EOF" >> "$GITHUB_OUTPUT"
+        # Build complete message including header and footer
+        {
+          echo "missing_text<<EOF"
+          echo "**Missing entries:** ${MISSING_UI_COUNT}"
+          echo ""
+          echo "$MISSING_MODULES"
+          echo ""
+          echo "_These UI modules are referenced by application descriptors but were NOT found in \`package.json\`._"
+          echo "EOF"
+        } >> "$GITHUB_OUTPUT"
         
         echo "has_missing_ui=true" >> "$GITHUB_OUTPUT"
-        echo "missing_count=$MISSING_UI_COUNT" >> "$GITHUB_OUTPUT"
       else
-        echo "missing_modules=" >> "$GITHUB_OUTPUT"
+        echo "missing_text=" >> "$GITHUB_OUTPUT"
         echo "has_missing_ui=false" >> "$GITHUB_OUTPUT"
-        echo "missing_count=0" >> "$GITHUB_OUTPUT"
       fi
 
   - name: Prepare notification metadata
@@ -241,7 +246,7 @@ runs:
             ${{ inputs.notification_type == 'success' && inputs.pr_created == 'true' && steps.format-descriptor-updates.outputs.has_applications == 'true' && format(',{{"color": "{0}", "mrkdwn_in": ["text"], "title": "Applications Updated", "text": {1}}}', steps.prepare-metadata.outputs.color, toJSON(steps.format-descriptor-updates.outputs.applications)) || '' }}
             ${{ inputs.notification_type == 'success' && inputs.pr_created == 'true' && steps.format-descriptor-updates.outputs.has_components == 'true' && format(',{{"color": "{0}", "mrkdwn_in": ["text"], "title": "Components Updated", "text": {1}}}', steps.prepare-metadata.outputs.color, toJSON(steps.format-descriptor-updates.outputs.components)) || '' }}
             ${{ inputs.notification_type == 'success' && inputs.pr_created == 'true' && steps.format-package-updates.outputs.has_ui_deps == 'true' && format(',{{"color": "{0}", "mrkdwn_in": ["text"], "title": "UI Dependencies Updated", "text": {1}}}', steps.prepare-metadata.outputs.color, toJSON(steps.format-package-updates.outputs.ui_dependencies)) || '' }}
-            ${{ inputs.notification_type == 'success' && inputs.pr_created == 'true' && steps.format-missing-ui-modules.outputs.has_missing_ui == 'true' && format(',{{"color": "warning", "mrkdwn_in": ["text"], "title": "⚠️ Missing UI Dependencies", "text": "**Missing entries:** {0}\n\n{1}\n\n_These UI modules are referenced by application descriptors but were NOT found in `package.json`._", "footer": "Eureka CI/CD"}}', steps.format-missing-ui-modules.outputs.missing_count, toJSON(steps.format-missing-ui-modules.outputs.missing_modules)) || '' }}
+            ${{ inputs.notification_type == 'success' && inputs.pr_created == 'true' && steps.format-missing-ui-modules.outputs.has_missing_ui == 'true' && format(',{{"color": "warning", "mrkdwn_in": ["text"], "title": "⚠️ Missing UI Dependencies", "text": {0}, "footer": "Eureka CI/CD"}}', toJSON(steps.format-missing-ui-modules.outputs.missing_text)) || '' }}
             ${{ inputs.notification_type == 'success' && inputs.pr_created == 'true' && (inputs.successful_reviewers != '' || inputs.failed_reviewers != '') && format(',{{"color": "{0}", "mrkdwn_in": ["text"], "title": "{1}", "text": {2}, "footer": "Eureka CI/CD"}}', inputs.failed_reviewers != '' && 'warning' || steps.prepare-metadata.outputs.color, inputs.failed_reviewers != '' && 'Reviewers (failed)' || 'Reviewers (added)', toJSON(inputs.failed_reviewers || inputs.successful_reviewers || 'No reviewers configured')) || '' }}
             ${{ inputs.notification_type == 'success' && inputs.pr_created != 'true' && format('{{"color": "{0}", "fields": [{{"title": "New Version", "value": "{1}", "short": true}}, {{"title": "Updated", "value": "{2}", "short": true}}, {{"title": "Commit", "value": "<https://github.com/{3}/commit/{4}|{4}>", "short": true}}]}}', steps.prepare-metadata.outputs.color, inputs.new_version, inputs.updates_cnt, inputs.repo, inputs.commit_sha) || '' }}
             ${{ inputs.notification_type == 'success' && inputs.pr_created != 'true' && steps.format-descriptor-updates.outputs.has_applications == 'true' && format(',{{"color": "{0}", "mrkdwn_in": ["text"], "title": "Applications Updated", "text": {1}}}', steps.prepare-metadata.outputs.color, toJSON(steps.format-descriptor-updates.outputs.applications)) || '' }}
