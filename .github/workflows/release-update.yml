@@ -152,7 +152,6 @@ jobs:
           descriptor_diff_json: ${{ needs.update.outputs.descriptor_diff_json }}
           package_diff_json: ${{ needs.update.outputs.package_diff_json }}
           not_found_ui_report: ${{ needs.update.outputs.not_found_ui_report }}
-          missing_ui_count: ${{ needs.update.outputs.missing_ui_count }}
           pr_created: ${{ needs.update.outputs.pr_created }}
           pr_url: ${{ needs.update.outputs.pr_url }}
           pr_number: ${{ needs.update.outputs.pr_number }}
@@ -180,7 +179,6 @@ jobs:
           descriptor_diff_json: ${{ needs.update.outputs.descriptor_diff_json }}
           package_diff_json: ${{ needs.update.outputs.package_diff_json }}
           not_found_ui_report: ${{ needs.update.outputs.not_found_ui_report }}
-          missing_ui_count: ${{ needs.update.outputs.missing_ui_count }}
           pr_created: ${{ needs.update.outputs.pr_created }}
           pr_url: ${{ needs.update.outputs.pr_url }}
           pr_number: ${{ needs.update.outputs.pr_number }}
