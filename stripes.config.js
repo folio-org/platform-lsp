@@ -2,6 +2,7 @@ const modules = require("./stripes.modules");
 const extra = require("./stripes.extra");
 const { merge } = require('lodash');
 
+// Documentation: https://folio-org.atlassian.net/wiki/spaces/DEV/pages/46858271/stripes.config.js+properties
 module.exports = {
   okapi: {
     'url': '${kongUrl}',
