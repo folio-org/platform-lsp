@@ -18,6 +18,11 @@ on:
         required: false
         type: boolean
         default: false
+      enable_team_notification:
+        description: 'Enable team channel Slack notifications'
+        required: false
+        type: boolean
+        default: true
       pr_reviewers:
         description: 'Comma-separated list of reviewers'
         required: false
@@ -56,10 +61,30 @@ on:
       updates_cnt:
         description: 'Number of modules/components updated'
         value: ${{ jobs.update.outputs.updates_cnt }}
+      updates_markdown:
+        description: 'Formatted markdown for applications/components updates'
+        value: ${{ jobs.update.outputs.updates_markdown }}
+      ui_updates_markdown:
+        description: 'Formatted markdown for UI dependency updates'
+        value: ${{ jobs.update.outputs.ui_updates_markdown }}
+      descriptor_diff_json:
+        description: 'JSON array of descriptor changes for Slack formatting'
+        value: ${{ jobs.update.outputs.descriptor_diff_json }}
+      package_diff_json:
+        description: 'JSON array of package.json changes for Slack formatting'
+        value: ${{ jobs.update.outputs.package_diff_json }}
+      notification_outcome:
+        description: 'Outcome of notifications (success/failure/skipped)'
+        value: ${{ jobs.notify.outputs.notification_outcome }}
 
 permissions:
   contents: write
   pull-requests: write
+
+env:
+  REPO_OWNER: ${{ github.repository_owner }}
+  REPO_NAME: ${{ github.event.repository.name }}
+  GH_TOKEN: ${{ github.token }}
 
 concurrency:
   group: platform-update-${{ github.repository }}-${{ inputs.release_branch }}
@@ -78,3 +103,191 @@ jobs:
       pr_reviewers: ${{ inputs.pr_reviewers }}
       pr_labels: ${{ inputs.pr_labels }}
     secrets: inherit
+
+  notify:
+    name: Send Notifications
+    needs: [update]
+    if: always() && !cancelled() && (needs.update.outputs.updated == 'true' || needs.update.result == 'failure')
+    runs-on: ubuntu-latest
+    outputs:
+      team_notif_status: ${{ steps.notify-team.outcome }}
+      general_notif_status: ${{ steps.notify-general.outcome }}
+      notification_outcome: ${{ steps.notify-team.outcome || steps.notify-general.outcome }}
+    steps:
+      - name: Get team channel
+        id: get-team-channel
+        if: inputs.enable_team_notification == true
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ env.GH_TOKEN }}
+          script: |
+            try {
+              const { data: variable } = await github.rest.actions.getRepoVariable({
+                owner: '${{ env.REPO_OWNER }}',
+                repo: '${{ env.REPO_NAME }}',
+                name: 'SLACK_NOTIF_CHANNEL'
+              });
+              console.log(`Found SLACK_NOTIF_CHANNEL: ${variable.value}`);
+              core.setOutput('team_channel', variable.value);
+            } catch (error) {
+              console.log(`SLACK_NOTIF_CHANNEL not found or not accessible: ${error.message}`);
+              core.setOutput('team_channel', '');
+            }
+
+      - name: Notify team channel
+        id: notify-team
+        if: inputs.enable_team_notification == true && steps.get-team-channel.outputs.team_channel != ''
+        uses: folio-org/platform-lsp/.github/actions/release-update-notification@master
+        with:
+          notification_type: ${{ needs.update.result == 'success' && 'success' || 'failure' }}
+          release_branch: ${{ inputs.release_branch }}
+          update_branch: ${{ inputs.update_branch }}
+          workflow_status: ${{ needs.update.outputs.workflow_status }}
+          updated: ${{ needs.update.outputs.updated }}
+          new_version: ${{ needs.update.outputs.new_version }}
+          updates_cnt: ${{ needs.update.outputs.updates_cnt }}
+          descriptor_diff_json: ${{ needs.update.outputs.descriptor_diff_json }}
+          package_diff_json: ${{ needs.update.outputs.package_diff_json }}
+          pr_created: ${{ needs.update.outputs.pr_created }}
+          pr_url: ${{ needs.update.outputs.pr_url }}
+          pr_number: ${{ needs.update.outputs.pr_number }}
+          commit_sha: ${{ github.sha }}
+          failure_reason: ${{ needs.update.outputs.failure_reason }}
+          dry_run: ${{ inputs.dry_run }}
+          workflow_run_id: ${{ github.run_id }}
+          workflow_run_number: ${{ github.run_number }}
+          repo: ${{ github.repository }}
+          slack_channel: ${{ steps.get-team-channel.outputs.team_channel }}
+          slack_token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+
+      - name: Notify general channel
+        id: notify-general
+        if: vars.GENERAL_SLACK_NOTIF_CHANNEL != ''
+        uses: folio-org/platform-lsp/.github/actions/release-update-notification@master
+        with:
+          notification_type: ${{ needs.update.result == 'success' && 'success' || 'failure' }}
+          release_branch: ${{ inputs.release_branch }}
+          update_branch: ${{ inputs.update_branch }}
+          workflow_status: ${{ needs.update.outputs.workflow_status }}
+          updated: ${{ needs.update.outputs.updated }}
+          new_version: ${{ needs.update.outputs.new_version }}
+          updates_cnt: ${{ needs.update.outputs.updates_cnt }}
+          descriptor_diff_json: ${{ needs.update.outputs.descriptor_diff_json }}
+          package_diff_json: ${{ needs.update.outputs.package_diff_json }}
+          pr_created: ${{ needs.update.outputs.pr_created }}
+          pr_url: ${{ needs.update.outputs.pr_url }}
+          pr_number: ${{ needs.update.outputs.pr_number }}
+          commit_sha: ${{ github.sha }}
+          failure_reason: ${{ needs.update.outputs.failure_reason }}
+          dry_run: ${{ inputs.dry_run }}
+          workflow_run_id: ${{ github.run_id }}
+          workflow_run_number: ${{ github.run_number }}
+          repo: ${{ github.repository }}
+          slack_channel: ${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}
+          slack_token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+
+  summarize:
+    name: Workflow Summary
+    needs: [update, notify]
+    if: always()
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_BRANCH: ${{ inputs.release_branch }}
+      UPDATE_BRANCH: ${{ inputs.update_branch }}
+      UPDATE_RESULT: ${{ needs.update.result }}
+      UPDATED: ${{ needs.update.outputs.updated }}
+      UPDATES_CNT: ${{ needs.update.outputs.updates_cnt }}
+      UPDATES_MARKDOWN: ${{ needs.update.outputs.updates_markdown }}
+      UI_UPDATES_MARKDOWN: ${{ needs.update.outputs.ui_updates_markdown }}
+      NEW_VERSION: ${{ needs.update.outputs.new_version }}
+      PR_CREATED: ${{ needs.update.outputs.pr_created }}
+      PR_URL: ${{ needs.update.outputs.pr_url }}
+      PR_NUMBER: ${{ needs.update.outputs.pr_number }}
+      FAILURE_REASON: ${{ needs.update.outputs.failure_reason }}
+      TEAM_NOTIF_STATUS: ${{ needs.notify.outputs.team_notif_status || 'skipped' }}
+      TEAM_NOTIF_STATUS_ICON: >-
+        ${{
+          needs.notify.outputs.team_notif_status == 'success' && '✅'
+          || needs.notify.outputs.team_notif_status == 'failure' && '⚠️'
+          || 'ℹ️'
+        }}
+      GENERAL_NOTIF_STATUS: ${{ needs.notify.outputs.general_notif_status || 'skipped' }}
+      GENERAL_NOTIF_STATUS_ICON: >-
+        ${{
+          needs.notify.outputs.general_notif_status == 'success' && '✅'
+          || needs.notify.outputs.general_notif_status == 'failure' && '⚠️'
+          || 'ℹ️'
+        }}
+    steps:
+      - name: Generate Summary
+        run: |
+          {
+            echo "## 🎯 Release Update Summary"
+            echo ""
+            echo "**Release Branch:** \`$RELEASE_BRANCH\`"
+            echo "**Update Branch:** \`$UPDATE_BRANCH\`"
+            echo "**Workflow Run:** [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+            echo ""
+
+            if [[ "$UPDATE_RESULT" == "success" ]]; then
+              if [[ "$UPDATED" == "true" ]]; then
+                echo "### ✅ Update Successful"
+                echo ""
+                echo "- **New Version:** \`$NEW_VERSION\`"
+                echo "- **Modules/Components Updated:** $UPDATES_CNT"
+                echo ""
+                
+                if [[ -n "$UPDATES_MARKDOWN" ]]; then
+                  echo "$UPDATES_MARKDOWN"
+                  echo ""
+                fi
+                
+                if [[ -n "$UI_UPDATES_MARKDOWN" ]]; then
+                  echo "$UI_UPDATES_MARKDOWN"
+                  echo ""
+                fi
+                
+                if [[ "$PR_CREATED" == "true" && -n "$PR_URL" ]]; then
+                  echo "**Pull Request:** [#$PR_NUMBER]($PR_URL)"
+                  echo ""
+                else
+                  echo "**Commit:** [\`${{ github.sha }}\`](https://github.com/${{ github.repository }}/commit/${{ github.sha }})"
+                  echo ""
+                fi
+              else
+                echo "### ✨ No Updates Needed"
+                echo "All modules are already up to date"
+                echo ""
+              fi
+            else
+              echo "### ❌ Update Failed"
+              echo ""
+              if [[ -n "$FAILURE_REASON" ]]; then
+                echo "**Failure Reason:**"
+                echo "\`\`\`"
+                echo "$FAILURE_REASON"
+                echo "\`\`\`"
+                echo ""
+              fi
+            fi
+
+            if [[ "${{ inputs.dry_run }}" == "true" ]]; then
+              echo "### 🏃 Dry Run Mode"
+              echo "This was a dry run - no changes were committed or PRs created"
+              echo ""
+            fi
+
+            echo "### 📨 Notification Status"
+            echo ""
+            if [[ "${{ inputs.enable_team_notification }}" == "true" ]]; then
+              echo "$TEAM_NOTIF_STATUS_ICON **Team Channel:** $TEAM_NOTIF_STATUS"
+            else
+              echo "ℹ️ **Team Channel:** Disabled"
+            fi
+            echo ""
+            if [[ -n "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}" ]]; then
+              echo "$GENERAL_NOTIF_STATUS_ICON **General Channel** (\`${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}\`): $GENERAL_NOTIF_STATUS"
+            else
+              echo "ℹ️ **General Channel:** Not configured"
+            fi
+          } >> $GITHUB_STEP_SUMMARY

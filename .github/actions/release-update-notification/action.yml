@@ -1,0 +1,213 @@
+name: 'Release Update Slack Notification'
+description: 'Send formatted Slack notifications for release update operations'
+author: 'FOLIO DevOps'
+
+inputs:
+  notification_type:
+    description: 'Type of notification (success/failure)'
+    required: true
+  release_branch:
+    description: 'Release branch name'
+    required: true
+  update_branch:
+    description: 'Update branch name'
+    required: true
+  workflow_status:
+    description: 'Overall workflow status'
+    required: true
+  updated:
+    description: 'Whether updates were found'
+    required: true
+  new_version:
+    description: 'New platform version if updated'
+    required: false
+    default: ''
+  updates_cnt:
+    description: 'Number of modules/components updated'
+    required: false
+    default: '0'
+  descriptor_diff_json:
+    description: 'JSON array of descriptor changes'
+    required: false
+    default: '[]'
+  package_diff_json:
+    description: 'JSON array of package.json changes'
+    required: false
+    default: '[]'
+  pr_created:
+    description: 'Whether a PR was created'
+    required: false
+    default: 'false'
+  pr_url:
+    description: 'URL of the created PR'
+    required: false
+    default: ''
+  pr_number:
+    description: 'PR number if created'
+    required: false
+    default: ''
+  commit_sha:
+    description: 'Commit SHA if no PR'
+    required: false
+    default: ''
+  failure_reason:
+    description: 'Reason for failure if any'
+    required: false
+    default: ''
+  successful_reviewers:
+    description: 'Successfully added reviewers'
+    required: false
+    default: ''
+  failed_reviewers:
+    description: 'Failed to add reviewers'
+    required: false
+    default: ''
+  dry_run:
+    description: 'Whether this is a dry run'
+    required: false
+    default: 'false'
+  workflow_run_id:
+    description: 'GitHub workflow run ID'
+    required: true
+  workflow_run_number:
+    description: 'GitHub workflow run number'
+    required: true
+  repo:
+    description: 'Repository name (org/repo format)'
+    required: true
+  slack_channel:
+    description: 'Slack channel to send notification to'
+    required: true
+  slack_token:
+    description: 'Slack bot token'
+    required: true
+
+outputs:
+  message_sent:
+    description: 'Whether the message was sent successfully'
+    value: ${{ steps.send-notification.outcome }}
+
+runs:
+  using: 'composite'
+  steps:
+  - name: Format descriptor updates for Slack
+    id: format-descriptor-updates
+    shell: bash
+    env:
+      DESCRIPTOR_DIFF_JSON: ${{ inputs.descriptor_diff_json }}
+    run: |
+      set -euo pipefail
+
+      # Parse descriptor diff JSON and format as plain text for Slack
+      if [[ -n "$DESCRIPTOR_DIFF_JSON" && "$DESCRIPTOR_DIFF_JSON" != "[]" ]]; then
+        # Extract applications and components separately
+        APPLICATIONS=$(echo "$DESCRIPTOR_DIFF_JSON" | jq -r '
+          [.[] | select(.group == "applications" or .group == "Applications")] | 
+          map("\(.name): \(.old_version) → \(.new_version)") | 
+          join("\n")
+        ')
+        
+        COMPONENTS=$(echo "$DESCRIPTOR_DIFF_JSON" | jq -r '
+          [.[] | select(.group == "eureka-components" or .group == "Components")] | 
+          map("\(.name): \(.old_version) → \(.new_version)") | 
+          join("\n")
+        ')
+        
+        echo "applications<<EOF" >> "$GITHUB_OUTPUT"
+        echo "$APPLICATIONS" >> "$GITHUB_OUTPUT"
+        echo "EOF" >> "$GITHUB_OUTPUT"
+        
+        echo "components<<EOF" >> "$GITHUB_OUTPUT"
+        echo "$COMPONENTS" >> "$GITHUB_OUTPUT"
+        echo "EOF" >> "$GITHUB_OUTPUT"
+        
+        echo "has_applications=$([ -n "$APPLICATIONS" ] && echo 'true' || echo 'false')" >> "$GITHUB_OUTPUT"
+        echo "has_components=$([ -n "$COMPONENTS" ] && echo 'true' || echo 'false')" >> "$GITHUB_OUTPUT"
+      else
+        echo "applications=" >> "$GITHUB_OUTPUT"
+        echo "components=" >> "$GITHUB_OUTPUT"
+        echo "has_applications=false" >> "$GITHUB_OUTPUT"
+        echo "has_components=false" >> "$GITHUB_OUTPUT"
+      fi
+
+  - name: Format package updates for Slack
+    id: format-package-updates
+    shell: bash
+    env:
+      PACKAGE_DIFF_JSON: ${{ inputs.package_diff_json }}
+    run: |
+      set -euo pipefail
+
+      # Parse package diff JSON and format as plain text for Slack
+      if [[ -n "$PACKAGE_DIFF_JSON" && "$PACKAGE_DIFF_JSON" != "[]" ]]; then
+        UI_DEPS=$(echo "$PACKAGE_DIFF_JSON" | jq -r '
+          map("\(.name): \(.old_version) → \(.new_version)") | 
+          join("\n")
+        ')
+        
+        echo "ui_dependencies<<EOF" >> "$GITHUB_OUTPUT"
+        echo "$UI_DEPS" >> "$GITHUB_OUTPUT"
+        echo "EOF" >> "$GITHUB_OUTPUT"
+        
+        echo "has_ui_deps=$([ -n "$UI_DEPS" ] && echo 'true' || echo 'false')" >> "$GITHUB_OUTPUT"
+      else
+        echo "ui_dependencies=" >> "$GITHUB_OUTPUT"
+        echo "has_ui_deps=false" >> "$GITHUB_OUTPUT"
+      fi
+
+  - name: Prepare notification metadata
+    id: prepare-metadata
+    shell: bash
+    run: |
+      set -euo pipefail
+
+      # Determine color and emoji based on status
+      if [[ "${{ inputs.notification_type }}" == "success" ]]; then
+        echo "color=good" >> "$GITHUB_OUTPUT"
+        echo "emoji=✅" >> "$GITHUB_OUTPUT"
+        echo "status_text=updated" >> "$GITHUB_OUTPUT"
+      else
+        echo "color=danger" >> "$GITHUB_OUTPUT"
+        echo "emoji=❌" >> "$GITHUB_OUTPUT"
+        echo "status_text=failed" >> "$GITHUB_OUTPUT"
+      fi
+
+      # Add dry-run prefix if applicable
+      if [[ "${{ inputs.dry_run }}" == "true" ]]; then
+        echo "title_prefix=[DRY RUN] " >> "$GITHUB_OUTPUT"
+      else
+        echo "title_prefix=" >> "$GITHUB_OUTPUT"
+      fi
+
+  - name: Send Slack notification
+    id: send-notification
+    uses: slackapi/slack-github-action@v2.1.1
+    continue-on-error: true
+    with:
+      method: chat.postMessage
+      token: ${{ inputs.slack_token }}
+      payload: |
+        {
+          "channel": "${{ inputs.slack_channel }}",
+          "text": "${{ steps.prepare-metadata.outputs.title_prefix }}${{ inputs.repo }} ${{ inputs.release_branch }} ${{ steps.prepare-metadata.outputs.status_text }} #${{ inputs.workflow_run_number }}",
+          "blocks": [
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*${{ steps.prepare-metadata.outputs.emoji }} ${{ steps.prepare-metadata.outputs.title_prefix }}${{ inputs.repo }} `${{ inputs.release_branch }}` ${{ steps.prepare-metadata.outputs.status_text }}* <https://github.com/${{ inputs.repo }}/actions/runs/${{ inputs.workflow_run_id }}|#${{ inputs.workflow_run_number }}>"
+              }
+            }
+          ],
+          "attachments": [
+            ${{ inputs.notification_type == 'success' && inputs.pr_created == 'true' && format('{{"color": "{0}", "fields": [{{"title": "Branch", "value": "<https://github.com/{1}/tree/{2}|{2}>", "short": true}}, {{"title": "New Version", "value": "{3}", "short": true}}, {{"title": "Updated", "value": "{4}", "short": true}}, {{"title": "Pull Request", "value": "{5}", "short": true}}]}}', steps.prepare-metadata.outputs.color, inputs.repo, inputs.release_branch, inputs.new_version, inputs.updates_cnt, inputs.pr_url != '' && format('<{0}|#{1}>', inputs.pr_url, inputs.pr_number) || 'PR creation failed') || '' }}
+            ${{ inputs.notification_type == 'success' && inputs.pr_created == 'true' && steps.format-descriptor-updates.outputs.has_applications == 'true' && format(',{{"color": "{0}", "mrkdwn_in": ["text"], "title": "Applications Updated", "text": {1}}}', steps.prepare-metadata.outputs.color, toJSON(steps.format-descriptor-updates.outputs.applications)) || '' }}
+            ${{ inputs.notification_type == 'success' && inputs.pr_created == 'true' && steps.format-descriptor-updates.outputs.has_components == 'true' && format(',{{"color": "{0}", "mrkdwn_in": ["text"], "title": "Components Updated", "text": {1}}}', steps.prepare-metadata.outputs.color, toJSON(steps.format-descriptor-updates.outputs.components)) || '' }}
+            ${{ inputs.notification_type == 'success' && inputs.pr_created == 'true' && steps.format-package-updates.outputs.has_ui_deps == 'true' && format(',{{"color": "{0}", "mrkdwn_in": ["text"], "title": "UI Dependencies Updated", "text": {1}}}', steps.prepare-metadata.outputs.color, toJSON(steps.format-package-updates.outputs.ui_dependencies)) || '' }}
+            ${{ inputs.notification_type == 'success' && inputs.pr_created == 'true' && (inputs.successful_reviewers != '' || inputs.failed_reviewers != '') && format(',{{"color": "{0}", "mrkdwn_in": ["text"], "title": "{1}", "text": {2}, "footer": "Eureka CI/CD"}}', inputs.failed_reviewers != '' && 'warning' || steps.prepare-metadata.outputs.color, inputs.failed_reviewers != '' && 'Reviewers (failed)' || 'Reviewers (added)', toJSON(inputs.failed_reviewers || inputs.successful_reviewers || 'No reviewers configured')) || '' }}
+            ${{ inputs.notification_type == 'success' && inputs.pr_created != 'true' && format('{{"color": "{0}", "fields": [{{"title": "New Version", "value": "{1}", "short": true}}, {{"title": "Updated", "value": "{2}", "short": true}}, {{"title": "Commit", "value": "<https://github.com/{3}/commit/{4}|{4}>", "short": true}}]}}', steps.prepare-metadata.outputs.color, inputs.new_version, inputs.updates_cnt, inputs.repo, inputs.commit_sha) || '' }}
+            ${{ inputs.notification_type == 'success' && inputs.pr_created != 'true' && steps.format-descriptor-updates.outputs.has_applications == 'true' && format(',{{"color": "{0}", "mrkdwn_in": ["text"], "title": "Applications Updated", "text": {1}}}', steps.prepare-metadata.outputs.color, toJSON(steps.format-descriptor-updates.outputs.applications)) || '' }}
+            ${{ inputs.notification_type == 'success' && inputs.pr_created != 'true' && steps.format-descriptor-updates.outputs.has_components == 'true' && format(',{{"color": "{0}", "mrkdwn_in": ["text"], "title": "Components Updated", "text": {1}, "footer": "Eureka CI/CD"}}', steps.prepare-metadata.outputs.color, toJSON(steps.format-descriptor-updates.outputs.components)) || '' }}
+            ${{ inputs.notification_type == 'failure' && format('{{"color": "{0}", "fields": [{{"title": "Branch", "value": "{1}", "short": true}}, {{"title": "Failure Reason", "value": "{2}", "short": false}}], "footer": "Eureka CI/CD"}}', steps.prepare-metadata.outputs.color, inputs.release_branch, inputs.failure_reason || 'Check workflow logs for details') || '' }}
+          ]
+        }

@@ -64,6 +64,18 @@ on:
       pr_number:
         description: 'PR number if created or updated'
         value: ${{ jobs.manage-pr.outputs.pr_number }}
+      updates_markdown:
+        description: 'Formatted markdown for applications/components updates'
+        value: ${{ jobs.generate-reports.outputs.updates_markdown }}
+      ui_updates_markdown:
+        description: 'Formatted markdown for UI dependency updates'
+        value: ${{ jobs.generate-reports.outputs.ui_updates_markdown }}
+      descriptor_diff_json:
+        description: 'JSON array of descriptor changes for Slack formatting'
+        value: ${{ jobs.generate-reports.outputs.descriptor_diff_json }}
+      package_diff_json:
+        description: 'JSON array of package.json changes for Slack formatting'
+        value: ${{ jobs.generate-reports.outputs.package_diff_json }}
 
 permissions:
   contents: write
@@ -289,6 +301,8 @@ jobs:
       ui_updates_markdown: ${{ steps.generate-markdown-reports.outputs.ui_updates_markdown }}
       missing_ui_markdown: ${{ steps.generate-markdown-reports.outputs.missing_ui_markdown }}
       updates_cnt: ${{ steps.build-change-report.outputs.updates_cnt }}
+      descriptor_diff_json: ${{ steps.build-change-report.outputs.diff_json }}
+      package_diff_json: ${{ steps.build-ui-diff.outputs.diff_json }}
       artifact_name: ${{ env.ARTIFACT_NAME }}
     steps:
       - name: 'Download Platform Descriptor Artifact'
