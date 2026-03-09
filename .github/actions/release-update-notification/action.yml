@@ -100,16 +100,16 @@ runs:
 
       # Parse descriptor diff JSON and format as plain text for Slack
       if [[ -n "$DESCRIPTOR_DIFF_JSON" && "$DESCRIPTOR_DIFF_JSON" != "[]" ]]; then
-        # Extract applications and components separately
+        # Extract applications (required and optional) and components separately
         APPLICATIONS=$(echo "$DESCRIPTOR_DIFF_JSON" | jq -r '
-          [.[] | select(.group == "applications" or .group == "Applications")] | 
-          map("\(.name): \(.old_version) → \(.new_version)") | 
+          [.[] | select(.group == "Applications (required)" or .group == "Applications (optional)")] | 
+          map("\(.name): \(.change.old) → \(.change.new)") | 
           join("\n")
         ')
         
         COMPONENTS=$(echo "$DESCRIPTOR_DIFF_JSON" | jq -r '
-          [.[] | select(.group == "eureka-components" or .group == "Components")] | 
-          map("\(.name): \(.old_version) → \(.new_version)") | 
+          [.[] | select(.group == "Eureka Components")] | 
+          map("\(.name): \(.change.old) → \(.change.new)") | 
           join("\n")
         ')
         
