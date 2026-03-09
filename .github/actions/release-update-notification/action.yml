@@ -182,7 +182,7 @@ runs:
           # Build complete message including header and footer
           {
             echo "missing_text<<EOF"
-            echo "**Missing entries:** ${MISSING_UI_COUNT}"
+            echo "*Missing entries:* ${MISSING_UI_COUNT}"
             echo ""
             echo "$MISSING_MODULES"
             echo ""
