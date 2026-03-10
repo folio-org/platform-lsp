@@ -3,9 +3,8 @@ name: Release Update Scheduler
 run-name: Release update scheduler ${{ github.event_name == 'workflow_dispatch' && '[manual]' || '' }}
 
 on:
-  # TODO: Enable scheduled runs once ready
-  # schedule:
-  #   - cron: '0 * * * *'
+  schedule:
+    - cron: '0 * * * *'
 
   workflow_dispatch:
     inputs:
@@ -39,9 +38,6 @@ jobs:
       pr_labels: ${{ steps.get-config.outputs.pr_labels }}
       branch_config: ${{ steps.get-config.outputs.branch_config }}
     steps:
-      - name: Ensure gh CLI # TODO: Remove before merging if using a self-hosted runner with gh pre-installed
-        run: sudo apt-get update && sudo apt-get install -y gh
-
       - name: Get Update Configuration
         id: get-config
         uses: folio-org/kitfox-github/.github/actions/get-update-config@master
