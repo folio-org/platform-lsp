@@ -1684,9 +1684,9 @@
     react-query "^3.38.1"
 
 "@folio/eholdings@>=1.1.0":
-  version "11.1.1099000000000314"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.1.1099000000000314.tgz#758d01695cbb3cf0031dc4b6848c1b36a4d5b36b"
-  integrity sha512-8OCFTy2NUfLwFWBOH8JQp47p6TSlP2itYE3RyyPKVjv0b4VjtNdctviPqN6EQfK5AO37n5cmiLkTTHGZ7ZeLdQ==
+  version "11.1.1099000000000317"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.1.1099000000000317.tgz#e9ed0994f24beb6d708bcb80f75a5c70814a98c2"
+  integrity sha512-tnRb3yRzCfcvDC2FlWyyPh5mt8YstaMPo4E0+JQN+mHReEMKhu6U+x6BR2FaalAOJWO5u7M0c33mwkVs2dPG/w==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
@@ -1968,9 +1968,9 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/marc-authorities@>=1.0.0":
-  version "8.0.1099000000001346"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/marc-authorities/-/marc-authorities-8.0.1099000000001346.tgz#0db8b7f8735dd3151009eaf8efecefdcca57d850"
-  integrity sha512-NCYylLakADtRg7pFMWWl2+hiQGcmGd3i6054SW6uAcBd+IDkfsQnuSPWluysWMD5yhmbTtyhOQfKlHD4Lku1XA==
+  version "8.0.1099000000001371"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/marc-authorities/-/marc-authorities-8.0.1099000000001371.tgz#e6c341a5aeb3238cf82134d148cd5f9211f6b410"
+  integrity sha512-b+IeCb2l4BZiomYf19qJR/EXmui4ieqotPJyNA4KQ/IBa8I8YZb9/O0ZlKF3BPlu7A79CYx8H19kz2tnsGR+oQ==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     "@rehooks/local-storage" "^2.4.4"
