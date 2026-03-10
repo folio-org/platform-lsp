@@ -1,0 +1,121 @@
+name: Sync Applications to FAR
+description: Synchronize application descriptors from folio-org GitHub repositories to FOLIO Application Registry (FAR)
+
+inputs:
+  descriptor-path:
+    description: Path to platform descriptor file
+    required: false
+    default: 'platform-descriptor.json'
+  far-base-url:
+    description: FAR base URL
+    required: false
+    default: 'https://far.ci.folio.org'
+  github-token:
+    description: GitHub token for repository access
+    required: true
+  dry-run:
+    description: Preview mode without POSTing to FAR (true|false)
+    required: false
+    default: 'false'
+  application-groups:
+    description: Comma-separated list of application groups to process
+    required: false
+    default: 'required,optional'
+  request-timeout:
+    description: HTTP request timeout (seconds)
+    required: false
+    default: '10.0'
+  max-retries:
+    description: Maximum number of HTTP request retries
+    required: false
+    default: '3'
+  retry-backoff:
+    description: Base backoff time in seconds for retries
+    required: false
+    default: '1.0'
+  log-level:
+    description: Level of logging verbosity (INFO, DEBUG, WARNING, ERROR)
+    required: false
+    default: 'INFO'
+  far-auth-token:
+    description: FAR API authentication token (optional)
+    required: false
+    default: ''
+
+outputs:
+  synced-count:
+    description: Number of descriptors successfully synced
+    value: ${{ steps.sync.outputs.synced-count }}
+  failed-count:
+    description: Number of failed sync attempts
+    value: ${{ steps.sync.outputs.failed-count }}
+  skipped-count:
+    description: Number of skipped (already in FAR)
+    value: ${{ steps.sync.outputs.skipped-count }}
+  summary:
+    description: JSON summary of results
+    value: ${{ steps.sync.outputs.summary }}
+
+runs:
+  using: composite
+  steps:
+  - name: Set up Python
+    uses: actions/setup-python@v5
+    with:
+      python-version: '3.x'
+
+  - name: Cache pip dependencies
+    uses: actions/cache@v4
+    with:
+      path: ~/.cache/pip
+      key: pip-${{ runner.os }}-${{ hashFiles(format('{0}/requirements.txt', github.action_path)) }}
+      restore-keys: |
+        pip-${{ runner.os }}-
+
+  - name: Install dependencies
+    shell: bash
+    run: |
+      set -euo pipefail
+      IFS=$'\n\t'
+      echo 'Installing dependencies...'
+      mkdir -p ~/.cache/pip
+      python -m pip install --disable-pip-version-check --no-cache-dir -r "${{ github.action_path }}/requirements.txt"
+
+  - id: sync
+    name: Run sync script
+    shell: bash
+    env:
+      DESCRIPTOR_PATH: ${{ inputs.descriptor-path }}
+      FAR_BASE_URL: ${{ inputs.far-base-url }}
+      GITHUB_TOKEN: ${{ inputs.github-token }}
+      DRY_RUN: ${{ inputs.dry-run }}
+      APPLICATION_GROUPS: ${{ inputs.application-groups }}
+      REQUEST_TIMEOUT: ${{ inputs.request-timeout }}
+      MAX_RETRIES: ${{ inputs.max-retries }}
+      RETRY_BACKOFF: ${{ inputs.retry-backoff }}
+      FAR_AUTH_TOKEN: ${{ inputs.far-auth-token }}
+      PYTHONUNBUFFERED: '1'
+      LOG_LEVEL: ${{ inputs.log-level }}
+    run: |
+      set -euo pipefail
+      IFS=$'\n\t'
+      echo 'Running application sync script...'
+
+      # Log to GitHub step summary if available
+      if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+        {
+          echo '## Sync Applications to FAR'
+          echo "- Descriptor: $DESCRIPTOR_PATH"
+          echo "- FAR Base URL: $FAR_BASE_URL"
+          echo "- Application Groups: $APPLICATION_GROUPS"
+          echo "- Dry Run: $DRY_RUN"
+          echo "- Log level: $LOG_LEVEL"
+        } >> "$GITHUB_STEP_SUMMARY"
+      fi
+
+      # Run the script
+      python "${GITHUB_ACTION_PATH}/sync-applications-to-far.py"
+
+branding:
+  icon: upload-cloud
+  color: blue

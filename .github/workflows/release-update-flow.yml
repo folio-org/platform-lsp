@@ -139,6 +139,21 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
+      # TEMPORARY: Sync application descriptors from GitHub to FAR
+      # This is a temporary solution until Eureka CI process is finalized.
+      # Once Eureka CI automatically publishes descriptors to FAR on release,
+      # this step can be removed.
+      - name: 'Sync Application Descriptors to FAR'
+        id: sync-to-far
+        uses: folio-org/platform-lsp/.github/actions/sync-applications-to-far@master
+        with:
+          descriptor-path: ${{ env.STATE_FILE }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          far-base-url: ${{ env.FAR_URL }}
+          dry-run: 'true'
+          log-level: 'INFO'
+        continue-on-error: true
+
       - name: 'Fetch base descriptor'
         id: fetch-base-descriptor
         uses: folio-org/platform-lsp/.github/actions/read-file@master
