@@ -14,40 +14,37 @@ on:
     inputs:
       repo_owner:
         description: 'Repository owner'
-        required: false
+        default: 'folio-org'
+        required: true
         type: string
       repo_name:
         description: 'Repository name'
-        required: false
+        default: 'platform-lsp'
+        required: true
         type: string
       pr_number:
         description: 'Pull request number'
-        required: false
+        required: true
         type: string
       head_sha:
         description: 'Head commit SHA that triggered the check suite'
-        required: false
+        required: true
         type: string
       node-version:
         description: 'Node.js version to use'
-        required: false
-        default: '20.x'
+        required: true
+        default: '22.x'
         type: string
       folio-npm-registry:
         description: 'FOLIO NPM registry URL'
-        required: false
+        required: true
         default: 'https://repository.folio.org/repository/npm-folio/'
         type: string
       yarn-lock-retention-days:
         description: 'Number of days to retain the yarn.lock artifact'
-        required: false
+        required: true
         default: 1
         type: number
-      allow-lint-errors:
-        description: 'Whether to allow lint errors without failing the workflow'
-        required: false
-        default: true
-        type: boolean
 
 permissions:
   contents: read
@@ -334,10 +331,6 @@ jobs:
           name: yarn.lock
           path: yarn.lock
           retention-days: ${{ inputs.yarn-lock-retention-days }}
-          
-      - name: Lint
-        run: yarn lint
-        continue-on-error: ${{ inputs.allow-lint-errors }}
 
   finalize-check-run:
     name: Finalize Check Run
@@ -441,13 +434,13 @@ jobs:
     outputs:
       team_channel: ${{ steps.get-vars.outputs.team_channel }}
     env:
-      TITLE_TEXT: "${{ inputs.repo_name || github.event.pull_request.base.repo.name || github.event.repository.name }} release update check ${{ (needs.validate-platform.outputs.validation_passed == 'true' && needs.build-stripes.result == 'success') && 'passed' || 'failed' }}"
+      TITLE_TEXT: "${{ inputs.repo_name || github.event.pull_request.base.repo.name || github.event.repository.name }} PR check ${{ (needs.validate-platform.outputs.validation_passed == 'true' && needs.build-stripes.result == 'success') && 'passed' || 'failed' }}"
       TITLE_BLOCK: |
         {
           "type": "section",
           "text": {
             "type": "mrkdwn",
-            "text": "*${{ inputs.repo_name || github.event.pull_request.base.repo.name || github.event.repository.name }} release update check ${{ (needs.validate-platform.outputs.validation_passed == 'true' && needs.build-stripes.result == 'success') && 'passed' || 'failed' }} <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+            "text": "*${{ inputs.repo_name || github.event.pull_request.base.repo.name || github.event.repository.name }} PR check ${{ (needs.validate-platform.outputs.validation_passed == 'true' && needs.build-stripes.result == 'success') && 'passed' || 'failed' }} <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
           }
         }
       ATTACHMENT: |
