@@ -150,7 +150,7 @@ jobs:
           descriptor-path: ${{ env.STATE_FILE }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           far-base-url: ${{ env.FAR_URL }}
-          dry-run: 'true'
+          dry-run: 'false'
           log-level: 'INFO'
         continue-on-error: true
 
