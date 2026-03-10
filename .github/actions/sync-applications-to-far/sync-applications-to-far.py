@@ -284,6 +284,48 @@ def download_application_descriptor(app_name: str, version: str, github_token: s
         return None
 
 
+def sanitize_descriptor(descriptor: Dict[str, Any]) -> Dict[str, Any]:
+    """Sanitize application descriptor by setting module URLs to null.
+    
+    Downloaded descriptors may contain internal/development URLs that should
+    not be published to the public FAR registry. This function ensures all
+    module and uiModule URLs are set to null.
+    
+    Args:
+        descriptor: Application descriptor dictionary
+        
+    Returns:
+        Sanitized descriptor (modified in-place)
+    """
+    app_name = descriptor.get('name', 'unknown')
+    app_version = descriptor.get('version', 'unknown')
+    
+    sanitized_count = 0
+    
+    # Sanitize modules array
+    if 'modules' in descriptor and isinstance(descriptor['modules'], list):
+        for module in descriptor['modules']:
+            if isinstance(module, dict) and 'url' in module and module['url'] is not None:
+                logger.debug("Sanitizing URL in module %s for %s-%s: %s" % 
+                           (module.get('name', 'unknown'), app_name, app_version, module['url']))
+                module['url'] = None
+                sanitized_count += 1
+    
+    # Sanitize uiModules array
+    if 'uiModules' in descriptor and isinstance(descriptor['uiModules'], list):
+        for module in descriptor['uiModules']:
+            if isinstance(module, dict) and 'url' in module and module['url'] is not None:
+                logger.debug("Sanitizing URL in uiModule %s for %s-%s: %s" % 
+                           (module.get('name', 'unknown'), app_name, app_version, module['url']))
+                module['url'] = None
+                sanitized_count += 1
+    
+    if sanitized_count > 0:
+        logger.info("Sanitized %d URL(s) in descriptor for %s-%s" % (sanitized_count, app_name, app_version))
+    
+    return descriptor
+
+
 # ---------------------------------------------------------------------------
 # POST to FAR
 # ---------------------------------------------------------------------------
@@ -381,6 +423,9 @@ def process_application(app: Dict[str, str], github_token: str, dry_run: bool) -
                     result['failed'] += 1
                     result['errors'].append("Failed to download descriptor for %s-%s" % (app_name, version))
                     continue
+                
+                # Sanitize descriptor to ensure URLs are null
+                descriptor = sanitize_descriptor(descriptor)
                 
                 success, message = post_to_far(descriptor, dry_run)
                 
