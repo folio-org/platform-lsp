@@ -266,10 +266,11 @@ def download_application_descriptor(app_name: str, version: str, github_token: s
             logger.warning("application-descriptor.json not found in %s-%s release assets" % (app_name, version))
             return None
         
-        # Download and parse JSON
+        # Download and parse JSON (with authentication for better rate limits)
         logger.debug("Downloading descriptor from %s" % descriptor_asset.browser_download_url)
         request = urllib.request.Request(descriptor_asset.browser_download_url)
         request.add_header('User-Agent', 'FOLIO-Sync-To-FAR/1.0')
+        request.add_header('Authorization', 'token %s' % github_token)
         
         with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT) as response:
             data = json.loads(response.read().decode('utf-8'))
