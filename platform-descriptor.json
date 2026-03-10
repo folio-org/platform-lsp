@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000007011"
+        "version": "1.2.0-SNAPSHOT.100200000007064"
       },
       {
         "name": "app-agreements",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-mosaic",
-        "version": "1.1.0-SNAPSHOT.100200000006758"
+        "version": "1.1.0-SNAPSHOT.100200000006994"
       },
       {
         "name": "app-notification",
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000001304"
+        "version": "1.0.0-SNAPSHOT.100200000001710"
       },
       {
         "name": "app-reading-room",
