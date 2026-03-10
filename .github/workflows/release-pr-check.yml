@@ -69,9 +69,19 @@ jobs:
     outputs:
       validation_status: ${{ steps.validate.outputs.status }}
       validation_message: ${{ steps.validate.outputs.message }}
+      is_update_pr: ${{ steps.validate.outputs.is_update_pr }}
       head_branch: ${{ steps.pr-info.outputs.head_ref }}
       base_branch: ${{ steps.pr-info.outputs.base_ref }}
     steps:
+      - name: Print Input Parameters
+        run: |
+          echo "::group::Workflow Inputs"
+          echo "repo_owner: ${{ inputs.repo_owner }}"
+          echo "repo_name: ${{ inputs.repo_name }}"
+          echo "pr_number: ${{ inputs.pr_number }}"
+          echo "head_sha: ${{ inputs.head_sha }}"
+          echo "::endgroup::"
+
       - name: Get Pull Request Information
         id: pr-info
         uses: folio-org/kitfox-github/.github/actions/get-pr-info@master
@@ -112,10 +122,12 @@ jobs:
         if: steps.pr-info.outputs.pr_exists == 'true' && steps.check-commit.outputs.commit_found == 'true'
         env:
           TARGET_BRANCH: ${{ steps.pr-info.outputs.base_ref }}
+          HEAD_BRANCH: ${{ steps.pr-info.outputs.head_ref }}
           PR_LABELS: ${{ steps.pr-info.outputs.labels }}
           CONFIG_EXISTS: ${{ steps.get-config.outputs.config_exists }}
           ENABLED: ${{ steps.get-config.outputs.enabled }}
-          RELEASE_BRANCHES: ${{ steps.get-config.outputs.release_branches }}
+          RELEASE_BRANCHES: ${{ steps.get-config.outputs.branches }}
+          BRANCH_CONFIG: ${{ steps.get-config.outputs.branch_config }}
           REQUIRED_LABELS: ${{ steps.get-config.outputs.pr_labels }}
         run: |
           echo "::notice::Validating configuration for branch $TARGET_BRANCH"
@@ -123,7 +135,7 @@ jobs:
           if [[ "$CONFIG_EXISTS" != "true" ]]; then
             echo "status=skipped" >> "$GITHUB_OUTPUT"
             echo "message=Release configuration file not found" >> "$GITHUB_OUTPUT"
-            echo "::warning::Configuration file not found: .github/update-config.yml"
+            echo "::warning::Configuration file not found: .github/release-config.yml"
             exit 0
           fi
 
@@ -142,15 +154,35 @@ jobs:
             exit 0
           fi
 
+          BRANCH_ENTRY=$(echo "$BRANCH_CONFIG" | jq -r ".[] | select(.branch == \"$TARGET_BRANCH\")")
+          NEED_PR=$(echo "$BRANCH_ENTRY" | jq -r ".need_pr // false")
+          UPDATE_BRANCH=$(echo "$BRANCH_ENTRY" | jq -r ".update_branch // empty")
+
+          if [[ "$NEED_PR" != "true" ]]; then
+            echo "status=skipped" >> "$GITHUB_OUTPUT"
+            echo "message=Branch $TARGET_BRANCH is not configured for PR-based updates" >> "$GITHUB_OUTPUT"
+            echo "::notice::Branch $TARGET_BRANCH has need_pr=false, skipping PR check"
+            exit 0
+          fi
+
+          if [[ "$HEAD_BRANCH" != "$UPDATE_BRANCH" ]]; then
+            echo "is_update_pr=false" >> "$GITHUB_OUTPUT"
+            echo "status=success" >> "$GITHUB_OUTPUT"
+            echo "message=Non-update PR - validation skipped" >> "$GITHUB_OUTPUT"
+            echo "::notice::Head branch '$HEAD_BRANCH' is not the configured update branch '$UPDATE_BRANCH', this is a non-update PR"
+            exit 0
+          fi
+
+          echo "is_update_pr=true" >> "$GITHUB_OUTPUT"
+
           if [ -n "$REQUIRED_LABELS" ]; then
             echo "::notice::Checking for required labels: $REQUIRED_LABELS"
             PR_LABELS_ARRAY=$(echo "$PR_LABELS" | jq -r '.[]' 2>/dev/null || echo "")
             MISSING_LABELS=""
 
-            # Convert comma-separated labels to array
             IFS=',' read -ra LABEL_ARRAY <<< "$REQUIRED_LABELS"
             for label in "${LABEL_ARRAY[@]}"; do
-              label=$(echo "$label" | xargs) # Trim whitespace
+              label=$(echo "$label" | xargs)
               if ! echo "$PR_LABELS_ARRAY" | grep -q "^$label$"; then
                 MISSING_LABELS="${MISSING_LABELS}${MISSING_LABELS:+, }$label"
               fi
