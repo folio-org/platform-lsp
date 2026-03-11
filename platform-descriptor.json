@@ -1,102 +1,190 @@
 {
   "name": "FOLIO LSP",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2025",
+  "version": "R2-2025-SNAPSHOT.4803",
   "eureka-components": [
     {
       "name": "folio-kong",
-      "version": "3.9.1"
+      "version": "3.10.0-SNAPSHOT.20"
     },
     {
       "name": "folio-keycloak",
-      "version": "26.1.3"
+      "version": "26.6.0-SNAPSHOT.95"
     },
     {
       "name": "folio-module-sidecar",
-      "version": "3.0.7"
+      "version": "3.1.0-SNAPSHOT.292"
     },
     {
       "name": "mgr-applications",
-      "version": "3.0.1"
+      "version": "4.0.0-SNAPSHOT.250"
     },
     {
       "name": "mgr-tenants",
-      "version": "3.0.1"
+      "version": "3.1.0-SNAPSHOT.188"
     },
     {
       "name": "mgr-tenant-entitlements",
-      "version": "3.1.4"
+      "version": "4.0.0-SNAPSHOT.245"
     }
   ],
   "applications": {
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.0.24"
+        "version": "2.1.0-SNAPSHOT.100200000006889"
       },
       {
         "name": "app-platform-complete",
-        "version": "2.1.40"
+        "version": "3.3.0-SNAPSHOT.100200000006467"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.0.22"
+        "version": "1.2.0-SNAPSHOT.100200000007101"
+      },
+      {
+        "name": "app-agreements",
+        "version": "1.0.0-SNAPSHOT.100200000006909"
+      },
+      {
+        "name": "app-authority-records",
+        "version": "1.0.0-SNAPSHOT.100200000002166"
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.0.7"
+        "version": "1.2.0-SNAPSHOT.100200000006690"
       },
       {
         "name": "app-consortia",
-        "version": "1.2.1"
-      },
-      {
-        "name": "app-dcb",
-        "version": "1.1.4"
-      },
-      {
-        "name": "app-edge-complete",
-        "version": "2.0.9"
-      },
-      {
-        "name": "app-erm-usage",
-        "version": "2.0.3"
-      },
-      {
-        "name": "app-fqm",
-        "version": "1.0.11"
-      },
-      {
-        "name": "app-marc-migrations",
-        "version": "2.0.1"
-      },
-      {
-        "name": "app-oai-pmh",
-        "version": "1.0.2"
-      },
-      {
-        "name": "app-inn-reach",
-        "version": "1.0.0"
-      },
-      {
-        "name": "app-linked-data",
-        "version": "1.1.6"
-      },
-      {
-        "name": "app-reading-room",
-        "version": "2.0.2"
+        "version": "1.4.0-SNAPSHOT.100200000006418"
       },
       {
         "name": "app-consortia-manager",
-        "version": "1.1.1"
+        "version": "1.4.0-SNAPSHOT.100200000006294"
+      },
+      {
+        "name": "app-dashboard",
+        "version": "1.0.0-SNAPSHOT.100200000006544"
+      },
+      {
+        "name": "app-data-export",
+        "version": "1.0.0-SNAPSHOT.100200000005342"
+      },
+      {
+        "name": "app-dcb",
+        "version": "1.4.0-SNAPSHOT.100200000006833"
+      },
+      {
+        "name": "app-ebsconet",
+        "version": "1.1.0-SNAPSHOT.100200000006899"
+      },
+      {
+        "name": "app-edge-complete",
+        "version": "2.2.0-SNAPSHOT.100200000005757"
+      },
+      {
+        "name": "app-eholdings",
+        "version": "1.1.0-SNAPSHOT.100200000007118"
+      },
+      {
+        "name": "app-erm-usage",
+        "version": "2.2.0-SNAPSHOT.100200000006671"
+      },
+      {
+        "name": "app-fqm",
+        "version": "1.2.0-SNAPSHOT.100200000007106"
+      },
+      {
+        "name": "app-gobi",
+        "version": "1.1.0-SNAPSHOT.100200000006106"
+      },
+      {
+        "name": "app-inn-reach",
+        "version": "1.1.0-SNAPSHOT.100200000006420"
+      },
+      {
+        "name": "app-licenses",
+        "version": "1.0.0-SNAPSHOT.100200000006828"
+      },
+      {
+        "name": "app-linked-data",
+        "version": "1.1.0-SNAPSHOT.100200000007160"
+      },
+      {
+        "name": "app-lists",
+        "version": "1.1.0-SNAPSHOT.100200000007010"
+      },
+      {
+        "name": "app-marc-migrations",
+        "version": "2.2.0-SNAPSHOT.100200000006426"
+      },
+      {
+        "name": "app-marc-storage",
+        "version": "1.0.0-SNAPSHOT.100200000005562"
+      },
+      {
+        "name": "app-mosaic",
+        "version": "1.1.0-SNAPSHOT.100200000006994"
+      },
+      {
+        "name": "app-notification",
+        "version": "1.0.0-SNAPSHOT.100200000002297"
+      },
+      {
+        "name": "app-oa",
+        "version": "1.0.0-SNAPSHOT.100200000006519"
+      },
+      {
+        "name": "app-oai-pmh",
+        "version": "1.2.0-SNAPSHOT.100200000006478"
+      },
+      {
+        "name": "app-quick-marc",
+        "version": "1.0.0-SNAPSHOT.100200000001710"
+      },
+      {
+        "name": "app-reading-room",
+        "version": "1.4.0-SNAPSHOT.100200000006297"
+      },
+      {
+        "name": "app-reporting",
+        "version": "1.4.0-SNAPSHOT.100200000006146"
+      },
+      {
+        "name": "app-requests-ecs",
+        "version": "1.4.0-SNAPSHOT.100200000006398"
+      },
+      {
+        "name": "app-requests-mediated",
+        "version": "1.2.0-SNAPSHOT.100200000006665"
+      },
+      {
+        "name": "app-requests-mediated-ui",
+        "version": "1.4.0-SNAPSHOT.100200000004555"
+      },
+      {
+        "name": "app-rtac",
+        "version": "1.1.0-SNAPSHOT.100200000005170"
+      },
+      {
+        "name": "app-search",
+        "version": "1.0.0-SNAPSHOT.100200000006875"
+      },
+      {
+        "name": "app-service-interaction",
+        "version": "1.0.0-SNAPSHOT.100200000006339"
+      },
+      {
+        "name": "app-serials-management",
+        "version": "1.0.0-SNAPSHOT.100200000007016"
       }
     ]
   },
   "dependencies": {
     "postgres": ">=16.0",
-    "kafka": ">=3.5.1",
-    "opensearch": ">=2.0.0"
+    "kafka": ">=3.8.0",
+    "opensearch": ">=3.0.0"
   }
 }

@@ -11,11 +11,6 @@ on:
         required: false
         default: "snapshot"
         type: string
-      node-version:
-        description: 'Node.js version to use'
-        required: false
-        default: '20.x'
-        type: string
 
 jobs:
   check-and-update:
@@ -87,38 +82,6 @@ jobs:
           # Exit with the original code to fail the step if script failed
           exit $exit_code
 
-      - name: Install Node ${{ inputs.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ inputs.node-version }}
-          check-latest: true
-          always-auth: true
-
-      - name: Build stripes
-        id: build-stripes
-        run: |
-          set +e
-          {
-            rm -f yarn.lock
-            yarn install
-            
-            {
-              echo "## Yarn Dependencies"
-              echo '```'
-              yarn list --pattern @folio
-              echo '```'
-            } >> $GITHUB_STEP_SUMMARY
-
-            current_branch=$(git branch --show-current)
-            git add yarn.lock
-            git commit -m "[CI] Update yarn.lock" || echo "No changes to commit"
-            git push origin $current_branch
-          } 2>&1 | tee /tmp/build-stripes-output.log
-          exit_code=${PIPESTATUS[0]}
-          set -e
-          echo "SCRIPT_EXIT_CODE=${exit_code}" >> $GITHUB_OUTPUT
-          exit $exit_code
-
       - name: Capture error details
         if: always()
         id: error-details
@@ -126,15 +89,8 @@ jobs:
           if [ "${{ steps.check-apps.outputs.SCRIPT_EXIT_CODE }}" != "0" ]; then
             echo "FAILED_STEP=Check and Update Application Versions" >> $GITHUB_OUTPUT
             if [ -f /tmp/check-apps-output.log ]; then
+              # Get the last 10 lines of output for error context
               ERROR_DETAILS=$(tail -n 10 /tmp/check-apps-output.log | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
-              echo "ERROR_DETAILS=${ERROR_DETAILS}" >> $GITHUB_OUTPUT
-            else
-              echo "ERROR_DETAILS=No error log available" >> $GITHUB_OUTPUT
-            fi
-          elif [ "${{ steps.build-stripes.outputs.SCRIPT_EXIT_CODE }}" != "0" ]; then
-            echo "FAILED_STEP=Build stripes" >> $GITHUB_OUTPUT
-            if [ -f /tmp/build-stripes-output.log ]; then
-              ERROR_DETAILS=$(tail -n 20 /tmp/build-stripes-output.log | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
               echo "ERROR_DETAILS=${ERROR_DETAILS}" >> $GITHUB_OUTPUT
             else
               echo "ERROR_DETAILS=No error log available" >> $GITHUB_OUTPUT
@@ -143,21 +99,6 @@ jobs:
             echo "FAILED_STEP=" >> $GITHUB_OUTPUT
             echo "ERROR_DETAILS=" >> $GITHUB_OUTPUT
           fi
-
-      - name: Detect if updates were made
-        if: success()
-        id: updates-check
-        run: |
-          if grep -q "Successfully updated" /tmp/check-apps-output.log 2>/dev/null; then
-            echo "UPDATES_MADE=true" >> $GITHUB_OUTPUT
-          else
-            echo "UPDATES_MADE=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Get final commit SHA
-        if: success()
-        id: final-sha
-        run: echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
       - name: Notify on Failure
         if: failure()
@@ -208,7 +149,7 @@ jobs:
           fi
 
       - name: Notify on Success
-        if: success() && steps.updates-check.outputs.UPDATES_MADE == 'true'
+        if: success()
         uses: slackapi/slack-github-action@v2.1.1
         with:
           method: chat.postMessage
@@ -229,7 +170,7 @@ jobs:
                   - type: mrkdwn
                     text: "*Checked out:*\n<${{ github.server_url }}/${{ github.repository }}/tree/${{ inputs.branch || 'snapshot' }}|${{ inputs.branch || 'snapshot' }}>"
                   - type: mrkdwn
-                    text: "*Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ steps.final-sha.outputs.sha }}|${{ steps.final-sha.outputs.sha }}>"
+                    text: "*Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ steps.checkout-sha.outputs.sha }}|${{ steps.checkout-sha.outputs.sha }}>"
                   - type: mrkdwn
                     text: "*Duration:*\n${{ steps.duration.outputs.duration }}"
                   - type: mrkdwn

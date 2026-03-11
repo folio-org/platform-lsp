@@ -1,7 +1,8 @@
-const apps = require("./stripes.modules");
+const modules = require("./stripes.modules");
 const extra = require("./stripes.extra");
 const { merge } = require('lodash');
 
+// Documentation: https://folio-org.atlassian.net/wiki/spaces/DEV/pages/46858271/stripes.config.js+properties
 module.exports = {
   okapi: {
     'url': '${kongUrl}',
@@ -28,7 +29,7 @@ module.exports = {
     preserveConsole: true,
     useSecureTokens: true,
   },
-  modules: merge({}, apps, extra),
+  modules: merge({}, modules, extra),
   branding: {
     logo: {
       src: './tenant-assets/opentown-libraries-logo.png',
