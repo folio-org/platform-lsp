@@ -429,7 +429,14 @@ jobs:
   notify:
     name: Send Notifications
     needs: [pre-check, validate-platform, build-stripes, finalize-check-run]
-    if: always() && !cancelled() && needs.pre-check.outputs.validation_status == 'success'
+    if: |
+      always() && !cancelled() && (
+        needs.pre-check.result != 'success' ||
+        (needs.pre-check.outputs.validation_status == 'success' && (
+          needs.validate-platform.result != 'success' ||
+          needs.build-stripes.result != 'success'
+        ))
+      )
     runs-on: ubuntu-latest
     outputs:
       team_channel: ${{ steps.get-vars.outputs.team_channel }}
