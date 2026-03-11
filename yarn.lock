@@ -1387,7 +1387,7 @@
     react-router-prop-types "^1.0.4"
     zustand "^5.0.0"
 
-"@folio/authorization-policies@>=1.0.0":
+"@folio/authorization-policies@>=2.0.0":
   version "2.0.1099000000000136"
   resolved "https://repository.folio.org/repository/npm-folioci/@folio/authorization-policies/-/authorization-policies-2.0.1099000000000136.tgz#90f5af73b52440d4232b823ea31495e1d522e706"
   integrity sha512-Aau9xl10KOCdjF3u6I45NsyWf4C8cJj4iS7rVT6SAmqpjtAIPhF6NhWBS0wwdYMNxtvVCXemZSObH5bgaXQkGA==
@@ -1406,7 +1406,7 @@
     react-final-form "^6.3.0"
     react-final-form-arrays "^3.1.1"
 
-"@folio/authorization-roles@>=1.0.0":
+"@folio/authorization-roles@>=2.0.3":
   version "2.1.1099000000000251"
   resolved "https://repository.folio.org/repository/npm-folioci/@folio/authorization-roles/-/authorization-roles-2.1.1099000000000251.tgz#8729c1ec18a447d95f6d8b4e14411d29a8602610"
   integrity sha512-1ggcVW7PBA2KIXL+fZSP0IFntn8CjOMYjnP1dFfzfdbbGHR/DvTMTv90FVbAgoOfS4B+EMc05KBnMbiOhMjfMQ==
@@ -1815,10 +1815,9 @@
   optionalDependencies:
     "@folio/plugin-find-user" "^8.0.0"
 
-"@folio/inventory@>=1.4.0":
-  version "14.0.1099000000001726"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.0.1099000000001726.tgz#3491499b2e614c351d57afe991888834c6326666"
-  integrity sha512-qjufoQcqE6z/JxdUlA9enu/spPbZgSr9VN0+grHEzEC3ytAGpLqEpdSB7wG3U7nYzsnPFBzGEoIIZc39u81I6w==
+"@folio/inventory@https://github.com/folio-org/ui-inventory.git#master":
+  version "14.0.0"
+  resolved "https://github.com/folio-org/ui-inventory.git#de2862f96274c8edc04916f402687685a53ab36e"
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -1967,10 +1966,9 @@
     react-final-form "^6.3.0"
     react-final-form-arrays "^3.1.1"
 
-"@folio/marc-authorities@>=1.0.0":
-  version "8.0.1099000000001392"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/marc-authorities/-/marc-authorities-8.0.1099000000001392.tgz#6f4d753e22408f3daeefea0678d8affdef93c474"
-  integrity sha512-fTfN3wIKIS+zyazZgnl22HreGbabXFR95p4gf06FksTvp+SSXJaG5o58BSsO4zFl0rrcOM5iO02ChpfqeSWE4w==
+"@folio/marc-authorities@https://github.com/folio-org/ui-marc-authorities.git#master":
+  version "8.0.0"
+  resolved "https://github.com/folio-org/ui-marc-authorities.git#74cbad199d8a16f4f9b695a936d3edd5c49c1be9"
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     "@rehooks/local-storage" "^2.4.4"
@@ -2301,7 +2299,7 @@
   optionalDependencies:
     "@folio/plugin-find-organization" "^6.0.0"
 
-"@folio/plugin-select-application@>=1.0.0", "@folio/plugin-select-application@^2.0.0":
+"@folio/plugin-select-application@>=2.0.0", "@folio/plugin-select-application@^2.0.0":
   version "2.0.1099000000000149"
   resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-select-application/-/plugin-select-application-2.0.1099000000000149.tgz#2ee4e67b3d683cb5ffe0940c036be504d406aa93"
   integrity sha512-V+Vj983LxNMJMKhNC1pQZrlPWQgbuq78VEY/31hLSrh9NVNT0nLBCmlRan35sTZuTrBnhtjiJkOEROdGA9bzfA==
@@ -2312,30 +2310,10 @@
     lodash "^4.17.11"
     prop-types "^15.6.0"
 
-"@folio/quick-marc@>=1.0.0":
-  version "11.0.1099000000000539"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/quick-marc/-/quick-marc-11.0.1099000000000539.tgz#b2353fc7a2456421843bf5cecb6d4ad4ccfc351c"
-  integrity sha512-peowHzqOpOeQi4Nt47ahFv71hfK6URezbNxOjC1x35tVdAtrRf2qylyH1J328CNIgoYCLz3OtemnVLz9kWRZBw==
-  dependencies:
-    "@folio/stripes-acq-components" "^7.0.0"
-    classnames "^2.5.1"
-    final-form "^4.18.2"
-    final-form-arrays "^3.0.1"
-    lodash "^4.17.5"
-    prop-types "^15.5.10"
-    react-final-form "^6.3.0"
-    react-final-form-arrays "^3.1.0"
-    react-final-form-listeners "^1.0.2"
-    react-query "^3.39.2"
-    react-router-prop-types "^1.0.4"
-    uuid "^8.3.2"
-  optionalDependencies:
-    "@folio/plugin-find-authority" "^5.0.0"
-
-"@folio/quick-marc@^10.0.0":
-  version "10.1.1099000000000478"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/quick-marc/-/quick-marc-10.1.1099000000000478.tgz#307e0c1447c9ae657bae3025e449fa107a43e5fe"
-  integrity sha512-536RZH9rBIG3orQyvTMNswsUzLZmHOVcIHvTnfPnoiOC69zVZD8/cHlyxi3A1WdNP09g9DQQvKPhotarCtNAMA==
+"@folio/quick-marc@^10.0.0", "@folio/quick-marc@https://github.com/folio-org/ui-quick-marc.git#feature/qm-unify":
+  version "11.0.0"
+  uid "851c6399d1eacf72b36ee8b8f05eb04633c8ac53"
+  resolved "https://github.com/folio-org/ui-quick-marc.git#851c6399d1eacf72b36ee8b8f05eb04633c8ac53"
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
@@ -2525,6 +2503,17 @@
     query-string "^7.0.1"
     react-query "^3.39.3"
 
+"@folio/stripes-authority-components@https://github.com/folio-org/stripes-authority-components.git#master":
+  version "6.1.0"
+  resolved "https://github.com/folio-org/stripes-authority-components.git#4d252d9599808d66a3716040854b9dcaccf61847"
+  dependencies:
+    "@folio/stripes-acq-components" "^7.0.0"
+    "@rehooks/local-storage" "^2.4.4"
+    classnames "^2.3.2"
+    prop-types "^15.6.0"
+    query-string "^7.0.1"
+    react-query "^3.39.3"
+
 "@folio/stripes-authorization-components@^2.0.0", "@folio/stripes-authorization-components@^2.0.1":
   version "2.0.1099000000000452"
   resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-authorization-components/-/stripes-authorization-components-2.0.1099000000000452.tgz#4bead6c2c1fb041bbf1bbe09ef9cffc3b2069238"
@@ -2699,6 +2688,17 @@
   version "2.1.1099000000000016"
   resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-inventory-components/-/stripes-inventory-components-2.1.1099000000000016.tgz#74600209b672d65537f8f501aa855a61adbc72e1"
   integrity sha512-PhoCQFpEfKXlfvcr3IN/bXC1fgHKcdmN+ibL1qF2tq2eMg+NTW5LEj37clBcDgjzvXPYXXeXsSwjhjQFgSxhfg==
+  dependencies:
+    "@folio/stripes-acq-components" "^7.0.0"
+    history "^4.10.0"
+    lodash "^4.17.4"
+    prop-types "^15.5.10"
+    query-string "^5.0.0"
+    zustand "^4.1.1"
+
+"@folio/stripes-inventory-components@https://github.com/folio-org/stripes-inventory-components.git#main":
+  version "2.1.0"
+  resolved "https://github.com/folio-org/stripes-inventory-components.git#adb293fdae42e5759f8e1afea1cb99802feb792c"
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     history "^4.10.0"
@@ -3221,10 +3221,10 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.29.tgz#5a40109a1ab5f84d6fd8fc928b19f367cbe7e7b1"
   integrity sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==
 
-"@rehooks/local-storage@2.4.4", "@rehooks/local-storage@^2.4.4", "@rehooks/local-storage@^2.4.5":
-  version "2.4.4"
-  resolved "https://registry.yarnpkg.com/@rehooks/local-storage/-/local-storage-2.4.4.tgz#ccf40f60c2dcbab86dc88f9e3ea898d1fb8bea2d"
-  integrity sha512-zE+kfOkG59n/1UTxdmbwktIosclr67Nlbf2MzUJ9mNtCSypVscNHeD1qT6JCSo5Pjj8DO893IKWNLJqKKzDL/Q==
+"@rehooks/local-storage@2.4.5", "@rehooks/local-storage@^2.4.4", "@rehooks/local-storage@^2.4.5":
+  version "2.4.5"
+  resolved "https://registry.yarnpkg.com/@rehooks/local-storage/-/local-storage-2.4.5.tgz#92c773ce623e168274557499679582cd32749f77"
+  integrity sha512-3Q4KtiUBaKoIDRK72BWfAy50ul6hbw29f/M7tyCzlMe2FbSsiQNok0WGeBLaYj4T2PJ7JMSJlSbUGY8RNsImmw==
 
 "@remix-run/router@1.23.2":
   version "1.23.2"
@@ -3539,7 +3539,7 @@
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.2.tgz#5950e50960793055845e956c427fc2b0d70c5239"
   integrity sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==
 
-"@types/prop-types@*", "@types/prop-types@^15.7.3":
+"@types/prop-types@^15.7.3":
   version "15.7.15"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.15.tgz#e6e5a86d602beaca71ce5163fadf5f95d70931c7"
   integrity sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==
@@ -3598,12 +3598,11 @@
   resolved "https://registry.yarnpkg.com/@types/react-transition-group/-/react-transition-group-4.4.12.tgz#b5d76568485b02a307238270bfe96cb51ee2a044"
   integrity sha512-8TV6R3h2j7a91c+1DXdJi3Syo69zzIZbz7Lg5tORM5LEJG7X/E6a1V3drRyBRZq7/utz7A+c4OgYLiLcYGHG6w==
 
-"@types/react@*", "@types/react@16 || 17 || 18 || 19", "@types/react@^18.3.14":
-  version "18.3.28"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.3.28.tgz#0a85b1a7243b4258d9f626f43797ba18eb5f8781"
-  integrity sha512-z9VXpC7MWrhfWipitjNdgCauoMLRdIILQsAEV+ZesIzBq/oUlxk0m3ApZuMFCXdnS4U7KrI+l3WRUEGQ8K1QKw==
+"@types/react@*", "@types/react@16 || 17 || 18 || 19":
+  version "19.2.14"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-19.2.14.tgz#39604929b5e3957e3a6fa0001dafb17c7af70bad"
+  integrity sha512-ilcTH/UniCkMdtexkoCN0bI7pMcJDvmQFPvuPvmEaYA/NSfFTAgdUSLAoVjaRJm7+6PvcM+q1zYOwS4wTYMF9w==
   dependencies:
-    "@types/prop-types" "*"
     csstype "^3.2.2"
 
 "@types/retry@0.12.0":
@@ -5130,10 +5129,10 @@ domhandler@^5.0, domhandler@^5.0.2, domhandler@^5.0.3:
   dependencies:
     domelementtype "^2.3.0"
 
-dompurify@^3.0.9, dompurify@^3.1.3, dompurify@^3.1.7, dompurify@^3.2.0, dompurify@^3.3.1:
-  version "3.3.3"
-  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.3.3.tgz#680cae8af3e61320ddf3666a3bc843f7b291b2b6"
-  integrity sha512-Oj6pzI2+RqBfFG+qOaOLbFXLQ90ARpcGG6UePL82bJLtdsa6CYJD7nmiU8MW9nQNOtCHV3lZ/Bzq1X0QYbBZCA==
+dompurify@3.3.1, dompurify@^3.0.9, dompurify@^3.1.3, dompurify@^3.1.7, dompurify@^3.2.0, dompurify@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.3.1.tgz#c7e1ddebfe3301eacd6c0c12a4af284936dbbb86"
+  integrity sha512-qkdCKzLNtrgPFP1Vo+98FRzJnBRGe4ffyCea9IwHB1fyxPOeNTHpLKYGd4Uk9xvNoH0ZoOjwZxNptyMwqrId1Q==
   optionalDependencies:
     "@types/trusted-types" "^2.0.7"
 
@@ -10138,7 +10137,7 @@ zen-observable@0.8.15:
   resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.8.15.tgz#96415c512d8e3ffd920afd3889604e30b9eaac15"
   integrity sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==
 
-zustand@^4.1.1, zustand@^4.5.4:
+zustand@^4.1.1:
   version "4.5.7"
   resolved "https://registry.yarnpkg.com/zustand/-/zustand-4.5.7.tgz#7d6bb2026a142415dd8be8891d7870e6dbe65f55"
   integrity sha512-CHOUy7mu3lbD6o6LJLfllpjkzhHXSBlX8B9+qPddUsIfeF5S/UZ5q0kmCsnRqT1UHFQZchNFDDzMbQsuesHWlw==
