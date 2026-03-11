@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000005342"
+        "version": "1.0.0-SNAPSHOT.100200000005364"
       },
       {
         "name": "app-dcb",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000007159"
+        "version": "1.2.0-SNAPSHOT.100200000007173"
       },
       {
         "name": "app-gobi",
