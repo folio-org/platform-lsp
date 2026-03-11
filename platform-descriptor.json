@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000006465"
+        "version": "3.3.0-SNAPSHOT.100200000006467"
       }
     ],
     "optional": [
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100200000006588"
+        "version": "1.0.0-SNAPSHOT.100200000007016"
       }
     ]
   },
