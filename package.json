@@ -37,7 +37,6 @@
     "@folio/ldp": ">=1.1.0",
     "@folio/ld-folio-wrapper": ">=1.0.0",
     "@folio/licenses": ">=2.0.0",
-    "@folio/lists": ">=1.2.0",
     "@folio/local-kb-admin": ">=1.0.0",
     "@folio/marc-authorities": "https://github.com/folio-org/ui-marc-authorities.git#master",
     "@folio/mosaic-settings": ">=1.0.0",

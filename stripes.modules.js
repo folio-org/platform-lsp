@@ -29,7 +29,6 @@ module.exports = {
   '@folio/ld-folio-wrapper': {},
   '@folio/ldp' : {},
   '@folio/licenses' : {},
-  '@folio/lists' : {},
   '@folio/local-kb-admin': {},
   '@folio/marc-authorities': {},
   '@folio/mosaic-settings': {},

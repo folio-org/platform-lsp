@@ -934,7 +934,7 @@
     pirates "^4.0.6"
     source-map-support "^0.5.16"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.10.0", "@babel/runtime@^7.12.0", "@babel/runtime@^7.12.1", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.15.4", "@babel/runtime@^7.18.3", "@babel/runtime@^7.19.4", "@babel/runtime@^7.21.0", "@babel/runtime@^7.23.8", "@babel/runtime@^7.24.1", "@babel/runtime@^7.24.5", "@babel/runtime@^7.28.6", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.10.0", "@babel/runtime@^7.12.0", "@babel/runtime@^7.12.1", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.15.4", "@babel/runtime@^7.18.3", "@babel/runtime@^7.19.4", "@babel/runtime@^7.23.8", "@babel/runtime@^7.24.1", "@babel/runtime@^7.24.5", "@babel/runtime@^7.28.6", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
   version "7.28.6"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.28.6.tgz#d267a43cb1836dc4d182cce93ae75ba954ef6d2b"
   integrity sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==
@@ -1798,7 +1798,7 @@
 
 "@folio/inventory@https://github.com/folio-org/ui-inventory.git#master":
   version "14.0.0"
-  resolved "https://github.com/folio-org/ui-inventory.git#e9cbacfc8043991e24af8a49efac6f89a2373172"
+  resolved "https://github.com/folio-org/ui-inventory.git#5aa9b8be58a34e11731e771e8961ecec48831362"
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -1918,18 +1918,6 @@
     react-select "^5.9.0"
     uuid "^13.0.0"
     zustand "^5.0.8"
-
-"@folio/lists@>=1.2.0":
-  version "4.0.3099000000001016"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-4.0.3099000000001016.tgz#6480eab2f60108a03f9335aa9cdc242c0c94ac1b"
-  integrity sha512-VuM5ANCB47UpfnCTsOk1nEsLw/Kqgz3uQjdoBbGs2nlSxnhiEfFL+Ya1QIG6/WvrxggBS4xEMKflINIiTdfrYQ==
-  dependencies:
-    "@folio/plugin-query-builder" "^2.0.0"
-    "@folio/stripes-acq-components" "~7.0.0"
-    date-fns "^2.29.3"
-    ky "^0.33.2"
-    lodash "^4.17.21"
-    prop-types "^15.6.0"
 
 "@folio/local-kb-admin@>=1.0.0":
   version "9.1.1099000000000209"
@@ -2260,19 +2248,6 @@
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
-    ky "^0.33.2"
-    lodash "^4.17.5"
-    prop-types "^15.5.10"
-    react-query "^3.6.0"
-  optionalDependencies:
-    "@folio/plugin-find-organization" "^6.0.0"
-
-"@folio/plugin-query-builder@^2.0.0":
-  version "2.0.309900000000711"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-query-builder/-/plugin-query-builder-2.0.309900000000711.tgz#8332178ce3c2bfde2ed58b7e72b7ee4f61ca1f56"
-  integrity sha512-ZXx+p5xzpgV9X9VvK4VSVlIbyAI/8Pk3974RRhrhSpdb0z5EL44dJinWHbykcPx4qdGMTg3LPTyOsfwesR8EXA==
-  dependencies:
-    "@folio/stripes-acq-components" "^7.0.0"
     ky "^0.33.2"
     lodash "^4.17.5"
     prop-types "^15.5.10"
@@ -4848,13 +4823,6 @@ d@1, d@^1.0.1, d@^1.0.2:
   dependencies:
     es5-ext "^0.10.64"
     type "^2.7.2"
-
-date-fns@^2.29.3:
-  version "2.30.0"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.30.0.tgz#f367e644839ff57894ec6ac480de40cae4b0f4d0"
-  integrity sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==
-  dependencies:
-    "@babel/runtime" "^7.21.0"
 
 dateformat@^2.0.0:
   version "2.2.0"
