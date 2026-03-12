@@ -5,7 +5,6 @@ module.exports = {
   '@folio/authorization-policies': {},
   '@folio/authorization-roles': {},
   '@folio/bulk-edit': {},
-  '@folio/calendar' : {},
   '@folio/checkin' : {},
   '@folio/checkout' : {},
   '@folio/circulation' : {},
