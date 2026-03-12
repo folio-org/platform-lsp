@@ -108,6 +108,7 @@
   },
   "resolutions": {
     "@rehooks/local-storage": "2.4.5",
+    "@types/react": "^18.3.14",
     "@folio/stripes-authority-components": "https://github.com/folio-org/stripes-authority-components.git#master",
     "@folio/stripes-inventory-components": "https://github.com/folio-org/stripes-inventory-components.git#main",
     "@folio/quick-marc": "https://github.com/folio-org/ui-quick-marc.git#feature/qm-unify",
