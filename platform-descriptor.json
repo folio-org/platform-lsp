@@ -62,7 +62,7 @@
       },
       {
         "name": "app-consortia-manager",
-        "version": "1.4.0-SNAPSHOT.100200000006294"
+        "version": "1.4.0-SNAPSHOT.100200000007171"
       },
       {
         "name": "app-dashboard",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000007209"
+        "version": "1.1.0-SNAPSHOT.100200000007210"
       },
       {
         "name": "app-erm-usage",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000007173"
+        "version": "1.2.0-SNAPSHOT.100200000007186"
       },
       {
         "name": "app-gobi",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.1.0-SNAPSHOT.100200000007104"
+        "version": "1.1.0-SNAPSHOT.100200000007124"
       },
       {
         "name": "app-marc-migrations",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-mosaic",
-        "version": "1.1.0-SNAPSHOT.100200000006994"
+        "version": "1.1.0-SNAPSHOT.100200000007073"
       },
       {
         "name": "app-notification",
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000001710"
+        "version": "1.0.0-SNAPSHOT.100200000001782"
       },
       {
         "name": "app-reading-room",
@@ -174,7 +174,7 @@
       },
       {
         "name": "app-service-interaction",
-        "version": "1.0.0-SNAPSHOT.100200000006339"
+        "version": "1.0.0-SNAPSHOT.100200000006812"
       },
       {
         "name": "app-serials-management",
