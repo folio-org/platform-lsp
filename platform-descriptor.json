@@ -32,21 +32,21 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000006889"
+        "version": "2.1.0-SNAPSHOT.100200000006918"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000006469"
+        "version": "3.3.0-SNAPSHOT.100200000006492"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000007101"
+        "version": "1.2.0-SNAPSHOT.100200000007141"
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000006909"
+        "version": "1.0.0-SNAPSHOT.100200000006938"
       },
       {
         "name": "app-authority-records",
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000005365"
+        "version": "1.0.0-SNAPSHOT.100200000005376"
       },
       {
         "name": "app-dcb",
@@ -86,11 +86,11 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000007118"
+        "version": "1.1.0-SNAPSHOT.100200000007209"
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000006964"
+        "version": "2.2.0-SNAPSHOT.100200000006979"
       },
       {
         "name": "app-fqm",
@@ -102,11 +102,11 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "1.1.0-SNAPSHOT.100200000006420"
+        "version": "1.1.0-SNAPSHOT.100200000006921"
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100200000006828"
+        "version": "1.0.0-SNAPSHOT.100200000006957"
       },
       {
         "name": "app-linked-data",
@@ -134,11 +134,11 @@
       },
       {
         "name": "app-oa",
-        "version": "1.0.0-SNAPSHOT.100200000006519"
+        "version": "1.0.0-SNAPSHOT.100200000007022"
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100200000006478"
+        "version": "1.2.0-SNAPSHOT.100200000006941"
       },
       {
         "name": "app-quick-marc",
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-reporting",
-        "version": "1.4.0-SNAPSHOT.100200000006146"
+        "version": "1.4.0-SNAPSHOT.100200000006974"
       },
       {
         "name": "app-requests-ecs",
@@ -162,7 +162,7 @@
       },
       {
         "name": "app-requests-mediated-ui",
-        "version": "1.4.0-SNAPSHOT.100200000004555"
+        "version": "1.4.0-SNAPSHOT.100200000005373"
       },
       {
         "name": "app-rtac",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100200000007016"
+        "version": "1.0.0-SNAPSHOT.100200000007041"
       }
     ]
   },
