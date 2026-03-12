@@ -2081,9 +2081,9 @@
     "@folio/plugin-find-interface" "^6.0.0"
 
 "@folio/plugin-bursar-export@>=1.0.0":
-  version "5.0.1099000000000280"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-bursar-export/-/plugin-bursar-export-5.0.1099000000000280.tgz#552e2bbcd836071b8144c79d2690d0bb3fc3ac18"
-  integrity sha512-wgn58M1leOJzEWAPHp38OY3ykcmpNubeePcq6X1q/iXbjsozbF+qnLDK1V10m6DTyoroX4b3EWD15dnrWnzCHw==
+  version "5.0.1099000000000284"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-bursar-export/-/plugin-bursar-export-5.0.1099000000000284.tgz#adab301bbcd2afa2601aed5b5fb8ca9033cf4f13"
+  integrity sha512-+44BuK4EMqVDq3FL2CIxqpEtV31oG717pL9lSyAm1mGXuylHqruFIUnPbvhovV6LdxRqmPwpq9Qidt+VKC9cYw==
   dependencies:
     "@ngneat/falso" "^6.4.0"
     classnames "^2.3.2"
@@ -2526,9 +2526,9 @@
     react-query "^3.39.3"
 
 "@folio/stripes-authorization-components@^2.0.0", "@folio/stripes-authorization-components@^2.0.1":
-  version "2.0.1099000000000452"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-authorization-components/-/stripes-authorization-components-2.0.1099000000000452.tgz#4bead6c2c1fb041bbf1bbe09ef9cffc3b2069238"
-  integrity sha512-T0BnjIFeIoHjcruhr0bOXPws0mFxhAD41+ChHhyddpXV/5CEzzir8VyY/sci4fGnCQbOz9+nwMCpfAOVDitohA==
+  version "2.0.1099000000000457"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-authorization-components/-/stripes-authorization-components-2.0.1099000000000457.tgz#67772005fb388acd26626325a0f94e64ec502d41"
+  integrity sha512-H5uUEEGQBmvpWLsGDioTKoM2cy0ult7hCy/fe9vq/P/8VAO6vx3oCe3JUQxxH5FHlMNrz0WfzQm2w1M9F5IiEA==
   dependencies:
     "@folio/plugin-select-application" "^2.0.0"
     classnames "^2.2.6"
@@ -2747,9 +2747,9 @@
     prop-types "^15.7.2"
 
 "@folio/stripes-smart-components@^10.0.0":
-  version "10.1.1099000000000707"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-smart-components/-/stripes-smart-components-10.1.1099000000000707.tgz#b31a854f071ae271d419ecca39b1d0cade3323bc"
-  integrity sha512-0ncgusD6kSrf3wOuVUR13gv7I9SvQfkQ+7zw5cgbOBN3uwsqgvvmf7TYqIo5HlEPCIf0yZMFVRj2YGYCZStTjA==
+  version "10.1.1099000000000711"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-smart-components/-/stripes-smart-components-10.1.1099000000000711.tgz#4b4a5a2b4a59ad9856fbe20b57859767f6d4afb8"
+  integrity sha512-3W1SE3/iYkMkYvmNnn8ft9yrLipqFOPvXDjkf36z9TCwjTun7cPedn7+7rfsA0gjHAAtVEQwGw8O8p9gnBCe1w==
   dependencies:
     "@babel/runtime" "^7.28.6"
     "@rehooks/local-storage" "^2.4.4"
