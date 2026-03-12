@@ -9,7 +9,6 @@ module.exports = {
   '@folio/checkout' : {},
   '@folio/circulation' : {},
   '@folio/circulation-log' : {},
-  '@folio/claims' : {},
   '@folio/consortia-settings': {},
   '@folio/courses' : {},
   '@folio/dashboard' : {},
