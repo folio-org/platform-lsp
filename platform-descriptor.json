@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000006540"
+        "version": "3.3.0-SNAPSHOT.100200000006546"
       }
     ],
     "optional": [
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000007186"
+        "version": "1.2.0-SNAPSHOT.100200000007243"
       },
       {
         "name": "app-gobi",
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000001782"
+        "version": "1.0.0-SNAPSHOT.100200000001831"
       },
       {
         "name": "app-reading-room",
