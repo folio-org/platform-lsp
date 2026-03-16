@@ -105,6 +105,10 @@
         "version": "1.1.0-SNAPSHOT.100200000006921"
       },
       {
+        "name": "app-inventory",
+        "version": "1.0.0-SNAPSHOT.100200000000017"
+      },      
+      {
         "name": "app-licenses",
         "version": "1.0.0-SNAPSHOT.100200000006957"
       },
