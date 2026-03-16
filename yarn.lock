@@ -1365,9 +1365,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/agreements@>=2.0.0":
-  version "12.1.1099000000001873"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/agreements/-/agreements-12.1.1099000000001873.tgz#979bf3d09468fde4074259730ef8059f7370d3b3"
-  integrity sha512-UDQi2cXYuzeG9wjW/NyG+iwgl8VwQo7dEuaYwgA7ipUKVKHhF5s8AGdt3O06wKCx76DIjCHDnW83hpJWNEJ3Yg==
+  version "12.1.1099000000001884"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/agreements/-/agreements-12.1.1099000000001884.tgz#9928de9f79a1e038cf81656e7c9da172b92e3aa3"
+  integrity sha512-epobqiaQXqpOh09AcAzg2ZejVltfPop4yaQPC9m57NkJepg3+FnRLg8J/Cud1rVVxfBBxJuCjFPAv9KiVRwRdg==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     "@k-int/stripes-kint-components" "^5.28.3"
