@@ -42,11 +42,11 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000007220"
+        "version": "1.2.0-SNAPSHOT.100200000007386"
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000007173"
+        "version": "1.0.0-SNAPSHOT.100200000007174"
       },
       {
         "name": "app-authority-records",
@@ -106,11 +106,11 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000000019"
+        "version": "1.0.0-SNAPSHOT.100200000000026"
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100200000007194"
+        "version": "1.0.0-SNAPSHOT.100200000007196"
       },
       {
         "name": "app-linked-data",
