@@ -2302,9 +2302,9 @@
     "@folio/plugin-find-organization" "^6.0.0"
 
 "@folio/plugin-select-application@>=1.0.0", "@folio/plugin-select-application@^2.0.0":
-  version "2.0.1099000000000149"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-select-application/-/plugin-select-application-2.0.1099000000000149.tgz#2ee4e67b3d683cb5ffe0940c036be504d406aa93"
-  integrity sha512-V+Vj983LxNMJMKhNC1pQZrlPWQgbuq78VEY/31hLSrh9NVNT0nLBCmlRan35sTZuTrBnhtjiJkOEROdGA9bzfA==
+  version "2.0.1099000000000156"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-select-application/-/plugin-select-application-2.0.1099000000000156.tgz#e394134e00a01cb6c8f0b789761f687224fa2cff"
+  integrity sha512-1xNEbYZVmwCgWH20jzuGVpHHiq2rxEbEDnH+zAmgT+5f45xU/TbMraXD2WmF7wmlR0JSiIjOkjn8Zx3WWG2r+Q==
   dependencies:
     "@k-int/stripes-kint-components" "^5.1.1"
     classnames "^2.2.5"
