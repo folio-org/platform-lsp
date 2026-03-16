@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000006730"
+        "version": "3.3.0-SNAPSHOT.100200000006738"
       }
     ],
     "optional": [
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000007271"
+        "version": "1.1.0-SNAPSHOT.100200000007448"
       },
       {
         "name": "app-lists",
