@@ -2302,9 +2302,9 @@
     "@folio/plugin-find-organization" "^6.0.0"
 
 "@folio/plugin-select-application@>=1.0.0", "@folio/plugin-select-application@^2.0.0":
-  version "2.0.1099000000000156"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-select-application/-/plugin-select-application-2.0.1099000000000156.tgz#e394134e00a01cb6c8f0b789761f687224fa2cff"
-  integrity sha512-1xNEbYZVmwCgWH20jzuGVpHHiq2rxEbEDnH+zAmgT+5f45xU/TbMraXD2WmF7wmlR0JSiIjOkjn8Zx3WWG2r+Q==
+  version "2.0.1099000000000159"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-select-application/-/plugin-select-application-2.0.1099000000000159.tgz#e9b61ab740918a048d36bdf5365a67dff3411f28"
+  integrity sha512-BSzXeSgphCel5Xynz7J2XyTF5fVOHPKNulbUNLlGti1enGD5skbfpIdgn7bGzccWlqFwoHQxfsP8JrGt6GyMSg==
   dependencies:
     "@k-int/stripes-kint-components" "^5.1.1"
     classnames "^2.2.5"
@@ -2526,9 +2526,9 @@
     react-query "^3.39.3"
 
 "@folio/stripes-authorization-components@^2.0.0", "@folio/stripes-authorization-components@^2.0.1":
-  version "2.0.1099000000000457"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-authorization-components/-/stripes-authorization-components-2.0.1099000000000457.tgz#67772005fb388acd26626325a0f94e64ec502d41"
-  integrity sha512-H5uUEEGQBmvpWLsGDioTKoM2cy0ult7hCy/fe9vq/P/8VAO6vx3oCe3JUQxxH5FHlMNrz0WfzQm2w1M9F5IiEA==
+  version "2.0.1099000000000466"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-authorization-components/-/stripes-authorization-components-2.0.1099000000000466.tgz#54126f76ebd2fceb9f2b61c6c2ba66d9fc2baeb1"
+  integrity sha512-wsRrbS2MHJFybwkMWWLNdzqOlqZ0phw9+UUoKqZbjkf1ZzulRIowFmgmwZfXJFnlzAV9qEdcqsQ6s2zKatQSOA==
   dependencies:
     "@folio/plugin-select-application" "^2.0.0"
     classnames "^2.2.6"
@@ -4701,21 +4701,21 @@ copy-webpack-plugin@^13.0.1:
     tinyglobby "^0.2.12"
 
 core-js-compat@^3.48.0:
-  version "3.48.0"
-  resolved "https://registry.yarnpkg.com/core-js-compat/-/core-js-compat-3.48.0.tgz#7efbe1fc1cbad44008190462217cc5558adaeaa6"
-  integrity sha512-OM4cAF3D6VtH/WkLtWvyNC56EZVXsZdU3iqaMG2B4WvYrlqU831pc4UtG5yp0sE9z8Y02wVN7PjW5Zf9Gt0f1Q==
+  version "3.49.0"
+  resolved "https://registry.yarnpkg.com/core-js-compat/-/core-js-compat-3.49.0.tgz#06145447d92f4aaf258a0c44f24b47afaeaffef6"
+  integrity sha512-VQXt1jr9cBz03b331DFDCCP90b3fanciLkgiOoy8SBHy06gNf+vQ1A3WFLqG7I8TipYIKeYK9wxd0tUrvHcOZA==
   dependencies:
     browserslist "^4.28.1"
 
 core-js-pure@^3.23.3:
-  version "3.48.0"
-  resolved "https://registry.yarnpkg.com/core-js-pure/-/core-js-pure-3.48.0.tgz#7d5a3fe1ec3631b9aa76a81c843ac2ce918e5023"
-  integrity sha512-1slJgk89tWC51HQ1AEqG+s2VuwpTRr8ocu4n20QUcH1v9lAN0RXen0Q0AABa/DK1I7RrNWLucplOHMx8hfTGTw==
+  version "3.49.0"
+  resolved "https://registry.yarnpkg.com/core-js-pure/-/core-js-pure-3.49.0.tgz#ff8436b7251a3832f5fdbbe3e10f7f2e58e51fb1"
+  integrity sha512-XM4RFka59xATyJv/cS3O3Kml72hQXUeGRuuTmMYFxwzc9/7C8OYTaIR/Ji+Yt8DXzsFLNhat15cE/JP15HrCgw==
 
 core-js@^3.0.0, core-js@^3.26.1, core-js@^3.6.0, core-js@^3.6.1, core-js@^3.8.3:
-  version "3.48.0"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.48.0.tgz#1f813220a47bbf0e667e3885c36cd6f0593bf14d"
-  integrity sha512-zpEHTy1fjTMZCKLHUZoVeylt9XrzaIN2rbPXEt0k+q7JE5CkCZdo6bNq55bn24a69CH7ErAVLKijxJja4fw+UQ==
+  version "3.49.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.49.0.tgz#8b4d520ac034311fa21aa616f017ada0e0dbbddd"
+  integrity sha512-es1U2+YTtzpwkxVLwAFdSpaIMyQaq0PBgm3YD1W3Qpsn1NAmO3KSgZfu+oGSWVu6NvLHoHCV/aYcsE5wiB7ALg==
 
 core-util-is@~1.0.0:
   version "1.0.3"
