@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000005453"
+        "version": "1.0.0-SNAPSHOT.100200000005609"
       },
       {
         "name": "app-dcb",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000007291"
+        "version": "1.1.0-SNAPSHOT.100200000007458"
       },
       {
         "name": "app-erm-usage",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000000017"
+        "version": "1.0.0-SNAPSHOT.100200000000019"
       },
       {
         "name": "app-licenses",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.0.0-SNAPSHOT.100200000005562"
+        "version": "1.0.0-SNAPSHOT.100200000005924"
       },
       {
         "name": "app-mosaic",
@@ -174,7 +174,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000006875"
+        "version": "1.0.0-SNAPSHOT.100200000007279"
       },
       {
         "name": "app-service-interaction",
