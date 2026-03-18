@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000007422"
+        "version": "1.2.0-SNAPSHOT.100200000007475"
       },
       {
         "name": "app-agreements",
@@ -182,7 +182,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100200000007041"
+        "version": "1.0.0-SNAPSHOT.100200000007373"
       }
     ]
   },
