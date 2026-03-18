@@ -1916,9 +1916,9 @@
     uuid "^8.3.1"
 
 "@folio/licenses@>=2.0.0":
-  version "12.1.1099000000000304"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/licenses/-/licenses-12.1.1099000000000304.tgz#c8c7bf233532174d780ef7fce02d08e2dca7026d"
-  integrity sha512-3lU/AUBkiApR/Tp88r1EASdh83jazBkZMjdGhGHO6kBwhFcoNddrxIBoPGKxQG4XyYV48a/gYgf0cgOyerI1HQ==
+  version "12.1.1099000000000310"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/licenses/-/licenses-12.1.1099000000000310.tgz#1f6703f64366aba7e4e1c7bfb53f887b101bf13e"
+  integrity sha512-51gV3/BMRsLQoKmGM+/ezozB7lbD78rm7Fw/sBgX4mII8O1QXsfULt2jcJr61WgVevIhO4c292PCejQqe2YFOQ==
   dependencies:
     "@k-int/stripes-kint-components" "^5.15.0"
     "@rehooks/local-storage" "^2.4.4"
@@ -3143,9 +3143,9 @@
   integrity sha512-q7qL4Mgjs1vByCaTnDFcBnV9HS7GVPJX5vyVoCgZHNSC9rjwIlmbXG5sUuorR5ndfHAIlJ8pVStxvjXHbNvtUg==
 
 "@k-int/stripes-kint-components@^5.0.0", "@k-int/stripes-kint-components@^5.1.1", "@k-int/stripes-kint-components@^5.11.0", "@k-int/stripes-kint-components@^5.15.0", "@k-int/stripes-kint-components@^5.28.3", "@k-int/stripes-kint-components@^5.30.0":
-  version "5.33.2"
-  resolved "https://registry.yarnpkg.com/@k-int/stripes-kint-components/-/stripes-kint-components-5.33.2.tgz#41c1357f2a3c010260c02cb9a7375ea2bad2315f"
-  integrity sha512-bS0jm7IQaOc3PuOh7FFWmQOKjEop7+wNAcWCfdLqdfzXnQ8PoAnd7+1QB3opVnCK2XpMe7h44Sv3ck0ArLkEMQ==
+  version "5.34.0"
+  resolved "https://registry.yarnpkg.com/@k-int/stripes-kint-components/-/stripes-kint-components-5.34.0.tgz#e0b2d0c70531ddcbb0ae502a228973b28d5f2546"
+  integrity sha512-YKO10UTskeJdJyJdCTa/vV4gvxYLQDIZDVITCJ9ch1tEVYStXa4ffnwVZEOODqPuHxUiOkxOEOHZeYq7BwfEhA==
   dependencies:
     "@rehooks/local-storage" "^2.4.4"
     compose-function "^3.0.3"
