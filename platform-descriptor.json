@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000006799"
+        "version": "1.2.0-SNAPSHOT.100200000007059"
       },
       {
         "name": "app-consortia",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000007014"
+        "version": "2.2.0-SNAPSHOT.100200000007308"
       },
       {
         "name": "app-fqm",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000000124"
+        "version": "1.0.0-SNAPSHOT.100200000000125"
       },
       {
         "name": "app-licenses",
