@@ -106,15 +106,15 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000000115"
+        "version": "1.0.0-SNAPSHOT.100200000000124"
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100200000007204"
+        "version": "1.0.0-SNAPSHOT.100200000007284"
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000007495"
+        "version": "1.1.0-SNAPSHOT.100200000007543"
       },
       {
         "name": "app-lists",
