@@ -1816,9 +1816,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/inventory-import@>=4.0.0":
-  version "4.0.1099000000000164"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory-import/-/inventory-import-4.0.1099000000000164.tgz#bd4e9bc2f82310eb24a6d5c404968ee3be7c9027"
-  integrity sha512-MRFf9YtRYHLAwlzGhj6A4fMJY8RsF4B48dfBBky9mFnKxXEBaqgV3CeC1jw56TSy4qH/nLNvgAT6SVMKzgLoww==
+  version "4.0.1099000000000165"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory-import/-/inventory-import-4.0.1099000000000165.tgz#999551fb2a7d0bf0bf2cd1ff7bfa4f2fb212cfea"
+  integrity sha512-hBUTJenUt8SspIuSliLScko26AarbdfaQ8TRYOU+Z7O4XBltneOk8Wjyosg9WUd3CHMVRZY62dIQHHGgrq8ohg==
   dependencies:
     final-form-arrays "^3.0.2"
     final-form-set-field-data "^1.0.2"
@@ -3363,17 +3363,17 @@
   dependencies:
     defer-to-connect "^2.0.1"
 
-"@tanstack/query-core@5.90.20":
-  version "5.90.20"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.90.20.tgz#e12128e39210715d4ce4fb299c33498ac297771e"
-  integrity sha512-OMD2HLpNouXEfZJWcKeVKUgQ5n+n3A2JFmBaScpNDUqSrQSjiveC7dKMe53uJUg1nDG16ttFPz2xfilz6i2uVg==
+"@tanstack/query-core@5.91.0":
+  version "5.91.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.91.0.tgz#3645fc1d9515b02a74afb1681911804b561fd401"
+  integrity sha512-FYXN8Kk9Q5VKuV6AIVaNwMThSi0nvAtR4X7HQoigf6ePOtFcavJYVIzgFhOVdtbBQtCJE3KimDIMMJM2DR1hjw==
 
 "@tanstack/react-query@^5.90.11":
-  version "5.90.21"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.90.21.tgz#e0eb40831a76510be438109435b8807ef63ab1b9"
-  integrity sha512-0Lu6y5t+tvlTJMTO7oh5NSpJfpg/5D41LlThfepTixPYkJ0sE2Jj0m0f6yYqujBwIXlId87e234+MxG3D3g7kg==
+  version "5.91.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.91.0.tgz#f5341aec16a41d63947aa226b3b5fba89be2a173"
+  integrity sha512-S8FODsDTNv0Ym+o/JVBvA6EWiWVhg6K2Q4qFehZyFKk6uW4H9OPbXl4kyiN9hAly0uHJ/1GEbR6kAI4MZWfjEA==
   dependencies:
-    "@tanstack/query-core" "5.90.20"
+    "@tanstack/query-core" "5.91.0"
 
 "@types/body-parser@*":
   version "1.19.6"
