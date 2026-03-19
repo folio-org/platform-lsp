@@ -4099,11 +4099,11 @@ bare-path@^3.0.0:
     bare-os "^3.0.1"
 
 bare-stream@^2.6.4:
-  version "2.9.0"
-  resolved "https://registry.yarnpkg.com/bare-stream/-/bare-stream-2.9.0.tgz#0ebebfcf212832450274bcba61f8fafca05adbc3"
-  integrity sha512-l/sVySZU942Akx6jxFC0IekU8V1mwM/fJ6tf6rK4/mBtSESF9lOktANLszMpB89k2qdDQB5uD4q3DWyjfT1Mug==
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/bare-stream/-/bare-stream-2.9.1.tgz#1f187a784ea5340a3bb1890eeca3ed04816b3421"
+  integrity sha512-S9lqQXbwhTEMffRhb3qTVT74M0qzLDgxt4+uV3wBwWj2e+uSYH49Yv1el9Mw+qPRk0o2f+ntXgTQHP7LypVGMA==
   dependencies:
-    streamx "^2.21.0"
+    streamx "^2.24.0"
     teex "^1.0.1"
 
 bare-url@^2.2.2:
@@ -9188,7 +9188,7 @@ stream-parser@^0.3.1:
   dependencies:
     debug "2"
 
-streamx@^2.12.5, streamx@^2.15.0, streamx@^2.21.0:
+streamx@^2.12.5, streamx@^2.15.0, streamx@^2.24.0:
   version "2.24.0"
   resolved "https://registry.yarnpkg.com/streamx/-/streamx-2.24.0.tgz#ec803231ec284352462852995d8997d30a8afa01"
   integrity sha512-PmzO9Pf1UnzKM9L7tzRv5idKMHTBlxY+XC3eWXCyM8uuIOs3sQAKJ+N+EJ1KRCWAeI9TTnbs+uTBj7t09cwb6g==
