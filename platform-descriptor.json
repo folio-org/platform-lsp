@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000007521"
+        "version": "1.2.0-SNAPSHOT.100200000007527"
       },
       {
         "name": "app-agreements",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000000169"
+        "version": "1.0.0-SNAPSHOT.100200000000177"
       },
       {
         "name": "app-licenses",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.1.0-SNAPSHOT.100200000007502"
+        "version": "1.1.0-SNAPSHOT.100200000007519"
       },
       {
         "name": "app-marc-migrations",
