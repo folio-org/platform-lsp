@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000007273"
+        "version": "2.1.0-SNAPSHOT.100200000007278"
       },
       {
         "name": "app-platform-complete",
@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000007492"
+        "version": "1.2.0-SNAPSHOT.100200000007521"
       },
       {
         "name": "app-agreements",
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.0.0-SNAPSHOT.100200000002434"
+        "version": "1.0.0-SNAPSHOT.100200000002566"
       },
       {
         "name": "app-bulk-edit",
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000005707"
+        "version": "1.0.0-SNAPSHOT.100200000005742"
       },
       {
         "name": "app-dcb",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000007570"
+        "version": "1.2.0-SNAPSHOT.100200000007586"
       },
       {
         "name": "app-gobi",
