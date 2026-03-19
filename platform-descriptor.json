@@ -58,7 +58,7 @@
       },
       {
         "name": "app-consortia",
-        "version": "1.4.0-SNAPSHOT.100200000007560"
+        "version": "1.4.0-SNAPSHOT.100200000007603"
       },
       {
         "name": "app-consortia-manager",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000007342"
+        "version": "2.2.0-SNAPSHOT.100200000007343"
       },
       {
         "name": "app-fqm",
@@ -102,7 +102,7 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "1.1.0-SNAPSHOT.100200000006921"
+        "version": "1.1.0-SNAPSHOT.100200000007283"
       },
       {
         "name": "app-inventory",
