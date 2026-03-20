@@ -1816,9 +1816,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/inventory-import@>=4.0.0":
-  version "4.0.1099000000000175"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory-import/-/inventory-import-4.0.1099000000000175.tgz#ffd9158fe3bb94b4a6f57eb9cd2726e47765826f"
-  integrity sha512-qqDQI/VHkVtSkY2zFSXMK6Elj9r239n2aa/anHfdfDpizp5rqvFl72gK0RJT895phrDwjy/A8Jame32bftiOkA==
+  version "4.0.1099000000000176"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory-import/-/inventory-import-4.0.1099000000000176.tgz#4e66316bfc5bcd40462aac0aa1008b7e066599ba"
+  integrity sha512-LMHUkWy26tTwiSeY4M6QBKhZtyRPDmXskOCJO4C7IRkWvypXD+0bO869hkot7TPZhqP2EPs6iTJUc4k3MHkdZg==
   dependencies:
     final-form-arrays "^3.0.2"
     final-form-set-field-data "^1.0.2"
@@ -1934,9 +1934,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/linked-data@^2.0.0":
-  version "2.0.1099000000002124"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.1099000000002124.tgz#6f41b55f2e96ae1a02c2e13cd78fc4b6914005a0"
-  integrity sha512-HhL9uMEaubNjWTRJdU/fwKmHb2S3sM+HD1aqUwGkqKRJS6RQrSKHsje80ONIUzMzzR1x38+N+6PK3T1QX1Un2A==
+  version "2.0.1099000000002153"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.1099000000002153.tgz#9ea16840f572411f78a9ac7ab1a6c8a26dc8933b"
+  integrity sha512-3zhVY0bNKEsvBm9GxHOuJExDO1GkOpQq4qg2GvCn/JlxyxOD0Lagt6rHplbsy8r7UcqzCwouXo8U6Hqzz/spDg==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -1944,6 +1944,7 @@
     "@dnd-kit/utilities" "^3.2.2"
     "@tanstack/react-query" "^5.90.11"
     classnames "^2.5.1"
+    focus-trap-react "^12.0.0"
     lodash "^4.17.21"
     react "^19.2.0"
     react-dom "^19.2.0"
@@ -5822,10 +5823,25 @@ flexboxgrid2@^7.2.0:
   dependencies:
     normalize.css "^7.0.0"
 
+focus-trap-react@^12.0.0:
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/focus-trap-react/-/focus-trap-react-12.0.0.tgz#fc1efacfde54691bd64e915bd7799759dc1bbf19"
+  integrity sha512-bTPk+jbG0Q3zqHjY7KjdmjqMKGKVrKbMwXxHX9+FTYENWxmLryJVoI3ZfStRSJ26uPipl+th9DIPhCyjeEBYdg==
+  dependencies:
+    focus-trap "^8.0.0"
+    tabbable "^6.4.0"
+
 focus-trap@^7.5.4:
   version "7.8.0"
   resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-7.8.0.tgz#b1d9463fa42b93ad7a5223d750493a6c09b672a8"
   integrity sha512-/yNdlIkpWbM0ptxno3ONTuf+2g318kh2ez3KSeZN5dZ8YC6AAmgeWz+GasYYiBJPFaYcSAPeu4GfhUaChzIJXA==
+  dependencies:
+    tabbable "^6.4.0"
+
+focus-trap@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-8.0.0.tgz#39ce25e930dbf58a3dfabc4f9b46d8488151e2de"
+  integrity sha512-Aa84FOGHs99vVwufDMdq2qgOwXPC2e9U66GcqBhn1/jEHPDhJaP8PYhkIbqG9lhfL5Kddk/567lj46LLHYCRUw==
   dependencies:
     tabbable "^6.4.0"
 
