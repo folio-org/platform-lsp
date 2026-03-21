@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000007571"
+        "version": "1.2.0-SNAPSHOT.100200000007665"
       },
       {
         "name": "app-agreements",
@@ -86,11 +86,11 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000007458"
+        "version": "1.1.0-SNAPSHOT.100200000007763"
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000007343"
+        "version": "2.2.0-SNAPSHOT.100200000007486"
       },
       {
         "name": "app-fqm",
@@ -102,7 +102,7 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "1.1.0-SNAPSHOT.100200000007340"
+        "version": "1.1.0-SNAPSHOT.100200000007423"
       },
       {
         "name": "app-inventory",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100200000007284"
+        "version": "1.0.0-SNAPSHOT.100200000007461"
       },
       {
         "name": "app-linked-data",
@@ -154,7 +154,7 @@
       },
       {
         "name": "app-reporting",
-        "version": "1.4.0-SNAPSHOT.100200000006974"
+        "version": "1.4.0-SNAPSHOT.100200000007476"
       },
       {
         "name": "app-requests-ecs",
