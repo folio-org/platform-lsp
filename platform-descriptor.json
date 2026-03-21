@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000007396"
+        "version": "2.1.0-SNAPSHOT.100200000007412"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000006922"
+        "version": "3.3.0-SNAPSHOT.100200000006987"
       }
     ],
     "optional": [
@@ -46,11 +46,11 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000007180"
+        "version": "1.0.0-SNAPSHOT.100200000007435"
       },
       {
         "name": "app-authority-records",
-        "version": "1.0.0-SNAPSHOT.100200000002632"
+        "version": "1.0.0-SNAPSHOT.100200000002704"
       },
       {
         "name": "app-bulk-edit",
@@ -62,15 +62,15 @@
       },
       {
         "name": "app-consortia-manager",
-        "version": "1.4.0-SNAPSHOT.100200000007171"
+        "version": "1.4.0-SNAPSHOT.100200000007717"
       },
       {
         "name": "app-dashboard",
-        "version": "1.0.0-SNAPSHOT.100200000006544"
+        "version": "1.0.0-SNAPSHOT.100200000007585"
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000005866"
+        "version": "1.0.0-SNAPSHOT.100200000005875"
       },
       {
         "name": "app-dcb",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000000245"
+        "version": "1.0.0-SNAPSHOT.100200000000319"
       },
       {
         "name": "app-licenses",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.1.0-SNAPSHOT.100200000007525"
+        "version": "1.1.0-SNAPSHOT.100200000007660"
       },
       {
         "name": "app-marc-migrations",
@@ -130,7 +130,7 @@
       },
       {
         "name": "app-mosaic",
-        "version": "1.1.0-SNAPSHOT.100200000007103"
+        "version": "1.1.0-SNAPSHOT.100200000007605"
       },
       {
         "name": "app-notification",
@@ -138,7 +138,7 @@
       },
       {
         "name": "app-oa",
-        "version": "1.0.0-SNAPSHOT.100200000007260"
+        "version": "1.0.0-SNAPSHOT.100200000007535"
       },
       {
         "name": "app-oai-pmh",
@@ -146,11 +146,11 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000001831"
+        "version": "1.0.0-SNAPSHOT.100200000002261"
       },
       {
         "name": "app-reading-room",
-        "version": "1.4.0-SNAPSHOT.100200000007559"
+        "version": "1.4.0-SNAPSHOT.100200000007576"
       },
       {
         "name": "app-reporting",
@@ -166,7 +166,7 @@
       },
       {
         "name": "app-requests-mediated-ui",
-        "version": "1.4.0-SNAPSHOT.100200000005373"
+        "version": "1.4.0-SNAPSHOT.100200000005868"
       },
       {
         "name": "app-rtac",
@@ -182,7 +182,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100200000007373"
+        "version": "1.0.0-SNAPSHOT.100200000007561"
       }
     ]
   },
