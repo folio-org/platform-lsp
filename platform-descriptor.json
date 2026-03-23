@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000005899"
+        "version": "1.0.0-SNAPSHOT.100200000005951"
       },
       {
         "name": "app-dcb",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-service-interaction",
-        "version": "1.0.0-SNAPSHOT.100200000006812"
+        "version": "1.0.0-SNAPSHOT.100200000007366"
       },
       {
         "name": "app-serials-management",
