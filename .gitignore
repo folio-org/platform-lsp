@@ -16,6 +16,7 @@ output
 .history/
 
 # Ignore user-specific AI/development tool artifacts
+.agents/
 .cursor/
 .claude/
 .codemie/
@@ -28,6 +29,7 @@ claude*
 .github/*agents*
 .github/*prompts*
 .github/*chatmodes*
+skills-lock.json
 
 # Miscellaneous
 *.class
