@@ -16,6 +16,7 @@ output
 .history/
 
 # Ignore user-specific AI/development tool artifacts
+.agents/
 .cursor/
 .claude/
 .codemie/
