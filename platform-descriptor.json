@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000007435"
+        "version": "1.0.0-SNAPSHOT.100200000007523"
       },
       {
         "name": "app-authority-records",
@@ -82,7 +82,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.0-SNAPSHOT.100200000006681"
+        "version": "2.2.0-SNAPSHOT.100200000006691"
       },
       {
         "name": "app-eholdings",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100200000007461"
+        "version": "1.0.0-SNAPSHOT.100200000007549"
       },
       {
         "name": "app-linked-data",
