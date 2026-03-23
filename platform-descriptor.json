@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000007523"
+        "version": "1.0.0-SNAPSHOT.100200000007525"
       },
       {
         "name": "app-authority-records",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000007822"
+        "version": "1.2.0-SNAPSHOT.100200000007828"
       },
       {
         "name": "app-gobi",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100200000007549"
+        "version": "1.0.0-SNAPSHOT.100200000007550"
       },
       {
         "name": "app-linked-data",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.1.0-SNAPSHOT.100200000007660"
+        "version": "1.1.0-SNAPSHOT.100200000007754"
       },
       {
         "name": "app-marc-migrations",
