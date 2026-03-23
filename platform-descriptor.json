@@ -82,7 +82,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.0-SNAPSHOT.100200000006451"
+        "version": "2.2.0-SNAPSHOT.100200000006681"
       },
       {
         "name": "app-eholdings",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000007486"
+        "version": "2.2.0-SNAPSHOT.100200000007564"
       },
       {
         "name": "app-fqm",
