@@ -19,9 +19,15 @@ output
 .cursor/
 .claude/
 .codemie/
+.codex/
+.specify/
 .mcp.json
 .cursor*
 claude*
+.github/*instructions*
+.github/*agents*
+.github/*prompts*
+.github/*chatmodes*
 
 # Miscellaneous
 *.class
