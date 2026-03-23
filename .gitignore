@@ -19,6 +19,8 @@ output
 .cursor/
 .claude/
 .codemie/
+.codex/
+.specify/
 .mcp.json
 .cursor*
 claude*
