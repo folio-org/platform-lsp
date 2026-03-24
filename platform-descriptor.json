@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000007487"
+        "version": "2.1.0-SNAPSHOT.100200000007531"
       },
       {
         "name": "app-platform-complete",
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.0.0-SNAPSHOT.100200000002821"
+        "version": "1.0.0-SNAPSHOT.100200000002824"
       },
       {
         "name": "app-bulk-edit",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.4.0-SNAPSHOT.100200000006833"
+        "version": "1.4.0-SNAPSHOT.100200000007584"
       },
       {
         "name": "app-ebsconet",
