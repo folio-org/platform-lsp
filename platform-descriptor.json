@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000007079"
+        "version": "3.3.0-SNAPSHOT.100200000007108"
       }
     ],
     "optional": [
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.0.0-SNAPSHOT.100200000002824"
+        "version": "1.0.0-SNAPSHOT.100200000002830"
       },
       {
         "name": "app-bulk-edit",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000000450"
+        "version": "1.0.0-SNAPSHOT.100200000000452"
       },
       {
         "name": "app-licenses",
@@ -130,7 +130,7 @@
       },
       {
         "name": "app-mosaic",
-        "version": "1.1.0-SNAPSHOT.100200000007605"
+        "version": "1.1.0-SNAPSHOT.100200000007737"
       },
       {
         "name": "app-notification",
