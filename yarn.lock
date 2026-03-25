@@ -1935,9 +1935,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/linked-data@^2.0.0":
-  version "2.0.1099000000002153"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.1099000000002153.tgz#9ea16840f572411f78a9ac7ab1a6c8a26dc8933b"
-  integrity sha512-3zhVY0bNKEsvBm9GxHOuJExDO1GkOpQq4qg2GvCn/JlxyxOD0Lagt6rHplbsy8r7UcqzCwouXo8U6Hqzz/spDg==
+  version "2.0.1099000000002178"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.1099000000002178.tgz#4d2efae412390e4382e67b7e8ce0e636a72576de"
+  integrity sha512-cR3QNRMFzkd8UvgWM99RDbwN4pkocixoGUeBTQPRsNLb82Rpl8ZzElGbQTvWkaUTfEMeps3+JRsSgtKYum5Q6Q==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -2330,9 +2330,9 @@
     prop-types "^15.6.0"
 
 "@folio/quick-marc@>=1.0.0":
-  version "11.0.1099000000000551"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/quick-marc/-/quick-marc-11.0.1099000000000551.tgz#7bbe428b42ea2171c702a1d294e8e4ff2d4a688c"
-  integrity sha512-LHISvZPlkp6wbrovMHYfJfi9Btm0ots5uwfw5UV3qXPvjzDkuPyDLfTLFp4MlHBu8sIQU+tOcwqsxJyBJo8YUQ==
+  version "11.0.1099000000000555"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/quick-marc/-/quick-marc-11.0.1099000000000555.tgz#cc70971f564250c200eec3e6eb7873f310c0d572"
+  integrity sha512-3Jwxz/tERpiSJzo2S2SJYKvVYXFzzk/BEoy/sFMpzvY+36vNFhl7THbbCrHXTJIbnRZX14jQqpP5j+nX8zdsPQ==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
@@ -4101,9 +4101,9 @@ bare-path@^3.0.0:
     bare-os "^3.0.1"
 
 bare-stream@^2.6.4:
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/bare-stream/-/bare-stream-2.10.0.tgz#bd2671247541afa14084a64c30257a2408ad376a"
-  integrity sha512-DOPZF/DDcDruKDA43cOw6e9Quq5daua7ygcAwJE/pKJsRWhgSSemi7qVNGE5kyDIxIeN1533G/zfbvWX7Wcb9w==
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/bare-stream/-/bare-stream-2.11.0.tgz#12f82a5624658d05356ace4b7fd698f0fb402a84"
+  integrity sha512-Y/+iQ49fL3rIn6w/AVxI/2+BRrpmzJvdWt5Jv8Za6Ngqc6V227c+pYjYYgLdpR3MwQ9ObVXD0ZrqoBztakM0rw==
   dependencies:
     streamx "^2.25.0"
     teex "^1.0.1"
