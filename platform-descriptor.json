@@ -98,7 +98,7 @@
       },
       {
         "name": "app-gobi",
-        "version": "1.1.0-SNAPSHOT.100200000007133"
+        "version": "1.1.0-SNAPSHOT.100200000007435"
       },
       {
         "name": "app-inn-reach",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000000471"
+        "version": "1.0.0-SNAPSHOT.100200000000511"
       },
       {
         "name": "app-licenses",
