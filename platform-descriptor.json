@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000007831"
+        "version": "1.2.0-SNAPSHOT.100200000007836"
       },
       {
         "name": "app-agreements",
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000006035"
+        "version": "1.0.0-SNAPSHOT.100200000006039"
       },
       {
         "name": "app-dcb",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000007763"
+        "version": "1.1.0-SNAPSHOT.100200000007945"
       },
       {
         "name": "app-erm-usage",
@@ -122,11 +122,11 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "2.2.0-SNAPSHOT.100200000006426"
+        "version": "2.2.0-SNAPSHOT.100200000007522"
       },
       {
         "name": "app-marc-storage",
-        "version": "1.0.0-SNAPSHOT.100200000006353"
+        "version": "1.0.0-SNAPSHOT.100200000006355"
       },
       {
         "name": "app-mosaic",
@@ -146,7 +146,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000002261"
+        "version": "1.0.0-SNAPSHOT.100200000002417"
       },
       {
         "name": "app-reading-room",
@@ -174,7 +174,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000007444"
+        "version": "1.0.0-SNAPSHOT.100200000007769"
       },
       {
         "name": "app-service-interaction",
