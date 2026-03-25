@@ -1885,9 +1885,9 @@
     "@folio/plugin-find-po-line" "^6.0.0"
 
 "@folio/ld-folio-wrapper@>=1.0.0":
-  version "2.0.1099000000000392"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/ld-folio-wrapper/-/ld-folio-wrapper-2.0.1099000000000392.tgz#6acf27505d0b7222974f983f18b876c3687ecfb9"
-  integrity sha512-Tv3kXC/kD2nleaXdJaImNzc3oLY/z1otBAIzJw6Q0W1CucwzQteBU0/eHVlJ998xj+k2rNfmZX7WCQY+qPXG0Q==
+  version "2.0.1099000000000408"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/ld-folio-wrapper/-/ld-folio-wrapper-2.0.1099000000000408.tgz#9ce8bc4ea70be1e41ea928ad64d88da31235950b"
+  integrity sha512-5NS4MsM8hK6WqETjtLhsYY6O2TlRe7wIjsBUZauyQX4tP1oGOmpVT1maPG7tN4XBiHtNd8akxV4laLnwOADtkw==
   dependencies:
     "@folio/linked-data" "^2.0.0"
     prop-types "^15.6.0"
