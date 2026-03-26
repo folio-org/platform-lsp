@@ -2292,12 +2292,13 @@
     prop-types "^15.6.0"
 
 "@folio/plugin-query-builder@>=1.0.0", "@folio/plugin-query-builder@^3.0.0":
-  version "3.0.1099000000001296"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-query-builder/-/plugin-query-builder-3.0.1099000000001296.tgz#854ee91204b2403f9224716803cd078f45b2b314"
-  integrity sha512-lA4IX2TguFcoRdr4riW7MBdWtolJMQqYCAK7t8z3Os4T32hrRDX7s0rY95egWyTeYt4TEBPB69PPj+zTEm/15Q==
+  version "3.0.1099000000001353"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-query-builder/-/plugin-query-builder-3.0.1099000000001353.tgz#a26071343343a89e5900f670f8f57916614b09ae"
+  integrity sha512-P+DGzVWmbgrnxq+OAc/nXuSf+0X8ac+OUnA4YUI9nnBwA7dVsB5hGlEaZH/DYJot1996a1c/4QhwpHiz9G0/kQ==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
+    fuzzysort "^2.0.4"
     ky "^0.33.2"
     lodash "^4.17.5"
     prop-types "^15.5.10"
@@ -6109,9 +6110,9 @@ handlebars-loader@^1.7.1:
     object-assign "^4.1.0"
 
 handlebars@^4.7.7, handlebars@^4.7.8:
-  version "4.7.8"
-  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.7.8.tgz#41c42c18b1be2365439188c77c6afae71c0cd9e9"
-  integrity sha512-vafaFqs8MZkRrSX7sFVUdo3ap/eNiLnb4IakshzvP56X5Nr1iGKAIqdX6tMlm6HcNRIkr6AxO5jFEoJzzpT8aQ==
+  version "4.7.9"
+  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.7.9.tgz#6f139082ab58dc4e5a0e51efe7db5ae890d56a0f"
+  integrity sha512-4E71E0rpOaQuJR2A3xDZ+GM1HyWYv1clR58tC8emQNeQe3RH7MAzSbat+V0wG78LQBo6m6bzSG/L4pBuCsgnUQ==
   dependencies:
     minimist "^1.2.5"
     neo-async "^2.6.2"
