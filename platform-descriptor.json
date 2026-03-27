@@ -94,7 +94,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000008011"
+        "version": "1.2.0-SNAPSHOT.100200000008014"
       },
       {
         "name": "app-gobi",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000000511"
+        "version": "1.0.0-SNAPSHOT.100200000000602"
       },
       {
         "name": "app-licenses",
