@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000007836"
+        "version": "1.2.0-SNAPSHOT.100200000007924"
       },
       {
         "name": "app-agreements",
@@ -98,7 +98,7 @@
       },
       {
         "name": "app-gobi",
-        "version": "1.1.0-SNAPSHOT.100200000007435"
+        "version": "1.1.0-SNAPSHOT.100200000007505"
       },
       {
         "name": "app-inn-reach",
