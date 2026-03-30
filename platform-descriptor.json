@@ -126,7 +126,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.0.0-SNAPSHOT.100200000006595"
+        "version": "1.0.0-SNAPSHOT.100200000006601"
       },
       {
         "name": "app-mosaic",
@@ -158,7 +158,7 @@
       },
       {
         "name": "app-requests-ecs",
-        "version": "1.4.0-SNAPSHOT.100200000007519"
+        "version": "1.4.0-SNAPSHOT.100200000007715"
       },
       {
         "name": "app-requests-mediated",
