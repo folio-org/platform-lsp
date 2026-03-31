@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000007531"
+        "version": "2.1.0-SNAPSHOT.100200000007564"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000007109"
+        "version": "3.3.0-SNAPSHOT.100200000007140"
       }
     ],
     "optional": [
@@ -50,11 +50,11 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.0.0-SNAPSHOT.100200000003112"
+        "version": "1.0.0-SNAPSHOT.100200000003160"
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000007470"
+        "version": "1.2.0-SNAPSHOT.100200000007716"
       },
       {
         "name": "app-consortia",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000008023"
+        "version": "1.2.0-SNAPSHOT.100200000008224"
       },
       {
         "name": "app-gobi",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000000802"
+        "version": "1.0.0-SNAPSHOT.100200000000804"
       },
       {
         "name": "app-licenses",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000008194"
+        "version": "1.1.0-SNAPSHOT.100200000008233"
       },
       {
         "name": "app-lists",
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-reading-room",
-        "version": "1.4.0-SNAPSHOT.100200000007576"
+        "version": "1.4.0-SNAPSHOT.100200000007728"
       },
       {
         "name": "app-reporting",
