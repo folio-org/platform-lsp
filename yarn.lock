@@ -2622,11 +2622,12 @@
     uuid "^9.0.0"
 
 "@folio/stripes-core@^11.0.0":
-  version "11.1.1099000000001612"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.1.1099000000001612.tgz#5e4cedd2cbfd1d67cdd0353480e407cb35782f8e"
-  integrity sha512-qP7MqL1eEg7AHJmDwDNf0l0JXbwEway7CH6E2hjcwf0BpKZRwKV2N8X40YfHNPSXT5nFrMFdoRFDwZQllCEZnA==
+  version "11.1.1099000000001625"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.1.1099000000001625.tgz#0c4d7f06f608fd97343ef4998a350f7b1e93e026"
+  integrity sha512-ttqgD9FZKeb9TS9EAwjcm9hHpjq6uy5/SXOFq5Vfn6i0HZya1qgSMFg8OsWGfDYCaRBo3QoNno6A+QRSCOhpHg==
   dependencies:
     "@apollo/client" "^3.2.1"
+    "@module-federation/runtime" "^2.0.0"
     classnames "^2.2.5"
     core-js "^3.26.1"
     final-form "^4.18.2"
@@ -3169,6 +3170,33 @@
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.5.tgz#4fc56c15c580b9adb7dc3c333a134e540b44bfb1"
   integrity sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==
+
+"@module-federation/error-codes@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@module-federation/error-codes/-/error-codes-2.3.1.tgz#6fa2243b97bb06762aed0effafc4d12f5dc58877"
+  integrity sha512-s3IjT2OYrSBNNmxdTmmrWBpsFfeNszdL6BSqjXLHb1CgXWUYLNXpb05IopnzMhRLcur6MTGuKR0ZSjJbmvQBbg==
+
+"@module-federation/runtime-core@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@module-federation/runtime-core/-/runtime-core-2.3.1.tgz#29f87a51b730d62ccd1614d5aa33216762a4a954"
+  integrity sha512-E0WgaCn32AWzD0n6SCH7VQ+kxk46XyX432PQWARgyQzCX/wyLkaT+We3A18RVNUevRT85YHLrrVIhMKJJVHgjA==
+  dependencies:
+    "@module-federation/error-codes" "2.3.1"
+    "@module-federation/sdk" "2.3.1"
+
+"@module-federation/runtime@^2.0.0":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@module-federation/runtime/-/runtime-2.3.1.tgz#e67db18b7e720e9f3042e598a42c66f7b7890727"
+  integrity sha512-NiKelHKzOf1Vz8oqcxC/XRUAW224O6lKj9xD0cfp5Bp343iu6s58RlLvX1ypF+UpCl3jA4JM8npGax/3jjyifw==
+  dependencies:
+    "@module-federation/error-codes" "2.3.1"
+    "@module-federation/runtime-core" "2.3.1"
+    "@module-federation/sdk" "2.3.1"
+
+"@module-federation/sdk@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@module-federation/sdk/-/sdk-2.3.1.tgz#3cdc007e5cc6deff5421c22cf0788926b7cbc14c"
+  integrity sha512-lgWxFZyLRKDXWRGlV6ROjFJ6MRaJTxs0bBnS6hS9ONfr/0TkeW4JzDbsfzrB8g4p6IgSKB+wQ9XfibJCGBI5OQ==
 
 "@ngneat/falso@^6.4.0":
   version "6.4.0"
