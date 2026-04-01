@@ -134,7 +134,7 @@
       },
       {
         "name": "app-notification",
-        "version": "1.0.0-SNAPSHOT.100200000003690"
+        "version": "1.0.0-SNAPSHOT.100200000003790"
       },
       {
         "name": "app-oa",
@@ -154,7 +154,7 @@
       },
       {
         "name": "app-reporting",
-        "version": "1.4.0-SNAPSHOT.100200000007981"
+        "version": "1.4.0-SNAPSHOT.100200000007983"
       },
       {
         "name": "app-requests-ecs",
