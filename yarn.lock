@@ -1832,9 +1832,9 @@
     use-deep-compare "^1.1.0"
 
 "@folio/inventory@>=1.4.0":
-  version "14.0.1099000000001791"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.0.1099000000001791.tgz#84e10d5eb80af68bd119c5f088d37a355c19f026"
-  integrity sha512-HF5b8mRvyeev088OpIFKguAsq8yWeh3/mX7Xgz+wBC5yco8ftWskSU310ryskBx0juHxaSvFy54qC0L+xnHpEQ==
+  version "14.0.1099000000001792"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.0.1099000000001792.tgz#ef32fda0affc51e07f90e9a0fb8bc753a223c983"
+  integrity sha512-7JqtN0llSLo7bsQXNnKBgHIRdbH+9xwy3gUkyl78Q8Ypi5HAVdcgd04ZF1oSi+BEtxSPu99EVMn9JVsdft/Yew==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -1893,9 +1893,9 @@
     prop-types "^15.6.0"
 
 "@folio/ldp@>=1.1.0":
-  version "3.2.1099000000000314"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/ldp/-/ldp-3.2.1099000000000314.tgz#f058a6004dfc84c63bbbaed3e6f4e2135a9cdc3f"
-  integrity sha512-BRXPEundzynOPDzRpVbrtjMUJdLCdK0l//+puwpBkYjulK5EgTmHf/1GRwjl3KgN97nP1QM6MWRvkI7k7yiwGA==
+  version "3.2.1099000000000315"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/ldp/-/ldp-3.2.1099000000000315.tgz#68fec7c8ee98acaa530f411036f0eec578fe2b8a"
+  integrity sha512-mRHh9hREytnMPKtK0QHf/MIjHFFvbtPbiVhkMYvxfoVDmp4tswcYFpXn8092ZeQotmCCiHvXX+lR5/L4iQMrXA==
   dependencies:
     "@e965/xlsx" "^0.20.2"
     chart.js "^2.9.3"
