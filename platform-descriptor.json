@@ -32,21 +32,21 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000007653"
+        "version": "2.1.0-SNAPSHOT.100200000007658"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000007219"
+        "version": "3.3.0-SNAPSHOT.100200000007220"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000008203"
+        "version": "1.2.0-SNAPSHOT.100200000008224"
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000007527"
+        "version": "1.0.0-SNAPSHOT.100200000007969"
       },
       {
         "name": "app-authority-records",
@@ -86,15 +86,15 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000008206"
+        "version": "1.1.0-SNAPSHOT.100200000008359"
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000007655"
+        "version": "2.2.0-SNAPSHOT.100200000008035"
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000008224"
+        "version": "1.2.0-SNAPSHOT.100200000008318"
       },
       {
         "name": "app-gobi",
@@ -106,11 +106,11 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000000854"
+        "version": "1.0.0-SNAPSHOT.100200000000906"
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100200000007550"
+        "version": "1.0.0-SNAPSHOT.100200000008004"
       },
       {
         "name": "app-linked-data",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.1.0-SNAPSHOT.100200000007893"
+        "version": "1.1.0-SNAPSHOT.100200000008227"
       },
       {
         "name": "app-marc-migrations",
@@ -146,7 +146,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000002773"
+        "version": "1.0.0-SNAPSHOT.100200000002774"
       },
       {
         "name": "app-reading-room",
@@ -154,11 +154,11 @@
       },
       {
         "name": "app-reporting",
-        "version": "1.4.0-SNAPSHOT.100200000007983"
+        "version": "1.4.0-SNAPSHOT.100200000008018"
       },
       {
         "name": "app-requests-ecs",
-        "version": "1.4.0-SNAPSHOT.100200000007715"
+        "version": "1.4.0-SNAPSHOT.100200000007837"
       },
       {
         "name": "app-requests-mediated",
@@ -182,7 +182,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100200000007561"
+        "version": "1.0.0-SNAPSHOT.100200000008113"
       }
     ]
   },
