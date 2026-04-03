@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000007840"
+        "version": "1.2.0-SNAPSHOT.100200000007850"
       },
       {
         "name": "app-consortia",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000008318"
+        "version": "1.2.0-SNAPSHOT.100200000008365"
       },
       {
         "name": "app-gobi",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000008368"
+        "version": "1.1.0-SNAPSHOT.100200000008373"
       },
       {
         "name": "app-lists",
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-reading-room",
-        "version": "1.4.0-SNAPSHOT.100200000007798"
+        "version": "1.4.0-SNAPSHOT.100200000007848"
       },
       {
         "name": "app-reporting",
