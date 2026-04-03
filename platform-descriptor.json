@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000007721"
+        "version": "1.2.0-SNAPSHOT.100200000007835"
       },
       {
         "name": "app-consortia",
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000006374"
+        "version": "1.0.0-SNAPSHOT.100200000006441"
       },
       {
         "name": "app-dcb",
