@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000007238"
+        "version": "3.3.0-SNAPSHOT.100200000007250"
       }
     ],
     "optional": [
@@ -50,11 +50,11 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.0.0-SNAPSHOT.100200000003247"
+        "version": "1.0.0-SNAPSHOT.100200000003281"
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000007835"
+        "version": "1.2.0-SNAPSHOT.100200000007840"
       },
       {
         "name": "app-consortia",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.0.0-SNAPSHOT.100200000006721"
+        "version": "1.0.0-SNAPSHOT.100200000006762"
       },
       {
         "name": "app-mosaic",
