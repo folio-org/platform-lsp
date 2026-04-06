@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000007701"
+        "version": "2.1.0-SNAPSHOT.100200000007859"
       },
       {
         "name": "app-platform-complete",
@@ -146,7 +146,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000002803"
+        "version": "1.0.0-SNAPSHOT.100200000002951"
       },
       {
         "name": "app-reading-room",
