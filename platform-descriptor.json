@@ -9,11 +9,11 @@
     },
     {
       "name": "folio-keycloak",
-      "version": "26.6.0-SNAPSHOT.99"
+      "version": "26.6.0-SNAPSHOT.102"
     },
     {
       "name": "folio-module-sidecar",
-      "version": "3.1.0-SNAPSHOT.2031"
+      "version": "3.1.0-SNAPSHOT.2039"
     },
     {
       "name": "mgr-applications",
@@ -21,7 +21,7 @@
     },
     {
       "name": "mgr-tenants",
-      "version": "3.1.0-SNAPSHOT.2040"
+      "version": "3.1.0-SNAPSHOT.2046"
     },
     {
       "name": "mgr-tenant-entitlements",
@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000007701"
+        "version": "2.1.0-SNAPSHOT.100200000007864"
       },
       {
         "name": "app-platform-complete",
@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000008224"
+        "version": "1.2.0-SNAPSHOT.100200000008420"
       },
       {
         "name": "app-agreements",
@@ -142,11 +142,11 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100200000007959"
+        "version": "1.2.0-SNAPSHOT.100200000008154"
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000002803"
+        "version": "1.0.0-SNAPSHOT.100200000002951"
       },
       {
         "name": "app-reading-room",
