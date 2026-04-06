@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000007859"
+        "version": "2.1.0-SNAPSHOT.100200000007864"
       },
       {
         "name": "app-platform-complete",
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100200000007959"
+        "version": "1.2.0-SNAPSHOT.100200000008154"
       },
       {
         "name": "app-quick-marc",
