@@ -30,11 +30,13 @@ claude*
 .github/*prompts*
 .github/*chatmodes*
 skills-lock.json
+specs/
 
 # Miscellaneous
 *.class
 *.log
 *.pyc
+__pycache__/
 *.swp
 .DS_Store
 .atom/
