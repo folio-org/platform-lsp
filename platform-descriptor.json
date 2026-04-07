@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000000909"
+        "version": "1.0.0-SNAPSHOT.100200000001150"
       },
       {
         "name": "app-licenses",
@@ -188,11 +188,11 @@
     "experimental": [
       {
         "name": "app-finc",
-        "version": "1.0.0-SNAPSHOT.100200000000001"
+        "version": "1.1.0-SNAPSHOT.100200000008403"
       },
       {
         "name": "app-rtac-cache",
-        "version": "1.0.0-SNAPSHOT.100200000000001"
+        "version": "1.1.0-SNAPSHOT.100200000004199"
       }
     ]
   },
