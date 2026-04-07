@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.0.0-SNAPSHOT.100200000003281"
+        "version": "1.0.0-SNAPSHOT.100200000003482"
       },
       {
         "name": "app-bulk-edit",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000001150"
+        "version": "1.0.0-SNAPSHOT.100200000001160"
       },
       {
         "name": "app-licenses",
