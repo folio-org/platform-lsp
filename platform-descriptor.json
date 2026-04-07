@@ -134,7 +134,7 @@
       },
       {
         "name": "app-notification",
-        "version": "1.0.0-SNAPSHOT.100200000004013"
+        "version": "1.0.0-SNAPSHOT.100200000004049"
       },
       {
         "name": "app-oa",
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100200000008154"
+        "version": "1.2.0-SNAPSHOT.100200000008193"
       },
       {
         "name": "app-quick-marc",
@@ -174,7 +174,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000008220"
+        "version": "1.0.0-SNAPSHOT.100200000008440"
       },
       {
         "name": "app-service-interaction",
