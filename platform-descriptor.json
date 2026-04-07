@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000007881"
+        "version": "2.1.0-SNAPSHOT.100200000007916"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000007439"
+        "version": "3.3.0-SNAPSHOT.100200000007442"
       }
     ],
     "optional": [
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000008542"
+        "version": "1.2.0-SNAPSHOT.100200000008577"
       },
       {
         "name": "app-gobi",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000001160"
+        "version": "1.0.0-SNAPSHOT.100200000001166"
       },
       {
         "name": "app-licenses",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000008554"
+        "version": "1.1.0-SNAPSHOT.100200000008588"
       },
       {
         "name": "app-lists",
@@ -146,7 +146,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000002951"
+        "version": "1.0.0-SNAPSHOT.100200000002999"
       },
       {
         "name": "app-reading-room",
