@@ -38,6 +38,12 @@ inputs:
     description: Level of logging verbosity (INFO, DEBUG, WARNING, ERROR)
     required: false
     default: 'INFO'
+  constraint-map:
+    description: >-
+      JSON object mapping component name to resolved scope (minor|patch|exact).
+      Overrides global filter-scope per entry.
+    required: false
+    default: '{}'
 
 outputs:
   updated-components:
@@ -81,6 +87,7 @@ runs:
         COMPONENTS_JSON: '${{ inputs.components }}'
         FILTER_SCOPE: '${{ inputs.filter-scope }}'
         SORT_ORDER: '${{ inputs.sort-order }}'
+        CONSTRAINT_MAP: '${{ inputs.constraint-map }}'
       run: |
         set -euo pipefail
         IFS=$'\n\t'

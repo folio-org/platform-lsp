@@ -1,0 +1,17 @@
+name: 'Validate Descriptor Template'
+description: 'Validate constraint-prefixed versions in a platform descriptor template file'
+author: 'FOLIO Kitfox'
+
+inputs:
+  template-file:
+    description: 'Path to the descriptor template JSON file'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Validate descriptor template'
+      shell: bash
+      env:
+        TEMPLATE_FILE: ${{ inputs.template-file }}
+      run: python3 "${{ github.action_path }}/validate_descriptor_template.py"

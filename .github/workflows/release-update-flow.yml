@@ -165,26 +165,56 @@ jobs:
           validate_json: true
           fail_on_missing: true
 
+      - name: 'Detect descriptor template'
+        id: detect-template
+        run: |
+          TEMPLATE_FILE="platform-descriptor-template.json"
+          if [ -f "$TEMPLATE_FILE" ]; then
+            echo "template_exists=true" >> "$GITHUB_OUTPUT"
+            echo "source_file=$TEMPLATE_FILE" >> "$GITHUB_OUTPUT"
+            echo "::notice::Template file found: $TEMPLATE_FILE"
+          else
+            echo "template_exists=false" >> "$GITHUB_OUTPUT"
+            echo "source_file=$STATE_FILE" >> "$GITHUB_OUTPUT"
+            echo "::notice::No template found; using $STATE_FILE"
+          fi
+
+      - name: 'Validate descriptor template'
+        if: steps.detect-template.outputs.template_exists == 'true'
+        uses: folio-org/platform-lsp/.github/actions/validate-descriptor-template@master
+        with:
+          template-file: ${{ steps.detect-template.outputs.source_file }}
+
       - name: 'Extract descriptor fields'
         id: read-descriptor
         uses: folio-org/platform-lsp/.github/actions/extract-descriptor-fields@master
         with:
-          file-path: ${{ env.STATE_FILE }}
+          file-path: ${{ steps.detect-template.outputs.source_file }}
           fields: 'eureka-components,applications'
           validate-schema: 'true'
           expected-types: '{"eureka-components":"array","applications":"object"}'
+
+      - name: 'Build constraint map from template'
+        id: build-constraint-map
+        if: steps.detect-template.outputs.template_exists == 'true'
+        uses: folio-org/platform-lsp/.github/actions/build-constraint-map@master
+        with:
+          eureka-components: ${{ steps.read-descriptor.outputs.eureka-components }}
+          applications: ${{ steps.read-descriptor.outputs.applications }}
 
       - name: 'Update Eureka Components'
         id: update-eureka-components
         uses: folio-org/platform-lsp/.github/actions/update-eureka-components@master
         with:
           components: ${{ steps.read-descriptor.outputs.eureka-components }}
+          constraint-map: ${{ steps.build-constraint-map.outputs.component-constraint-map || '{}' }}
 
       - name: 'Update Applications'
         id: update-applications
         uses: folio-org/platform-lsp/.github/actions/update-applications@master
         with:
           applications: ${{ steps.read-descriptor.outputs.applications }}
+          constraint-map: ${{ steps.build-constraint-map.outputs.app-constraint-map || '{}' }}
 
       - name: 'Compare Components & Applications'
         id: compare-components

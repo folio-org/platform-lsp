@@ -60,6 +60,12 @@ inputs:
     description: Level of logging verbosity (INFO, DEBUG, WARNING, ERROR)
     required: false
     default: 'INFO'
+  constraint-map:
+    description: >-
+      JSON object mapping application name to resolved scope (minor|patch|exact).
+      Overrides global filter-scope per entry.
+    required: false
+    default: '{}'
 
 outputs:
   updated-applications:
@@ -107,6 +113,7 @@ runs:
         RETRY_BACKOFF: ${{ inputs.retry-backoff }}
         PYTHONUNBUFFERED: '1'
         LOG_LEVEL: ${{ inputs.log-level }}
+        CONSTRAINT_MAP: ${{ inputs.constraint-map }}
       run: |
         set -euo pipefail
         IFS=$'\n\t'

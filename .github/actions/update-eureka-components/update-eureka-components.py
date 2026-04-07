@@ -59,6 +59,21 @@ RETRY_BACKOFF_BASE = 2
 RETRY_INITIAL_WAIT = 1  # seconds
 
 # ---------------------------------------------------------------------------
+# Constraint parsing
+# ---------------------------------------------------------------------------
+PREFIX_TO_SCOPE = {'^': 'minor', '~': 'patch', '': 'exact'}
+
+
+def parse_constraint(version_str: str) -> Tuple[str, str]:
+    """Returns (prefix, base_version). prefix is '^', '~', or ''.
+    Raises ValueError for unsupported constraint prefixes."""
+    if version_str.startswith(('^', '~')):
+        return version_str[0], version_str[1:]
+    if version_str and version_str[0].isdigit():
+        return '', version_str
+    raise ValueError(f"Unsupported constraint prefix in version '{version_str}'")
+
+# ---------------------------------------------------------------------------
 # Validation helpers
 # ---------------------------------------------------------------------------
 def validate_configuration(filter_scope: str, sort_order: str) -> None:
@@ -244,7 +259,12 @@ def decide_update(current_version: str, candidate_versions: Sequence[str], sort_
     return newest if is_newer(current_version, newest) else None
 
 
-def update_components(components: List[Dict[str, str]], filter_scope: str, sort_order: str) -> List[Dict[str, str]]:
+def update_components(
+    components: List[Dict[str, str]],
+    filter_scope: str,
+    sort_order: str,
+    constraint_map: Optional[Dict[str, str]] = None,
+) -> List[Dict[str, str]]:
     """
     Update component versions in-place when a newer release (with existing Docker image) is found.
     Returns the same list (mutated) for convenience.
@@ -261,11 +281,15 @@ def update_components(components: List[Dict[str, str]], filter_scope: str, sort_
     for comp in components:
         name = comp.get("name", "unknown")
         current_version = comp.get("version", "0.0.0")
+        entry_scope = constraint_map.get(name, filter_scope) if constraint_map else filter_scope
+        if entry_scope == 'exact':
+            logger.info(f"Processing: {name} (current: {current_version}) - exact pin, skipping query")
+            continue
         logger.info(f"Processing: {name} (current: {current_version})")
 
         try:
             all_tags = fetch_repo_release_tags(name, session=session)
-            filtered = filter_versions(all_tags, current_version, filter_scope)
+            filtered = filter_versions(all_tags, current_version, entry_scope)
             logger.debug(f"  All tags: {all_tags}")
             logger.info(f"  Filtered versions: {filtered}")
 
@@ -302,6 +326,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--sort-order', choices=['asc', 'desc'], default='asc',
                         help='Sort order when evaluating versions (default: asc)')
     parser.add_argument('--data', type=str, help='JSON string containing component data')
+    parser.add_argument('--constraint-map', type=str, default=None,
+                        help='JSON object mapping component name to scope (minor|patch|exact)')
     return parser.parse_args()
 
 # ---------------------------------------------------------------------------
@@ -334,12 +360,37 @@ def main() -> int:
             if not isinstance(item, dict) or "name" not in item or "version" not in item:
                 raise ValueError(f"Item at index {idx} must be an object with 'name' and 'version'")
 
+        # Read constraint map: CLI arg takes precedence over env var
+        constraint_map_json = args.constraint_map or os.getenv("CONSTRAINT_MAP")
+        constraint_map: Optional[Dict[str, str]] = None
+        if constraint_map_json:
+            try:
+                constraint_map = json.loads(constraint_map_json) or None
+            except json.JSONDecodeError as exc:
+                logger.error(f"Invalid CONSTRAINT_MAP JSON: {exc}")
+                return 1
+
+        # Strip constraint prefixes from version strings and derive per-entry scope map
+        derived_map: Dict[str, str] = {}
+        for comp in components_data:
+            try:
+                prefix, base_version = parse_constraint(comp['version'])
+            except ValueError as exc:
+                logger.error(f"Invalid version constraint for {comp.get('name')}: {exc}")
+                return 1
+            comp['version'] = base_version
+            if prefix:
+                derived_map[comp['name']] = PREFIX_TO_SCOPE[prefix]
+
+        # Resolve final constraint map: explicit constraint_map takes precedence over derived
+        resolved_map: Optional[Dict[str, str]] = {**derived_map, **(constraint_map or {})} or None
+
         logger.info("Original components:")
         for c in components_data:
             logger.info(f" - {c['name']}: {c['version']}")
 
         logger.info("=" * 40)
-        updated = update_components(components_data, filter_scope, sort_order)
+        updated = update_components(components_data, filter_scope, sort_order, constraint_map=resolved_map)
         logger.info("=" * 40)
 
         logger.info("Updated components:")

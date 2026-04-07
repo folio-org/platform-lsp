@@ -145,7 +145,7 @@ runs:
       # Parse package diff JSON and format as plain text for Slack
       if [[ -n "$PACKAGE_DIFF_JSON" && "$PACKAGE_DIFF_JSON" != "[]" ]]; then
         UI_DEPS=$(echo "$PACKAGE_DIFF_JSON" | jq -r '
-          map("\(.name): \(.old_version) → \(.new_version)") | 
+          map("\(.name): \(.change.old) → \(.change.new)") |
           join("\n")
         ')
         
