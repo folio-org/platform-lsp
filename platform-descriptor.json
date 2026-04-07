@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000007864"
+        "version": "2.1.0-SNAPSHOT.100200000007881"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000007250"
+        "version": "3.3.0-SNAPSHOT.100200000007412"
       }
     ],
     "optional": [
@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000007850"
+        "version": "1.2.0-SNAPSHOT.100200000008012"
       },
       {
         "name": "app-consortia",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000008378"
+        "version": "1.2.0-SNAPSHOT.100200000008542"
       },
       {
         "name": "app-gobi",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000008373"
+        "version": "1.1.0-SNAPSHOT.100200000008554"
       },
       {
         "name": "app-lists",
@@ -134,7 +134,7 @@
       },
       {
         "name": "app-notification",
-        "version": "1.0.0-SNAPSHOT.100200000003790"
+        "version": "1.0.0-SNAPSHOT.100200000004013"
       },
       {
         "name": "app-oa",
@@ -170,7 +170,7 @@
       },
       {
         "name": "app-rtac",
-        "version": "1.1.0-SNAPSHOT.100200000008052"
+        "version": "1.1.0-SNAPSHOT.100200000008201"
       },
       {
         "name": "app-search",
