@@ -184,6 +184,16 @@
         "name": "app-serials-management",
         "version": "1.0.0-SNAPSHOT.100200000008113"
       }
+    ],
+    "experimental": [
+      {
+        "name": "app-finc",
+        "version": "1.0.0-SNAPSHOT.100200000000001"
+      },
+      {
+        "name": "app-rtac-cache",
+        "version": "1.0.0-SNAPSHOT.100200000000001"
+      }
     ]
   },
   "dependencies": {

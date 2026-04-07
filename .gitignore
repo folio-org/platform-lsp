@@ -44,6 +44,8 @@ claude*
 
 # Ignore copilot instructions file
 copilot-*
-
+*agent.md
 # Ignore local development configuration files
 local-dev
+
+.fake
