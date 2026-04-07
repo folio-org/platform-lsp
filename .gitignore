@@ -37,6 +37,7 @@ specs/
 *.class
 *.log
 *.pyc
+__pycache__/
 *.swp
 .DS_Store
 .atom/
