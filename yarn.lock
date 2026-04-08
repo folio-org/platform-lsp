@@ -1816,9 +1816,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/inventory-import@>=4.0.0":
-  version "4.0.1099000000000196"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory-import/-/inventory-import-4.0.1099000000000196.tgz#b817d32a5b138b54b539623544361a287c75a52f"
-  integrity sha512-j4MitKZQQ+5DS8RVp7q4GjYvRjspLcQoSwR7uJT+gkDrHELp5p/AVu2RwrUctzEDtt4kcxVUW9doPas+DJL0iA==
+  version "4.0.1099000000000197"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory-import/-/inventory-import-4.0.1099000000000197.tgz#0f8f2fc89f1e6882aadf315670b024ae01b8c637"
+  integrity sha512-fsKnU+QY6KCEKDArIQwIXXl8FTCcb2Tn02wyLr/UnKVUmolnJxed5nNFxBYThv6QEeTw0n0POO0/xY8kuBUbWg==
   dependencies:
     "@folio/stripes-data-transfer-components" "^7.0.0"
     final-form-arrays "^3.0.2"
