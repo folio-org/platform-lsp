@@ -102,11 +102,11 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "1.1.0-SNAPSHOT.100200000007867"
+        "version": "1.1.0-SNAPSHOT.100200000008240"
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000001203"
+        "version": "1.0.0-SNAPSHOT.100200000001209"
       },
       {
         "name": "app-licenses",
@@ -134,7 +134,7 @@
       },
       {
         "name": "app-notification",
-        "version": "1.0.0-SNAPSHOT.100200000004066"
+        "version": "1.0.0-SNAPSHOT.100200000004092"
       },
       {
         "name": "app-oa",
