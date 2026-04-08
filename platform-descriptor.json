@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000008057"
+        "version": "1.2.0-SNAPSHOT.100200000008100"
       },
       {
         "name": "app-consortia",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000008625"
+        "version": "1.2.0-SNAPSHOT.100200000008628"
       },
       {
         "name": "app-gobi",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000008632"
+        "version": "1.1.0-SNAPSHOT.100200000008639"
       },
       {
         "name": "app-lists",
