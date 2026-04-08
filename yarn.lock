@@ -1816,9 +1816,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/inventory-import@>=4.0.0":
-  version "4.0.1099000000000193"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory-import/-/inventory-import-4.0.1099000000000193.tgz#5fd8a4e480536624d9c23c86db6e2828cda832e9"
-  integrity sha512-axan4sZl6DMNFUBnaK5/T78/H+8aOfKab1A7LrwWfOl8+QtaAmWQmBDk1LwBoDj6EYII0wBJ7LQT6+B/UdcHJw==
+  version "4.0.1099000000000195"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory-import/-/inventory-import-4.0.1099000000000195.tgz#e8d135d558b8ae953fcc9e6fc7b6ac9afe36a7e4"
+  integrity sha512-meb3cltSMeSNjptmpw5zC8XwqcRhfBbYTGk7cMiVPqL7DT+aa6GcVBwc918Ho4RXftm4b3JDnH4gw3RL4etnhg==
   dependencies:
     "@folio/stripes-data-transfer-components" "^7.0.0"
     final-form-arrays "^3.0.2"
@@ -10363,9 +10363,9 @@ webpack-virtual-modules@^0.4.3:
   integrity sha512-5tyDlKLqPfMqjT3Q9TAqf2YqjwmnUleZwzJi1A5qXnlBCdj2AtOJ6wAWdglTIDOPgOiOrXeBeFcsQ8+aGQ6QbA==
 
 webpack@^5.80.0:
-  version "5.105.4"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.105.4.tgz#1b77fcd55a985ac7ca9de80a746caffa38220169"
-  integrity sha512-jTywjboN9aHxFlToqb0K0Zs9SbBoW4zRUlGzI2tYNxVYcEi/IPpn+Xi4ye5jTLvX2YeLuic/IvxNot+Q1jMoOw==
+  version "5.106.0"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.106.0.tgz#ee374da5573eef1e47b2650d6be8e40fb928d697"
+  integrity sha512-Pkx5joZ9RrdgO5LBkyX1L2ZAJeK/Taz3vqZ9CbcP0wS5LEMx5QkKsEwLl29QJfihZ+DKRBFldzy1O30pJ1MDpA==
   dependencies:
     "@types/eslint-scope" "^3.7.7"
     "@types/estree" "^1.0.8"
