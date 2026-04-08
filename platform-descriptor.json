@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000007454"
+        "version": "3.3.0-SNAPSHOT.100200000007471"
       }
     ],
     "optional": [
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000006659"
+        "version": "1.0.0-SNAPSHOT.100200000006680"
       },
       {
         "name": "app-dcb",
@@ -82,7 +82,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.0-SNAPSHOT.100200000007169"
+        "version": "2.2.0-SNAPSHOT.100200000007393"
       },
       {
         "name": "app-eholdings",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000001183"
+        "version": "1.0.0-SNAPSHOT.100200000001203"
       },
       {
         "name": "app-licenses",
