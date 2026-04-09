@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000001252"
+        "version": "1.0.0-SNAPSHOT.100200000001253"
       },
       {
         "name": "app-licenses",
@@ -146,7 +146,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000003065"
+        "version": "1.0.0-SNAPSHOT.100200000003072"
       },
       {
         "name": "app-reading-room",
