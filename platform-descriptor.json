@@ -62,7 +62,7 @@
       },
       {
         "name": "app-consortia-manager",
-        "version": "1.4.0-SNAPSHOT.100200000007717"
+        "version": "1.4.0-SNAPSHOT.100200000008638"
       },
       {
         "name": "app-dashboard",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000008639"
+        "version": "1.1.0-SNAPSHOT.100200000008668"
       },
       {
         "name": "app-lists",
@@ -142,11 +142,11 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100200000008193"
+        "version": "1.2.0-SNAPSHOT.100200000008269"
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000002999"
+        "version": "1.0.0-SNAPSHOT.100200000003065"
       },
       {
         "name": "app-reading-room",
@@ -174,7 +174,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000008440"
+        "version": "1.0.0-SNAPSHOT.100200000008530"
       },
       {
         "name": "app-service-interaction",
