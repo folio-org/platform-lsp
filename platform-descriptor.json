@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000008546"
+        "version": "1.2.0-SNAPSHOT.100200000008547"
       },
       {
         "name": "app-agreements",
@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000008100"
+        "version": "1.2.0-SNAPSHOT.100200000008133"
       },
       {
         "name": "app-consortia",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000001248"
+        "version": "1.0.0-SNAPSHOT.100200000001252"
       },
       {
         "name": "app-licenses",
