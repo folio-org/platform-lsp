@@ -1561,9 +1561,9 @@
     lodash "^4.17.21"
 
 "@folio/consortia-settings@>=1.0.0":
-  version "3.0.1099000000000210"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/consortia-settings/-/consortia-settings-3.0.1099000000000210.tgz#83e35856fdd51f9a5a1c964e9cf1109cc272d1de"
-  integrity sha512-s6CG6TH4nxYHAoZF0DSr0Y43lye3yoMgYDG9cHae2Q1pGVApPL55LHtbdDUDXi26USc4lS9cyq/ZETJHDqcgGQ==
+  version "3.0.1099000000000216"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/consortia-settings/-/consortia-settings-3.0.1099000000000216.tgz#83650d1f89f211441d0260eb63904ecd263ba15a"
+  integrity sha512-SLYn4D1jLOd28Ckz+K+V8wD+9epiCOoiq66nXjK5gFD5grDlrocfQ4R1GVsOiTiKrwxpWV+ppi/NXuavshjAOQ==
   dependencies:
     "@folio/stripes-acq-components" "~7.0.0"
     "@folio/stripes-authorization-components" "^2.0.0"
@@ -2331,9 +2331,9 @@
     prop-types "^15.6.0"
 
 "@folio/quick-marc@>=1.0.0":
-  version "11.0.1099000000000555"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/quick-marc/-/quick-marc-11.0.1099000000000555.tgz#cc70971f564250c200eec3e6eb7873f310c0d572"
-  integrity sha512-3Jwxz/tERpiSJzo2S2SJYKvVYXFzzk/BEoy/sFMpzvY+36vNFhl7THbbCrHXTJIbnRZX14jQqpP5j+nX8zdsPQ==
+  version "11.0.1099000000000564"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/quick-marc/-/quick-marc-11.0.1099000000000564.tgz#dfac6e7b1a2f9adf6adda3fc0573213a043e021c"
+  integrity sha512-Q/5qTnLaUZNv4VZcrJ97pt/TcZTagTwIzmDYe+COtGTLvSoo+k/qBtDwPzt5cvKZr7aDCOsymNfYdoeITixjqw==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
