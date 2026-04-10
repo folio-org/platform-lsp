@@ -2055,9 +2055,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/orders@>=1.1.0":
-  version "9.0.1099000000000950"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-9.0.1099000000000950.tgz#703887429931388f9fd418bd25cc8660e9ed7773"
-  integrity sha512-HCEHYNuFIlO44/7uAtXApgwIfiaOibQ/fC6+VE5if9VOvx41ySv0kZbOIehJgC4N0uacOxTBom/ZPLp8b7tpKA==
+  version "9.0.1099000000000953"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-9.0.1099000000000953.tgz#63a7c65a085851a2b88f5046b952a6a3f28aad2a"
+  integrity sha512-LOmHXHOcoA8sVouRLAxnrjvtetzvD1wlV6kcqkNuLF/2m7IoZwfkRrkNRIHsHZcQmsmFxVVdPoEHFOQ49Y0IEA==
   dependencies:
     "@folio/plugin-find-po-line" "^6.0.0"
     "@folio/stripes-acq-components" "~7.1.0"
@@ -2381,9 +2381,9 @@
     uuid "^9.0.0"
 
 "@folio/receiving@>=1.0.0":
-  version "8.0.1099000000000471"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/receiving/-/receiving-8.0.1099000000000471.tgz#083edef06ef61659610feb0d299c07aea66ce831"
-  integrity sha512-PrjHPFQWELV0TvKHJp0aFjfxKZaU4EKbL9QmmalxbzA7007SP/OjfTnCpgLFu6agnEzrv3nPaEmWFS7O8YJI9Q==
+  version "8.0.1099000000000474"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/receiving/-/receiving-8.0.1099000000000474.tgz#9df390c01ade38b76190d1026cd919cc1286a86e"
+  integrity sha512-eGDWjgh9M4mNUxiuh+5hsPItkdV/W8RDNGIYDi1oUCc6xxcWNsHJT2IfSSLNrY/MH004JBAiYuld0u9tz9cIBw==
   dependencies:
     "@folio/stripes-acq-components" "~7.1.0"
     final-form "^4.18.2"
