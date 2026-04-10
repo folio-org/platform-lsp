@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000007550"
+        "version": "3.3.0-SNAPSHOT.100200000007554"
       }
     ],
     "optional": [
@@ -82,7 +82,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.0-SNAPSHOT.100200000007441"
+        "version": "2.2.0-SNAPSHOT.100200000007476"
       },
       {
         "name": "app-eholdings",
