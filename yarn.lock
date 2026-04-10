@@ -2944,9 +2944,9 @@
     uuid "9.0.0"
 
 "@folio/users@>=2.17.0":
-  version "13.0.1099000000001230"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/users/-/users-13.0.1099000000001230.tgz#045e389ead3d1d6e5e208049c249f3030cd091d3"
-  integrity sha512-lX1Azhkux0PouRveK1OCgq8/lilKM8+LGMNRzGxlT4+agu6KOD1yz0vUIuWmRXum7rsoMMCVE+I/ZVTSLVVxqQ==
+  version "13.0.1099000000001233"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/users/-/users-13.0.1099000000001233.tgz#25e6e5b3774a8c90859f1dc6b226e4517eeeb706"
+  integrity sha512-hrrZshE+SLZk8P+Vbw1y2SQrGFYStRDVV970cOXRE1AMxQFL8Y5mts4b5RUX3Ok8aXstbeuJNK7W/pq3gTv3Zg==
   dependencies:
     "@folio/stripes-util" "^7.0.0"
     compressorjs "^1.2.1"
