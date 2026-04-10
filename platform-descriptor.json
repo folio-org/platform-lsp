@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000007542"
+        "version": "3.3.0-SNAPSHOT.100200000007544"
       }
     ],
     "optional": [
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.0.0-SNAPSHOT.100200000003590"
+        "version": "1.0.0-SNAPSHOT.100200000003596"
       },
       {
         "name": "app-bulk-edit",
@@ -162,7 +162,7 @@
       },
       {
         "name": "app-requests-mediated",
-        "version": "1.2.0-SNAPSHOT.100200000008484"
+        "version": "1.2.0-SNAPSHOT.100200000008611"
       },
       {
         "name": "app-requests-mediated-ui",
