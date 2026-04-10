@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000007524"
+        "version": "3.3.0-SNAPSHOT.100200000007542"
       }
     ],
     "optional": [
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000001281"
+        "version": "1.0.0-SNAPSHOT.100200000001286"
       },
       {
         "name": "app-licenses",
