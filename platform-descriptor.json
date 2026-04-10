@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000001274"
+        "version": "1.0.0-SNAPSHOT.100200000001280"
       },
       {
         "name": "app-licenses",
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100200000008269"
+        "version": "1.2.0-SNAPSHOT.100200000008298"
       },
       {
         "name": "app-quick-marc",
