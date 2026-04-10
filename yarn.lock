@@ -1513,9 +1513,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/circulation@>=1.3.0":
-  version "12.0.1099000000000400"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/circulation/-/circulation-12.0.1099000000000400.tgz#8d852c3a78157c406a097da6bece64846e9ed995"
-  integrity sha512-vCGjp4CVbWUB/axw+aUXZoIbiwbgF6+jpnhpj8VBDyc3ygR17xehWfWTxgGdqDdoWGrEi2NWkgwfCSUWgwZvxQ==
+  version "12.0.1099000000000405"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/circulation/-/circulation-12.0.1099000000000405.tgz#b19e30cd14d623e7145d135d39d3e0d744c9e969"
+  integrity sha512-6eLImwtY+rntxCVAQt3fJw7VAaXoFoqHD9t7K0iGOe1RmXl1GewjpK8FDJqiBsF5qFJmG5hKiQ1X1cdbdT6Crg==
   dependencies:
     "@folio/stripes-template-editor" "^3.2.0"
     codemirror "^5.61.1"
@@ -1816,9 +1816,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/inventory-import@>=4.0.0":
-  version "4.0.1099000000000203"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory-import/-/inventory-import-4.0.1099000000000203.tgz#316e428b61e5854f12661b191328aed5880af9f5"
-  integrity sha512-saqnjNO1psHbI7BYu0Joo+m4ViYt8yXom14vqHLUDTrkhXHo+XXDgRe4n8Uqbw6Z2bNBCmpxrxsqkURrljEDqw==
+  version "4.0.1099000000000204"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory-import/-/inventory-import-4.0.1099000000000204.tgz#bbccbd6e9b96db8f2147a01d38098bae65af4c6a"
+  integrity sha512-AetkeY7WpkWCQQWU0Yix8yNGSLU4lPfEI1yRr/CmydWWs7qT28OWRfxCj74wt3YKP1YtFAaRR4rXhXDIFLgUKw==
   dependencies:
     "@folio/stripes-data-transfer-components" "^7.0.0"
     final-form-arrays "^3.0.2"
