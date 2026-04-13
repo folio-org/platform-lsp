@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000001296"
+        "version": "1.0.0-SNAPSHOT.100200000001444"
       },
       {
         "name": "app-licenses",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000008865"
+        "version": "1.1.0-SNAPSHOT.100200000008867"
       },
       {
         "name": "app-lists",
