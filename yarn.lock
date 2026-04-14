@@ -2451,9 +2451,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/serials-management@>=1.0.0":
-  version "2.1.1099000000001067"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/serials-management/-/serials-management-2.1.1099000000001067.tgz#335c856eab57fb0bf7316ac0075e262d41df337d"
-  integrity sha512-9w8VXr/cy4dC4BiyvGmFYTN9VRPCUpwHJSbWMdVFDj3RrWwNv5DPUdOXrrIkAoipkoneRyRHuo9ZHhDmYIHAug==
+  version "2.1.1099000000001074"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/serials-management/-/serials-management-2.1.1099000000001074.tgz#7ade113c7062717e96b509709475d1eebf5c1b8f"
+  integrity sha512-OJ1bEOTFAAL+/saxrtS5StwmF/TJ0R2rftXo4Uc6zD+tKRTWLYu3hy/t1Gs4s6OnqKG5qcv3NsyQU61sIs0/FA==
   dependencies:
     "@folio/stripes-acq-components" "^7.1.0"
     "@k-int/stripes-kint-components" "^5.15.0"
