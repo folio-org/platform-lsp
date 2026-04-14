@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000007718"
+        "version": "3.3.0-SNAPSHOT.100200000007721"
       }
     ],
     "optional": [
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.4.0-SNAPSHOT.100200000008528"
+        "version": "1.4.0-SNAPSHOT.100200000008539"
       },
       {
         "name": "app-ebsconet",
@@ -154,7 +154,7 @@
       },
       {
         "name": "app-reporting",
-        "version": "1.4.0-SNAPSHOT.100200000008018"
+        "version": "1.4.0-SNAPSHOT.100200000008548"
       },
       {
         "name": "app-requests-ecs",
