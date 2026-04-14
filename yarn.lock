@@ -1583,9 +1583,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/courses@>=1.0.0":
-  version "7.0.3099000000000204"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/courses/-/courses-7.0.3099000000000204.tgz#2f1104512079dde108e68aebeeb9e355d6f65eed"
-  integrity sha512-hv+ducLtj+0Yic5e/XgZMFyyeZKsRGyb0e6bffOGbdtRffAdLf+nrCmfQMtVVpIlSRzcfvzrRn+XqImDgoKJow==
+  version "7.1.1099000000000207"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/courses/-/courses-7.1.1099000000000207.tgz#33a7d7d7548ef274990c358e498cd89913941cf1"
+  integrity sha512-nLO0Gwljl/Kr3b2qHhJyhyN/3FuU+G2ZERt3nXFCGziA494Xx0ghTiCibe/aEoh62On/8EpWYq8TAXphynozLw==
   dependencies:
     final-form-set-field-data "^1.0.2"
     ky "^0.23.0"
@@ -1935,9 +1935,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/linked-data@^2.0.0":
-  version "2.0.1099000000002311"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.1099000000002311.tgz#cbd32f6f9cdfd8ae3eade5194f0234f551c9b6e3"
-  integrity sha512-mkdBbPM+5fcwIASxUdqdRpfJ4PNeqq4OAAuUdk8LzCembkGT1aoePwtpIpx3ib+6neHbPkKnydDYoFC44dP/OA==
+  version "2.0.1099000000002325"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.1099000000002325.tgz#dc5a94b23964f4abc3619a4b74b8d07b0bc7dd44"
+  integrity sha512-pDdV3HjCeJg3tk7kQPSbO19XIXpV+3Y1hYrQS34VJEMb9wUGXAu2NTBEo92ajJfBpIFUP+5cbgh+0k/M6tHQTw==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
