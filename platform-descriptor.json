@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000007711"
+        "version": "3.3.0-SNAPSHOT.100200000007715"
       }
     ],
     "optional": [
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.0.0-SNAPSHOT.100200000003596"
+        "version": "1.0.0-SNAPSHOT.100200000003775"
       },
       {
         "name": "app-bulk-edit",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000008699"
+        "version": "1.1.0-SNAPSHOT.100200000008943"
       },
       {
         "name": "app-erm-usage",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000008870"
+        "version": "1.2.0-SNAPSHOT.100200000008894"
       },
       {
         "name": "app-gobi",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.0.0-SNAPSHOT.100200000007032"
+        "version": "1.0.0-SNAPSHOT.100200000007249"
       },
       {
         "name": "app-mosaic",
@@ -174,7 +174,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000008530"
+        "version": "1.0.0-SNAPSHOT.100200000008775"
       },
       {
         "name": "app-service-interaction",
