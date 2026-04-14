@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000007724"
+        "version": "3.3.0-SNAPSHOT.0.2bd0d22"
       }
     ],
     "optional": [
@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000008133"
+        "version": "1.2.0-SNAPSHOT.0.2bd0d22"
       },
       {
         "name": "app-consortia",
@@ -71,6 +71,10 @@
       {
         "name": "app-data-export",
         "version": "1.0.0-SNAPSHOT.100200000006904"
+      },
+      {
+        "name": "app-data-import",
+        "version": "1.0.0-SNAPSHOT.100200000000674"
       },
       {
         "name": "app-dcb",
@@ -122,7 +126,7 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "2.2.0-SNAPSHOT.100200000008371"
+        "version": "2.2.0-SNAPSHOT.0.2bd0d22"
       },
       {
         "name": "app-marc-storage",
