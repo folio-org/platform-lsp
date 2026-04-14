@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000008225"
+        "version": "2.1.0-SNAPSHOT.100200000008226"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000007703"
+        "version": "3.3.0-SNAPSHOT.100200000007711"
       }
     ],
     "optional": [
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000001448"
+        "version": "1.0.0-SNAPSHOT.100200000001478"
       },
       {
         "name": "app-licenses",
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-reading-room",
-        "version": "1.4.0-SNAPSHOT.100200000007848"
+        "version": "1.4.0-SNAPSHOT.100200000008321"
       },
       {
         "name": "app-reporting",
