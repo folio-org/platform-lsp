@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000001485"
+        "version": "1.0.0-SNAPSHOT.100200000001487"
       },
       {
         "name": "app-licenses",
@@ -114,11 +114,11 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000008867"
+        "version": "1.1.0-SNAPSHOT.100200000008910"
       },
       {
         "name": "app-lists",
-        "version": "1.1.0-SNAPSHOT.100200000008523"
+        "version": "1.1.0-SNAPSHOT.100200000008785"
       },
       {
         "name": "app-marc-migrations",
@@ -182,7 +182,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100200000008653"
+        "version": "1.0.0-SNAPSHOT.100200000008655"
       }
     ],
     "experimental": [
