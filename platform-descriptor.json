@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000008226"
+        "version": "2.1.0-SNAPSHOT.100200000008232"
       },
       {
         "name": "app-platform-complete",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000008943"
+        "version": "1.1.0-SNAPSHOT.100200000008944"
       },
       {
         "name": "app-erm-usage",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000008894"
+        "version": "1.2.0-SNAPSHOT.100200000008895"
       },
       {
         "name": "app-gobi",
@@ -122,7 +122,7 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "2.2.0-SNAPSHOT.100200000007751"
+        "version": "2.2.0-SNAPSHOT.100200000008371"
       },
       {
         "name": "app-marc-storage",
@@ -146,7 +146,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000003072"
+        "version": "1.0.0-SNAPSHOT.100200000003275"
       },
       {
         "name": "app-reading-room",
@@ -174,7 +174,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000008775"
+        "version": "1.0.0-SNAPSHOT.100200000008776"
       },
       {
         "name": "app-service-interaction",
@@ -182,7 +182,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100200000008392"
+        "version": "1.0.0-SNAPSHOT.100200000008653"
       }
     ],
     "experimental": [
