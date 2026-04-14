@@ -2612,9 +2612,9 @@
     usehooks-ts "^3.1.1"
 
 "@folio/stripes-connect@^10.0.0":
-  version "10.0.1099000000000060"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-connect/-/stripes-connect-10.0.1099000000000060.tgz#0d2691215799564c0543718fa92538b3ecab1ddc"
-  integrity sha512-4ouq7K4phwS2tKk/edYYvp5eMEwv0bUlY7oRkVA9W8HKhc8wy6QdM6jCDGINEQdhHNV9FsQcx1Kwob9GWNTmfw==
+  version "10.1.1099000000000064"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-connect/-/stripes-connect-10.1.1099000000000064.tgz#aeb67c47df1fd911dd258385ab24c531eb977717"
+  integrity sha512-1sx9ky+ScdTWLUNCGEe63B+A++LA1avPWHdwrc/sZn/pinKqgvFPFsSrHmu9M8mliPn5Y+M1oUba8tKzWU9l7A==
   dependencies:
     lodash "^4.17.11"
     prop-types "^15.5.10"
