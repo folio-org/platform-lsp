@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000001487"
+        "version": "1.0.0-SNAPSHOT.100200000001501"
       },
       {
         "name": "app-licenses",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.0.0-SNAPSHOT.100200000007249"
+        "version": "1.0.0-SNAPSHOT.100200000007264"
       },
       {
         "name": "app-mosaic",
