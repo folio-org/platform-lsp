@@ -1893,9 +1893,9 @@
     prop-types "^15.6.0"
 
 "@folio/ldp@>=1.1.0":
-  version "3.2.1099000000000327"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/ldp/-/ldp-3.2.1099000000000327.tgz#fe5a0eee9840c9e839249a1a012eac23dbbf57b0"
-  integrity sha512-/hWwZoMr7dCEf9tlPGt+TDWAyo5SfKtnwh0Wbp2ThqLebaavpBOGa4iXtiQoZYWWMVYjr2u3pP0D3dFiPmk8cA==
+  version "3.3.1099000000000333"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/ldp/-/ldp-3.3.1099000000000333.tgz#260f3ff911887a1a51d55dcaab423ce72ac93ec3"
+  integrity sha512-CdQwQpqd4z9xt9iJryjz+TSQOwvaeEZiFpWg4MBcf0/ZXZTpuwGGekw/vUxuwROwys9oWD9wM8zWcwLMnPq1VA==
   dependencies:
     "@e965/xlsx" "^0.20.2"
     chart.js "^2.9.3"
@@ -2451,9 +2451,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/serials-management@>=1.0.0":
-  version "2.1.1099000000001074"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/serials-management/-/serials-management-2.1.1099000000001074.tgz#7ade113c7062717e96b509709475d1eebf5c1b8f"
-  integrity sha512-OJ1bEOTFAAL+/saxrtS5StwmF/TJ0R2rftXo4Uc6zD+tKRTWLYu3hy/t1Gs4s6OnqKG5qcv3NsyQU61sIs0/FA==
+  version "2.1.1099000000001079"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/serials-management/-/serials-management-2.1.1099000000001079.tgz#96880b0f861f2ff40df1564853b93b1c8b712435"
+  integrity sha512-9KB8rxinme8fAnQJtkrdiloZpiJvaI4SjhL/s0zlNT+EFv4VenCoq8LaB1X53cEul7jisRFzXSCWJ2Nv88qx6Q==
   dependencies:
     "@folio/stripes-acq-components" "^7.1.0"
     "@k-int/stripes-kint-components" "^5.15.0"
@@ -4513,9 +4513,9 @@ base64-js@^1.3.1:
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
 
 baseline-browser-mapping@^2.10.12:
-  version "2.10.18"
-  resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.10.18.tgz#565745085ba7743af7d4072707ad132db3a5a42f"
-  integrity sha512-VSnGQAOLtP5mib/DPyg2/t+Tlv65NTBz83BJBJvmLVHHuKJVaDOBvJJykiT5TR++em5nfAySPccDZDa4oSrn8A==
+  version "2.10.19"
+  resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.10.19.tgz#7697721c22f94f66195d0c34299b1a91e3299493"
+  integrity sha512-qCkNLi2sfBOn8XhZQ0FXsT1Ki/Yo5P90hrkRamVFRS7/KV9hpfA4HkoWNU152+8w0zPjnxo5psx5NL3PSGgv5g==
 
 batch@0.6.1:
   version "0.6.1"
