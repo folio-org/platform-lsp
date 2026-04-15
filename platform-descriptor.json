@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000008269"
+        "version": "2.1.0-SNAPSHOT.100200000008271"
       },
       {
         "name": "app-platform-complete",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000008035"
+        "version": "2.2.0-SNAPSHOT.100200000008599"
       },
       {
         "name": "app-fqm",
@@ -102,7 +102,7 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "1.1.0-SNAPSHOT.100200000008524"
+        "version": "1.1.0-SNAPSHOT.100200000008526"
       },
       {
         "name": "app-inventory",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.0.0-SNAPSHOT.100200000007279"
+        "version": "1.0.0-SNAPSHOT.100200000007284"
       },
       {
         "name": "app-mosaic",
@@ -162,7 +162,7 @@
       },
       {
         "name": "app-requests-mediated",
-        "version": "1.2.0-SNAPSHOT.100200000008611"
+        "version": "1.2.0-SNAPSHOT.100200000008833"
       },
       {
         "name": "app-requests-mediated-ui",
@@ -174,7 +174,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000008810"
+        "version": "1.0.0-SNAPSHOT.100200000008817"
       },
       {
         "name": "app-service-interaction",
@@ -192,7 +192,7 @@
       },
       {
         "name": "app-rtac-cache",
-        "version": "1.1.0-SNAPSHOT.100200000004346"
+        "version": "1.1.0-SNAPSHOT.100200000004559"
       }
     ]
   },
