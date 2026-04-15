@@ -2022,9 +2022,9 @@
     prop-types "^15.6.0"
 
 "@folio/oa@>=1.0.0":
-  version "3.1.1099000000000277"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/oa/-/oa-3.1.1099000000000277.tgz#264e77766b0efba1a3b26fea9d616a0c9273b957"
-  integrity sha512-92QqsCToham4N2/OF3pbNZsuowrFowCbnynfe9LVBuKqMA/X+DCpXDiwzpHPyim30pU0deQcGguz70Q4yiyQew==
+  version "3.1.1099000000000280"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/oa/-/oa-3.1.1099000000000280.tgz#22f2cd4d1e9f7c700f62cef77150bdde169e5ac0"
+  integrity sha512-iRatsjvvtOQ/i2hAzB0KJ00bH4LauIVXiLqAMDg79HQa8lIcm6wqlEXIMxkJTWPrYOvaSRW8M3FSL4ynoKSGvg==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     "@k-int/stripes-kint-components" "^5.15.0"
