@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000008236"
+        "version": "1.0.0-SNAPSHOT.100200000008534"
       },
       {
         "name": "app-authority-records",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100200000008281"
+        "version": "1.0.0-SNAPSHOT.100200000008577"
       },
       {
         "name": "app-linked-data",
