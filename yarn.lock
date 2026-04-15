@@ -2231,11 +2231,11 @@
     prop-types "^15.6.0"
 
 "@folio/plugin-find-interface@>=1.0.0", "@folio/plugin-find-interface@^6.0.0":
-  version "6.0.1099000000000061"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-find-interface/-/plugin-find-interface-6.0.1099000000000061.tgz#1fcf51910de5e2abd28410b8bfa91c11e303a273"
-  integrity sha512-rwckjV4ur0bDCpbcRd9zNitPMNk9ByZHf6L+jKCZa9nwt6LO8eMlOXnsCmyyoY3eyM0tqpqAOswm1ed7+RLvcA==
+  version "6.1.1099000000000088"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-find-interface/-/plugin-find-interface-6.1.1099000000000088.tgz#b85542c811dd9382a93383b72e1d0f7b2854c06c"
+  integrity sha512-Pi/NZFMaHVBd4sIeicb7dPKpio4NLlr7chNr3AvJtyp8VNPe6r7zen5k0dNKn9yepqu1oiB1p98nEF+7cmFhfw==
   dependencies:
-    "@folio/stripes-acq-components" "~7.0.0"
+    "@folio/stripes-acq-components" "~7.1.0"
     lodash "^4.17.11"
     prop-types "^15.6.0"
 
@@ -2273,9 +2273,9 @@
     react-final-form "^6.3.0"
 
 "@folio/plugin-find-po-line@>=1.0.0", "@folio/plugin-find-po-line@^6.0.0":
-  version "6.1.1099000000000136"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-find-po-line/-/plugin-find-po-line-6.1.1099000000000136.tgz#c2de79e435f293761a4aaec639063082e0639270"
-  integrity sha512-yH84gGXZWykvchYNCIvSv/ikSYk4I0G7RII436xmAlzcV5QFgSYXj0zd/HKu8DUdRBTmLEsHa0RmR0aQToi6yw==
+  version "6.1.1099000000000145"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-find-po-line/-/plugin-find-po-line-6.1.1099000000000145.tgz#ccb97f7f2682e99552c7cc62caf6ad12b4c51349"
+  integrity sha512-EUMDCSUnqrVhln5CTkb/ft9ezKBfFWTOqBzSVvbfite4ChCvS8+UbaXAegsipN4wUE7HJIqLEwUVdcNoA3Balw==
   dependencies:
     "@folio/stripes-acq-components" "~7.1.0"
     lodash "^4.17.11"
