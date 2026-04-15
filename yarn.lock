@@ -2745,9 +2745,9 @@
     zustand "^4.1.1"
 
 "@folio/stripes-leipzig-components@^1.0.0":
-  version "1.0.1099000000000189"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-leipzig-components/-/stripes-leipzig-components-1.0.1099000000000189.tgz#ee833271927639949fc79c940fdb0c3260356162"
-  integrity sha512-EjfZ5jvpvk3vnSKphFcIDoC+fMKZA/IqxB9j7QGLbu4A/nJcaXgfWtzcMVhPAvRv+l1VXiLKSOcPZE4gy7OEHg==
+  version "1.0.1099000000000194"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-leipzig-components/-/stripes-leipzig-components-1.0.1099000000000194.tgz#47efd0638c4089a631146a58e52ecfa0f7aaeb75"
+  integrity sha512-hszZ+fHxWtdAUlBypewflBKgHwEGR0uYJa9pg1nq9js/UwNEoSC5wd9KTdBaLELZDPrICj+/ZLjczgVCok5a8Q==
   dependencies:
     final-form-arrays "^3.0.2"
     lodash "^4.17.4"
