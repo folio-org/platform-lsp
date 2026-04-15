@@ -32,17 +32,17 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000008272"
+        "version": "2.1.0-SNAPSHOT.100200000008273"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000007726"
+        "version": "3.3.0-SNAPSHOT.100200000007728"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000008794"
+        "version": "1.2.0-SNAPSHOT.100200000008804"
       },
       {
         "name": "app-agreements",
@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000008133"
+        "version": "1.2.0-SNAPSHOT.100200000008362"
       },
       {
         "name": "app-consortia",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.0.0-SNAPSHOT.100200000000695"
+        "version": "1.0.0-SNAPSHOT.100200000000698"
       },
       {
         "name": "app-dcb",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "2.2.0-SNAPSHOT.100200000008371"
+        "version": "2.2.0-SNAPSHOT.100200000008381"
       },
       {
         "name": "app-marc-storage",
@@ -162,7 +162,7 @@
       },
       {
         "name": "app-requests-ecs",
-        "version": "1.4.0-SNAPSHOT.100200000008064"
+        "version": "1.4.0-SNAPSHOT.100200000008382"
       },
       {
         "name": "app-requests-mediated",
