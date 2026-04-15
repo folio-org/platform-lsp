@@ -73,6 +73,10 @@
         "version": "1.0.0-SNAPSHOT.100200000006904"
       },
       {
+        "name": "app-data-import",
+        "version": "1.0.0-SNAPSHOT.100200000000674"
+      },
+      {
         "name": "app-dcb",
         "version": "1.4.0-SNAPSHOT.100200000008539"
       },
