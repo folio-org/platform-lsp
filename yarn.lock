@@ -1632,12 +1632,12 @@
     react-window "^1.8.5"
 
 "@folio/data-import@>=0.0.0":
-  version "10.0.1099000000000301"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/data-import/-/data-import-10.0.1099000000000301.tgz#5c26fc414698d7028e8bb94bcdd1ec3b2d6d6400"
-  integrity sha512-SbmffIcQ5apGKy9B3U0YLx6D76DmwSj/GCEunThtqBW4LShYdmI4+PCQ+KV+fKwm9bivnLZlG0kUZ7auY8rLPA==
+  version "10.0.1099000000000307"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/data-import/-/data-import-10.0.1099000000000307.tgz#57fbd8c13be5409bb04ff4e2044b0ce8f23cae17"
+  integrity sha512-chdoyn9pjC/vkJjXocbdVEnZwZXIaeoywFzbOmEUvMykHK8h0PpOkCbwnzJ7MTUl5yI5mIv5Thx8zHMxmUn67A==
   dependencies:
-    "@folio/stripes-acq-components" "^7.0.0"
-    "@folio/stripes-data-transfer-components" "^7.0.0"
+    "@folio/stripes-acq-components" "^7.1.0"
+    "@folio/stripes-data-transfer-components" "^7.1.0"
     classnames "^2.2.5"
     dom-helpers "^5.2.0"
     final-form "^4.18.2"
@@ -2140,9 +2140,9 @@
     react-final-form-listeners "^1.0.2"
 
 "@folio/plugin-eusage-reports@>=1.0.0":
-  version "4.0.1099000000000179"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-eusage-reports/-/plugin-eusage-reports-4.0.1099000000000179.tgz#d784b314cbfd0067dd1a18e63ecf1d578fd1f854"
-  integrity sha512-tWx8oNOUKIsS20CRhpSVbeXCbbQPtyUQD668X7zVFiuJtd4e9NRTCK+q3Ns8eLMulBrKyT5cBt+w186NqjQzgA==
+  version "4.0.2099000000000185"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-eusage-reports/-/plugin-eusage-reports-4.0.2099000000000185.tgz#9bf34a71ea677053758a71375da3e0368c65c1de"
+  integrity sha512-g1gLCQnDVo4M+23YK9QAbpyK6Orr1Jzt9gTHnLm4G7ezfu48f9IQBm+CrNUB45X9RqaNLGvCJeaAhJF9Ao1quA==
   dependencies:
     chart.js "^4.4.0"
     lodash "^4.17.21"
@@ -2659,7 +2659,7 @@
     semver "^7.7.2"
     use-deep-compare "^1.1.0"
 
-"@folio/stripes-data-transfer-components@^7.0.0":
+"@folio/stripes-data-transfer-components@^7.0.0", "@folio/stripes-data-transfer-components@^7.1.0":
   version "7.1.1099000000000150"
   resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-data-transfer-components/-/stripes-data-transfer-components-7.1.1099000000000150.tgz#4ae7df19f1d0eba61531eaae3b5b43924e58800e"
   integrity sha512-ZkUTO9FolEM5+p4AZd4k6YkkJJMG6ZvSGO9pmKJ5ZMaEWP1eT5zuADTVT/vyUCy/hevuNo/c2qHFgeQAcZaTzA==
