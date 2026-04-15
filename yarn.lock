@@ -1617,9 +1617,9 @@
     zustand "^5.0.0"
 
 "@folio/data-export@>=1.0.0":
-  version "7.0.1099000000000302"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/data-export/-/data-export-7.0.1099000000000302.tgz#b6bceb371f1ac7c4d0a75ea9e8bcc56bba92a7d4"
-  integrity sha512-JvY/y992UvE0AqZjG4U0eyZ5fSwtPAYDkcyA+3QHqELF8tcmOb+LK6lSi76f1lx8tx3cTojyaLbAu5u98NabLw==
+  version "7.0.1099000000000308"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/data-export/-/data-export-7.0.1099000000000308.tgz#f0a2adbc4b41920b6e79c8f1dc73a98e96d07cb3"
+  integrity sha512-CMDoTUavGWBOquM21QxSMVWRD2Rdo5wiThttCI4+tLm9J7VO9MHzYrOKUw9IGquHPfgWplSY5+0RggaCdXg+zg==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     "@folio/stripes-data-transfer-components" "^7.0.0"
