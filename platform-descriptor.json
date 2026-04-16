@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000007768"
+        "version": "3.3.0-SNAPSHOT.100200000007770"
       }
     ],
     "optional": [
@@ -122,7 +122,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.1.0-SNAPSHOT.100200000008864"
+        "version": "1.1.0-SNAPSHOT.100200000008865"
       },
       {
         "name": "app-marc-migrations",
