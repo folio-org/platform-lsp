@@ -1513,9 +1513,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/circulation@>=1.3.0":
-  version "12.0.1099000000000409"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/circulation/-/circulation-12.0.1099000000000409.tgz#0bf2cf7e7af17e5d1ad95f58ca13ae5e80811218"
-  integrity sha512-PrYbSH2WNwVbTl3bdRBH7THtN1ssx8ccVNJc8mgLmbrdldEAwV6gz0pFM3/zXk/EWqNSyvVXHikWekVpviEHbQ==
+  version "12.0.1099000000000412"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/circulation/-/circulation-12.0.1099000000000412.tgz#4ac01d6a666d72373e1207b02c578870b2983946"
+  integrity sha512-GQJvRye1klKYLquDFVIvc39gaWiTR1sjFmvHQokyAMdILE5f7OZxdJq5in9DSZddOrlsRmiiNs1OYfDcQq8zUA==
   dependencies:
     "@folio/stripes-template-editor" "^3.2.0"
     codemirror "^5.61.1"
@@ -1935,9 +1935,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/linked-data@^2.0.0":
-  version "2.0.1099000000002337"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.1099000000002337.tgz#81525e49c7b7fca8186c1ef8d95893aba57801ae"
-  integrity sha512-nXshsykJOwWXO3lkroZZ5pCZtTygK1bh4wHxyrozdwAeHZLgyvEEUzW8KAuXClau5+deNlaKoQh+xhaAFCmHdA==
+  version "2.0.1099000000002348"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.1099000000002348.tgz#3b9a3a2a896638156d39df57dd65edf48b24d63a"
+  integrity sha512-AFgXk00YFMzXaR9s8piY5glPIKC3SGyY+pJ9SUJOA84dBCqX5I8lUFxqDbXesVLLvmTArSUOh4BZRYhLy7X7hA==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
