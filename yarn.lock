@@ -1670,9 +1670,9 @@
     "@folio/plugin-find-organization" "^6.0.0"
 
 "@folio/developer@>=1.5.0":
-  version "11.0.1099000000000368"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/developer/-/developer-11.0.1099000000000368.tgz#52c282ffa159df1542fdcb2dc04c8dfc86832329"
-  integrity sha512-7FbEYhc+i/N64Qgxsktg/qKsEdYGyxG93Kq0GbX42xN3MmELCyZAgIz0q0OqQ9pRIUHgheGNS3tZVysz/UTteg==
+  version "11.0.1099000000000371"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/developer/-/developer-11.0.1099000000000371.tgz#feeba321590dacd9a49ab923d05859ec602bfb66"
+  integrity sha512-G4DbXwrkAxMDZ/42Rgs8FI4FJ/FWoZJdBuqwZRLsLO53a5SYv8ld0oD8evsGUabVkkTYK/KeIW44lqpAky6m+A==
   dependencies:
     chart.js "^4.4.0"
     ky "^0.23.0"
@@ -1788,9 +1788,9 @@
     query-string "^7.1.2"
 
 "@folio/handler-stripes-registry@>=1.0.0":
-  version "3.1.1099000000000125"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/handler-stripes-registry/-/handler-stripes-registry-3.1.1099000000000125.tgz#c7a44c854612f996c693c899b66222e2258df160"
-  integrity sha512-3IqsQEdH4IzLoZK5iTXxZ/cAKaT40jgHk9Zvv9JSXrHwaiFEWfba87L3RU+kSNMcPgYlHuYMvY1xYo0KFbnofA==
+  version "3.2.1099000000000149"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/handler-stripes-registry/-/handler-stripes-registry-3.2.1099000000000149.tgz#20c17c2da101790e05f14b135897c7e9cf2f738a"
+  integrity sha512-qCLRpqiJHFUJJPNNBOImcy2X9EQEsEfQ7D63U+SJ4i2LotpJxzZNU/CftHgfAjDV8L6GOLiDfA0epriIaTPjUg==
   dependencies:
     dom-helpers "^3.4.0"
     lodash "^4.17.11"
@@ -1816,9 +1816,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/inventory-import@>=4.0.0":
-  version "4.0.1099000000000212"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory-import/-/inventory-import-4.0.1099000000000212.tgz#014ffa8882f074734601eef9bfd94b68de10880e"
-  integrity sha512-a8pbPK8mHxy7rnDqI7uEYTWWzrodX05ukZdbG4kjVeX1qBsSzrMSl9DZ6QVALqkRqYGeU9RMabb9t0u2/mgxbA==
+  version "4.1.1099000000000215"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory-import/-/inventory-import-4.1.1099000000000215.tgz#f6b4d23448f4c027985cf7d301fa94e17419b1b1"
+  integrity sha512-prTeQsPUDs2QwXnZ/6KFaAdQb/Ry4Cq0Faw8GaM69JTUPcbGDuuUIlwLEgzyDrgo2de4TVdWqal2WmXbuS2pYw==
   dependencies:
     "@folio/stripes-data-transfer-components" "^7.0.0"
     final-form-arrays "^3.0.2"
@@ -2623,9 +2623,9 @@
     uuid "^9.0.0"
 
 "@folio/stripes-core@^11.0.0":
-  version "11.1.1099000000001645"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.1.1099000000001645.tgz#826e37268cb7cebf9d8047bec52a1188585a34ef"
-  integrity sha512-dzGYI+5bXc0nf65/Qb7xLfRIziiHA4kEDvRWEL5V22d1u3pmq3XhP2Gsk/GW5/LfJf+RDZdZHajXVdZLz+0avw==
+  version "11.1.1099000000001652"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.1.1099000000001652.tgz#5fbdb77ffa9ecdd1b30125d9a538d6536ea2f679"
+  integrity sha512-lAo7T1ohh3c9JcVC2np1YKChYV1uKwCqD9VQIQr7EcHS/l1gUrrP9lj/DyOeFP53ddtG7UfqwkmRHM7QNviCiQ==
   dependencies:
     "@apollo/client" "^3.2.1"
     "@module-federation/runtime" "^2.0.0"
@@ -3314,12 +3314,13 @@
     "@jsonjoy.com/codegen" "^1.0.0"
 
 "@k-int/stripes-kint-components@^5.0.0", "@k-int/stripes-kint-components@^5.1.1", "@k-int/stripes-kint-components@^5.11.0", "@k-int/stripes-kint-components@^5.15.0", "@k-int/stripes-kint-components@^5.28.3", "@k-int/stripes-kint-components@^5.30.0":
-  version "5.35.0"
-  resolved "https://registry.yarnpkg.com/@k-int/stripes-kint-components/-/stripes-kint-components-5.35.0.tgz#be2de1ee3178a39045e54186d814f2d80ca6d092"
-  integrity sha512-otN+DcWzAh6FdWQo0eR9WHJSoeETA6v7BQgKvRpwNnPTlYadeys3Q+3Ozl4yXsjsygCwMlYhkZ2zR4+V5lOjsg==
+  version "5.36.0"
+  resolved "https://registry.yarnpkg.com/@k-int/stripes-kint-components/-/stripes-kint-components-5.36.0.tgz#f80173d7509f5635afb90f3ec189eb53deeb6d3e"
+  integrity sha512-NZv6ZabohaWpTOfGwr3ByPAZ3Qs7op7ZFokRDx9q851GwIof1HpcMz5PFWtWynS+xD+fxXLRpRO4F9FRjMTLMw==
   dependencies:
     "@rehooks/local-storage" "^2.4.4"
     compose-function "^3.0.3"
+    react-dropzone "^15.0.0"
     react-resize-detector "^11.0.0"
     zustand "^5.0.0"
 
@@ -8571,6 +8572,15 @@ react-dropzone@^14.3.8:
   version "14.4.1"
   resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-14.4.1.tgz#a33b5c348365bfc73d5fec69c91cb32c350cb9d4"
   integrity sha512-QDuV76v3uKbHiH34SpwifZ+gOLi1+RdsCO1kl5vxMT4wW8R82+sthjvBw4th3NHF/XX6FBsqDYZVNN+pnhaw0g==
+  dependencies:
+    attr-accept "^2.2.4"
+    file-selector "^2.1.0"
+    prop-types "^15.8.1"
+
+react-dropzone@^15.0.0:
+  version "15.0.0"
+  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-15.0.0.tgz#bd03c7c2b14fe4ea9db1a9c74502b85339f2e505"
+  integrity sha512-lGjYV/EoqEjEWPnmiSvH4v5IoIAwQM2W4Z1C0Q/Pw2xD0eVzKPS359BQTUMum+1fa0kH2nrKjuavmTPOGhpLPg==
   dependencies:
     attr-accept "^2.2.4"
     file-selector "^2.1.0"
