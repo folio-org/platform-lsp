@@ -2319,7 +2319,18 @@
   optionalDependencies:
     "@folio/plugin-find-organization" "^6.0.0"
 
-"@folio/plugin-select-application@>=1.0.0", "@folio/plugin-select-application@^2.0.0":
+"@folio/plugin-select-application@>=1.0.0":
+  version "3.0.1099000000000167"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-select-application/-/plugin-select-application-3.0.1099000000000167.tgz#d320542e4ad45b25e73f7506c2126a04924ac4e1"
+  integrity sha512-4JE7GqDlCSEiAJZm6hkleovtcEMpijGJ23cuEKJNwNxoifa3vf07UXE6SYsyyk+EJGOc8yl5zct9krmwR7lQvA==
+  dependencies:
+    "@k-int/stripes-kint-components" "^5.1.1"
+    classnames "^2.2.5"
+    dom-helpers "^3.4.0"
+    lodash "^4.17.11"
+    prop-types "^15.6.0"
+
+"@folio/plugin-select-application@^2.0.0":
   version "2.0.1099000000000159"
   resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-select-application/-/plugin-select-application-2.0.1099000000000159.tgz#e9b61ab740918a048d36bdf5365a67dff3411f28"
   integrity sha512-BSzXeSgphCel5Xynz7J2XyTF5fVOHPKNulbUNLlGti1enGD5skbfpIdgn7bGzccWlqFwoHQxfsP8JrGt6GyMSg==
