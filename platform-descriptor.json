@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000008830"
+        "version": "1.2.0-SNAPSHOT.100200000008838"
       },
       {
         "name": "app-agreements",
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.4.0-SNAPSHOT.100200000008599"
+        "version": "1.4.0-SNAPSHOT.100200000008605"
       },
       {
         "name": "app-ebsconet",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100200000008577"
+        "version": "1.0.0-SNAPSHOT.100200000008601"
       },
       {
         "name": "app-linked-data",
@@ -186,7 +186,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100200000008708"
+        "version": "1.0.0-SNAPSHOT.100200000008723"
       }
     ],
     "experimental": [
