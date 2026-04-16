@@ -1427,9 +1427,9 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/bulk-edit@>=1.0.0":
-  version "5.0.1099000000001110"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/bulk-edit/-/bulk-edit-5.0.1099000000001110.tgz#a4921cb7d124ad8ff71b91d0491118d842acc9f6"
-  integrity sha512-mP+69wJmQtdyuN90MlWrDfUhUGJYxIwZ9C8Dre6sAh9rDohDqaxMn2oNlZcIOuhEqSbPxK4dKOPUBg+TAEpF3w==
+  version "5.1.1099000000001114"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/bulk-edit/-/bulk-edit-5.1.1099000000001114.tgz#3e2500e420a9ed0762b447c59b05ec891cef0d4e"
+  integrity sha512-ENDeFYHtwsWxUN1dqRf8QltW/VhKOZHuQMTAPQY07OkoDHQ5JH/RrQFtqiEJcuR46F6NGmZoX6myMFBOB+wHfQ==
   dependencies:
     "@folio/plugin-query-builder" "^3.0.0"
     "@folio/stripes-acq-components" "^7.0.0"
@@ -2940,9 +2940,9 @@
     redux "^4.2.1"
 
 "@folio/tags@>=1.1.0":
-  version "9.0.1099000000000109"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/tags/-/tags-9.0.1099000000000109.tgz#9ff18b40c509bffdf4b633f0cde31f40ccf2b821"
-  integrity sha512-9cpa/Jv7UT9dZU0Pvblesxg288hgV6twmYdbPIn8bux9faU0hChIbu+WR4eG4bIEhJHxZcWrWHGr9woh5Os5kg==
+  version "10.0.1099000000000115"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/tags/-/tags-10.0.1099000000000115.tgz#e388abf40ec46b28acdf63b1f544b81536b4baa7"
+  integrity sha512-r7qYfzI3nJOAa7172rPdGTX5fOfGkOo2/oIcS9FtS1a29wojN/0fdg07bms9RDFhJW76gwkjHPrALGy0gt7etg==
   dependencies:
     prop-types "^15.5.10"
     redux-form "^8.3.7"
