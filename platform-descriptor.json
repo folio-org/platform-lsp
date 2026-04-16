@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.0.0-SNAPSHOT.100200000003775"
+        "version": "1.0.0-SNAPSHOT.100200000003832"
       },
       {
         "name": "app-bulk-edit",
@@ -62,7 +62,7 @@
       },
       {
         "name": "app-consortia-manager",
-        "version": "1.4.0-SNAPSHOT.100200000008638"
+        "version": "1.4.0-SNAPSHOT.100200000008940"
       },
       {
         "name": "app-dashboard",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000008618"
+        "version": "2.2.0-SNAPSHOT.100200000008619"
       },
       {
         "name": "app-fqm",
@@ -102,15 +102,15 @@
       },
       {
         "name": "app-gobi",
-        "version": "1.1.0-SNAPSHOT.100200000007509"
+        "version": "1.1.0-SNAPSHOT.100200000008328"
       },
       {
         "name": "app-inn-reach",
-        "version": "1.1.0-SNAPSHOT.100200000008536"
+        "version": "1.1.0-SNAPSHOT.100200000008547"
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000001545"
+        "version": "1.0.0-SNAPSHOT.100200000001546"
       },
       {
         "name": "app-licenses",
@@ -122,7 +122,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.1.0-SNAPSHOT.100200000008785"
+        "version": "1.1.0-SNAPSHOT.100200000008841"
       },
       {
         "name": "app-marc-migrations",
@@ -170,7 +170,7 @@
       },
       {
         "name": "app-requests-mediated-ui",
-        "version": "1.4.0-SNAPSHOT.100200000005868"
+        "version": "1.4.0-SNAPSHOT.100200000006967"
       },
       {
         "name": "app-rtac",
