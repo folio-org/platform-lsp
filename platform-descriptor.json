@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000007756"
+        "version": "3.3.0-SNAPSHOT.100200000007757"
       }
     ],
     "optional": [
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000006988"
+        "version": "1.0.0-SNAPSHOT.100200000006999"
       },
       {
         "name": "app-data-import",
@@ -82,7 +82,7 @@
       },
       {
         "name": "app-ebsconet",
-        "version": "1.1.0-SNAPSHOT.100200000006899"
+        "version": "1.1.0-SNAPSHOT.100200000008763"
       },
       {
         "name": "app-edge-complete",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000008619"
+        "version": "2.2.0-SNAPSHOT.100200000008629"
       },
       {
         "name": "app-fqm",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "2.2.0-SNAPSHOT.100200000008381"
+        "version": "2.2.0-SNAPSHOT.100200000008407"
       },
       {
         "name": "app-marc-storage",
@@ -134,7 +134,7 @@
       },
       {
         "name": "app-mosaic",
-        "version": "1.1.0-SNAPSHOT.100200000007871"
+        "version": "1.1.0-SNAPSHOT.100200000008789"
       },
       {
         "name": "app-notification",
