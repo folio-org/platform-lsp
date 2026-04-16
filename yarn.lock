@@ -1957,9 +1957,9 @@
     zustand "^5.0.12"
 
 "@folio/lists@>=1.2.0":
-  version "5.0.1099000000001034"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.1099000000001034.tgz#4fa3f26ccefde39a06b4d146b95d80496629e04c"
-  integrity sha512-mhAIpMV0BffDBTvZqsZbri90WA3Bl2E1nmbjTEj0rzfEhdLW5PEQAFJx2iWYX4iFO3/g8REIpzgs41aO/cPCpg==
+  version "5.0.1099000000001040"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.1099000000001040.tgz#12c397b3105c69eebea15c4f352f47644138eabd"
+  integrity sha512-YCl82+JFFJ9kFCfwngZkaXcimj4Y9PgwU8n7R75DF/YRHnNcXiNsfJnx4daB06/q8a+d7KurqDtWfgHOtv7CKQ==
   dependencies:
     "@folio/plugin-query-builder" "^2.0.0"
     "@folio/stripes-acq-components" "~7.0.0"
