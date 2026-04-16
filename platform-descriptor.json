@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.2.0-SNAPSHOT.100200000008391"
+        "version": "1.2.0-SNAPSHOT.100200000008394"
       },
       {
         "name": "app-consortia",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.0.0-SNAPSHOT.100200000000724"
+        "version": "1.0.0-SNAPSHOT.100200000000727"
       },
       {
         "name": "app-dcb",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.0-SNAPSHOT.100200000007707"
+        "version": "2.2.0-SNAPSHOT.100200000007710"
       },
       {
         "name": "app-eholdings",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000001556"
+        "version": "1.0.0-SNAPSHOT.100200000001558"
       },
       {
         "name": "app-licenses",
@@ -170,7 +170,7 @@
       },
       {
         "name": "app-requests-mediated-ui",
-        "version": "1.4.0-SNAPSHOT.100200000006967"
+        "version": "1.4.0-SNAPSHOT.100200000006978"
       },
       {
         "name": "app-rtac",
