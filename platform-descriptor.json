@@ -32,17 +32,17 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000008273"
+        "version": "2.1.0-SNAPSHOT.100200000008294"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000007745"
+        "version": "3.3.0-SNAPSHOT.100200000007746"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000008804"
+        "version": "1.2.0-SNAPSHOT.100200000008822"
       },
       {
         "name": "app-agreements",
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.0-SNAPSHOT.100200000006985"
+        "version": "1.0.0-SNAPSHOT.100200000006988"
       },
       {
         "name": "app-data-import",
@@ -90,15 +90,15 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000008944"
+        "version": "1.1.0-SNAPSHOT.100200000009007"
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000008599"
+        "version": "2.2.0-SNAPSHOT.100200000008618"
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000008895"
+        "version": "1.2.0-SNAPSHOT.100200000008958"
       },
       {
         "name": "app-gobi",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000001527"
+        "version": "1.0.0-SNAPSHOT.100200000001545"
       },
       {
         "name": "app-licenses",
@@ -142,11 +142,11 @@
       },
       {
         "name": "app-oa",
-        "version": "1.0.0-SNAPSHOT.100200000008662"
+        "version": "1.0.0-SNAPSHOT.100200000008681"
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100200000008298"
+        "version": "1.2.0-SNAPSHOT.100200000008537"
       },
       {
         "name": "app-quick-marc",
@@ -158,7 +158,7 @@
       },
       {
         "name": "app-reporting",
-        "version": "1.4.0-SNAPSHOT.100200000008548"
+        "version": "1.4.0-SNAPSHOT.100200000008599"
       },
       {
         "name": "app-requests-ecs",
@@ -186,13 +186,13 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100200000008655"
+        "version": "1.0.0-SNAPSHOT.100200000008708"
       }
     ],
     "experimental": [
       {
         "name": "app-finc",
-        "version": "1.1.0-SNAPSHOT.100200000008403"
+        "version": "1.1.0-SNAPSHOT.100200000009438"
       },
       {
         "name": "app-rtac-cache",
