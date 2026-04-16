@@ -1466,9 +1466,9 @@
     utility-types "^3.10.0"
 
 "@folio/checkin@>=1.3.0":
-  version "12.0.1099000000000391"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/checkin/-/checkin-12.0.1099000000000391.tgz#1d163df9efbbaeefc2ad0ad232e182c2217b8233"
-  integrity sha512-uLWSiJsKcA41dR7B6GHoM/y81PKQWZZ+LXhN4jyWFflpskqKGFmBXSAeRbqTGxcX/iGmzUTIOwyBtNp5jEcyxw==
+  version "12.0.1099000000000395"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/checkin/-/checkin-12.0.1099000000000395.tgz#9cbfdba053c32d697035fe76d68c0587875a8c74"
+  integrity sha512-Ja4eC//Pz7EoNaBuWoHvNOB8sAA/T7z1XC+TnoT2I9rkMjeM24D0texz9gt9qXqgpf36dIXfFmUlHFlTSS1/rA==
   dependencies:
     dateformat "^2.0.0"
     dompurify "^3.0.9"
@@ -1483,9 +1483,9 @@
     uuid "^9.0.0"
 
 "@folio/checkout@>=1.3.0":
-  version "13.0.1099000000000351"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/checkout/-/checkout-13.0.1099000000000351.tgz#981708a228d701c96eb2171b125d76afd4e65496"
-  integrity sha512-D0NMCfdp6vC8NCLFH5MOXTKwteP5Q7wWXRlZZhjLaT4RG6nb8SY+qti+sedSFaVG97M2VHscCLP/CkrWzvy+/w==
+  version "13.0.1099000000000356"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/checkout/-/checkout-13.0.1099000000000356.tgz#dd93639f65d52e82411c76174bde044b5e934170"
+  integrity sha512-rPOcpjiDueWZfDQtx5nOAwOz11pK1il6i4sIG0MyUBNGjn0ok1P23yY839jEQLZK8CuvoSFXX6/Q06xCqxL9NQ==
   dependencies:
     final-form "^4.19.1"
     inactivity-timer "^1.0.0"
