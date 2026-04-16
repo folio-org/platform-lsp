@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000008310"
+        "version": "2.1.0-SNAPSHOT.100200000008314"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000007762"
+        "version": "3.3.0-SNAPSHOT.100200000007764"
       }
     ],
     "optional": [
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.4.0-SNAPSHOT.100200000008606"
+        "version": "1.4.0-SNAPSHOT.100200000008608"
       },
       {
         "name": "app-ebsconet",
@@ -130,7 +130,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.0.0-SNAPSHOT.100200000007284"
+        "version": "1.0.0-SNAPSHOT.100200000007322"
       },
       {
         "name": "app-mosaic",
@@ -138,7 +138,7 @@
       },
       {
         "name": "app-notification",
-        "version": "1.0.0-SNAPSHOT.100200000004374"
+        "version": "1.0.0-SNAPSHOT.100200000004410"
       },
       {
         "name": "app-oa",
