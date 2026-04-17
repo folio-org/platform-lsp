@@ -1365,9 +1365,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/agreements@>=2.0.0":
-  version "12.1.1099000000001968"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/agreements/-/agreements-12.1.1099000000001968.tgz#d0b0226f85eab3b84ba2cfa188901086be51e2f4"
-  integrity sha512-++yZvUOcXK9bxMrnrIyQml9/7TYyle3JSgtqH5WT5WM6Q39qCzmTciJaLm4KaPjFEYmM9ecAEIuNc7yrogStzA==
+  version "12.2.1099000000001971"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/agreements/-/agreements-12.2.1099000000001971.tgz#ae85edf454e724e6cd4cd7e7948b550b977dc19b"
+  integrity sha512-BRA8t0Of/7FYq+CTosBeGtqgVWPpA4jGKeKagifYmzaKAszlSLsVzxheYTSa5HldFkXptw3QOKCZUpicXqp+Eg==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     "@k-int/stripes-kint-components" "^5.28.3"
@@ -1866,9 +1866,9 @@
     "@folio/plugin-find-po-line" "^6.0.0"
 
 "@folio/ld-folio-wrapper@>=1.0.0":
-  version "2.0.1099000000000460"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/ld-folio-wrapper/-/ld-folio-wrapper-2.0.1099000000000460.tgz#fbccf0e83407bed1bfcaa4d6b1f796c1de379d01"
-  integrity sha512-D0Ii1EwJEruw3niuDr7trxyfhixB5rPObyJz7KdF6JikqmhBSrH9iMmQUL8Yff6CGYUgZlP4eSSv8RFxXI73IQ==
+  version "2.0.1099000000000464"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/ld-folio-wrapper/-/ld-folio-wrapper-2.0.1099000000000464.tgz#329ac9d1cab72601ca241d3ee4980f2d305a213b"
+  integrity sha512-YKS6LE6N3nbcQW852aaNNB7PrGBFqMC6zyMvn0fGVKk06nDd9mvBbYlC7bmYbIydiSaoegR1n0uEqRam11Dvmg==
   dependencies:
     "@folio/linked-data" "^2.0.0"
     prop-types "^15.6.0"
@@ -2443,9 +2443,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/serials-management@>=1.0.0":
-  version "2.1.1099000000001097"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/serials-management/-/serials-management-2.1.1099000000001097.tgz#c69c6b3ae916ab0b1b02f382442e56676cbf6049"
-  integrity sha512-xHFPJ+w3mmCUH121Ns68uBWh8MiS/QkVKao4n7KYERfdQeAB6/fflfrLSxSz7Knc8VkX3PLdtcjTjyzrpD+1Lw==
+  version "2.2.1099000000001104"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/serials-management/-/serials-management-2.2.1099000000001104.tgz#57513f27f3068c40317684da9d912ae393dfc657"
+  integrity sha512-l2kQg1iwQ0ttD6mT0OYNOS+PxYcJsaU6lF1CyRlRaDSf+EQBzkBzJNzBBzycozEhWZ+97qMGdsaRmiH76y1+3A==
   dependencies:
     "@folio/stripes-acq-components" "^7.1.0"
     "@k-int/stripes-kint-components" "^5.15.0"
@@ -6593,9 +6593,9 @@ html-to-react@^1.3.3, html-to-react@^1.7.0:
     lodash.camelcase "^4.3.0"
 
 html-webpack-plugin@^5.3.2:
-  version "5.6.6"
-  resolved "https://registry.yarnpkg.com/html-webpack-plugin/-/html-webpack-plugin-5.6.6.tgz#5321b9579f4a1949318550ced99c2a4a4e60cbaf"
-  integrity sha512-bLjW01UTrvoWTJQL5LsMRo1SypHW80FTm12OJRSnr3v6YHNhfe+1r0MYUZJMACxnCHURVnBWRwAsWs2yPU9Ezw==
+  version "5.6.7"
+  resolved "https://registry.yarnpkg.com/html-webpack-plugin/-/html-webpack-plugin-5.6.7.tgz#429bab4e12abf3c07e1c608886608e2df2c06b11"
+  integrity sha512-md+vXtdCAe60s1k6AU3dUyMJnDxUyQAwfwPKoLisvgUF1IXjtlLsk2se54+qfL9Mdm26bbwvjJybpNx48NKRLw==
   dependencies:
     "@types/html-minifier-terser" "^6.0.0"
     html-minifier-terser "^6.0.2"
