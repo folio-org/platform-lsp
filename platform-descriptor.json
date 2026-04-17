@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.0.0-SNAPSHOT.100200000000762"
+        "version": "1.0.0-SNAPSHOT.100200000000766"
       },
       {
         "name": "app-dcb",
@@ -98,7 +98,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "1.2.0-SNAPSHOT.100200000009014"
+        "version": "1.2.0-SNAPSHOT.100200000009018"
       },
       {
         "name": "app-gobi",
@@ -122,7 +122,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.1.0-SNAPSHOT.100200000008894"
+        "version": "1.1.0-SNAPSHOT.100200000008898"
       },
       {
         "name": "app-marc-migrations",
