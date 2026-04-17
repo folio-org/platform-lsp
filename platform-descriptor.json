@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000008590"
+        "version": "1.0.0-SNAPSHOT.100200000008592"
       },
       {
         "name": "app-authority-records",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000009026"
+        "version": "1.1.0-SNAPSHOT.100200000009028"
       },
       {
         "name": "app-lists",
@@ -174,7 +174,7 @@
       },
       {
         "name": "app-rtac",
-        "version": "1.1.0-SNAPSHOT.100200000008619"
+        "version": "1.1.0-SNAPSHOT.100200000008625"
       },
       {
         "name": "app-search",
@@ -186,7 +186,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.0-SNAPSHOT.100200000008723"
+        "version": "1.0.0-SNAPSHOT.100200000008761"
       }
     ],
     "experimental": [
@@ -196,7 +196,7 @@
       },
       {
         "name": "app-rtac-cache",
-        "version": "1.1.0-SNAPSHOT.100200000004559"
+        "version": "1.1.0-SNAPSHOT.100200000004631"
       }
     ]
   },
