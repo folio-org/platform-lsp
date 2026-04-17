@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000008588"
+        "version": "1.0.0-SNAPSHOT.100200000008590"
       },
       {
         "name": "app-authority-records",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.0.0-SNAPSHOT.100200000000727"
+        "version": "1.0.0-SNAPSHOT.100200000000762"
       },
       {
         "name": "app-dcb",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "1.1.0-SNAPSHOT.100200000008554"
+        "version": "1.1.0-SNAPSHOT.100200000008596"
       },
       {
         "name": "app-inventory",
@@ -114,15 +114,15 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100200000008634"
+        "version": "1.0.0-SNAPSHOT.100200000008635"
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000009023"
+        "version": "1.1.0-SNAPSHOT.100200000009026"
       },
       {
         "name": "app-lists",
-        "version": "1.1.0-SNAPSHOT.100200000008881"
+        "version": "1.1.0-SNAPSHOT.100200000008894"
       },
       {
         "name": "app-marc-migrations",
