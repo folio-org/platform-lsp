@@ -1388,9 +1388,9 @@
     zustand "^5.0.0"
 
 "@folio/authorization-policies@>=1.0.0":
-  version "2.0.1099000000000136"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/authorization-policies/-/authorization-policies-2.0.1099000000000136.tgz#90f5af73b52440d4232b823ea31495e1d522e706"
-  integrity sha512-Aau9xl10KOCdjF3u6I45NsyWf4C8cJj4iS7rVT6SAmqpjtAIPhF6NhWBS0wwdYMNxtvVCXemZSObH5bgaXQkGA==
+  version "2.0.1099000000000146"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/authorization-policies/-/authorization-policies-2.0.1099000000000146.tgz#3324fdba06eb878b2e504af5c5ebc4caa353cccc"
+  integrity sha512-U3aFe3GeUBKzE5vie/PgC8a8BijkcnQWQ1l5UogEfuEf7WhQdVrZFFzw/tzxo87srTwEPXyo9+8sI5vCWbI3IQ==
   dependencies:
     "@folio/stripes-authorization-components" "^2.0.0"
     "@k-int/stripes-kint-components" "^5.0.0"
@@ -1407,13 +1407,13 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/authorization-roles@>=1.0.0":
-  version "2.1.1099000000000262"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/authorization-roles/-/authorization-roles-2.1.1099000000000262.tgz#04dd042e4fa08987fb6d4a507f70689270551fe0"
-  integrity sha512-P/j07jFdiKr2K3qxzNIY/WOQK0XO1AwRhXB/ky5sEJiaHIldajKHc9hjTish3jT4IA2tW46vVtjgoOjMD6zIWA==
+  version "3.0.1099000000000265"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/authorization-roles/-/authorization-roles-3.0.1099000000000265.tgz#716187ae35572247c381738444d658d2d12ada99"
+  integrity sha512-9YuNNaNjzahGNvjqrLe6hlEMvhL3uBBJbB/SWa76C3hkro7/Ozu2QJgzVCYBTecqtSamQKe5AUjWcTI3i/gV4Q==
   dependencies:
     "@folio/plugin-select-application" "^2.0.0"
-    "@folio/stripes-acq-components" "^7.0.0"
-    "@folio/stripes-authorization-components" "^2.0.3"
+    "@folio/stripes-acq-components" "^7.1.0"
+    "@folio/stripes-authorization-components" "^2.1.0"
     "@k-int/stripes-kint-components" "^5.0.0"
     classnames "^2.2.6"
     compose-function "^3.0.3"
@@ -2273,9 +2273,9 @@
     prop-types "^15.6.0"
 
 "@folio/plugin-query-builder@>=1.0.0", "@folio/plugin-query-builder@^3.0.0":
-  version "3.0.1099000000001386"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-query-builder/-/plugin-query-builder-3.0.1099000000001386.tgz#6450cf7869fb6183017db0651a6197fe6ff9f4f1"
-  integrity sha512-LT4ytiFr+7jrRNMJzRSdjuCRBJz8Vcv7tpzYx2BXp7J+taeApPnsNG9reAW6inqEPrKECv/YbxJsm7FbKvPyyQ==
+  version "3.0.1099000000001398"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-query-builder/-/plugin-query-builder-3.0.1099000000001398.tgz#eebb767ffee22150444015c93f9e3f053cd2bc26"
+  integrity sha512-wYt2OyiovYwIQWPrfBK85+EJnGOqrbxhUi2+o+hyNcAfrzY7qcbJsoaITppiHXJsueLTExsDoSqudHBoSsJ8Lg==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
@@ -2513,7 +2513,7 @@
     query-string "^7.0.1"
     react-query "^3.39.3"
 
-"@folio/stripes-authorization-components@^2.0.0", "@folio/stripes-authorization-components@^2.0.3":
+"@folio/stripes-authorization-components@^2.0.0", "@folio/stripes-authorization-components@^2.1.0":
   version "2.1.1099000000000491"
   resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-authorization-components/-/stripes-authorization-components-2.1.1099000000000491.tgz#dee46eacffcf1b538cf021a7c093726b4414ff5d"
   integrity sha512-uO1d7mlaEqNke12r5lVqsGhipE4RsXcotXh26wWV1R+mqOZXRhaXZ0Yw1cFeg8mQPfGUJYP1Rlk9VG+7mYLBHg==
