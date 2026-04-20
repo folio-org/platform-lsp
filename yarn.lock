@@ -1407,13 +1407,13 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/authorization-roles@>=1.0.0":
-  version "2.1.1099000000000251"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/authorization-roles/-/authorization-roles-2.1.1099000000000251.tgz#8729c1ec18a447d95f6d8b4e14411d29a8602610"
-  integrity sha512-1ggcVW7PBA2KIXL+fZSP0IFntn8CjOMYjnP1dFfzfdbbGHR/DvTMTv90FVbAgoOfS4B+EMc05KBnMbiOhMjfMQ==
+  version "2.1.1099000000000262"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/authorization-roles/-/authorization-roles-2.1.1099000000000262.tgz#04dd042e4fa08987fb6d4a507f70689270551fe0"
+  integrity sha512-P/j07jFdiKr2K3qxzNIY/WOQK0XO1AwRhXB/ky5sEJiaHIldajKHc9hjTish3jT4IA2tW46vVtjgoOjMD6zIWA==
   dependencies:
     "@folio/plugin-select-application" "^2.0.0"
     "@folio/stripes-acq-components" "^7.0.0"
-    "@folio/stripes-authorization-components" "^2.0.1"
+    "@folio/stripes-authorization-components" "^2.0.3"
     "@k-int/stripes-kint-components" "^5.0.0"
     classnames "^2.2.6"
     compose-function "^3.0.3"
@@ -2513,10 +2513,10 @@
     query-string "^7.0.1"
     react-query "^3.39.3"
 
-"@folio/stripes-authorization-components@^2.0.0", "@folio/stripes-authorization-components@^2.0.1":
-  version "2.0.1099000000000483"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-authorization-components/-/stripes-authorization-components-2.0.1099000000000483.tgz#c491a5c4d54e1fc820088e8990494579954a8057"
-  integrity sha512-XPqmyCkHPst2HZ/lF+fXEqtw+3X4nyaKcWRo/oxrA31XLzG6PCs5Od5GaHItPnD+xIRhjJrFRRSWHPrn7wBBlA==
+"@folio/stripes-authorization-components@^2.0.0", "@folio/stripes-authorization-components@^2.0.3":
+  version "2.1.1099000000000491"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-authorization-components/-/stripes-authorization-components-2.1.1099000000000491.tgz#dee46eacffcf1b538cf021a7c093726b4414ff5d"
+  integrity sha512-uO1d7mlaEqNke12r5lVqsGhipE4RsXcotXh26wWV1R+mqOZXRhaXZ0Yw1cFeg8mQPfGUJYP1Rlk9VG+7mYLBHg==
   dependencies:
     "@folio/plugin-select-application" "^2.0.0"
     classnames "^2.2.6"
@@ -2815,9 +2815,9 @@
   integrity sha512-fbmFL5zhA3gXc1Fia2p5egZI1hBtSk7SiSKnIYke34MlY+VIJHsu1nQ4XDDyI9QU6Q1O+02Eak+Zf/zT8StJ8A==
 
 "@folio/stripes-util@^7.0.0":
-  version "7.1.1099000000000088"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-util/-/stripes-util-7.1.1099000000000088.tgz#cc6b9da88357e50b298de93f7b7112d72be62628"
-  integrity sha512-Uo+wbAPZgEVTBA6TrCGObVz0hEtUDNWz8LiOW6R1eE5AoUmbAnJmYsqlU9NBcoB5edbW1ZvmViYu7WsmeQzlyQ==
+  version "7.1.1099000000000091"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-util/-/stripes-util-7.1.1099000000000091.tgz#cfdc57d0b5d181a8d2f9fed1dd3376fee7fea592"
+  integrity sha512-ziPXrX54a9UmQ4caQUX0RuoL9k4gpzVbUQE0+U/ypkcanomxFFmekoyG10BZRLI1gzyPL0ZDo+G2G1RR0SZxaQ==
   dependencies:
     json2csv "^4.2.1"
     lodash "^4.17.4"
