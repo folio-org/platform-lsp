@@ -2742,9 +2742,9 @@
   integrity sha512-MDJaynBk+5c+Cu5EPnAbQBb+ja8zphSeOSTqAsaY3Ghh4YewYgNW4U243jdeaO85wYqMVK3R7Tqq2kJvRNS4xA==
 
 "@folio/stripes-marc-components@>=1.0.0":
-  version "2.1.1099000000000225"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-marc-components/-/stripes-marc-components-2.1.1099000000000225.tgz#e5006fcfa786b26e8cfbf6c2537e617551ec3a48"
-  integrity sha512-srQI43VLoilrAoylA6VOnybj1zMMJOhEUVZXHK6paKe/Y6837JIuKBbsxAMF0Kkg+zt9J4wpfry1Kokk7D+eow==
+  version "2.1.1099000000000228"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-marc-components/-/stripes-marc-components-2.1.1099000000000228.tgz#dc3430ffa24f7e21ec0ecf585befebccc2a00842"
+  integrity sha512-vuXHleI3f8KkPj35Oro/ya4mI+Cz9iirb1W/VVK5lZwR37pwLu44l/I+zca6hSokxjBYZn4CD6uKWfNvUlnTmw==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.3.2"
