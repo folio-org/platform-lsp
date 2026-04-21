@@ -1985,9 +1985,9 @@
     "@folio/stripes-acq-components" "^7.0.0"
 
 "@folio/myprofile@>=1.0.0":
-  version "11.0.1099000000000195"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/myprofile/-/myprofile-11.0.1099000000000195.tgz#7d039e4ea2dae387864c91f7aa90da58a583d9d6"
-  integrity sha512-/RqrjAVYaZymV+ziPvdtGxdliLjrKn6DhHhNnS6CtK9didypHr9DuEY+nsIAFZvGH1psWrFgbvMXck7TCnXXuw==
+  version "11.0.1099000000000202"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/myprofile/-/myprofile-11.0.1099000000000202.tgz#7f1ebc1198116ae6591856b44d928984755be560"
+  integrity sha512-k3AXL7dixqHh0k6iQySwzJI6Utn380rr5TUlbvuyqiGpvCeixmf4+9kBIJVqVPWlbOWhxpHBoIPpi/KKBfOKmA==
   dependencies:
     "@dnd-kit/core" "^6.2.0"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -2363,9 +2363,9 @@
     "@folio/plugin-find-authority" "^5.0.0"
 
 "@folio/reading-room@>=1.0.0":
-  version "3.0.1099000000000182"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/reading-room/-/reading-room-3.0.1099000000000182.tgz#46e25f203c321b480b969b3093d7f6543889327e"
-  integrity sha512-/nj74huauB5s0B1vwzj56FLlMGXf+00RDGpiH+jMMxU83M4Kz4Fz6q8njNdzsJPZr1ILp7pnVRZ2F8bm1pnMEw==
+  version "3.0.1099000000000191"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/reading-room/-/reading-room-3.0.1099000000000191.tgz#b9e0ebe85e5530821c7e3d6bbd5163a050edcb22"
+  integrity sha512-RmvN3wvg3abTC39YV2bhqYZgj6gE49HOCTja1XptKpRHqveua4QsaE1yvdh6zbtytz/dRTDdzz7V2ObqsfOPgQ==
   dependencies:
     classnames "^2.2.5"
     prop-types "^15.6.0"
@@ -2393,11 +2393,11 @@
     "@folio/plugin-find-po-line" "^6.0.0"
 
 "@folio/remote-storage@>=1.0.0":
-  version "7.1.1099000000000143"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/remote-storage/-/remote-storage-7.1.1099000000000143.tgz#47cc463357a114e19d7466cddd7b10be380fda67"
-  integrity sha512-tQyjwhAbjwv0+fZYOnMU6KAA0JEiiffylcxS8zlnEGBe2a2shh7rrcU37l6asXNomDH1EyyPvYchE44z2EGu9g==
+  version "7.1.1099000000000149"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/remote-storage/-/remote-storage-7.1.1099000000000149.tgz#7da5e66106c3151c7762f5857985b88c94f7f8e9"
+  integrity sha512-poZiuWBIGkmBnHDw3tY4xSKvKmMldYJCF0piPsu9vsUSqiDx4+TmNKm2s42byB6Uu2uVtlRDDCZY16vsArirhA==
   dependencies:
-    "@folio/stripes-acq-components" "^7.0.0"
+    "@folio/stripes-acq-components" "^7.1.0"
     ky "^0.23.0"
     lodash "^4.17.5"
     prop-types "^15.5.10"
