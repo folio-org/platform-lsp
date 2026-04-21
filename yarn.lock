@@ -2482,9 +2482,9 @@
     react-final-form "^6.3.0"
 
 "@folio/servicepoints@>=1.1.0":
-  version "9.0.1099000000000092"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/servicepoints/-/servicepoints-9.0.1099000000000092.tgz#5c3eea00bb488b440ae5ae8a6dafe95ca1b3b357"
-  integrity sha512-fmPW3/7rmUjc29WA0RN+kGvwhSakbWmjAn0on1Sj08uJ2PKtS1js4YYbDlilBmAYDB37eEGWxrVtF59Pt/fh+w==
+  version "9.0.1099000000000099"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/servicepoints/-/servicepoints-9.0.1099000000000099.tgz#8e5b269598d45d83e9bb74f5b21499dacf1ca0d3"
+  integrity sha512-+Lge2BUecsEK84C7JlEH+8LRxrx9Q5C/4Ha4o7UHX8FCgSrX+Fw0DAf7yiJ7gLkx9PMm4KfTgwWH1105xPFO3w==
   dependencies:
     lodash "^4.17.4"
     prop-types "^15.6.0"
@@ -2672,9 +2672,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/stripes-erm-components@>=9.0.0":
-  version "10.2.1099000000000471"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-erm-components/-/stripes-erm-components-10.2.1099000000000471.tgz#5ac799c5e2a42f04935115dd02a7d0057c5abf5d"
-  integrity sha512-nGWprQm2kjpKpmnLDQjHui6+rB1WMqv+nPvnXIvrgrtwYxVZ+TZBIOSY7EMA9bSe/hbNHbNQ7QjXGKQ25jr4wQ==
+  version "10.2.1099000000000474"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-erm-components/-/stripes-erm-components-10.2.1099000000000474.tgz#d1e207e2e6a84e900778bf308154a569fc69f161"
+  integrity sha512-OePQ51Tcvl3CsGqLdWhinLDzVYANqo8UBTLuIkIWcoxEiUnJ9l8XR/0DAy+PJOQWOH4WjGTm/KP0dvn8EkZY8A==
   dependencies:
     "@k-int/stripes-kint-components" "^5.30.0"
     dayjs "^1.11.13"
