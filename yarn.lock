@@ -1813,15 +1813,15 @@
     use-deep-compare "^1.1.0"
 
 "@folio/inventory@>=1.4.0":
-  version "14.0.1099000000001829"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.0.1099000000001829.tgz#b916d5d87218001ee11f9a4daf603e795e22ddd6"
-  integrity sha512-GdyltWgL11V4pxL+3S7ybnxUYgn6zQU4e+9MgeyOwhp3nKXwMWQ6dpHnn+QOjPK7W9ta5UsuAgMh1ox22y63zQ==
+  version "14.0.1099000000001846"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.0.1099000000001846.tgz#a1e0473e29896c9c7f4d35e41a9740397075ebf8"
+  integrity sha512-Gx9ejIs44Ol0K2AMyZLy9TfRDKuxKu3QaNnc8qv4v0mKNpDx5VKdpvxL+JG9uL4ebd5Go9b6RDURSDE8j3Dgfg==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
     "@dnd-kit/sortable" "^10.0.0"
     "@dnd-kit/utilities" "^3.2.2"
-    "@folio/stripes-acq-components" "^7.0.0"
+    "@folio/stripes-acq-components" "^7.1.0"
     classnames "^2.3.2"
     file-saver "^2.0.0"
     final-form "^4.18.2"
@@ -1840,8 +1840,8 @@
     redux-form "^8.3.7"
     use-session-storage-state "^18.2.0"
   optionalDependencies:
-    "@folio/plugin-create-inventory-records" "^6.0.0"
-    "@folio/plugin-find-instance" "^9.0.0"
+    "@folio/plugin-create-inventory-records" "^7.0.0"
+    "@folio/plugin-find-instance" "^10.0.0"
 
 "@folio/invoice@>=1.0.0":
   version "8.0.1099000000000535"
@@ -1916,9 +1916,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/linked-data@^2.0.0":
-  version "2.0.1099000000002379"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.1099000000002379.tgz#ae4aca55f16185e45ae0b6de31d8583ae55caa96"
-  integrity sha512-fSUQIezHNsKcO/62XPN/NRWjO25/oI4ehCWFAZBFd1CjW5dYls2Yt7ucSRHgxDYrmY7IEbIVWDAVjWv6KNgOLw==
+  version "2.0.1099000000002388"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.1099000000002388.tgz#a1b44889030b1cf10b9618c925708a3783869435"
+  integrity sha512-xf1wKn40BbUHLgavMvteQ1rB/ZkBi8ONJWtbwHQjl/S6jNrlwhF7UUnbHBsXVwhOQIBAJ6RgslC8HcPwzIaGeQ==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -2092,7 +2092,7 @@
     react-final-form-listeners "^1.0.2"
     react-router-prop-types "^1.0.4"
 
-"@folio/plugin-create-inventory-records@>=1.0.0":
+"@folio/plugin-create-inventory-records@>=1.0.0", "@folio/plugin-create-inventory-records@^7.0.0":
   version "7.0.1099000000000150"
   resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-create-inventory-records/-/plugin-create-inventory-records-7.0.1099000000000150.tgz#7c92f09192fe910652bbcee65af2daafc4317616"
   integrity sha512-3rWURiymaKYQAJhXQwpLPwZPUTPYT0Ormfhj+EU62h7eUxN2OXP/Jea0aTsKYqUoWb7+EiR0uWvPJzSGPkGw8Q==
@@ -2201,7 +2201,7 @@
     prop-types "^15.6.0"
     redux-form "^8.3.7"
 
-"@folio/plugin-find-instance@>=1.1.0":
+"@folio/plugin-find-instance@>=1.1.0", "@folio/plugin-find-instance@^10.0.0":
   version "10.0.1099000000000198"
   resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-find-instance/-/plugin-find-instance-10.0.1099000000000198.tgz#f33462da272a8fce63378bd87e640633dd209f94"
   integrity sha512-medADxk2n0MQBeRuxCddjzvKXNTHJmOkwhNirTp0qCPlQYGJJyFjheI6pda4DlhRQ63/qZi9P1gxjugxQjAPfw==
