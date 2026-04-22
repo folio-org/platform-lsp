@@ -29,6 +29,7 @@ claude*
 .github/*agents*
 .github/*prompts*
 .github/*chatmodes*
+.serena/
 skills-lock.json
 specs/
 
