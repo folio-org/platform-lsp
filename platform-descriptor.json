@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.0.0-SNAPSHOT.100200000004089"
+        "version": "1.0.0-SNAPSHOT.100200000004091"
       },
       {
         "name": "app-bulk-edit",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.2.0-SNAPSHOT.100200000008693"
+        "version": "2.2.0-SNAPSHOT.100200000008879"
       },
       {
         "name": "app-fqm",
