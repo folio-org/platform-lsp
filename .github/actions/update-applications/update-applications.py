@@ -39,6 +39,21 @@ MAX_RETRIES = int(os.getenv("MAX_RETRIES", "3"))            # HTTP request retri
 RETRY_BACKOFF = float(os.getenv("RETRY_BACKOFF", "1.0"))    # Base backoff time in seconds
 
 # ---------------------------------------------------------------------------
+# Constraint parsing
+# ---------------------------------------------------------------------------
+PREFIX_TO_SCOPE = {'^': 'minor', '~': 'patch', '': 'exact'}
+
+
+def parse_constraint(version_str):
+    """Returns (prefix, base_version). prefix is '^', '~', or ''.
+    Raises ValueError for unsupported constraint prefixes."""
+    if version_str.startswith(('^', '~')):
+        return version_str[0], version_str[1:]
+    if version_str and version_str[0].isdigit():
+        return '', version_str
+    raise ValueError("Unsupported constraint prefix in version '%s'" % version_str)
+
+# ---------------------------------------------------------------------------
 # Validation
 # ---------------------------------------------------------------------------
 def validate_configuration(filter_scope, sort_order):
@@ -170,7 +185,7 @@ def decide_update(current_version, candidate_versions, sort_order):
 # ---------------------------------------------------------------------------
 # Update logic
 # ---------------------------------------------------------------------------
-def update_applications(applications, filter_scope, sort_order):
+def update_applications(applications, filter_scope, sort_order, constraint_map=None):
     if not applications:
         logger.info("No applications provided")
         return applications
@@ -180,6 +195,10 @@ def update_applications(applications, filter_scope, sort_order):
     for app in applications:
         name = app.get("name", "<unknown>")
         current = app.get("version", "0.0.0")
+        entry_scope = constraint_map.get(name, filter_scope) if constraint_map else filter_scope
+        if entry_scope == 'exact':
+            logger.info("Processing: %s (current: %s) - exact pin, skipping query" % (name, current))
+            continue
         logger.info("Processing: %s (current: %s)" % (name, current))
         try:
             all_versions = fetch_app_versions(name)
@@ -190,7 +209,7 @@ def update_applications(applications, filter_scope, sort_order):
         if not all_versions:
             logger.info("  No versions found")
             continue
-        filtered = filter_versions(all_versions, current, filter_scope)
+        filtered = filter_versions(all_versions, current, entry_scope)
         logger.info("  Filtered versions: %s" % filtered)
         if not filtered:
             logger.info("  No candidate versions in scope")
@@ -227,7 +246,7 @@ def print_grouped(grouped):
 # ---------------------------------------------------------------------------
 # Process applications from JSON
 # ---------------------------------------------------------------------------
-def process_applications_json(applications_json, filter_scope, sort_order):
+def process_applications_json(applications_json, filter_scope, sort_order, constraint_map=None):
     try:
         payload = json.loads(applications_json)
     except json.JSONDecodeError as exc:
@@ -262,8 +281,21 @@ def process_applications_json(applications_json, filter_scope, sort_order):
     logger.info("Original applications:")
     for app in flat:
         logger.info(" - %s: %s" % (app['name'], app['version']))
+    # Strip constraint prefixes from version strings and derive per-entry scope map
+    derived_map = {}
+    for app in flat:
+        try:
+            prefix, base_version = parse_constraint(app['version'])
+        except ValueError as exc:
+            logger.error("Invalid version constraint for %s: %s" % (app.get('name'), exc))
+            return None
+        app['version'] = base_version
+        if prefix:
+            derived_map[app['name']] = PREFIX_TO_SCOPE[prefix]
+    # Resolve final constraint map: explicit constraint_map takes precedence over derived
+    resolved_map = {**derived_map, **(constraint_map or {})} or None
     logger.info("=" * 40)
-    update_applications(flat, filter_scope, sort_order)
+    update_applications(flat, filter_scope, sort_order, constraint_map=resolved_map)
     logger.info("=" * 40)
     logger.info("Updated applications:")
     for app in flat:
@@ -284,6 +316,8 @@ def parse_args():
     parser.add_argument('--data', type=str, help='JSON string containing application data')
     parser.add_argument('--log-level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR'], default=LOG_LEVEL,
                         help='Logging verbosity level (default: %s)' % LOG_LEVEL)
+    parser.add_argument('--constraint-map', type=str, default=None,
+                        help='JSON object mapping app name to scope (minor|patch|exact)')
     return parser.parse_args()
 
 # ---------------------------------------------------------------------------
@@ -301,7 +335,15 @@ def main():
         if not applications_json:
             logger.error("No application data provided. Use --data argument or APPLICATIONS_JSON environment variable.")
             return 1
-        output_obj = process_applications_json(applications_json, filter_scope, sort_order)
+        constraint_map_json = args.constraint_map or os.getenv("CONSTRAINT_MAP")
+        constraint_map = None
+        if constraint_map_json:
+            try:
+                constraint_map = json.loads(constraint_map_json) or None
+            except json.JSONDecodeError as exc:
+                logger.error("Invalid CONSTRAINT_MAP JSON: %s" % exc)
+                return 1
+        output_obj = process_applications_json(applications_json, filter_scope, sort_order, constraint_map=constraint_map)
         if output_obj is None:
             return 1
         serialized = json.dumps(output_obj, separators=(",", ":"))  # removed sort_keys=True to preserve original object key order

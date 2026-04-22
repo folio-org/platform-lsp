@@ -1,0 +1,30 @@
+name: 'Build Constraint Map'
+description: 'Build per-entry constraint maps (minor|patch|exact) from descriptor template JSON'
+author: 'FOLIO Kitfox'
+
+inputs:
+  eureka-components:
+    description: 'JSON array of eureka-components from the descriptor template'
+    required: true
+  applications:
+    description: 'JSON object of applications (required/optional) from the descriptor template'
+    required: true
+
+outputs:
+  component-constraint-map:
+    description: 'JSON object mapping component names to constraint types (minor|patch|exact)'
+    value: ${{ steps.build.outputs.component-constraint-map }}
+  app-constraint-map:
+    description: 'JSON object mapping application names to constraint types (minor|patch|exact)'
+    value: ${{ steps.build.outputs.app-constraint-map }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Build constraint map'
+      id: build
+      shell: bash
+      env:
+        EUREKA_COMPONENTS: ${{ inputs.eureka-components }}
+        APPLICATIONS: ${{ inputs.applications }}
+      run: python3 "${{ github.action_path }}/build_constraint_map.py"

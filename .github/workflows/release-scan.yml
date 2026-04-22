@@ -43,6 +43,7 @@ jobs:
         uses: folio-org/kitfox-github/.github/actions/get-update-config@master
         with:
           repo: ${{ github.repository }}
+          branch: master
           github_token: ${{ github.token }}
 
   update-branches:
