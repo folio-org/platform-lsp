@@ -1,7 +1,7 @@
 {
-  "name": "FOLIO LSP",
+  "name": "FOLIO LSP (Trillium)",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2025-ci.1",
+  "version": "R1-2026.1",
   "eureka-components": [
     {
       "name": "folio-kong",
@@ -9,94 +9,174 @@
     },
     {
       "name": "folio-keycloak",
-      "version": "^26.5.1"
+      "version": "^26.5.3"
     },
     {
       "name": "folio-module-sidecar",
-      "version": "~3.0.18"
+      "version": "~4.0.0"
     },
     {
       "name": "mgr-applications",
-      "version": "~3.0.6"
+      "version": "~4.0.0"
     },
     {
       "name": "mgr-tenants",
-      "version": "~3.0.6"
+      "version": "~4.0.0"
     },
     {
       "name": "mgr-tenant-entitlements",
-      "version": "~3.1.10"
+      "version": "~4.0.0"
     }
   ],
   "applications": {
     "required": [
       {
-        "name": "app-platform-minimal",
-        "version": "~2.0.51"
+        "name": "app-platform-complete",
+        "version": "~3.3.0"
       },
       {
-        "name": "app-platform-complete",
-        "version": "~2.5.3"
+        "name": "app-platform-minimal",
+        "version": "~2.1.0"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "~1.0.28"
+        "version": "~2.0.0"
+      },
+      {
+        "name": "app-agreements",
+        "version": "~1.0.0"
+      },
+      {
+        "name": "app-authority-records",
+        "version": "~1.0.0"
       },
       {
         "name": "app-bulk-edit",
-        "version": "~1.0.9"
+        "version": "~2.0.0"
       },
       {
         "name": "app-consortia",
-        "version": "~1.2.3"
+        "version": "~1.4.0"
       },
       {
         "name": "app-consortia-manager",
-        "version": "~1.1.1"
+        "version": "~1.4.0"
+      },
+      {
+        "name": "app-dashboard",
+        "version": "~1.0.0"
+      },
+      {
+        "name": "app-data-export",
+        "version": "~1.0.0"
+      },
+      {
+        "name": "app-data-import",
+        "version": "~1.0.0"
       },
       {
         "name": "app-dcb",
-        "version": "~1.1.10"
+        "version": "~2.0.0"
+      },
+      {
+        "name": "app-ebsconet",
+        "version": "~1.1.0"
       },
       {
         "name": "app-edge-complete",
-        "version": "~2.0.16"
+        "version": "~2.2.0"
+      },
+      {
+        "name": "app-eholdings",
+        "version": "~1.0.0"
       },
       {
         "name": "app-erm-usage",
-        "version": "~2.0.4"
+        "version": "~3.0.0"
       },
       {
         "name": "app-fqm",
-        "version": "~1.0.15"
+        "version": "~2.0.0"
+      },
+      {
+        "name": "app-gobi",
+        "version": "~1.1.0"
       },
       {
         "name": "app-inn-reach",
-        "version": "~1.0.6"
+        "version": "~2.0.0"
+      },
+      {
+        "name": "app-inventory",
+        "version": "~1.0.0"
+      },
+      {
+        "name": "app-licenses",
+        "version": "~1.0.0"
       },
       {
         "name": "app-linked-data",
-        "version": "~1.1.6"
+        "version": "~2.0.0"
+      },
+      {
+        "name": "app-lists",
+        "version": "~1.1.0"
       },
       {
         "name": "app-marc-migrations",
-        "version": "~2.0.5"
+        "version": "~3.0.0"
+      },
+      {
+        "name": "app-marc-storage",
+        "version": "~1.0.0"
+      },
+      {
+        "name": "app-mosaic",
+        "version": "~1.1.0"
+      },
+      {
+        "name": "app-notification",
+        "version": "~1.0.0"
       },
       {
         "name": "app-oai-pmh",
-        "version": "~1.0.3"
+        "version": "~2.0.0"
+      },
+      {
+        "name": "app-quick-marc",
+        "version": "~1.0.0"
       },
       {
         "name": "app-reading-room",
-        "version": "~2.0.2"
+        "version": "~3.0.0"
+      },
+      {
+        "name": "app-reporting",
+        "version": "~1.5.0"
+      },
+      {
+        "name": "app-rtac",
+        "version": "~1.1.0"
+      },
+      {
+        "name": "app-search",
+        "version": "~1.0.0"
+      },
+      {
+        "name": "app-serials-management",
+        "version": "~1.0.0"
+      },
+      {
+        "name": "app-service-interaction",
+        "version": "~1.0.0"
       }
     ]
   },
   "dependencies": {
     "postgres": ">=16.0",
-    "kafka": ">=3.5.1",
-    "opensearch": ">=2.19.0"
+    "kafka": ">=4.2.0",
+    "opensearch": ">=3.5.0"
   }
 }
