@@ -1552,10 +1552,9 @@
     react-final-form-arrays "^3.1.0"
     react-query "^3.39.3"
 
-"@folio/claims@>=1.0.0":
-  version "2.0.1099000000000294"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/claims/-/claims-2.0.1099000000000294.tgz#78a94ec46bbc1ec1c5de2e1c92b4fc06e16256dc"
-  integrity sha512-xdJHn696FIW6BcfLFClIv88BNHPF7FnHhVcBg7xPHSK8GifDvpCDQCkvk8T+Sal6x7B4SMYiQJzSqmOy5bB+qw==
+"@folio/claims@https://github.com/folio-org/ui-claims.git#notifications-center-poc":
+  version "2.0.0"
+  resolved "https://github.com/folio-org/ui-claims.git#38a228a52dd40cdd7b4ba190eae519b30f546c81"
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     lodash "^4.17.21"
@@ -2589,10 +2588,9 @@
     redux "^4.2.1"
     uuid "^9.0.0"
 
-"@folio/stripes-core@^11.0.0":
-  version "11.1.1099000000001660"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.1.1099000000001660.tgz#c7513aa02325ccb86b6b16ec32f7571219a33b27"
-  integrity sha512-1jdGLD3MGMxsprr9ZDn2LAKI0XktKvFbguzal6t5S4DpBqtleeCilAQkdY8cBssR1qfHzLyUcyq9agvpXPNn1g==
+"@folio/stripes-core@^11.0.0", "@folio/stripes-core@https://github.com/folio-org/stripes-core.git#notifications-center-poc":
+  version "11.1.0"
+  resolved "https://github.com/folio-org/stripes-core.git#91acb9f9bc12e1bb0893acfd063f1184b493ed8f"
   dependencies:
     "@apollo/client" "^3.2.1"
     "@module-federation/runtime" "^2.0.0"
