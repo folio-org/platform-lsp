@@ -21,6 +21,13 @@ output
 .mcp.json
 .cursor*
 claude*
+.github/*instructions*
+.github/*agents*
+.github/*prompts*
+.github/*chatmodes*
+.serena/
+skills-lock.json
+specs/
 
 # Miscellaneous
 *.class
