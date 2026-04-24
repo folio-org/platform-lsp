@@ -1916,9 +1916,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/linked-data@^2.0.0":
-  version "2.0.1099000000002410"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.1099000000002410.tgz#09c4927447552b30c783ad9fda63d9943b486440"
-  integrity sha512-ZTMuYes5/MuV4v3JFQLle7CxvwGG8VGMnC+/e9AFfMx25ZEiBkKp1ha6NTVw/33ug8kn9YjncFow42sqGYu6Bw==
+  version "2.0.1099000000002416"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.1099000000002416.tgz#fc28842afb312a69f1b81fa5e1fa12314ff00718"
+  integrity sha512-hxqVrX3CgiOhhPaZgu5qhGMbD7RzbLXNDWSL2D98Y5TTD7ahilvw2UPxGzyfo3qvo7te79BU3FZHFyEpwezcrA==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
