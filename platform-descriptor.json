@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000008643"
+        "version": "2.1.0-SNAPSHOT.100200000008644"
       },
       {
         "name": "app-platform-complete",
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.0.0-SNAPSHOT.100200000004091"
+        "version": "1.0.0-SNAPSHOT.100200000004154"
       },
       {
         "name": "app-bulk-edit",
