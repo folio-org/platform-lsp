@@ -6167,9 +6167,9 @@ focus-trap@^7.5.4:
     tabbable "^6.4.0"
 
 focus-trap@^8.0.0:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-8.0.1.tgz#b3018898086884b82d1eb7c4b37625a501ee2543"
-  integrity sha512-9ptSG6z51YQOstI/oN4XuVGP/03u2nh0g//qz7L6zX0i6PZiPnkcf3GenXq7N2hZnASXaMxTPpbKwdI+PFvxlw==
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-8.1.0.tgz#51e2ab9f2a55e1cf37eff6d939c986002709d509"
+  integrity sha512-T65crff26CKV2CZ3csg5y05r+560srp0b8EbAif35euW58hzklVf/Gb4Q+/HCtB8e9III3QFEyk5BWV5XJuOyw==
   dependencies:
     tabbable "^6.4.0"
 
@@ -7311,9 +7311,9 @@ lines-and-columns@^1.1.6:
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
 
 loader-runner@^4.3.1:
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/loader-runner/-/loader-runner-4.3.1.tgz#6c76ed29b0ccce9af379208299f07f876de737e3"
-  integrity sha512-IWqP2SCPhyVFTBtRcgMHdzlf9ul25NwaFx4wCEH/KjAXuuHY4yNjvPXsBokp8jCB936PyWRaPKUNh8NvylLp2Q==
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/loader-runner/-/loader-runner-4.3.2.tgz#9913d3a15971f8f635915e601fb5c9d495d918e9"
+  integrity sha512-DFEqQ3ihfS9blba08cLfYf1NRAIEm+dDjic073DRDc3/JspI/8wYmtDsHwd3+4hwvdxSK7PGaElfTmm0awWJ4w==
 
 loader-utils@1.4.x:
   version "1.4.2"
