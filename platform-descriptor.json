@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000008081"
+        "version": "3.3.0-SNAPSHOT.100200000008208"
       }
     ],
     "optional": [
@@ -146,7 +146,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.2.0-SNAPSHOT.100200000008575"
+        "version": "1.2.0-SNAPSHOT.100200000008973"
       },
       {
         "name": "app-quick-marc",
