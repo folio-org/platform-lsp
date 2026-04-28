@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000008784"
+        "version": "2.1.0-SNAPSHOT.100200000008820"
       },
       {
         "name": "app-platform-complete",
@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.2.0-SNAPSHOT.100200000009319"
+        "version": "1.2.0-SNAPSHOT.100200000009324"
       },
       {
         "name": "app-agreements",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000002074"
+        "version": "1.0.0-SNAPSHOT.100200000002079"
       },
       {
         "name": "app-licenses",
