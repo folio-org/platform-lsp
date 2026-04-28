@@ -33,6 +33,7 @@
     "@folio/handler-stripes-registry": "3.1.0",
     "@folio/inn-reach": "6.1.0",
     "@folio/inventory": "14.0.0",
+    "@folio/inventory-import": "4.1.0",
     "@folio/invoice": "8.0.0",
     "@folio/ld-folio-wrapper": "2.0.1",
     "@folio/ldp": "3.3.0",
