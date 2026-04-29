@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000008208"
+        "version": "3.3.0-SNAPSHOT.100200000008259"
       }
     ],
     "optional": [
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000003570"
+        "version": "1.0.0-SNAPSHOT.100200000003805"
       },
       {
         "name": "app-reading-room",
