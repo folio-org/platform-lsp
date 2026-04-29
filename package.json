@@ -110,6 +110,7 @@
     "@folio/stripes-authority-components": "https://github.com/folio-org/stripes-authority-components.git#master",
     "@folio/stripes-inventory-components": "https://github.com/folio-org/stripes-inventory-components.git#main",
     "@folio/quick-marc": "https://github.com/folio-org/ui-quick-marc.git#master",
+    "@folio/inventory": "https://github.com/folio-org/ui-inventory.git#master",
     "colors": "1.4.0",
     "dompurify": "3.3.1",
     "final-form": "^4.20.4",
