@@ -26,6 +26,7 @@ module.exports = {
   '@folio/handler-stripes-registry': {},
   '@folio/inn-reach' : {},
   '@folio/inventory' : {},
+  '@folio/inventory-import': {},
   '@folio/invoice' : {},
   '@folio/ld-folio-wrapper': {},
   '@folio/ldp' : {},
