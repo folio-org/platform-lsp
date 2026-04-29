@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0-SNAPSHOT.100200000008592"
+        "version": "1.0.0-SNAPSHOT.100200000009038"
       },
       {
         "name": "app-authority-records",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0-SNAPSHOT.100200000008635"
+        "version": "1.0.0-SNAPSHOT.100200000009094"
       },
       {
         "name": "app-linked-data",
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-oa",
-        "version": "1.0.0-SNAPSHOT.100200000008681"
+        "version": "1.0.0-SNAPSHOT.100200000009202"
       },
       {
         "name": "app-oai-pmh",
