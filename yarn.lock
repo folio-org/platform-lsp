@@ -2520,10 +2520,10 @@
     lodash "^4.17.4"
     prop-types "^15.6.0"
 
-"@folio/stripes-acq-components@7.0.5", "@folio/stripes-acq-components@^7.0.0", "@folio/stripes-acq-components@^7.1.0", "@folio/stripes-acq-components@~7.0.0", "@folio/stripes-acq-components@~7.1.0":
-  version "7.0.5"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-acq-components/-/stripes-acq-components-7.0.5.tgz#5b321817bba3d5123ffe0e19739352d11c8676ee"
-  integrity sha512-hoP72Fgys0ZkiSvyr5qMVfLeyu+6xf+AXKoCIkA6nij1eXPqnonivuGVxuROiPmX8Jd2laPuJM847mYiPZrSdg==
+"@folio/stripes-acq-components@^7.0.0", "@folio/stripes-acq-components@^7.1.0", "@folio/stripes-acq-components@~7.0.0", "@folio/stripes-acq-components@~7.1.0":
+  version "7.1.0"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-acq-components/-/stripes-acq-components-7.1.0.tgz#cae1f571e7b9a467314949430c283e58522a9f8b"
+  integrity sha512-ACF7h+3LMIKoFY6TmCTYhX3As3U574nbp1lh78+Qtx26O0AWuj4h2FDMQCprtRaF5qMsOUMirV3DxooUxYI+/w==
   dependencies:
     "@folio/stripes-types" "^3.0.0"
     "@rehooks/local-storage" "^2.4.4"
@@ -2554,10 +2554,10 @@
     query-string "^7.0.1"
     react-query "^3.39.3"
 
-"@folio/stripes-authorization-components@2.0.8", "@folio/stripes-authorization-components@^2.0.0", "@folio/stripes-authorization-components@^2.1.0":
-  version "2.0.8"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-authorization-components/-/stripes-authorization-components-2.0.8.tgz#05a99af0f8cef85d4b6d908bb8430ffb6f6dadae"
-  integrity sha512-lwrxaCyUaaoKMmXLPLXuIbrexxHJoyrbP9vRXb4t7B8kS3+CsScw62KasimucSOW2wQwbgMHHyOG5ZvcSkHddQ==
+"@folio/stripes-authorization-components@^2.0.0", "@folio/stripes-authorization-components@^2.1.0", "@folio/stripes-authorization-components@~2.1.0":
+  version "2.1.0"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-authorization-components/-/stripes-authorization-components-2.1.0.tgz#3b09234fbb1a23a09a36c45eaec91a923d0d4d5a"
+  integrity sha512-GPyc1G18WYsHI6IpDQRRnWe3+vMzr9DGmx7vIuy0pLCJXBmdbZRMnDj+cdGQap2fx4L9YkeW26phd6E9CE4HIQ==
   dependencies:
     "@folio/plugin-select-application" "^2.0.0"
     classnames "^2.2.6"
