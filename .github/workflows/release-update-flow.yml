@@ -39,6 +39,11 @@ on:
         required: false
         type: string
         default: ''
+      node_version:
+        description: 'Node.js version to install for yarn operations'
+        required: false
+        type: string
+        default: '22.x'
     outputs:
       updated:
         description: 'Whether the platform descriptor was updated'
@@ -78,7 +83,7 @@ on:
         value: ${{ jobs.generate-reports.outputs.package_diff_json }}
       not_found_ui_report:
         description: 'JSON object of UI modules not found in package.json'
-        value: ${{ jobs.update-package-json.outputs.not_found_ui_report }}
+        value: ${{ jobs.update-stripes-components.outputs.not_found_ui_report }}
 
 permissions:
   contents: write
@@ -261,8 +266,8 @@ jobs:
             ${{ steps.fetch-base-descriptor.outputs.file_path }}
           retention-days: 1
 
-  update-package-json:
-    name: 'Update Package JSON'
+  update-stripes-components:
+    name: 'Update Stripes Components'
     needs: [determine-source-branch, update-platform-descriptor]
     if: needs.update-platform-descriptor.outputs.updated == 'true'
     runs-on: ubuntu-latest
@@ -331,18 +336,40 @@ jobs:
           fi
           echo "::notice::Successfully updated package.json with ${{ steps.update-package-json.outputs.updated-count }} dependency changes"
 
-      - name: 'Upload Package JSON Artifact'
+      - name: 'Setup Node.js'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node_version || '22.x' }}
+
+      - name: 'Install dependencies'
+        run: yarn install --ignore-scripts --non-interactive
+
+      - name: 'List FOLIO packages'
+        run: yarn list --pattern @folio
+
+      - name: 'Check if yarn.lock was updated'
+        id: check-yarn-lock
+        run: |
+          if git diff --name-only | grep -q "^yarn.lock$"; then
+            echo "yarn-lock-updated=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "yarn-lock-updated=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 'Upload Stripes Artifact'
         uses: actions/upload-artifact@v4
         with:
           name: 'package-json-files-${{ github.run_id }}'
           path: |
             package.json
             ${{ steps.fetch-base-package-json.outputs.file_path }}
+            ${{ steps.check-yarn-lock.outputs.yarn-lock-updated == 'true' && 'yarn.lock' || '' }}
+          if-no-files-found: warn
           retention-days: 1
 
   generate-reports:
     name: 'Generate Diff Reports'
-    needs: [determine-source-branch, update-platform-descriptor, update-package-json]
+    needs: [determine-source-branch, update-platform-descriptor, update-stripes-components]
     if: always() && !cancelled() && needs.update-platform-descriptor.result == 'success' && needs.update-platform-descriptor.outputs.updated == 'true'
     runs-on: ubuntu-latest
     outputs:
@@ -360,8 +387,8 @@ jobs:
           name: 'platform-descriptor-files-${{ github.run_id }}'
           path: .
 
-      - name: 'Download Package JSON Artifact'
-        if: needs.update-package-json.result == 'success'
+      - name: 'Download Stripes Artifact'
+        if: needs.update-stripes-components.result == 'success'
         uses: actions/download-artifact@v4
         with:
           name: 'package-json-files-${{ github.run_id }}'
@@ -387,7 +414,7 @@ jobs:
 
       - name: 'Find base package.json file'
         id: find-base-package
-        if: needs.update-package-json.result == 'success'
+        if: needs.update-stripes-components.result == 'success'
         run: |
           set -euo pipefail
           IFS=$'\n\t'
@@ -413,7 +440,7 @@ jobs:
 
       - name: 'Generate package diff report'
         id: build-ui-diff
-        if: needs.update-package-json.result == 'success' && steps.find-base-package.outputs.base_file != ''
+        if: needs.update-stripes-components.result == 'success' && steps.find-base-package.outputs.base_file != ''
         uses: folio-org/platform-lsp/.github/actions/generate-package-diff-report@master
         with:
           base_package_path: ${{ steps.find-base-package.outputs.base_file }}
@@ -430,7 +457,7 @@ jobs:
           failure_reason: ${{ needs.update-platform-descriptor.outputs.failure_reason }}
           descriptor_markdown: ${{ steps.build-change-report.outputs.updates_markdown }}
           ui_updates_markdown: ${{ steps.build-ui-diff.outputs.ui_updates_markdown }}
-          not_found_ui_report: ${{ needs.update-package-json.outputs.not_found_ui_report }}
+          not_found_ui_report: ${{ needs.update-stripes-components.outputs.not_found_ui_report }}
           package_diff_available: ${{ steps.build-ui-diff.outputs.has_changes != '' && 'true' || 'false' }}
           write_to_summary: 'true'
 
@@ -441,11 +468,13 @@ jobs:
           path: |
             ${{ env.STATE_FILE }}
             package.json
+            yarn.lock
+          if-no-files-found: warn
           retention-days: 1
 
   commit-changes:
     name: 'Commit and Push Changes'
-    needs: [determine-source-branch, update-platform-descriptor, update-package-json, generate-reports]
+    needs: [determine-source-branch, update-platform-descriptor, update-stripes-components, generate-reports]
     if: needs.update-platform-descriptor.outputs.updated == 'true'
     uses: folio-org/kitfox-github/.github/workflows/commit-and-push-changes.yml@master
     with:
@@ -464,7 +493,7 @@ jobs:
 
   manage-pr:
     name: 'Manage Pull Request'
-    needs: [determine-source-branch, update-platform-descriptor, update-package-json, generate-reports, commit-changes]
+    needs: [determine-source-branch, update-platform-descriptor, update-stripes-components, generate-reports, commit-changes]
     if: |
       always() &&
       !inputs.dry_run &&
