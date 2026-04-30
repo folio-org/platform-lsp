@@ -86,7 +86,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.0-SNAPSHOT.100200000007743"
+        "version": "2.2.0-SNAPSHOT.100200000008209"
       },
       {
         "name": "app-eholdings",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000002107"
+        "version": "1.0.0-SNAPSHOT.100200000002131"
       },
       {
         "name": "app-licenses",
@@ -174,7 +174,7 @@
       },
       {
         "name": "app-rtac",
-        "version": "1.1.0-SNAPSHOT.100200000009078"
+        "version": "1.1.0-SNAPSHOT.100200000009090"
       },
       {
         "name": "app-search",
@@ -196,7 +196,7 @@
       },
       {
         "name": "app-rtac-cache",
-        "version": "1.1.0-SNAPSHOT.100200000004631"
+        "version": "1.1.0-SNAPSHOT.100200000005112"
       }
     ]
   },
