@@ -1677,9 +1677,9 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/erm-usage@>=1.0.3":
-  version "12.0.1099000000000892"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-12.0.1099000000000892.tgz#008251b03a02d5570dc84789bfe4a8ed51c5ce38"
-  integrity sha512-QSdu86h8oFkOv31GLOURj9kpBO8wE3gATBsTqadlwvosSzMe1J1kU1oKIYgT4Qe7T2x9Ib9gMZIJzdyD/O46Eg==
+  version "12.0.1099000000000896"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-12.0.1099000000000896.tgz#6004ddf0ca3c80b642c902044fa545a4f6d8ccae"
+  integrity sha512-tv961kzL+BsvIJiS7dWXBSD7U6n1xY64ANXB/d/edMGq3X40jx4pxvyBYS5VE6qWQvx4dCTqWRuXpFFNkLQsEQ==
   dependencies:
     "@folio/stripes-leipzig-components" "^1.0.0"
     compose-function "^3.0.3"
@@ -1771,7 +1771,7 @@
 
 "@folio/inventory@https://github.com/folio-org/ui-inventory.git#master":
   version "14.0.1"
-  resolved "https://github.com/folio-org/ui-inventory.git#5dc6dc8e9f763df78e44b3c2856407ea82977c77"
+  resolved "https://github.com/folio-org/ui-inventory.git#25aa4d7f8e15fa71d1f4b8e7c8bdaf9f6ef150ff"
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -1872,9 +1872,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/linked-data@^2.0.0":
-  version "2.0.1099000000002430"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.1099000000002430.tgz#50b5f3589ffca963eab0ef43a49e7d386eaed7c0"
-  integrity sha512-uJwBBK1Aph8Rja/V0QY1uEtiMNON1ekGsb2K/6qNCQJgDLbEH7sIwT+t9bE4YQU590ieAYpyQELcEU5fv2RIxA==
+  version "2.0.1099000000002433"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.1099000000002433.tgz#f21eae408bf5406a07d512733a866b6556fd7d7f"
+  integrity sha512-kP+HjV+he+erIx47AytxvZV0I+Lpk6Ii9urAt092TzHveFOCmv/SBprmwDnFDLAEo/mB313ZA5zYd1HKb1NbQw==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -2300,9 +2300,9 @@
     uuid "^9.0.0"
 
 "@folio/receiving@>=1.0.0":
-  version "8.0.1099000000000483"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/receiving/-/receiving-8.0.1099000000000483.tgz#56874d4355f9da16789da6fa8a52bf952831bcd0"
-  integrity sha512-XrhN9sOGyWNVpjUty76v3Px2XZuPKsQ2akKsPczp1/rCHIku6xbUFH/u9Pxldlm01K7ShnZBeKhE8kcyEGw7pg==
+  version "8.0.1099000000000491"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/receiving/-/receiving-8.0.1099000000000491.tgz#3503953579d9875e7b62bdb9152e0a2e9b4a49da"
+  integrity sha512-Fcc6HlbY9pGRhV9I8e3gL24h+tKlTpgwiK4J59+1DwcMQlLhHgRLALLAzVghyDwNzGf2f0Qixh/XAz+mQexoiQ==
   dependencies:
     "@folio/stripes-acq-components" "~7.1.0"
     final-form "^4.18.2"
@@ -2452,9 +2452,9 @@
     react-query "^3.39.3"
 
 "@folio/stripes-authorization-components@^2.0.0", "@folio/stripes-authorization-components@^2.1.0":
-  version "2.1.1099000000000491"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-authorization-components/-/stripes-authorization-components-2.1.1099000000000491.tgz#dee46eacffcf1b538cf021a7c093726b4414ff5d"
-  integrity sha512-uO1d7mlaEqNke12r5lVqsGhipE4RsXcotXh26wWV1R+mqOZXRhaXZ0Yw1cFeg8mQPfGUJYP1Rlk9VG+7mYLBHg==
+  version "2.1.1099000000000503"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-authorization-components/-/stripes-authorization-components-2.1.1099000000000503.tgz#b34f051a8ecf7e98089817f7135a36263122f731"
+  integrity sha512-IlIoGn9GKyFa3gCYeQxsCHllhegQ12pJL+0dzjVBrNWXYSsBNAmsa87K2kMa634k5h68XvKI3ZEeq2UNR75u8w==
   dependencies:
     "@folio/plugin-select-application" "^2.0.0"
     classnames "^2.2.6"
@@ -2531,9 +2531,9 @@
     uuid "^9.0.0"
 
 "@folio/stripes-core@^11.0.0":
-  version "11.1.1099000000001689"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.1.1099000000001689.tgz#dd2ee289ee3113db4cff54ae4fafb8815dc91817"
-  integrity sha512-dTWl7kwqL/he9B7kZr8fiDHZsjNMxyGMJ4f291So3aipS5gRmPRzqy+iAzGoQmtvz3aLCIaR/XClUzdz7pY/HA==
+  version "11.1.1099000000001702"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.1.1099000000001702.tgz#e3238d4202e2b5b3d318e9215041dea721ee8f50"
+  integrity sha512-SRLkL80meQZLgzhHOrDSig1Zrtj72vXcYItbR3+0xh1eajSs1F2VnFsIJu2h+tuCYR8BVKblKHrFb6PgQkkR5g==
   dependencies:
     "@apollo/client" "^3.2.1"
     "@module-federation/runtime" "^2.0.0"
@@ -2746,9 +2746,9 @@
     uuid "^8.3.2"
 
 "@folio/stripes-types@^3.0.0":
-  version "3.0.1099000000000124"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-types/-/stripes-types-3.0.1099000000000124.tgz#de6e779dd47d079058ff2d21d2c969eff42a473f"
-  integrity sha512-XjUVBR0cEXID6TXV1qKTMiT9io36SSHgNBoqEb85k75h8f6Na/hiatktLwcazYW4PtWiomSR+FTrOx6443vYWQ==
+  version "3.1.1099000000000128"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-types/-/stripes-types-3.1.1099000000000128.tgz#c07b2e4a3e717d63008719678cd9396ddb4f9019"
+  integrity sha512-aPhSCQvDlXBabNZXWPj3/7FEXIieeT5sM5c9r0r4LRTA/TT+EIj1xuYm2MH8032tv3CRasR8sWprlAvWzRf9EQ==
   dependencies:
     "@folio/stripes-react-hotkeys" "^3.0.0"
     dayjs "^1.11.10"
@@ -2764,9 +2764,9 @@
   integrity sha512-6gki12sdLWJavDFJD6HnvNAiannZyaHy61bJjaAK1nMP29DBZcsImknGuinYMKawot4vSfZNKMu1b4OcWcu4pw==
 
 "@folio/stripes-util@^7.0.0":
-  version "7.1.1099000000000091"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-util/-/stripes-util-7.1.1099000000000091.tgz#cfdc57d0b5d181a8d2f9fed1dd3376fee7fea592"
-  integrity sha512-ziPXrX54a9UmQ4caQUX0RuoL9k4gpzVbUQE0+U/ypkcanomxFFmekoyG10BZRLI1gzyPL0ZDo+G2G1RR0SZxaQ==
+  version "7.2.1099000000000101"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-util/-/stripes-util-7.2.1099000000000101.tgz#8b887f365bd1a40ca9261044091a0821dd78644f"
+  integrity sha512-I2Gzya+e3xf1FxXFhVp26lyAr0/b2zlNBx5HS+dwYAPoT/PWG32GiBs8J8E58fBppxT169BhZ80RYDeEhZwgFg==
   dependencies:
     json2csv "^4.2.1"
     lodash "^4.17.4"
@@ -2925,10 +2925,10 @@
   dependencies:
     tslib "^2.8.0"
 
-"@formatjs/fast-memoize@3.1.2":
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/@formatjs/fast-memoize/-/fast-memoize-3.1.2.tgz#d207dcffdabc5d16bde127fd7e3b4a52d8405af5"
-  integrity sha512-vPnriihkfK0lzoQGaXq+qXH23VsYyansRTkTgo2aTG0k1NjLFyZimFVdfj4C9JkSE5dm7CEngcQ5TTc1yAyBfQ==
+"@formatjs/fast-memoize@3.1.3":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@formatjs/fast-memoize/-/fast-memoize-3.1.3.tgz#d2a9391d5e22abbd369b1fb6cdcbfeb248392b46"
+  integrity sha512-Ocd1vPuD68rW6BJDuAOtnnc1GPeVepY5kZXML1psGVFQ+1Q8CfkftT3Tnam+Mxx97Pz08jIEDCotl/GV+Naccg==
 
 "@formatjs/icu-messageformat-parser@2.11.4":
   version "2.11.4"
@@ -2939,12 +2939,12 @@
     "@formatjs/icu-skeleton-parser" "1.8.16"
     tslib "^2.8.0"
 
-"@formatjs/icu-messageformat-parser@3.5.5":
-  version "3.5.5"
-  resolved "https://registry.yarnpkg.com/@formatjs/icu-messageformat-parser/-/icu-messageformat-parser-3.5.5.tgz#f3620e59bf4532e67d4cb592bde53bd21b50cd49"
-  integrity sha512-ASMon8BNlKHgQQpZx84xI80EXRS90GlsEU4wEulCKCzrMtUdrfEvFc9UEYmRbvEvtFQLZ4qHXnisUy6PuFjwyA==
+"@formatjs/icu-messageformat-parser@3.5.6":
+  version "3.5.6"
+  resolved "https://registry.yarnpkg.com/@formatjs/icu-messageformat-parser/-/icu-messageformat-parser-3.5.6.tgz#b347f017185ef5ceff7e56f069e57a52f1a52ca1"
+  integrity sha512-04ZjRIeQCnR/h32wBP9/S7rkyy1hLAs2fXJcNwc7hseJd//K9TMBqK0ukb4dXqnALKQ9m5ruZeOD2qqEkK9ixg==
   dependencies:
-    "@formatjs/icu-skeleton-parser" "2.1.5"
+    "@formatjs/icu-skeleton-parser" "2.1.6"
 
 "@formatjs/icu-skeleton-parser@1.8.16":
   version "1.8.16"
@@ -2954,10 +2954,10 @@
     "@formatjs/ecma402-abstract" "2.3.6"
     tslib "^2.8.0"
 
-"@formatjs/icu-skeleton-parser@2.1.5":
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/@formatjs/icu-skeleton-parser/-/icu-skeleton-parser-2.1.5.tgz#9fea1b8b1388859ffdbff712e4b21c036676bf15"
-  integrity sha512-9Kc6tMaAPZKTGevdfcvx5zT3v4BTfamo+djJE29wF6ds1QLhoA09MZNDpWMZaebWzuoOTIXhDvgmqmjSlUOGlw==
+"@formatjs/icu-skeleton-parser@2.1.6":
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/@formatjs/icu-skeleton-parser/-/icu-skeleton-parser-2.1.6.tgz#ebc79f8049a88bf68ab886c69dae29b16b2722df"
+  integrity sha512-9f1VQ2kaaLHK0WPU1OrAmiNKCKJwyoDmwNzQXbUa6XtFBOgHZ4YZURE8sSedHmMr0kvpB75OtplB0hMYkfdwfg==
 
 "@formatjs/intl-localematcher@0.6.2":
   version "0.6.2"
@@ -2977,14 +2977,14 @@
     intl-messageformat "10.7.18"
     tslib "^2.8.0"
 
-"@formatjs/intl@4.1.7":
-  version "4.1.7"
-  resolved "https://registry.yarnpkg.com/@formatjs/intl/-/intl-4.1.7.tgz#64d1b406a7b4a1ad04d9772072ff06ff115dac8a"
-  integrity sha512-SOJHtwG4Ke17zHBO61BLOiA1dcK2kk+QChsNZyPlBbI7dElAEkCLl5e3ZX1uxxXF1RtjAnD+lvqMN0tiPlP2Ww==
+"@formatjs/intl@4.1.8":
+  version "4.1.8"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl/-/intl-4.1.8.tgz#76ea5b58e56a52542378714cc14ff1380ce93ad1"
+  integrity sha512-ikDo41921J++o+fMjl7Qd1QxGiYqnBbMhBbDfzlwlfq0CQIuhF/BU/SZosZEGgpTqOa0VUhLCbOYC7wjtXb1tQ==
   dependencies:
-    "@formatjs/fast-memoize" "3.1.2"
-    "@formatjs/icu-messageformat-parser" "3.5.5"
-    intl-messageformat "11.2.2"
+    "@formatjs/fast-memoize" "3.1.3"
+    "@formatjs/icu-messageformat-parser" "3.5.6"
+    intl-messageformat "11.2.3"
 
 "@graphql-typed-document-node/core@^3.1.1":
   version "3.2.0"
@@ -5508,9 +5508,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.328:
-  version "1.5.344"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.344.tgz#6437cc08a7d9b914a98120e182f37793c9eaffd4"
-  integrity sha512-4MxfbmNDm+KPh066EZy+eUnkcDPcZ35wNmOWzFuh/ijvHsve6kbLTLURy88uCNK5FbpN+yk2nQY6BYh1GEt+wg==
+  version "1.5.345"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.345.tgz#39d8f7cbc19350e5d7d94a471c111eb7326e8ef6"
+  integrity sha512-F9JXQGiMrz6yVNPI2qOVPvB9HzjH5cGzhs8oJ6A28V5L/YnzN/0KsuiibqF+F1Fd9qxFzD1BUnYSd8JfULxTwg==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -6736,13 +6736,13 @@ intl-messageformat@10.7.18:
     "@formatjs/icu-messageformat-parser" "2.11.4"
     tslib "^2.8.0"
 
-intl-messageformat@11.2.2, intl-messageformat@^11.1.2:
-  version "11.2.2"
-  resolved "https://registry.yarnpkg.com/intl-messageformat/-/intl-messageformat-11.2.2.tgz#42b595a7d7369653b3612901eaa831db70b00455"
-  integrity sha512-yUfyIkPGqMvvk2onw2xBJeLsjXdiYUYebR8mmZVQYBuZUJsFGVht48Ftm1khgu8EZ0n+izX4rAEj3fLAilkh9g==
+intl-messageformat@11.2.3, intl-messageformat@^11.1.2:
+  version "11.2.3"
+  resolved "https://registry.yarnpkg.com/intl-messageformat/-/intl-messageformat-11.2.3.tgz#d40fe748baa95f863f09000970aaf293f3684efe"
+  integrity sha512-kZthTU+3WLcoWoRg5j6LOkN1TeUBtmkX0OIwSAbcHVIfQAEbGVdmANM8u6GL3eUDOqLwheYoXMUshAh1UdeXlQ==
   dependencies:
-    "@formatjs/fast-memoize" "3.1.2"
-    "@formatjs/icu-messageformat-parser" "3.5.5"
+    "@formatjs/fast-memoize" "3.1.3"
+    "@formatjs/icu-messageformat-parser" "3.5.6"
 
 intl-unofficial-duration-unit-format@3.0.0:
   version "3.0.0"
@@ -8498,13 +8498,13 @@ react-intl-formatted-duration@^4.0.0:
     intl-unofficial-duration-unit-format "3.0.0"
 
 react-intl@^10.1.1:
-  version "10.1.3"
-  resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-10.1.3.tgz#6798f23ff5294fb5294173bb563e2578f48adbad"
-  integrity sha512-SEONkI1nbrMJ5OXhCD66YSPY8Py5VuAA1P9pLKi3pB+eYRUbt0ryF3lhue8rH/SVX2d/hvKa6C4YB/lGjophKg==
+  version "10.1.4"
+  resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-10.1.4.tgz#077448fe0efdd45e0b009c9ffff3f6b57ac84f57"
+  integrity sha512-SUAHChHUw1VPdyDzndQisCeC4fuYrPa360MDvS+BF+Pb6uUw5hLYd67QaQ8FiYmw+roVvDswxi1kW/8wJPnQ1Q==
   dependencies:
-    "@formatjs/icu-messageformat-parser" "3.5.5"
-    "@formatjs/intl" "4.1.7"
-    intl-messageformat "11.2.2"
+    "@formatjs/icu-messageformat-parser" "3.5.6"
+    "@formatjs/intl" "4.1.8"
+    intl-messageformat "11.2.3"
 
 react-intl@^7.1.10:
   version "7.1.14"
@@ -9985,9 +9985,9 @@ uuid@9.0.0:
   integrity sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==
 
 uuid@^11.1.0:
-  version "11.1.0"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-11.1.0.tgz#9549028be1753bb934fc96e2bca09bb4105ae912"
-  integrity sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==
+  version "11.1.1"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-11.1.1.tgz#f6d81d2e1c65d00762e5e29b16c5d2d995e208ad"
+  integrity sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==
 
 uuid@^13.0.0:
   version "13.0.1"
@@ -10140,9 +10140,9 @@ webpack-remove-empty-scripts@^1.0.1:
     ansis "4.0.0-node10"
 
 webpack-sources@^3.3.4:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.4.0.tgz#67cdfdff349ff1e3e7ca5c1ed6a2802b84cf6cf5"
-  integrity sha512-gHwIe1cgBvvfLeu1Yz/dcFpmHfKDVxxyqI+kzqmuxZED81z2ChxpyqPaWcNqigPywhaEke7AjSGga+kxY55gjQ==
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.4.1.tgz#009d110999ebd9fb3a6fa8d32eec6f84d940e65d"
+  integrity sha512-eACpxRN02yaawnt+uUNIF7Qje6A9zArxBbcAJjK1PK3S9Ycg5jIuJ8pW4q8EMnwNZCEGltcjkRx1QzOxOkKD8A==
 
 webpack-virtual-modules@^0.4.3:
   version "0.4.6"
