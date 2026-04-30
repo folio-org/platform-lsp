@@ -1554,10 +1554,10 @@
     react-final-form-arrays "^3.1.0"
     react-query "^3.39.3"
 
-"@folio/claims@2.0.0":
-  version "2.0.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/claims/-/claims-2.0.0.tgz#fb144bb709ce21a8da27f15c4b1b5793ef452b91"
-  integrity sha512-gxGfcz0a0ab3t+I/W7ZGI9yzwNcwpCGcCLBGKt0wYpsqsNIhIVqfkJoytZZAnvLv/13QfrudlnJaztwAKy0Q4g==
+"@folio/claims@2.0.1":
+  version "2.0.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/claims/-/claims-2.0.1.tgz#51647d53469c7731d9445972bdd192033bcd5889"
+  integrity sha512-J2MYdSRQun9LQJr445NzezwPZd9sceOZqzzzLNv0S/QxFuIi102t/GfHeeX6ljyhTJVe7hyCzIrWhNsMHA3bZw==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     lodash "^4.17.21"
