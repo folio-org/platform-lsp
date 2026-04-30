@@ -1704,9 +1704,9 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/erm-usage@>=1.0.3":
-  version "12.0.1099000000000892"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-12.0.1099000000000892.tgz#008251b03a02d5570dc84789bfe4a8ed51c5ce38"
-  integrity sha512-QSdu86h8oFkOv31GLOURj9kpBO8wE3gATBsTqadlwvosSzMe1J1kU1oKIYgT4Qe7T2x9Ib9gMZIJzdyD/O46Eg==
+  version "12.0.1099000000000896"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-12.0.1099000000000896.tgz#6004ddf0ca3c80b642c902044fa545a4f6d8ccae"
+  integrity sha512-tv961kzL+BsvIJiS7dWXBSD7U6n1xY64ANXB/d/edMGq3X40jx4pxvyBYS5VE6qWQvx4dCTqWRuXpFFNkLQsEQ==
   dependencies:
     "@folio/stripes-leipzig-components" "^1.0.0"
     compose-function "^3.0.3"
@@ -2794,9 +2794,9 @@
     uuid "^8.3.2"
 
 "@folio/stripes-types@^3.0.0":
-  version "3.0.1099000000000124"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-types/-/stripes-types-3.0.1099000000000124.tgz#de6e779dd47d079058ff2d21d2c969eff42a473f"
-  integrity sha512-XjUVBR0cEXID6TXV1qKTMiT9io36SSHgNBoqEb85k75h8f6Na/hiatktLwcazYW4PtWiomSR+FTrOx6443vYWQ==
+  version "3.1.1099000000000128"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-types/-/stripes-types-3.1.1099000000000128.tgz#c07b2e4a3e717d63008719678cd9396ddb4f9019"
+  integrity sha512-aPhSCQvDlXBabNZXWPj3/7FEXIieeT5sM5c9r0r4LRTA/TT+EIj1xuYm2MH8032tv3CRasR8sWprlAvWzRf9EQ==
   dependencies:
     "@folio/stripes-react-hotkeys" "^3.0.0"
     dayjs "^1.11.10"
