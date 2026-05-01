@@ -2599,9 +2599,9 @@
     uuid "^9.0.0"
 
 "@folio/stripes-core@^11.0.0":
-  version "11.1.1099000000001718"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.1.1099000000001718.tgz#3e9bb540ee8dab6eaa97dfbce29225161aa3620a"
-  integrity sha512-3B7NZN9Vv4C9dzEosSx8iIK0BwO6BxsAXt1JWvO+XECw6ccyuNA4ZarBK9Rw1wcEVqKZskM8ot8QQF4IEyOrJQ==
+  version "11.1.1099000000001722"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.1.1099000000001722.tgz#04b1bd4102a583a766611a3703b405c2a61cf009"
+  integrity sha512-RChFljeVQpNfuzHIesA7GlhXXg43FFLtzWc3MREvfqb4kVTqWb3mt/3qtsiAc9B7h5jrF+Umu1trjxBnBl3vMw==
   dependencies:
     "@apollo/client" "^3.2.1"
     "@module-federation/runtime" "^2.0.0"
@@ -4487,9 +4487,9 @@ base64-js@^1.3.1:
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
 
 baseline-browser-mapping@^2.10.12:
-  version "2.10.24"
-  resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.10.24.tgz#6dc320c7bf53859ec2bf55d54db6d2e5c078df16"
-  integrity sha512-I2NkZOOrj2XuguvWCK6OVh9GavsNjZjK908Rq3mIBK25+GD8vPX5w2WdxVqnQ7xx3SrZJiCiZFu+/Oz50oSYSA==
+  version "2.10.25"
+  resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.10.25.tgz#183b45c0d3bdd12addb352426555fb3627eb022a"
+  integrity sha512-QO/VHsXCQdnzADMfmkeOPvHdIAkoB7i0/rGjINPJEetLx75hNttVWGQ/jycHUDP9zZ9rupbm60WRxcwViB0MiA==
 
 batch@0.6.1:
   version "0.6.1"
