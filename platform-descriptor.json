@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000009033"
+        "version": "2.1.0-SNAPSHOT.100200000009040"
       },
       {
         "name": "app-platform-complete",
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.0.0-SNAPSHOT.100200000004454"
+        "version": "1.0.0-SNAPSHOT.100200000004502"
       },
       {
         "name": "app-bulk-edit",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "2.2.0-SNAPSHOT.100200000008407"
+        "version": "2.2.0-SNAPSHOT.100200000009033"
       },
       {
         "name": "app-marc-storage",
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000003919"
+        "version": "1.0.0-SNAPSHOT.100200000003965"
       },
       {
         "name": "app-reading-room",
