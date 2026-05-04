@@ -1947,9 +1947,9 @@
     zustand "^5.0.12"
 
 "@folio/lists@>=1.2.0":
-  version "5.0.1099000000001056"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.1099000000001056.tgz#38527b32490e187d1812ba1a3176623a3a4e8dd5"
-  integrity sha512-ATZtSK4Z0GSq+yXuzsqF+ZEepTQwtVpSUK+WcTBC8E4IHQuaJ81SoqiLfsIWn3Rb11yct4Pt3qP762n/BSvPrw==
+  version "5.0.2099000000001059"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.2099000000001059.tgz#793b73a654d265a9d6e7585571f55d1988454c55"
+  integrity sha512-0wbsBU4zExVfE2TZJ+D6Za80DxP8hogyAXD8/Ae+SiRdo3dxgfszqhsJQ/324jBUrhlRG/EhjDAtAYYwsEOwXg==
   dependencies:
     "@folio/plugin-query-builder" "^3.0.0"
     "@folio/stripes-acq-components" "~7.1.0"
@@ -5924,9 +5924,9 @@ fast-png@^6.2.0:
     pako "^2.1.0"
 
 fast-uri@^3.0.1:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/fast-uri/-/fast-uri-3.1.0.tgz#66eecff6c764c0df9b762e62ca7edcfb53b4edfa"
-  integrity sha512-iPeeDKJSWf4IEOasVVrknXpaBV0IApz/gp7S2bb7Z4Lljbl2MGJRqInZiUrQwV16cpzw/D3S5j5Julj/gT52AA==
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/fast-uri/-/fast-uri-3.1.1.tgz#dd085fec2494a2a33bac6e61277374669e1dd774"
+  integrity sha512-h2r7rcm6Ee/J8o0LD5djLuFVcfbZxhvho4vvsbeV0aMvXjUgqv4YpxpkEx0d68l6+IleVfLAdVEfhR7QNMkGHQ==
 
 fast-xml-parser@^4.2.4:
   version "4.5.6"
