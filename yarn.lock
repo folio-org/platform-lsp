@@ -2009,10 +2009,10 @@
   dependencies:
     prop-types "^15.6.0"
 
-"@folio/oai-pmh@6.0.0":
-  version "6.0.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/oai-pmh/-/oai-pmh-6.0.0.tgz#3f29364571608cfe0a269342ed640280c1845908"
-  integrity sha512-VXos4IaMN78dVLM1KqCMKvuWHNPGaDMEVbDibaafMPP8LzDH+D2bchhonA7B38Z+t7OpO0TuSSNVSdlCe+4oUw==
+"@folio/oai-pmh@7.0.0":
+  version "7.0.0"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/oai-pmh/-/oai-pmh-7.0.0.tgz#e5ad1b45108743a969da3a9fe344cbcc0a619486"
+  integrity sha512-jI3/8JG1W5tWzaSP4ED06jGJmUrvoBk3y+FBZnsgxGSDDxEmnr6ANGF+9FqgKm7BnkvP11bGxyHVylCwyIQmog==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     file-saver "^2.0.5"
@@ -2299,7 +2299,18 @@
   optionalDependencies:
     "@folio/plugin-find-organization" "^6.0.0"
 
-"@folio/plugin-select-application@2.0.0", "@folio/plugin-select-application@^2.0.0":
+"@folio/plugin-select-application@3.0.0":
+  version "3.0.0"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-select-application/-/plugin-select-application-3.0.0.tgz#c692350d2e0d3b7120ef254e8f4ce97ebddffcae"
+  integrity sha512-LjJ8/ZclzbhnMV910/MfnK8m7LyYdJOE27Q2TPkK+R3euBryPT4zC7b4BDygMTjLm6rT5Cqarkh+nzCTBjDuyA==
+  dependencies:
+    "@k-int/stripes-kint-components" "^5.1.1"
+    classnames "^2.2.5"
+    dom-helpers "^3.4.0"
+    lodash "^4.17.11"
+    prop-types "^15.6.0"
+
+"@folio/plugin-select-application@^2.0.0":
   version "2.0.0"
   resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-select-application/-/plugin-select-application-2.0.0.tgz#58a83bf8d165a4d5206801f6520d6acce9c86c6e"
   integrity sha512-QFOhhX3qcjdFqKUvSbL9P8sWVihnSw+W0FrT5ao5jfoDrOTjowh9hr3J3BHmVgwi/eK1/ceomddj7ovfCywZ1w==
@@ -2597,12 +2608,12 @@
   optionalDependencies:
     "@folio/plugin-find-user" "^8.0.0"
 
-"@folio/stripes-erm-components@10.0.0":
-  version "10.0.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-erm-components/-/stripes-erm-components-10.0.0.tgz#b8d0824d46bc485fa958b33608bfa88780b82df8"
-  integrity sha512-NHuTpDwWQBIMlswb1wrH/EvgudrzZsrL9/XHR/GRyUML40NxI2iUkrZyTLj9EgI8jKki4iPi4KOZSSki4wcKRg==
+"@folio/stripes-erm-components@10.1.0":
+  version "10.1.0"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-erm-components/-/stripes-erm-components-10.1.0.tgz#eb2900a0a4b823355474e493b37f9caaeb0ddb10"
+  integrity sha512-XCPu7A+NxSB/LlI3FUupzi+TUFfhNa+Jf2Wgw8O8calO1GbgWRCT8TS70/9bI6RGTzacJqMRvvE+O5gKeBAPUg==
   dependencies:
-    "@k-int/stripes-kint-components" "^5.11.0"
+    "@k-int/stripes-kint-components" "^5.30.0"
     dayjs "^1.11.13"
     final-form "^4.18.4"
     final-form-arrays "^3.0.1"
@@ -3219,7 +3230,7 @@
     "@jsonjoy.com/buffers" "^1.0.0"
     "@jsonjoy.com/codegen" "^1.0.0"
 
-"@k-int/stripes-kint-components@^5.0.0", "@k-int/stripes-kint-components@^5.1.1", "@k-int/stripes-kint-components@^5.11.0", "@k-int/stripes-kint-components@^5.15.0", "@k-int/stripes-kint-components@^5.28.3":
+"@k-int/stripes-kint-components@^5.0.0", "@k-int/stripes-kint-components@^5.1.1", "@k-int/stripes-kint-components@^5.11.0", "@k-int/stripes-kint-components@^5.15.0", "@k-int/stripes-kint-components@^5.28.3", "@k-int/stripes-kint-components@^5.30.0":
   version "5.36.1"
   resolved "https://registry.yarnpkg.com/@k-int/stripes-kint-components/-/stripes-kint-components-5.36.1.tgz#a1cb8c4b8ead76b6b6627a7f3788dffc2eb771c0"
   integrity sha512-4Ih4fLSaHzewZwqzZCUmBtVQEH0Cqa6Fha012mYTdUjw3RjufDja8hk9JGV7PURnyZ0GPb1ijvChLi6PwTfsNg==
