@@ -2599,9 +2599,9 @@
     uuid "^9.0.0"
 
 "@folio/stripes-core@^11.0.0":
-  version "11.1.1099000000001722"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.1.1099000000001722.tgz#04b1bd4102a583a766611a3703b405c2a61cf009"
-  integrity sha512-RChFljeVQpNfuzHIesA7GlhXXg43FFLtzWc3MREvfqb4kVTqWb3mt/3qtsiAc9B7h5jrF+Umu1trjxBnBl3vMw==
+  version "11.1.1099000000001732"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.1.1099000000001732.tgz#62e332980d4c30166c542bd7b8cff9713b373e4b"
+  integrity sha512-3+10GvAUhKcNrzlODBKJ03T8jf6D2NK5J6Dmun44G6rrMF7wHRgJvAxdlZ4Ddig4bKInPq1hd4MOQtsQyeJBGg==
   dependencies:
     "@apollo/client" "^3.2.1"
     "@module-federation/runtime" "^2.0.0"
@@ -6158,9 +6158,9 @@ focus-trap@^7.5.4:
     tabbable "^6.4.0"
 
 focus-trap@^8.1.0:
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-8.1.0.tgz#51e2ab9f2a55e1cf37eff6d939c986002709d509"
-  integrity sha512-T65crff26CKV2CZ3csg5y05r+560srp0b8EbAif35euW58hzklVf/Gb4Q+/HCtB8e9III3QFEyk5BWV5XJuOyw==
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-8.2.0.tgz#151fa06539e1b7d9abfcc27f8cd5a028682ede87"
+  integrity sha512-CaBdQ9P4fa/yCA6pDf/3aJd8bf9IOG5QGK21/E+86o2V4V8kzXaR4A9E6tNR7KkkS1+T5ZIU1tJDBDLwsucz9g==
   dependencies:
     tabbable "^6.4.0"
 
