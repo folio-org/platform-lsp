@@ -1947,11 +1947,11 @@
     zustand "^5.0.12"
 
 "@folio/lists@>=1.2.0":
-  version "5.0.1099000000001053"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.1099000000001053.tgz#76411c575eae008e3759e66d470af355b9781e9e"
-  integrity sha512-jnPZQ+/FLJ5pxlpcsdUpfFyjfvq3U6p+kon5jxyqNEmqqPqyZVUcIkZfawXe9ks+gwShzp1HOBG2GfxXCxhqnQ==
+  version "5.0.1099000000001056"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.1099000000001056.tgz#38527b32490e187d1812ba1a3176623a3a4e8dd5"
+  integrity sha512-ATZtSK4Z0GSq+yXuzsqF+ZEepTQwtVpSUK+WcTBC8E4IHQuaJ81SoqiLfsIWn3Rb11yct4Pt3qP762n/BSvPrw==
   dependencies:
-    "@folio/plugin-query-builder" "^2.0.0"
+    "@folio/plugin-query-builder" "^3.0.0"
     "@folio/stripes-acq-components" "~7.1.0"
     date-fns "^2.29.3"
     ky "^0.33.2"
@@ -2306,19 +2306,6 @@
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
     fuzzysort "^2.0.4"
-    ky "^0.33.2"
-    lodash "^4.17.5"
-    prop-types "^15.5.10"
-    react-query "^3.6.0"
-  optionalDependencies:
-    "@folio/plugin-find-organization" "^6.0.0"
-
-"@folio/plugin-query-builder@^2.0.0":
-  version "2.0.309900000000711"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-query-builder/-/plugin-query-builder-2.0.309900000000711.tgz#8332178ce3c2bfde2ed58b7e72b7ee4f61ca1f56"
-  integrity sha512-ZXx+p5xzpgV9X9VvK4VSVlIbyAI/8Pk3974RRhrhSpdb0z5EL44dJinWHbykcPx4qdGMTg3LPTyOsfwesR8EXA==
-  dependencies:
-    "@folio/stripes-acq-components" "^7.0.0"
     ky "^0.33.2"
     lodash "^4.17.5"
     prop-types "^15.5.10"
