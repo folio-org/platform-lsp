@@ -38,7 +38,7 @@
     "@folio/ld-folio-wrapper": "2.0.1",
     "@folio/ldp": "3.3.0",
     "@folio/licenses": "12.1.0",
-    "@folio/lists": "5.0.1",
+    "@folio/lists": "5.0.2",
     "@folio/local-kb-admin": "9.1.0",
     "@folio/marc-authorities": "8.0.0",
     "@folio/mosaic-settings": "1.1.0",
