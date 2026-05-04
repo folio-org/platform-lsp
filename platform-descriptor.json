@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.0-SNAPSHOT.100200000002298"
+        "version": "1.0.0-SNAPSHOT.100200000002299"
       },
       {
         "name": "app-licenses",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.0-SNAPSHOT.100200000009323"
+        "version": "1.1.0-SNAPSHOT.100200000009724"
       },
       {
         "name": "app-lists",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.0.0-SNAPSHOT.100200000009618"
+        "version": "1.0.0-SNAPSHOT.100200000009619"
       },
       {
         "name": "app-service-interaction",
