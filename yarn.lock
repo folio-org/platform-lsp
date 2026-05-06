@@ -1562,9 +1562,9 @@
     react-query "^3.39.3"
 
 "@folio/claims@>=1.0.0":
-  version "2.0.1099000000000311"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/claims/-/claims-2.0.1099000000000311.tgz#de0145fd00653455eae5a9c3457fa7d2e1d42c6c"
-  integrity sha512-N2A9q7kPHn+2L2R9iqDvjAw4Y4+fyA+OcQwgSgCVSbid4TduYQ0zeJyDNJbcVo+f4derrd+AUWTG3gGIqHF2FQ==
+  version "2.0.2099000000000314"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/claims/-/claims-2.0.2099000000000314.tgz#7b10db4baf119c5d45ad04d7a630cacb15e511de"
+  integrity sha512-dpEGsiHd9xnhSpltv3V+es1E0UT6eDJz0Cb3NGvC/F7gvsSzyjMSmwZbLt7rfkT/Eys4YfBjIY0/VDsjFLLHbg==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     lodash "^4.17.21"
@@ -1925,9 +1925,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/linked-data@^2.0.0":
-  version "2.0.1099000000002433"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.1099000000002433.tgz#f21eae408bf5406a07d512733a866b6556fd7d7f"
-  integrity sha512-kP+HjV+he+erIx47AytxvZV0I+Lpk6Ii9urAt092TzHveFOCmv/SBprmwDnFDLAEo/mB313ZA5zYd1HKb1NbQw==
+  version "2.0.1099000000002439"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.1099000000002439.tgz#4a007e06605f13a42b92cb18469e872163305787"
+  integrity sha512-TouBhnolrqEsDcd4Iiq8y6CylrsxVXZrTRqnZuBcXxbGtNoIw7stznyTLzlyaKTrmZVc7M5rHxEfY/2nx3/yIg==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -2366,9 +2366,9 @@
     uuid "^9.0.0"
 
 "@folio/receiving@>=1.0.0":
-  version "8.0.1099000000000500"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/receiving/-/receiving-8.0.1099000000000500.tgz#c3c708b5cfbb9e88008bd5921bbb0df8b98e7e5a"
-  integrity sha512-QTK/d2xE8oHYXCj8HayQYTg14UcZ7N1rzxQvU5eacZwxFGprwoX8tsrFYTrpm/3CUVnQx8SVwD182wmGKd2qmw==
+  version "8.0.2099000000000505"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/receiving/-/receiving-8.0.2099000000000505.tgz#d4d273269ec31a2884291917a898be84226b0a61"
+  integrity sha512-UcTP1yCdgF3NT347Bt6sKMPCmPxh1qPUJPVweRzqRk/cpgMIH/E/B+B2aoek7UTIYWvtk7LiEpQFM2NGUqPcvA==
   dependencies:
     "@folio/stripes-acq-components" "~7.1.0"
     final-form "^4.18.2"
@@ -4703,9 +4703,9 @@ camelcase@^7.0.1:
   integrity sha512-xlx1yCK2Oc1APsPXDL2LdlNP6+uu8OCDdhOBSVT279M/S+y75O30C2VuD8T2ogdePBBl7PfPF4504tnLgX3zfw==
 
 caniuse-lite@^1.0.30001782, caniuse-lite@^1.0.30001787:
-  version "1.0.30001791"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001791.tgz#dfb93d85c40ad380c57123e72e10f3c575786b51"
-  integrity sha512-yk0l/YSrOnFZk3UROpDLQD9+kC1l4meK/wed583AXrzoarMGJcbRi2Q4RaUYbKxYAsZ8sWmaSa/DsLmdBeI1vQ==
+  version "1.0.30001792"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001792.tgz#ca8bb9be244835a335e2018272ce7223691873c5"
+  integrity sha512-hVLMUZFgR4JJ6ACt1uEESvQN1/dBVqPAKY0hgrV70eN3391K6juAfTjKZLKvOMsx8PxA7gsY1/tLMMTcfFLLpw==
 
 canvg@^3.0.11:
   version "3.0.11"
