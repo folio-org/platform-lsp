@@ -1572,9 +1572,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/courses@>=1.0.0":
-  version "7.1.1099000000000219"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/courses/-/courses-7.1.1099000000000219.tgz#887bf89828d11f1a39e586c17a4a0e8d56b0cfa0"
-  integrity sha512-CDRcGVh/c8bV69BB75Sudj+Hp3pZjw4TPXkHeQGYNAvQsz9x9ButqFMGRCRpocBNyI5Vw3DhVX3aVnzA6PifEQ==
+  version "7.1.1099000000000227"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/courses/-/courses-7.1.1099000000000227.tgz#17331d389f1fe4e557dc3d24381fcf76f721445a"
+  integrity sha512-+64AK3erXF0FhNdczmuEzkjtErpJQ4r7J6bgobiC6Y+WkbdML9/un3TwxDDmOq8nKhoPzhy9C5VeX8A0NaBIIQ==
   dependencies:
     final-form-set-field-data "^1.0.2"
     ky "^0.23.0"
