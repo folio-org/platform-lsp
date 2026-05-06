@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.3.0-SNAPSHOT.100200000008489"
+        "version": "3.3.0-SNAPSHOT.100200000008491"
       }
     ],
     "optional": [
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.0-SNAPSHOT.100200000008405"
+        "version": "2.2.0-SNAPSHOT.100200000008409"
       },
       {
         "name": "app-eholdings",
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.0.0-SNAPSHOT.100200000003966"
+        "version": "1.0.0-SNAPSHOT.100200000004027"
       },
       {
         "name": "app-reading-room",
