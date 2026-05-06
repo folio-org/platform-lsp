@@ -1559,10 +1559,10 @@
     react-final-form-arrays "^3.1.0"
     react-query "^3.39.3"
 
-"@folio/claims@2.0.1":
-  version "2.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/claims/-/claims-2.0.1.tgz#51647d53469c7731d9445972bdd192033bcd5889"
-  integrity sha512-J2MYdSRQun9LQJr445NzezwPZd9sceOZqzzzLNv0S/QxFuIi102t/GfHeeX6ljyhTJVe7hyCzIrWhNsMHA3bZw==
+"@folio/claims@2.0.2":
+  version "2.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/claims/-/claims-2.0.2.tgz#db67cc58254fb3c332fdecde3f450f283030b17a"
+  integrity sha512-2pgQTlfA4uocEvcWbMpi569GiJ+pgCCOoMhMJ5q7+Viua8DUN/gDf3jFah1mx8sU33h+bKSWa2qs3PNXanldgg==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     lodash "^4.17.21"
@@ -2338,10 +2338,10 @@
     react-final-form "^6.3.0"
     uuid "^9.0.0"
 
-"@folio/receiving@8.0.1":
-  version "8.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/receiving/-/receiving-8.0.1.tgz#0a3ee08c055492de20cb368424c5ac58eb689c43"
-  integrity sha512-RCqNTTUjxOEbGuGvG57DFpi6cN6CrFejjP+MB4Blhvn91QuHCMraVci9wLZpqR7jMUkBB/1bNpdFOnrGHKJwyg==
+"@folio/receiving@8.0.2":
+  version "8.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/receiving/-/receiving-8.0.2.tgz#be8b41e6e74bdceae2bac1f8c0033ad3e35b922e"
+  integrity sha512-hAjPEwINCHRrQPVuI6shnaOSw//Vg9Sfcpxb9HC/rlufeeoSQxvszaZts/zY8bbMzQY4EszXj53I57XTldSXxQ==
   dependencies:
     "@folio/stripes-acq-components" "~7.1.0"
     final-form "^4.18.2"
