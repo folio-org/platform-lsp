@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.1.0-SNAPSHOT.100200000009132"
+        "version": "2.1.0-SNAPSHOT.100200000009138"
       },
       {
         "name": "app-platform-complete",
@@ -162,7 +162,7 @@
       },
       {
         "name": "app-requests-ecs",
-        "version": "1.4.0-SNAPSHOT.100200000008383"
+        "version": "1.4.0-SNAPSHOT.100200000009126"
       },
       {
         "name": "app-requests-mediated",
