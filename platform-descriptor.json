@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.4.0-SNAPSHOT.100200000009326"
+        "version": "2.1.0-SNAPSHOT.100200000009549"
       },
       {
         "name": "app-ebsconet",
@@ -162,15 +162,15 @@
       },
       {
         "name": "app-requests-ecs",
-        "version": "1.4.0-SNAPSHOT.100200000009126"
+        "version": "2.1.0-SNAPSHOT.100200000009316"
       },
       {
         "name": "app-requests-mediated",
-        "version": "1.2.0-SNAPSHOT.100200000008833"
+        "version": "3.1.0-SNAPSHOT.100200000009864"
       },
       {
         "name": "app-requests-mediated-ui",
-        "version": "1.4.0-SNAPSHOT.100200000007885"
+        "version": "2.1.0-SNAPSHOT.100200000007898"
       },
       {
         "name": "app-rtac",
