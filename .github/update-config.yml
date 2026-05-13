@@ -5,6 +5,7 @@ update_config:
     - version-update
   pr_reviewers:
     - folio-org/kitfox
+    - folio-org/fse-platform
 
 branches:
   - snapshot:
