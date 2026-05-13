@@ -2463,10 +2463,10 @@
     query-string "^7.0.1"
     react-query "^3.39.3"
 
-"@folio/stripes-authorization-components@^2.0.0", "@folio/stripes-authorization-components@^2.1.0", "@folio/stripes-authorization-components@~2.1.0":
-  version "2.1.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-authorization-components/-/stripes-authorization-components-2.1.0.tgz#3b09234fbb1a23a09a36c45eaec91a923d0d4d5a"
-  integrity sha512-GPyc1G18WYsHI6IpDQRRnWe3+vMzr9DGmx7vIuy0pLCJXBmdbZRMnDj+cdGQap2fx4L9YkeW26phd6E9CE4HIQ==
+"@folio/stripes-authorization-components@^2.0.0", "@folio/stripes-authorization-components@^2.1.0", "@folio/stripes-authorization-components@~2.2.0":
+  version "2.2.0"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-authorization-components/-/stripes-authorization-components-2.2.0.tgz#78b59204ec543701a5b3f7b0ad19993cf7f92d55"
+  integrity sha512-9DbonhHc8QeayGQNPbG5xO59CuML3oBc1NSaQpFN4012nkGeKu7lrixweSwrHuLSwXvJjnc1kDQ6ALYvujGzow==
   dependencies:
     "@folio/plugin-select-application" "^2.0.0"
     classnames "^2.2.6"
