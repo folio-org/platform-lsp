@@ -99,20 +99,30 @@ jobs:
         run: |
           set +e
           {
-            rm -f yarn.lock
-            yarn install
-            
-            {
-              echo "## Yarn Dependencies"
-              echo '```'
-              yarn list --pattern @folio
-              echo '```'
-            } >> $GITHUB_STEP_SUMMARY
+            node -v
 
-            current_branch=$(git branch --show-current)
-            git add yarn.lock
-            git commit -m "[CI] Update yarn.lock" || echo "No changes to commit"
-            git push origin $current_branch
+            cp yarn.lock yarn.lock.bak 2>/dev/null || true
+            rm -f yarn.lock
+
+            if ! yarn install; then
+              cp yarn.lock.bak yarn.lock 2>/dev/null || true
+              rm -f yarn.lock.bak
+              false
+            else
+              rm -f yarn.lock.bak
+
+              {
+                echo "## Yarn Dependencies"
+                echo '```'
+                yarn list --pattern @folio
+                echo '```'
+              } >> $GITHUB_STEP_SUMMARY
+
+              current_branch=$(git branch --show-current)
+              git add yarn.lock
+              git commit -m "[CI] Update yarn.lock" || echo "No changes to commit"
+              git push origin $current_branch
+            fi
           } 2>&1 | tee /tmp/build-stripes-output.log
           exit_code=${PIPESTATUS[0]}
           set -e
