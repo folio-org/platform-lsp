@@ -88,11 +88,10 @@ jobs:
           exit $exit_code
 
       - name: Install Node ${{ inputs.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ inputs.node-version }}
           check-latest: true
-          always-auth: true
 
       - name: Build stripes
         id: build-stripes

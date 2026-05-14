@@ -337,9 +337,10 @@ jobs:
           echo "::notice::Successfully updated package.json with ${{ steps.update-package-json.outputs.updated-count }} dependency changes"
 
       - name: 'Setup Node.js'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ inputs.node_version || '22' }}
+          check-latest: true
 
       - name: 'Install dependencies'
         run: yarn install --ignore-scripts --non-interactive
