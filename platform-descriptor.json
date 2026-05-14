@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000009799"
+        "version": "2.1.0-SNAPSHOT.100200000009825"
       },
       {
         "name": "app-agreements",
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.1.0-SNAPSHOT.100200000007951"
+        "version": "1.1.0-SNAPSHOT.100200000007952"
       },
       {
         "name": "app-data-import",
