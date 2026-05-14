@@ -308,7 +308,7 @@ jobs:
       - name: Install Node ${{ inputs.node-version }}
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ inputs.node-version }}
+          node-version: ${{ inputs.node-version || '22' }}
           check-latest: true
 
       - name: Set FOLIO NPM registry
