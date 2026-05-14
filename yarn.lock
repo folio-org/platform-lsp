@@ -1833,9 +1833,9 @@
     "@folio/plugin-find-instance" "^10.0.0"
 
 "@folio/invoice@>=1.0.0":
-  version "8.0.1099000000000540"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/invoice/-/invoice-8.0.1099000000000540.tgz#b08b762e3eea4e883064612ba0aad439b2ee4f34"
-  integrity sha512-DCDa1VC77ZOny2jAAXbvwZE42z/JsG2QGQx3LW23Xq0Z2EkEDkZEQhGwFzYjPSld5Of5+s1o744VGU+PLlGhjA==
+  version "8.0.1099000000000545"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/invoice/-/invoice-8.0.1099000000000545.tgz#0ea83cc3c97731059237cf5be3d53fca8147cdec"
+  integrity sha512-Lb2uD1NVeKhR/6IEZkE6TCGUxC7gC70+0inWKrsiyNppB41+bH6B53w0jfXb8fBEMYaCThBwA6MQ3sBXVAXoVw==
   dependencies:
     "@folio/stripes-acq-components" "~7.1.0"
     file-saver "^2.0.0"
@@ -2025,9 +2025,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/orders@>=1.1.0":
-  version "9.0.1099000000000973"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-9.0.1099000000000973.tgz#c6556606292210aa0f52d72154d2ba53ab8b864c"
-  integrity sha512-q3MH6gUfSt7AbTNu45kbaY5frZiHvHpwGH9grrOoGwe9Fy10ZjNBFQbugwLm/tOdEWy+4YNHQVTRljNwtVS3cw==
+  version "9.0.1099000000000976"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-9.0.1099000000000976.tgz#6eceb472377ff46ee7ee1778eee9f744a355f084"
+  integrity sha512-9ARJ/7viA7kejjsa0Hickej9PlsbAmN7EQhTvrq1s17cVyMNv++Fa7wGgbTEkHyHFd5P9zz64gee9I/U2NG4Vg==
   dependencies:
     "@folio/plugin-find-po-line" "^6.0.0"
     "@folio/stripes-acq-components" "~7.1.0"
@@ -2292,9 +2292,9 @@
     prop-types "^15.6.0"
 
 "@folio/quick-marc@>=1.0.0", "@folio/quick-marc@^11.0.0":
-  version "11.0.1099000000000576"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/quick-marc/-/quick-marc-11.0.1099000000000576.tgz#ba99cd423d9e49a1b31c38a68ca1e5bf97dba61d"
-  integrity sha512-FzkC7O3THTiD2q9Tga6joBAfye6ampXFIdhDYWmRnwSTsJiXn2a6cOF3AUXTpVblDeDBOr+xDH6cVXvFjyNrRQ==
+  version "11.1.1099000000000579"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/quick-marc/-/quick-marc-11.1.1099000000000579.tgz#97f2c17f6dc1161fa77c6f87f7df26175f1e7f7e"
+  integrity sha512-nYvEK3WvmNrNQdnOdp9VOBWYF29YyvxP2Era2N542Oy0g67+xiNc5wPP88YChaFodMsc/oJy6XESJ5NJeUnqAA==
   dependencies:
     "@folio/stripes-acq-components" "^7.1.0"
     classnames "^2.5.1"
@@ -2542,9 +2542,9 @@
     uuid "^9.0.0"
 
 "@folio/stripes-core@^11.0.0":
-  version "11.1.1099000000001799"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.1.1099000000001799.tgz#3ecac6bf8c25eb5309cc24f212962a6145ce8463"
-  integrity sha512-pz+AZEQscmliGV3uiS4KIMVSlx8LDV/MA6YWP/wYMDUQGZqaRShaPvk4OaZZ4qzA1vgH0qEFlAu04QCvpgU0RQ==
+  version "11.1.1099000000001806"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.1.1099000000001806.tgz#89c85e0ac8d3e2020efc71803f836a92b82de6cc"
+  integrity sha512-NoyRdeVylFOgbWLO/iSVyRDKlG4L9M2TQYyKW2MfHD6Tq4CWo7+3rFAGF+0XDs/WA/n+V1V/Kq66ymD7sWU0Hw==
   dependencies:
     "@apollo/client" "^3.2.1"
     "@module-federation/runtime" "^2.0.0"
@@ -3877,11 +3877,11 @@
   integrity sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==
 
 "@types/node@*":
-  version "25.7.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-25.7.0.tgz#7498f82e90dbdce7c34b75aaaa256c498a0ebe6c"
-  integrity sha512-z+pdZyxE+RTQE9AcboAZCb4otwcrvgHD+GlBpPgn0emDVt0ohrTMhAwlr2Wd9nZ+nihhYFxO2pThz3C5qSu2Eg==
+  version "25.8.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-25.8.0.tgz#d13033397d1c186876bed4c9b9d7f3f962097eb3"
+  integrity sha512-TCFSk8IZh+iLX1xtksoBVtdmgL+1IX0fC9BeU4QqFSuNdN/K+HUlhqOzEmSYYpZUVsLYcPqc9KX+60iDuninSQ==
   dependencies:
-    undici-types "~7.21.0"
+    undici-types ">=7.24.0 <7.24.7"
 
 "@types/pako@^2.0.3":
   version "2.0.4"
@@ -5538,9 +5538,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.328:
-  version "1.5.355"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.355.tgz#ea6acfbb850595c54814125a3906336edd619856"
-  integrity sha512-LUPZhKzZPYSPme1jEYohpkA+ybYCJztr1quAdBd7E7h3+VOBVcKkwwtBJu41nrjawrRzfb8mtMfzWozoaK0ZIQ==
+  version "1.5.356"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.356.tgz#6de16c06bc84869cab8bdd6e7b9020ff5bf31389"
+  integrity sha512-9NgFd7m5t5MCJ5rUSjJITUXAH9mEGlrlofnMf4YEr+pz6JlP7cWmTAH+JFmbPnaSW8koVTkuW7pacORWAnA5Yw==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -8685,11 +8685,11 @@ react-router-dom@^5.2.0:
     tiny-warning "^1.0.0"
 
 react-router-dom@^7.14.0:
-  version "7.15.0"
-  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-7.15.0.tgz#a4b95c4402d896c2ad437014aff9076b94673063"
-  integrity sha512-VcrVg64Fo8nwBvDscajG8gRTLIuTC6N50nb22l2HOOV4PTOHgoGp8mUjy9wLiHYoYTSYI36tUnXZgasSRFZorQ==
+  version "7.15.1"
+  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-7.15.1.tgz#cf5aee65a44e407a17a2e9718d5350482b1e281f"
+  integrity sha512-AzF62gjY6U9rkMq4RfP/r2EVtQ7DMfNMjyOp/flLTCrtRylLiK4wT4pSq6O8rOXZ2eXdZYJPEYe+ifomiv+Igg==
   dependencies:
-    react-router "7.15.0"
+    react-router "7.15.1"
 
 react-router-prop-types@^1.0.4, react-router-prop-types@^1.0.5:
   version "1.0.5"
@@ -8714,10 +8714,10 @@ react-router@5.3.4, react-router@^5.2.0:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
-react-router@7.15.0:
-  version "7.15.0"
-  resolved "https://registry.yarnpkg.com/react-router/-/react-router-7.15.0.tgz#cb438ff254ab5a1e356ef5a23d7821d8f6fbe652"
-  integrity sha512-HW9vYwuM8f4yx66Izy8xfrzCM+SBJluoZcCbww9A1TySax11S5Vgw6fi3ZjMONw9J4gQwngL7PzkyIpJJpJ7RQ==
+react-router@7.15.1:
+  version "7.15.1"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-7.15.1.tgz#0a12fece05887a47c54970480745385c793bcaac"
+  integrity sha512-R8rl9HhgikFYoPJymnUtPXWbnDb3oget6lQnfIoupbt61aT9aOhRkDsY2XRhZRyX1Z/8a5sL74fXmFNm3NRK5A==
   dependencies:
     cookie "^1.0.1"
     set-cookie-parser "^2.6.0"
@@ -9879,10 +9879,10 @@ uglify-js@^3.1.4:
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.19.3.tgz#82315e9bbc6f2b25888858acd1fff8441035b77f"
   integrity sha512-v3Xu+yuwBXisp6QYTcH4UbH+xYJXqnq2m/LtQVWKWzYc1iehYnLixoQDN9FH6/j9/oybfd6W9Ghwkl8+UMKTKQ==
 
-undici-types@~7.21.0:
-  version "7.21.0"
-  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-7.21.0.tgz#433f7dd1b5daa9ab4dacb721a5e11a8de51eadda"
-  integrity sha512-w9IMgQrz4O0YN1LtB7K5P63vhlIOvC7opSmouCJ+ZywlPAlO9gIkJ+otk6LvGpAs2wg4econaCz3TvQ9xPoyuQ==
+"undici-types@>=7.24.0 <7.24.7":
+  version "7.24.6"
+  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-7.24.6.tgz#61275b485d7fd4e9d269c7cf04ec2873c9cc0f91"
+  integrity sha512-WRNW+sJgj5OBN4/0JpHFqtqzhpbnV0GuB+OozA9gCL7a993SmU+1JBZCzLNxYsbMfIeDL+lTsphD5jN5N+n0zg==
 
 undici@7.24.7:
   version "7.24.7"
