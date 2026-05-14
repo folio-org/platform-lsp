@@ -339,7 +339,7 @@ jobs:
       - name: 'Setup Node.js'
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ inputs.node_version || '22.x' }}
+          node-version: ${{ inputs.node_version || '22' }}
 
       - name: 'Install dependencies'
         run: yarn install --ignore-scripts --non-interactive

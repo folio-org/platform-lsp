@@ -33,7 +33,7 @@ on:
       node-version:
         description: 'Node.js version to use'
         required: true
-        default: '22.x'
+        default: '22'
         type: string
       folio-npm-registry:
         description: 'FOLIO NPM registry URL'
