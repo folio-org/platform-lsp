@@ -2271,7 +2271,22 @@
     lodash "^4.17.4"
     prop-types "^15.6.0"
 
-"@folio/plugin-query-builder@3.0.0", "@folio/plugin-query-builder@^3.0.0":
+"@folio/plugin-query-builder@3.0.1":
+  version "3.0.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-query-builder/-/plugin-query-builder-3.0.1.tgz#1414409f6a29c1cf51db37f3ef98f8ad0e29b553"
+  integrity sha512-P0BlhR33CCI0kEVIIQDVQJ812JZNrd7hlCVy/Sr62v8rp0LknCkspvdnT72hDwFoX/R9CZrzQpb0dJReQTt+WA==
+  dependencies:
+    "@folio/stripes-acq-components" "^7.0.0"
+    classnames "^2.5.1"
+    fuzzysort "^2.0.4"
+    ky "^0.33.2"
+    lodash "^4.17.5"
+    prop-types "^15.5.10"
+    react-query "^3.6.0"
+  optionalDependencies:
+    "@folio/plugin-find-organization" "^6.0.0"
+
+"@folio/plugin-query-builder@^3.0.0":
   version "3.0.0"
   resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-query-builder/-/plugin-query-builder-3.0.0.tgz#1cdd206796dea2f3306a3372153d7c5f2b0a4a10"
   integrity sha512-G1tTbg24XIYYVOejEY9oFM1CR6Ej6XvBZfkw+vJ9PkFrOJXqLCKjDZQDaLua5A9KDpL0DBgC5rPxbuAnvzXeIw==
