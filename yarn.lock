@@ -2355,9 +2355,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/requests-mediated@>=1.0.0":
-  version "4.1.1099000000000246"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/requests-mediated/-/requests-mediated-4.1.1099000000000246.tgz#42804405e50e1e02fd8da5ccb9018376b1446a8d"
-  integrity sha512-cF2M2OVHm0QWOQLlodXjO/hay0mkWGHrK3vssrz62g1QphFdOOpSp7dNkj84tc8D4rZftyZKYQ+MFG1usOgLnA==
+  version "4.1.1099000000000251"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/requests-mediated/-/requests-mediated-4.1.1099000000000251.tgz#189b4595588f6eef07e5d227d8603212e24eab89"
+  integrity sha512-sQa+C9oEZFhM8Ulty43V+IUvzNsBEWFD2y7aeBJYg/grvzPPBXBvV609OWtoJa9BUjtKDVgv+k/Rdik2PFUU9g==
   dependencies:
     dompurify "^3.1.7"
     html-to-react "^1.3.3"
