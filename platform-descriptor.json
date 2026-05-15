@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.1.0-SNAPSHOT.100200000009519"
+        "version": "1.1.0-SNAPSHOT.100200000009523"
       },
       {
         "name": "app-authority-records",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.1.0-SNAPSHOT.100200000009576"
+        "version": "1.1.0-SNAPSHOT.100200000009578"
       },
       {
         "name": "app-linked-data",
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-oa",
-        "version": "1.0.0-SNAPSHOT.100200000009308"
+        "version": "1.0.0-SNAPSHOT.100200000009689"
       },
       {
         "name": "app-oai-pmh",
@@ -166,7 +166,7 @@
       },
       {
         "name": "app-requests-mediated",
-        "version": "3.1.0-SNAPSHOT.100200000009864"
+        "version": "3.1.0-SNAPSHOT.100200000009906"
       },
       {
         "name": "app-requests-mediated-ui",
@@ -186,7 +186,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.1.0-SNAPSHOT.100200000009720"
+        "version": "1.1.0-SNAPSHOT.100200000009723"
       }
     ],
     "experimental": [
