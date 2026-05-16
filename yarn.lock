@@ -6103,11 +6103,11 @@ flexboxgrid2@^7.2.0:
     normalize.css "^7.0.0"
 
 focus-trap-react@^12.0.0:
-  version "12.0.1"
-  resolved "https://registry.yarnpkg.com/focus-trap-react/-/focus-trap-react-12.0.1.tgz#4e8e029ee018838a6ce257d74518ce44fcccfc9c"
-  integrity sha512-MUlm5W4YP9qXZt6J7cRkdZtVekN7WQRqh5STvcRM8s2juTQWNFIz2BYlvaEddij9h04H/9SL8QcXkvqEEWUD6A==
+  version "12.0.2"
+  resolved "https://registry.yarnpkg.com/focus-trap-react/-/focus-trap-react-12.0.2.tgz#cd9d6e423cc0c4eb0d9b08a789d53ab7038dc6ad"
+  integrity sha512-74OXbMiEOEDfynxLwhntTEbBbL+nSvGyBaLQ8tfnDuLPBLR+bgdE4oMaK8DOt/u9YH+9JFKJ+MuIYInSX7Rk5g==
   dependencies:
-    focus-trap "^8.1.0"
+    focus-trap "^8.2.1"
     tabbable "^6.4.0"
 
 focus-trap@^7.5.4:
@@ -6117,7 +6117,7 @@ focus-trap@^7.5.4:
   dependencies:
     tabbable "^6.4.0"
 
-focus-trap@^8.1.0:
+focus-trap@^8.2.1:
   version "8.2.1"
   resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-8.2.1.tgz#ab192bbaf6f767f869d47e2e6f804e336ea5874a"
   integrity sha512-6CxwrrFRquH7pDXb1mWxudkU9LSfYBMRZutpgddb2o6iwCk7cIRrBhyY3c8SGKcmIKdeMTrGSNg4Bedh2RSF/w==
