@@ -1433,10 +1433,10 @@
     react-final-form "^6.3.0"
     react-final-form-arrays "^3.1.1"
 
-"@folio/bulk-edit@5.1.0":
-  version "5.1.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/bulk-edit/-/bulk-edit-5.1.0.tgz#df20dc569fe444df0cadf7417e8e95fc1a58c11c"
-  integrity sha512-Dtf1scATY1OF55C0fSRU97H5pUuqbPgw8pzdsRaJH1LgntSmzgeEIeZ/5K0DmKwDoIaIs0FZ76TwpzWCNok2bA==
+"@folio/bulk-edit@5.1.1":
+  version "5.1.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/bulk-edit/-/bulk-edit-5.1.1.tgz#78afc6878567f671826eeb6b90bc280ff689fe74"
+  integrity sha512-3bvxT1f9Sa1DTjGniihOOF/MlvHYlNhiwcHzcb4AIpAgmTRhz/mX/iYnUfaQIe8VscHSm5El3XpQXsAiCMrAbg==
   dependencies:
     "@folio/plugin-query-builder" "^3.0.0"
     "@folio/stripes-acq-components" "^7.0.0"
@@ -1872,10 +1872,10 @@
     "@folio/plugin-find-organization" "^6.0.0"
     "@folio/plugin-find-po-line" "^6.0.0"
 
-"@folio/ld-folio-wrapper@2.0.1":
-  version "2.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/ld-folio-wrapper/-/ld-folio-wrapper-2.0.1.tgz#296054e2bcb879c427d40cf6f746c55dc881cff2"
-  integrity sha512-BwGGyFh0DCTKGE38ep6edWuiwQ8PSw0j0Rp0uZ0PBKopNMlarZ1wcQ2c6uzLVYdrwPLqD0QQEFLtdseY76wJeg==
+"@folio/ld-folio-wrapper@2.0.3":
+  version "2.0.3"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/ld-folio-wrapper/-/ld-folio-wrapper-2.0.3.tgz#03646e8699ae6a10d3a4aa4934a7f51ff46d0fb5"
+  integrity sha512-vga6yRIfoH4DMW1/kRgMzlaKEDeoTc1YDXBUCGRU8b4Ww0PVuDM1M1avwsjeWruYu6tbki7NJPgtVHJYfYohEA==
   dependencies:
     "@folio/linked-data" "^2.0.0"
     prop-types "^15.6.0"
