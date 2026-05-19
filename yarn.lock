@@ -2025,9 +2025,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/orders@>=1.1.0":
-  version "9.0.1099000000000980"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-9.0.1099000000000980.tgz#866452e2c29bae531f54bfaef68458b82bd9f86c"
-  integrity sha512-Nex5EU4jTz93llyC+DQ0e9NLT1gc1A/ePwgNfRUuZLZNTj/MR41VWdoX0CCrXnCmEZbF2m4vB79S4TqIdtXTaA==
+  version "9.0.1099000000000983"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-9.0.1099000000000983.tgz#beb32531a26b17a70de18510aa126a95a7053f55"
+  integrity sha512-PkvFIq1ftMwX1KPtB+9A1ylzMfloq78S+F8EWje8tKpD19EaWkrJUvaRDXafR8ePi+QdGhXT2EJNwdFqQk5UWw==
   dependencies:
     "@folio/plugin-find-po-line" "^6.0.0"
     "@folio/stripes-acq-components" "~7.1.0"
@@ -2865,9 +2865,9 @@
     uuid "9.0.0"
 
 "@folio/users@>=2.17.0":
-  version "13.1.1099000000001334"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/users/-/users-13.1.1099000000001334.tgz#f925b1a26a304a43c955b7396734d6d8ada9f152"
-  integrity sha512-QcvY4ZMY0EASzRquJopVSpkzgi76py2s5uSSgtd6gyyr8apQENow9jEC7zo8hpIoBZdPQIEpWy5Z6rM09vltrg==
+  version "13.1.1099000000001337"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/users/-/users-13.1.1099000000001337.tgz#3f2656b2805498e8a2f91bb6a2ce270a16698c1b"
+  integrity sha512-ibc086dJM1UuwuGOvF1WBadVULNydoGmoF6YnYFWdw6L/HHhRLA8QBUBIfzUmQyPC2bpiKXKikt4YwaH9HWHig==
   dependencies:
     compressorjs "^1.2.1"
     dompurify "^3.2.0"
@@ -5563,9 +5563,9 @@ encodeurl@~2.0.0:
   integrity sha512-Q0n9HRi4m6JuGIV1eFlmvJB7ZEVxu93IrMyiMsGC0lrMJMWzRgx6WGquyfQgZVb31vhGgXnfmPNNXmxnOkRBrg==
 
 enhanced-resolve@^5.0.0, enhanced-resolve@^5.20.0:
-  version "5.21.4"
-  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.21.4.tgz#dfc764a3fd9db04be03ba9c99c950aa650b365c8"
-  integrity sha512-wE4fDO8OjJhrPFH69HUQStq5oKvGRTNXEyW+k5C/pUQLASSsTu7obd2V3GvCDgPcY9AWjhJ4jz9Kh7iRvrxhJg==
+  version "5.21.5"
+  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.21.5.tgz#8f80167d009d8f01267ad61035e59fe5c94ac3a6"
+  integrity sha512-mLCNbrQli11K1ySUmuNt4ZUB3OpGIDq4q2vTBTf5cL2lpsRjI9QKqSD0ndjW8FyvcW/Jj46gMe9syyHAsvMa/A==
   dependencies:
     graceful-fs "^4.2.4"
     tapable "^2.3.3"
@@ -8567,9 +8567,9 @@ react-intl-formatted-duration@^4.0.0:
     intl-unofficial-duration-unit-format "3.0.0"
 
 react-intl@^10.1.1:
-  version "10.1.7"
-  resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-10.1.7.tgz#61e1fa8fa003358c87d008e9e2d8776fc3cd5f3d"
-  integrity sha512-VAeHBDccPU9y43UbJJ7GzyLNY+1Z2ul3xSjVmb9qZ/vh/E+ACBm/me4IvAv/VvXShcF817hHyzcJOuzoZejqOA==
+  version "10.1.8"
+  resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-10.1.8.tgz#ce796ea01750666667c36ff76adc15d55a2b4019"
+  integrity sha512-+iBzzkykXkZ2/9zI8LnDmfCobgz33J+r+24QbX4dJJ4f6rO1LuFwqv39kSTloZdPm9yYcnJOrvz0MqyCa6XeXQ==
   dependencies:
     "@formatjs/icu-messageformat-parser" "3.5.9"
     "@formatjs/intl" "4.1.11"
