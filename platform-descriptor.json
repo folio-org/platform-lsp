@@ -36,13 +36,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000008858"
+        "version": "3.4.0-SNAPSHOT.100200000008860"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000009978"
+        "version": "2.1.0-SNAPSHOT.100200000009979"
       },
       {
         "name": "app-agreements",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000009271"
+        "version": "3.1.0-SNAPSHOT.100200000009454"
       },
       {
         "name": "app-marc-storage",
@@ -146,11 +146,11 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "2.1.0-SNAPSHOT.100200000009625"
+        "version": "2.1.0-SNAPSHOT.100200000009627"
       },
       {
         "name": "app-quick-marc",
-        "version": "1.1.0-SNAPSHOT.100200000004247"
+        "version": "1.1.0-SNAPSHOT.100200000004387"
       },
       {
         "name": "app-reading-room",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000010026"
+        "version": "1.1.0-SNAPSHOT.100200000010044"
       },
       {
         "name": "app-service-interaction",
