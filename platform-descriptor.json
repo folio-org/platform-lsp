@@ -36,13 +36,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000008838"
+        "version": "3.4.0-SNAPSHOT.100200000008858"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000009957"
+        "version": "2.1.0-SNAPSHOT.100200000009978"
       },
       {
         "name": "app-agreements",
@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "2.1.0-SNAPSHOT.100200000009388"
+        "version": "2.1.0-SNAPSHOT.100200000009548"
       },
       {
         "name": "app-consortia",
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.1.0-SNAPSHOT.100200000008077"
+        "version": "1.1.0-SNAPSHOT.100200000008102"
       },
       {
         "name": "app-data-import",
@@ -146,7 +146,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "2.1.0-SNAPSHOT.100200000009489"
+        "version": "2.1.0-SNAPSHOT.100200000009625"
       },
       {
         "name": "app-quick-marc",
