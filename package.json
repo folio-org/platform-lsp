@@ -66,7 +66,7 @@
     "@folio/plugin-find-user": "8.1.0",
     "@folio/plugin-select-application": "3.0.0",
     "@folio/plugin-query-builder": "3.0.1",
-    "@folio/quick-marc": "11.0.0",
+    "@folio/quick-marc": "11.0.1",
     "@folio/reading-room": "3.0.0",
     "@folio/receiving": "8.0.3",
     "@folio/remote-storage": "7.1.0",
