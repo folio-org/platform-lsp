@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000009979"
+        "version": "2.1.0-SNAPSHOT.100200000009999"
       },
       {
         "name": "app-agreements",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000010044"
+        "version": "1.1.0-SNAPSHOT.100200000010063"
       },
       {
         "name": "app-service-interaction",
