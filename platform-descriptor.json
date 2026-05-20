@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000009510"
+        "version": "2.2.0-SNAPSHOT.100200000009515"
       },
       {
         "name": "app-platform-complete",
@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.1.0-SNAPSHOT.100200000009523"
+        "version": "1.1.0-SNAPSHOT.100200000009656"
       },
       {
         "name": "app-authority-records",
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.1.0-SNAPSHOT.100200000008102"
+        "version": "1.1.0-SNAPSHOT.100200000008126"
       },
       {
         "name": "app-data-import",
@@ -130,7 +130,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.0.0-SNAPSHOT.100200000007965"
+        "version": "1.1.0-SNAPSHOT.100200000008427"
       },
       {
         "name": "app-mosaic",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000010064"
+        "version": "1.1.0-SNAPSHOT.100200000010065"
       },
       {
         "name": "app-service-interaction",
