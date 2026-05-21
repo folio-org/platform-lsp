@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000008901"
+        "version": "3.4.0-SNAPSHOT.100200000008904"
       }
     ],
     "optional": [
@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "2.1.0-SNAPSHOT.100200000009592"
+        "version": "2.1.0-SNAPSHOT.100200000009594"
       },
       {
         "name": "app-consortia",
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.1.0-SNAPSHOT.100200000008128"
+        "version": "1.1.0-SNAPSHOT.100200000008149"
       },
       {
         "name": "app-data-import",
