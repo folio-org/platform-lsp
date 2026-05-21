@@ -19,7 +19,7 @@ module.exports = {
     isSingleTenant: ${isSingleTenant},
     enableEcsRequests: ${enableEcsRequests},
     rtr: {
-      idleSessionTTL: '1h',
+      idleSessionTTL: '120s',
       idleModalTTL: '30s',
     },
     logCategories: 'core,path,action,xhr',
