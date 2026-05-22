@@ -2004,10 +2004,10 @@
     react-query "^3.39.3"
     react-router-prop-types "^1.0.4"
 
-"@folio/orders@9.0.2":
-  version "9.0.2"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/orders/-/orders-9.0.2.tgz#9a0eb3965cbdd299029b5de898b1cbf173b33dfb"
-  integrity sha512-yG75wIn8p5QmP/nTFel7QpmsDnfnyCqTFt4MS7qr+UgLY6QuL9FfN4q3cIZdvtVmO7OInx46qI0CeHdLHqUjCw==
+"@folio/orders@9.0.3":
+  version "9.0.3"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/orders/-/orders-9.0.3.tgz#4d34192ce0594a2997528ba43deeb4ee6e4c70c6"
+  integrity sha512-6EhTgOk6YvenlvMX5hP/lkqD4NQjQ8Lp+VV1QT/1laq4cs4r63MJdS8vTwmuxV5o4ZnHsjlooaXnPmrzujCivw==
   dependencies:
     "@folio/plugin-find-po-line" "^6.0.0"
     "@folio/stripes-acq-components" "~7.1.0"
@@ -2208,7 +2208,16 @@
     qs "^6.14.1"
     react-final-form "^6.3.0"
 
-"@folio/plugin-find-po-line@6.1.0", "@folio/plugin-find-po-line@^6.0.0":
+"@folio/plugin-find-po-line@6.1.1":
+  version "6.1.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-find-po-line/-/plugin-find-po-line-6.1.1.tgz#6714f925929595d6297d2437e8fa7be49eed17ae"
+  integrity sha512-OXplfcQcvkOqpO7gadjl5N7LOgCLdrbzMZQDEhAsjC4reoSXelr/I4E2TjYgNFimcd2Aj+CkjnluZVv5o/GNUQ==
+  dependencies:
+    "@folio/stripes-acq-components" "~7.1.0"
+    lodash "^4.17.11"
+    prop-types "^15.6.0"
+
+"@folio/plugin-find-po-line@^6.0.0":
   version "6.1.0"
   resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-find-po-line/-/plugin-find-po-line-6.1.0.tgz#74e06cbadfb12d26f61e9b55727b612eff8ca42f"
   integrity sha512-15wIvML8SWn5HBf89Oh2qaI/0qsSePFT4MbdSGEVt2M9Nlt6W8Mqa0IusM8PEC5kL8nLca+vZs6ZMA9xhZ3TXQ==
