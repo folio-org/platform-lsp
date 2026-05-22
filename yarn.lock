@@ -1855,11 +1855,11 @@
     "@folio/plugin-find-po-line" "^6.0.0"
 
 "@folio/ld-folio-wrapper@>=1.0.0":
-  version "2.0.3099000000000482"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/ld-folio-wrapper/-/ld-folio-wrapper-2.0.3099000000000482.tgz#abfbb8882d4c5a5c11a375fa909f0e475c2c661e"
-  integrity sha512-V1QIR7VgcDQkjdHppT4ZC/A9zMM30ZyCTOKl3o2HY2InVk4qEWtp8NrfSDt7pKbC+sZrfkoM6pYKAW/yAJRptw==
+  version "2.0.4099000000000486"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/ld-folio-wrapper/-/ld-folio-wrapper-2.0.4099000000000486.tgz#af60d598d309edabea1db22c543bd9b50f9eca02"
+  integrity sha512-HpnvubV0ynQGwgiUHVqWzisjLidd5vIMNdy2AwXPR+l3lUsUs4nCdthGZLSJXH1d5TxAVAf7jPeST6J4cVQakA==
   dependencies:
-    "@folio/linked-data" "^2.0.0"
+    "@folio/linked-data" "^2.0.3"
     prop-types "^15.6.0"
 
 "@folio/ldp@>=1.1.0":
@@ -1904,7 +1904,7 @@
     react-final-form-arrays "^3.1.0"
     react-router-prop-types "^1.0.4"
 
-"@folio/linked-data@^2.0.0":
+"@folio/linked-data@^2.0.3":
   version "2.0.3099000000002462"
   resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.3099000000002462.tgz#b6af9151c12b76dcc352916a5d8fa92cb08d11f6"
   integrity sha512-mxJO7wy9umxePnwjIn9JxRJDDCcXrciNsZ1H6YqDuzX0Sk9YXhNLxkC9uximZt3+hDRkhHddPKmvmPhjtce3KQ==
@@ -5547,9 +5547,9 @@ encodeurl@~2.0.0:
   integrity sha512-Q0n9HRi4m6JuGIV1eFlmvJB7ZEVxu93IrMyiMsGC0lrMJMWzRgx6WGquyfQgZVb31vhGgXnfmPNNXmxnOkRBrg==
 
 enhanced-resolve@^5.0.0, enhanced-resolve@^5.21.4:
-  version "5.21.6"
-  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.21.6.tgz#aa207b43cf658e6ab3ba06896edc00c13c3127c6"
-  integrity sha512-aNnGCvbJ/RIyWo1IuhNdVjnNF+EjH9wpzpNHt+ci/m9He9LJvUN8wrCcXjp9cWsGNAuvSpVFTx/vraAFQ8qGjQ==
+  version "5.22.0"
+  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.22.0.tgz#43c5caad657c6fce58fc6142e5ca6fa8528ed460"
+  integrity sha512-xYcDWrpELkFzz9SpZ3PlI6Eu6eD93Yf0WLDRxikGhWJ3MAir2SNZTIVCVZqZ/NUyx8AdMc2gT9C0gPiw18kG+A==
   dependencies:
     graceful-fs "^4.2.4"
     tapable "^2.3.3"
