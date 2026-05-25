@@ -210,35 +210,62 @@ jobs:
       dry_run: ${{ inputs.dry_run }}
     secrets: inherit
 
+  dependency-refresh:
+    name: Refresh Dependencies ${{ matrix.application }}
+    needs: [setup, bump]
+    if: always() && needs.setup.result == 'success'
+    strategy:
+      matrix:
+        application: ${{ fromJson(needs.setup.outputs.applications) }}
+      fail-fast: false
+      max-parallel: 10
+    uses: folio-org/kitfox-github/.github/workflows/dependency-refresh-flow.yml@master
+    with:
+      app_name: ${{ matrix.application }}
+      repo: folio-org/${{ matrix.application }}
+      target_branch: snapshot
+      dry_run: ${{ inputs.dry_run }}
+    secrets: inherit
+
   collect-results:
     name: Collect Application Results
-    needs: [setup, bump]
+    needs: [setup, bump, dependency-refresh]
     runs-on: ubuntu-latest
     if: always() && needs.bump.result != 'skipped'
     outputs:
-      success_count: ${{ steps.gather.outputs.success_count }}
-      skipped_count: ${{ steps.gather.outputs.skipped_count }}
-      failure_count: ${{ steps.gather.outputs.failure_count }}
-      successful_apps: ${{ steps.gather.outputs.successful_apps }}
-      skipped_apps: ${{ steps.gather.outputs.skipped_apps }}
-      failed_apps: ${{ steps.gather.outputs.failed_apps }}
-      bumped_apps: ${{ steps.gather.outputs.bumped_apps }}
+      success_count: ${{ steps.gather-bump.outputs.success_count }}
+      skipped_count: ${{ steps.gather-bump.outputs.skipped_count }}
+      failure_count: ${{ steps.gather-bump.outputs.failure_count }}
+      successful_apps: ${{ steps.gather-bump.outputs.successful_apps }}
+      skipped_apps: ${{ steps.gather-bump.outputs.skipped_apps }}
+      failed_apps: ${{ steps.gather-bump.outputs.failed_apps }}
+      bumped_apps: ${{ steps.gather-bump.outputs.bumped_apps }}
+      deprefresh_success_count: ${{ steps.gather-deprefresh.outputs.deprefresh_success_count }}
+      deprefresh_skipped_count: ${{ steps.gather-deprefresh.outputs.deprefresh_skipped_count }}
+      deprefresh_failure_count: ${{ steps.gather-deprefresh.outputs.deprefresh_failure_count }}
+      deprefresh_apps: ${{ steps.gather-deprefresh.outputs.deprefresh_apps }}
+      deprefresh_failed_apps: ${{ steps.gather-deprefresh.outputs.deprefresh_failed_apps }}
     steps:
-      - name: Download All Application Results
+      - name: Download Bump Results
         uses: actions/download-artifact@v4
         with:
           pattern: "result-*"
           path: /tmp/all-results
           merge-multiple: true
 
-      - name: Gather Application Results
-        id: gather
+      - name: Download Dep-Refresh Results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "deprefresh-*"
+          path: /tmp/all-deprefresh
+          merge-multiple: true
+
+      - name: Gather Bump Results
+        id: gather-bump
         run: |
           set -eo pipefail
 
-          echo "::notice::Analyzing application results"
-
-          all=$(jq -s '.' /tmp/all-results/*.json)
+          all=$(jq -s '.' /tmp/all-results/*.json 2>/dev/null || echo '[]')
 
           success_count=$(jq '[.[] | select(.status=="success")] | length' <<<"$all")
           skipped_count=$(jq '[.[] | select(.status=="skipped")] | length' <<<"$all")
@@ -256,7 +283,7 @@ jobs:
             | join("\n")
           ' <<<"$all")
 
-          echo "::notice::Results - Success: $success_count, Skipped: $skipped_count, Failed: $failure_count"
+          echo "::notice::Bump - Success: $success_count, Skipped: $skipped_count, Failed: $failure_count"
 
           {
             echo "success_count=$success_count"
@@ -284,10 +311,49 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
+      - name: Gather Dep-Refresh Results
+        id: gather-deprefresh
+        run: |
+          set -eo pipefail
+
+          deprefresh_all=$(jq -s '.' /tmp/all-deprefresh/*.json 2>/dev/null || echo '[]')
+
+          deprefresh_success_count=$(jq '[.[] | select(.status=="success")] | length' <<<"$deprefresh_all")
+          deprefresh_skipped_count=$(jq '[.[] | select(.status=="skipped")] | length' <<<"$deprefresh_all")
+          deprefresh_failure_count=$(jq '[.[] | select(.status=="failed")] | length' <<<"$deprefresh_all")
+
+          deprefresh_apps=$(jq -r --arg base "${GITHUB_SERVER_URL}" '
+            [.[]
+              | select(.status=="success" and (.refreshed_count // 0) > 0)
+              | "<\($base)/folio-org/\(.application)/tree/snapshot|\(.application) (\(.refreshed_count) constraint(s))>"
+            ]
+            | join("\n")
+          ' <<<"$deprefresh_all")
+
+          deprefresh_failed_apps=$(jq -r '[.[] | select(.status=="failed") | "\(.application) (\(.failure_reason // "failed"))"] | join("\n")' <<<"$deprefresh_all")
+
+          echo "::notice::Dep-refresh - Success: $deprefresh_success_count, Skipped: $deprefresh_skipped_count, Failed: $deprefresh_failure_count"
+
+          {
+            echo "deprefresh_success_count=$deprefresh_success_count"
+            echo "deprefresh_skipped_count=$deprefresh_skipped_count"
+            echo "deprefresh_failure_count=$deprefresh_failure_count"
+          } >> "$GITHUB_OUTPUT"
+          {
+            echo "deprefresh_apps<<EOF"
+            printf '%s\n' "$deprefresh_apps"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          {
+            echo "deprefresh_failed_apps<<EOF"
+            printf '%s\n' "$deprefresh_failed_apps"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
   slack_notification:
     name: Slack Notification
     runs-on: ubuntu-latest
-    needs: [setup, bump, collect-results]
+    needs: [setup, bump, dependency-refresh, collect-results]
     if: always() && inputs.dry_run == false
     outputs:
       notification_outcome: ${{ steps.send-success.outcome || steps.send-failure.outcome }}
@@ -295,8 +361,10 @@ jobs:
       IS_SUCCESS: >-
         ${{
             needs.bump.result == 'failure' && 'false' ||
+            needs.dependency-refresh.result == 'failure' && 'false' ||
             needs.collect-results.result == 'failure' && 'false' ||
             needs.collect-results.outputs.failure_count != '0' && 'false' ||
+            needs.collect-results.outputs.deprefresh_failure_count != '0' && 'false' ||
             'true'
         }}
     steps:
@@ -333,11 +401,28 @@ jobs:
                   "short": true
                 },
                 {
-                  "title": "Skipped",
+                  "title": "Bump Skipped",
                   "value": "${{ needs.collect-results.outputs.skipped_count }}",
+                  "short": true
+                },
+                {
+                  "title": "Templates Refreshed",
+                  "value": "${{ needs.collect-results.outputs.deprefresh_success_count || '0' }}",
+                  "short": true
+                },
+                {
+                  "title": "Refresh Skipped",
+                  "value": "${{ needs.collect-results.outputs.deprefresh_skipped_count || '0' }}",
                   "short": true
                 }
               ]
+            }
+          DEPREFRESH_ATTACHMENT: |
+            {
+              "color": "good",
+              "mrkdwn_in": ["text"],
+              "text": ${{ toJSON(needs.collect-results.outputs.deprefresh_apps) }},
+              "footer": "Eureka CI/CD — Dependency Refresh"
             }
         uses: slackapi/slack-github-action@v2.1.1
         with:
@@ -357,8 +442,9 @@ jobs:
                   "color": "good",
                   "mrkdwn_in": ["text"],
                   "text": ${{ toJSON(needs.collect-results.outputs.bumped_apps) }},
-                  "footer": "Eureka CI/CD"
-                }
+                  "footer": "Eureka CI/CD — Bumped"
+                },
+                ${{ needs.collect-results.outputs.deprefresh_success_count != '0' && env.DEPREFRESH_ATTACHMENT || '' }}
               ]
             }
 
@@ -395,8 +481,18 @@ jobs:
                   "short": true
                 },
                 {
-                  "title": "Failed",
+                  "title": "Bump Failed",
                   "value": "${{ needs.collect-results.outputs.failure_count || '0' }}",
+                  "short": true
+                },
+                {
+                  "title": "Templates Refreshed",
+                  "value": "${{ needs.collect-results.outputs.deprefresh_success_count || '0' }}",
+                  "short": true
+                },
+                {
+                  "title": "Refresh Failed",
+                  "value": "${{ needs.collect-results.outputs.deprefresh_failure_count || '0' }}",
                   "short": true
                 }
               ]
@@ -406,7 +502,14 @@ jobs:
               "color": "danger",
               "mrkdwn_in": ["text"],
               "text": ${{ toJSON(needs.collect-results.outputs.failed_apps) }},
-              "footer": "Eureka CI/CD"
+              "footer": "Eureka CI/CD — Bump Failures"
+            }
+          FAILED_DEPREFRESH_APPS: |
+            {
+              "color": "danger",
+              "mrkdwn_in": ["text"],
+              "text": ${{ toJSON(needs.collect-results.outputs.deprefresh_failed_apps) }},
+              "footer": "Eureka CI/CD — Dep-Refresh Failures"
             }
         uses: slackapi/slack-github-action@v2.1.1
         with:
@@ -422,14 +525,15 @@ jobs:
               ],
               "attachments": [
                 ${{ env.FAILURE_ATTACHMENT }},
-                ${{ needs.collect-results.outputs.failure_count != '0' && env.FAILED_APPS || '' }}
+                ${{ needs.collect-results.outputs.failure_count != '0' && env.FAILED_APPS || '' }},
+                ${{ needs.collect-results.outputs.deprefresh_failure_count != '0' && env.FAILED_DEPREFRESH_APPS || '' }}
               ]
             }
 
   workflow-summary:
     name: Workflow Summary
     runs-on: ubuntu-latest
-    needs: [setup, bump, collect-results, slack_notification]
+    needs: [setup, bump, dependency-refresh, collect-results, slack_notification]
     if: always()
     steps:
       - name: Generate Workflow Summary
@@ -444,8 +548,14 @@ jobs:
           SKIPPED_APPS: ${{ needs.collect-results.outputs.skipped_apps }}
           FAILED_APPS: ${{ needs.collect-results.outputs.failed_apps }}
           BUMPED_APPS: ${{ needs.collect-results.outputs.bumped_apps }}
+          DEPREFRESH_SUCCESS_COUNT: ${{ needs.collect-results.outputs.deprefresh_success_count || '0' }}
+          DEPREFRESH_SKIPPED_COUNT: ${{ needs.collect-results.outputs.deprefresh_skipped_count || '0' }}
+          DEPREFRESH_FAILURE_COUNT: ${{ needs.collect-results.outputs.deprefresh_failure_count || '0' }}
+          DEPREFRESH_APPS: ${{ needs.collect-results.outputs.deprefresh_apps }}
+          DEPREFRESH_FAILED_APPS: ${{ needs.collect-results.outputs.deprefresh_failed_apps }}
           SETUP_RESULT: ${{ needs.setup.result }}
           BUMP_RESULT: ${{ needs.bump.result }}
+          DEPREFRESH_RESULT: ${{ needs.dependency-refresh.result }}
           COLLECT_RESULT: ${{ needs.collect-results.result }}
           SLACK_OUTCOME: ${{ needs.slack_notification.outputs.notification_outcome }}
         run: |
@@ -459,8 +569,11 @@ jobs:
             line "- **Release Branch**: \`$RELEASE_BRANCH\`"
             line "- **Total Applications**: $TOTAL_APPS"
             line "- **Bumped**: $SUCCESS_COUNT"
-            line "- **Skipped**: $SKIPPED_COUNT"
-            line "- **Failed**: $FAILURE_COUNT"
+            line "- **Bump Skipped**: $SKIPPED_COUNT"
+            line "- **Bump Failed**: $FAILURE_COUNT"
+            line "- **Templates Refreshed**: $DEPREFRESH_SUCCESS_COUNT"
+            line "- **Refresh Skipped**: $DEPREFRESH_SKIPPED_COUNT"
+            line "- **Refresh Failed**: $DEPREFRESH_FAILURE_COUNT"
             line "- **Triggered by**: ${{ github.actor }}"
             line "- **Run Number**: ${{ github.run_number }}"
             line ""
@@ -489,22 +602,27 @@ jobs:
             [[ "$SUCCESS_COUNT" -gt 0 ]] && { line "#### ✅ Would bump:"; print_list "$BUMPED_APPS"; }
             [[ "$SKIPPED_COUNT" -gt 0 ]] && { line "#### ⏭️ Would skip:"; print_list "$SKIPPED_APPS"; }
             [[ "$FAILURE_COUNT" -gt 0 ]] && { line "#### ❌ Would fail:"; print_list "$FAILED_APPS"; }
+            [[ "$DEPREFRESH_SUCCESS_COUNT" -gt 0 ]] && { line "#### 🔄 Would refresh templates:"; print_list "$DEPREFRESH_APPS"; }
+            [[ "$DEPREFRESH_FAILURE_COUNT" -gt 0 ]] && { line "#### ❌ Refresh would fail:"; print_list "$DEPREFRESH_FAILED_APPS"; }
             exit 0
           fi
 
-          if [[ "$FAILURE_COUNT" -gt 0 ]]; then
+          if [[ "$FAILURE_COUNT" -gt 0 || "$DEPREFRESH_FAILURE_COUNT" -gt 0 ]]; then
             section "⚠️ Post-Release Bump - Partial Success"
             print_stats
             [[ "$SUCCESS_COUNT" -gt 0 ]] && { line "#### ✅ Bumped:"; print_list "$BUMPED_APPS"; }
-            [[ "$SKIPPED_COUNT" -gt 0 ]] && { line "#### ⏭️ Skipped:"; print_list "$SKIPPED_APPS"; }
-            line "#### ❌ Failed:"; print_list "$FAILED_APPS"
+            [[ "$SKIPPED_COUNT" -gt 0 ]] && { line "#### ⏭️ Bump Skipped:"; print_list "$SKIPPED_APPS"; }
+            [[ "$FAILURE_COUNT" -gt 0 ]] && { line "#### ❌ Bump Failed:"; print_list "$FAILED_APPS"; }
+            [[ "$DEPREFRESH_SUCCESS_COUNT" -gt 0 ]] && { line "#### 🔄 Templates Refreshed:"; print_list "$DEPREFRESH_APPS"; }
+            [[ "$DEPREFRESH_FAILURE_COUNT" -gt 0 ]] && { line "#### ❌ Refresh Failed:"; print_list "$DEPREFRESH_FAILED_APPS"; }
             exit 0
           fi
 
           section "✅ Post-Release Bump - Success"
           print_stats
           [[ "$SUCCESS_COUNT" -gt 0 ]] && { line "#### 📦 Bumped:"; print_list "$BUMPED_APPS"; }
-          [[ "$SKIPPED_COUNT" -gt 0 ]] && { line "#### ⏭️ Skipped (already at or above target):"; print_list "$SKIPPED_APPS"; }
+          [[ "$SKIPPED_COUNT" -gt 0 ]] && { line "#### ⏭️ Bump Skipped (already at or above target):"; print_list "$SKIPPED_APPS"; }
+          [[ "$DEPREFRESH_SUCCESS_COUNT" -gt 0 ]] && { line "#### 🔄 Templates Refreshed:"; print_list "$DEPREFRESH_APPS"; }
 
           section "📨 Notification"
           if [[ "$DRY_RUN" == "true" ]]; then
