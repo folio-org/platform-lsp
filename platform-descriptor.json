@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.1.0-SNAPSHOT.100200000008257"
+        "version": "1.1.0-SNAPSHOT.100200000008258"
       },
       {
         "name": "app-data-import",
@@ -98,7 +98,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "2.1.0-SNAPSHOT.100200000009995"
+        "version": "2.1.0-SNAPSHOT.100200000010295"
       },
       {
         "name": "app-gobi",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000002886"
+        "version": "1.1.0-SNAPSHOT.100200000002887"
       },
       {
         "name": "app-licenses",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000009454"
+        "version": "3.1.0-SNAPSHOT.100200000009597"
       },
       {
         "name": "app-marc-storage",
@@ -146,7 +146,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "2.1.0-SNAPSHOT.100200000009693"
+        "version": "2.1.0-SNAPSHOT.100200000009774"
       },
       {
         "name": "app-quick-marc",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000010065"
+        "version": "1.1.0-SNAPSHOT.100200000010188"
       },
       {
         "name": "app-service-interaction",
