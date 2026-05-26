@@ -23,7 +23,7 @@ The orchestrator is **reusable for future releases** — `release_branch` is an 
 [orchestrator: platform-lsp]
   authorize ──→ setup ──→ bump (matrix) ──→ dependency-refresh (matrix) ──→ collect-results ──→ slack_notification ──→ workflow-summary
                               │                              │
-                              │                              └──→ [flow: kitfox-github, per app — RANCHER-2983]
+                              │                              └──→ [flow: kitfox-github, per app]
                               │                                     prepare-refresh ──→ commit-refresh ──→ upload_results
                               │
                               └──→ [flow: kitfox-github, per app]
