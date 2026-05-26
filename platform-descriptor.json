@@ -36,17 +36,17 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000009032"
+        "version": "3.4.0-SNAPSHOT.100200000009036"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000010141"
+        "version": "2.1.0-SNAPSHOT.100200000010166"
       },
       {
         "name": "app-agreements",
-        "version": "1.1.0-SNAPSHOT.100200000009713"
+        "version": "1.1.0-SNAPSHOT.100200000009809"
       },
       {
         "name": "app-authority-records",
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.1.0-SNAPSHOT.100200000008259"
+        "version": "1.1.0-SNAPSHOT.100200000008284"
       },
       {
         "name": "app-data-import",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.0-SNAPSHOT.100200000008409"
+        "version": "2.3.0-SNAPSHOT.100200000008943"
       },
       {
         "name": "app-eholdings",
