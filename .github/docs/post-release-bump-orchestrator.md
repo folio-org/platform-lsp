@@ -21,11 +21,18 @@ The orchestrator is **reusable for future releases** — `release_branch` is an 
 
 ```
 [orchestrator: platform-lsp]
-  authorize ──→ setup ──→ bump (matrix) ──→ collect-results ──→ slack_notification ──→ workflow-summary
+  authorize ──→ setup ──→ bump (matrix) ──→ dependency-refresh (matrix) ──→ collect-results ──→ slack_notification ──→ workflow-summary
+                              │                              │
+                              │                              └──→ [flow: kitfox-github, per app]
+                              │                                     prepare-refresh ──→ commit-refresh ──→ upload_results
                               │
                               └──→ [flow: kitfox-github, per app]
                                      prepare-bump ──→ commit-bump (commit-and-push-changes.yml) ──→ upload_results
 ```
+
+Two matrix phases run in series:
+1. **`bump`** — each app's `pom.xml` project version on `snapshot` is bumped to `<release-major>.<release-minor + 1>.0-SNAPSHOT`.
+2. **`dependency-refresh`** — each app's `application.template.json` dependency constraints are refreshed when a dependee's major changed during `bump`. Runs regardless of bump's success (per-app preflight handles its own errors). Stale-only — constraints that still semver-match are left untouched.
 
 ### Why split across two repos?
 
@@ -75,18 +82,32 @@ If the resulting list is empty, the orchestrator fails with a clear error. The f
 
 ### Run summary
 
-Generated to the GitHub Actions step summary. Three sections:
-- **Bumped** — apps that received a commit (links to `snapshot` tree + new version).
-- **Skipped** — apps already at or above the target (with the reason).
-- **Failed** — apps that failed at any stage (with `failure_reason`).
+Generated to the GitHub Actions step summary. Two phases, each with three sections:
+
+**Bump phase:**
+- **Bumped** — apps whose `pom.xml` received a commit (links to `snapshot` tree + new version).
+- **Bump Skipped** — apps already at or above the target.
+- **Bump Failed** — apps that failed at any stage.
+
+**Dependency refresh phase:**
+- **Templates Refreshed** — apps whose `application.template.json` got at least one stale constraint updated (with the count of refreshed entries).
+- **Refresh Skipped** — apps whose constraints all still semver-match (`skipped_reason: no_stale_deps`).
+- **Refresh Failed** — apps that failed at any stage (e.g., missing template, unreadable dependee pom).
 
 ### Slack notification
 
-Single aggregate message to the channel configured at `vars.GENERAL_SLACK_NOTIF_CHANNEL`. Color `good` if all apps succeeded; `danger` otherwise. Lists per-app PR links / failure reasons. Suppressed entirely when `dry_run: true`.
+Single aggregate message to the channel configured at `vars.GENERAL_SLACK_NOTIF_CHANNEL`. Color `good` only if both phases have zero failures; `danger` otherwise. Includes counts for both phases plus a section listing refreshed apps with their refreshed-constraint counts. Suppressed entirely when `dry_run: true`.
 
 ### Per-app result artifacts
 
-Each app's flow emits a `result-<app>.json` artifact containing the full status record. Useful for post-run analysis. Schema documented in the flow doc.
+Each app's bump flow emits a `result-<app>.json` artifact (status record for the bump). Each app's dependency-refresh flow emits a `deprefresh-<app>` artifact containing `<app>-deprefresh.json` (status record + the list of refreshed constraint entries). The orchestrator's `collect-results` job consumes both via separate download patterns (`result-*` and `deprefresh-*`). Schemas documented in the respective flow docs.
+
+### Dependency refresh phase — operator notes
+
+- **When it runs**: immediately after `bump` matrix completes, regardless of bump's success (per-app preflight handles its own errors).
+- **What it does**: for each app, walks `application.template.json` `.dependencies[]`, fetches each dependee's current snapshot version, and rewrites the constraint to `^<dep-major>.<dep-minor>.0-SNAPSHOT` if and only if the existing constraint's major no longer semver-matches.
+- **What it does not touch**: `<app_name>.template.json` (only `application.template.json`), and any constraint whose major still matches.
+- **Idempotency**: re-running on the same target_branch with no stale constraints resolves all apps to `status=skipped, skipped_reason=no_stale_deps` — zero commits.
 
 ## Concurrency & Parallelism
 
@@ -141,9 +162,5 @@ This is `app-rtac-cache`'s situation by design — RANCHER-2882 keeps it out of 
 - `release-preparation-orchestrator.yml` (this repo) — cuts the release branch this orchestrator depends on.
 - `application-update-orchestrator.yml` (this repo) — the routine snapshot module-version updater that runs continuously. Different concern: it bumps module versions inside `application.template.json`, not the project version in `pom.xml`.
 - `approve-run.yml` (this repo) — the reusable team-membership gate used by this orchestrator's `authorize` job.
-
-## Tracking
-
-- RANCHER-2951 — introduces this orchestrator.
-- RANCHER-2917 — `app-z3950` Eureka-CI onboarding (gating its removal from `excluded_apps` for future releases).
-- RANCHER-2882 — pattern for optional apps kept out of `platform-descriptor.json`.
+- `post-release-bump-flow.yml` (kitfox-github) — per-app bump worker. See [`post-release-bump-flow.md`](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/post-release-bump-flow.md).
+- `dependency-refresh-flow.yml` (kitfox-github) — per-app dep-refresh worker. See [`dependency-refresh-flow.md`](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/dependency-refresh-flow.md).
