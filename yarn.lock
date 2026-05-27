@@ -1515,10 +1515,10 @@
     react-to-print "^2.3.2"
     uuid "^9.0.0"
 
-"@folio/checkout@13.0.1":
-  version "13.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/checkout/-/checkout-13.0.1.tgz#8d2d1acf2e64fcc02d816585a30b72de7dc249a4"
-  integrity sha512-K0iZPUwbaD3p62yry+YE0SZ96j0ERoxRB9o4Nj0VGVNH/wtMeC0mOyQBL3a39LjyCB7wK4p3EpxQNx+ywjDFQA==
+"@folio/checkout@13.0.2":
+  version "13.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/checkout/-/checkout-13.0.2.tgz#81afbe38270d117076d2e2b6fe58b08caf8794ad"
+  integrity sha512-tBnNyT6PiOCzlmAkvXWSp7CFj6eZ8L5m5xzWH1afBMyMJhZZclkA+Upfyp70BmxIj3dIK6phftH4k+6c1EFAUg==
   dependencies:
     final-form "^4.19.1"
     inactivity-timer "^1.0.0"
@@ -2917,10 +2917,10 @@
     prop-types "^15.5.10"
     redux-form "^8.3.7"
 
-"@folio/tenant-settings@11.0.0":
-  version "11.0.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/tenant-settings/-/tenant-settings-11.0.0.tgz#a5087984218eeb43d04037a68e88b8d13a242222"
-  integrity sha512-D/VkGGW+78KToEDNEjn69nXXu3j3qfMbh7cZJtdcWs77NCFdprmMMBT6zSscaojuUSoEeNAIr9QYfT0kpY+Dyg==
+"@folio/tenant-settings@11.0.1":
+  version "11.0.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/tenant-settings/-/tenant-settings-11.0.1.tgz#546613afdb62c3f5ffc810bdb9b31a0ca3e0a4f3"
+  integrity sha512-6RQpk0G3Mnb+fJc/miTDfscjUCCY9Rg2aE9mHm7i7m1sIFp+rKmFOZXy20XO6UCDU0jb+Oexi2qC4+JqD/76nw==
   dependencies:
     final-form "^4.18.2"
     lodash "^4.17.4"
