@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.1.0-SNAPSHOT.100200000009832"
+        "version": "1.1.0-SNAPSHOT.100200000009837"
       },
       {
         "name": "app-authority-records",
@@ -66,7 +66,7 @@
       },
       {
         "name": "app-dashboard",
-        "version": "1.0.0-SNAPSHOT.100200000009384"
+        "version": "1.1.0-SNAPSHOT.100200000010114"
       },
       {
         "name": "app-data-export",
