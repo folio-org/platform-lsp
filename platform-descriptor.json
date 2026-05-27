@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000009041"
+        "version": "3.4.0-SNAPSHOT.100200000009055"
       }
     ],
     "optional": [
@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.1.0-SNAPSHOT.100200000009809"
+        "version": "1.1.0-SNAPSHOT.100200000009828"
       },
       {
         "name": "app-authority-records",
@@ -110,11 +110,11 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000002930"
+        "version": "1.1.0-SNAPSHOT.100200000002932"
       },
       {
         "name": "app-licenses",
-        "version": "1.1.0-SNAPSHOT.100200000009838"
+        "version": "1.1.0-SNAPSHOT.100200000009889"
       },
       {
         "name": "app-linked-data",
@@ -182,7 +182,7 @@
       },
       {
         "name": "app-service-interaction",
-        "version": "1.0.0-SNAPSHOT.100200000008939"
+        "version": "1.1.0-SNAPSHOT.100200000009622"
       },
       {
         "name": "app-serials-management",
