@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000009644"
+        "version": "2.2.0-SNAPSHOT.100200000009693"
       },
       {
         "name": "app-platform-complete",
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "2.1.0-SNAPSHOT.100200000009549"
+        "version": "2.1.0-SNAPSHOT.100200000009895"
       },
       {
         "name": "app-ebsconet",
@@ -154,7 +154,7 @@
       },
       {
         "name": "app-reading-room",
-        "version": "1.4.0-SNAPSHOT.100200000009095"
+        "version": "3.1.0-SNAPSHOT.100200000009697"
       },
       {
         "name": "app-reporting",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000010188"
+        "version": "1.1.0-SNAPSHOT.100200000010232"
       },
       {
         "name": "app-service-interaction",
