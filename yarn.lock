@@ -1374,12 +1374,12 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/agreements@>=2.0.0":
-  version "12.2.1099000000002007"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/agreements/-/agreements-12.2.1099000000002007.tgz#519db35d03bc4290b47d72877874ec556e753067"
-  integrity sha512-JVzG69DjXElJhKGd8jgKF+pz98Ck/VDcwKim1TtMh53qy/pKf6p6mD6rCXGnF/bHBl4gRWa4l2IAlkE6YPGcwg==
+  version "12.2.1099000000002012"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/agreements/-/agreements-12.2.1099000000002012.tgz#9df2a187cd7886403b4f30cd789b1fde8087afc7"
+  integrity sha512-dp/8QWCej+tVxyR1fd8lFhoP1CYje6uhJeYq0pIJ8nZg8N9A9cHdwtLIcCYCFxLqMAppjHjU/ovY5NHAYzq6TQ==
   dependencies:
-    "@folio/stripes-acq-components" "^7.0.0"
-    "@k-int/stripes-kint-components" "^5.28.3"
+    "@folio/stripes-acq-components" "^7.1.0"
+    "@k-int/stripes-kint-components" "^5.37.0"
     "@rehooks/local-storage" "^2.4.4"
     compose-function "^3.0.3"
     final-form "^4.18.4"
@@ -1887,11 +1887,11 @@
     uuid "^8.3.1"
 
 "@folio/licenses@>=2.0.0":
-  version "12.2.1099000000000364"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/licenses/-/licenses-12.2.1099000000000364.tgz#3f7350ac3c6ddb86fb954482a64037221f73036b"
-  integrity sha512-dkiGb0akW8TaPLxh5+C/UPY+rb7gtkMpy+P8SnMuCXuO1BHj0gJ5aAYDP41f3EMCryivOPjwc4NYEnx0bzt7zQ==
+  version "12.2.1099000000000368"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/licenses/-/licenses-12.2.1099000000000368.tgz#3b8c1a4146bdb740a850b2c0eb6482cba13fdd64"
+  integrity sha512-WNDoHqnPeS6hcA32aL4+FbT2IKRLqOY5lwlCcYqwK7FyFAdjWysVsUXp+xBe6smZn5eyj0cBs780CdllPqo0bQ==
   dependencies:
-    "@k-int/stripes-kint-components" "^5.15.0"
+    "@k-int/stripes-kint-components" "^5.37.0"
     "@rehooks/local-storage" "^2.4.4"
     compose-function "^3.0.3"
     final-form "^4.18.4"
@@ -3215,7 +3215,7 @@
     "@jsonjoy.com/buffers" "^1.0.0"
     "@jsonjoy.com/codegen" "^1.0.0"
 
-"@k-int/stripes-kint-components@^5.0.0", "@k-int/stripes-kint-components@^5.1.1", "@k-int/stripes-kint-components@^5.15.0", "@k-int/stripes-kint-components@^5.28.3", "@k-int/stripes-kint-components@^5.37.0":
+"@k-int/stripes-kint-components@^5.0.0", "@k-int/stripes-kint-components@^5.1.1", "@k-int/stripes-kint-components@^5.15.0", "@k-int/stripes-kint-components@^5.37.0":
   version "5.37.0"
   resolved "https://registry.yarnpkg.com/@k-int/stripes-kint-components/-/stripes-kint-components-5.37.0.tgz#c5827c4ff0cdec092d8c24871ff1fb91cf6ecd3b"
   integrity sha512-0IZJVg7K5wZl3WIu3lCkezGVY+UhzjN5fDRi9fjP/XFMnEmUX+lTN+Jj586kvs+fjH5i6G84P+ne/gx+Z+uyAA==
@@ -5522,9 +5522,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.328:
-  version "1.5.362"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.362.tgz#0696661e1e8ea46248e82f62f0a0bfe1aac2ce76"
-  integrity sha512-PUY2DrLvkjkUuWqq+KPL2iWshrJsZOcIojzRQ7eXFacc9dWga7MGMJAa15VbiejSZB1PAXaRLAiKgruHP8LB1w==
+  version "1.5.363"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.363.tgz#6e9ee6bbb98d4aa12e96853e89993990d577eec8"
+  integrity sha512-VjUKPyWzGnT1fujlkEGC/BvN70Hh70KXtAqcmniXviYlJC/ivcT+BWGPyxWVbJZLfvtKR6dqg1L7T7pgAMBtWA==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
