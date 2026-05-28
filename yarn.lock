@@ -1802,9 +1802,9 @@
     use-deep-compare "^1.1.0"
 
 "@folio/inventory@>=1.4.0":
-  version "14.1.1099000000001941"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.1.1099000000001941.tgz#ef81ec98840ecc721ebf69fed2cfe5b186a46889"
-  integrity sha512-sFf327O2vAXXMyS5oTQgkr07YeiEfinHGMrMFoZrcWPmZiBWddePsCV5ECZy154G5Dotx5TMrarqyt8YimSiiA==
+  version "14.1.1099000000001951"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.1.1099000000001951.tgz#492f1dc52d150a0c1b1cec31eea6525db1c5562e"
+  integrity sha512-GXzUqPT9CLQhvRk50d76PxpK0capzEZMAXZ5mDx9nmVqF1Noh8lrSY5i2XthCrB6ZHKOwOQTVI37XlY54IEVoA==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -1905,9 +1905,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/linked-data@^2.0.3":
-  version "2.0.3099000000002472"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.3099000000002472.tgz#99227de6034e0f99750df0030d74b52e40a9ccec"
-  integrity sha512-8WDSAC8C4cHPvuGguo4aSR6L6C7H2/QauvBpF188QMPm2GxASvb+x2mAjuLlBjiGYEZRBQtpJplrFhFm2mxDRA==
+  version "2.0.3099000000002482"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.3099000000002482.tgz#ebaba722cb7ba935eaad0b965fb01427a26e56aa"
+  integrity sha512-zahTdcEPDiBZ+0tUoxfOWYyD+SIfCbFNnRzVmIEycQtelT+Icyw6pGmIdOt+kbPWgqvNK/dzIoGwqRXSRXL0Gg==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -2025,9 +2025,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/orders@>=1.1.0":
-  version "9.0.4099000000001009"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-9.0.4099000000001009.tgz#02b127236a44d84e8cefbe6f8765d20504d9ad67"
-  integrity sha512-8FKy/r2ZPmrLx1jE23eqcotIPQ4RtQblA0dX6QiylxsDIbXbQVuM9nr2fj4zsHkP+ddcIws+42LaXF4XO7NxJg==
+  version "9.0.4099000000001012"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-9.0.4099000000001012.tgz#8845e3949c7490b9f68b46329b80ec7ec4f646ed"
+  integrity sha512-iToD7AKr6AsGXsmfV4IrUSlsF1u5vZpCwZWvhvHSW0hdWV6eA62UmdN+fkq73SSeiqhglFNQY5480UA/WPR0Dw==
   dependencies:
     "@folio/plugin-find-po-line" "^6.1.1"
     "@folio/stripes-acq-components" "~7.1.0"
@@ -10436,6 +10436,6 @@ zustand@^4.1.1, zustand@^4.5.4:
     use-sync-external-store "^1.2.2"
 
 zustand@^5.0.0, zustand@^5.0.12:
-  version "5.0.13"
-  resolved "https://registry.yarnpkg.com/zustand/-/zustand-5.0.13.tgz#06995c126e8903cd27100af04da91c36ae3051ed"
-  integrity sha512-efI2tVaVQPqtOh114loML/Z80Y4NP3yc+Ff0fYiZJPauNeWZeIp/bRFD7I9bfmCOYBh/PHxlglQ9+wvlwnPikQ==
+  version "5.0.14"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-5.0.14.tgz#18216c24fcb980cf36898f9c57520e67b1f77855"
+  integrity sha512-/8tAspM5LMPr28b3fwLYrtdj77ECpfZviaP75CMTnwO8ISyaE4GDIG/9rDDYq/cH9D2Xw2A2RXglLInmVBQB/g==
