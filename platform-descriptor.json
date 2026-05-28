@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000010206"
+        "version": "2.1.0-SNAPSHOT.100200000010210"
       },
       {
         "name": "app-agreements",
@@ -50,11 +50,11 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.1.0-SNAPSHOT.100200000005192"
+        "version": "1.1.0-SNAPSHOT.100200000005196"
       },
       {
         "name": "app-bulk-edit",
-        "version": "2.1.0-SNAPSHOT.100200000009594"
+        "version": "2.1.0-SNAPSHOT.100200000009768"
       },
       {
         "name": "app-consortia",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000010021"
+        "version": "1.1.0-SNAPSHOT.100200000010432"
       },
       {
         "name": "app-erm-usage",
@@ -98,7 +98,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "2.1.0-SNAPSHOT.100200000010342"
+        "version": "2.1.0-SNAPSHOT.100200000010360"
       },
       {
         "name": "app-gobi",
