@@ -9,11 +9,11 @@
     },
     {
       "name": "folio-keycloak",
-      "version": "26.6.0-SNAPSHOT.106"
+      "version": "26.6.0-SNAPSHOT.109"
     },
     {
       "name": "folio-module-sidecar",
-      "version": "4.1.0-SNAPSHOT.2103"
+      "version": "4.1.0-SNAPSHOT.2110"
     },
     {
       "name": "mgr-applications",
