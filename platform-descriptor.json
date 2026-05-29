@@ -1,7 +1,7 @@
 {
   "name": "FOLIO LSP (Trillium)",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2026.23",
+  "version": "R1-2026.24",
   "eureka-components": [
     {
       "name": "folio-kong",
@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-complete",
-        "version": "3.3.2"
+        "version": "3.3.3"
       },
       {
         "name": "app-platform-minimal",
@@ -42,23 +42,23 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.0.12"
+        "version": "2.0.13"
       },
       {
         "name": "app-agreements",
-        "version": "1.0.0"
-      },
-      {
-        "name": "app-authority-records",
         "version": "1.0.1"
       },
       {
+        "name": "app-authority-records",
+        "version": "1.0.3"
+      },
+      {
         "name": "app-bulk-edit",
-        "version": "2.0.2"
+        "version": "2.0.3"
       },
       {
         "name": "app-consortia",
-        "version": "1.4.0"
+        "version": "1.4.1"
       },
       {
         "name": "app-consortia-manager",
@@ -66,7 +66,7 @@
       },
       {
         "name": "app-dashboard",
-        "version": "1.0.0"
+        "version": "1.0.1"
       },
       {
         "name": "app-data-export",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.0.0"
+        "version": "1.0.1"
       },
       {
         "name": "app-erm-usage",
@@ -106,15 +106,15 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "2.0.2"
+        "version": "2.0.4"
       },
       {
         "name": "app-inventory",
-        "version": "1.0.6"
+        "version": "1.0.7"
       },
       {
         "name": "app-licenses",
-        "version": "1.0.0"
+        "version": "1.0.1"
       },
       {
         "name": "app-linked-data",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.0.0"
+        "version": "3.0.1"
       },
       {
         "name": "app-marc-storage",
@@ -154,15 +154,15 @@
       },
       {
         "name": "app-reporting",
-        "version": "1.5.0"
+        "version": "1.5.1"
       },
       {
         "name": "app-rtac",
-        "version": "1.1.0"
+        "version": "1.1.1"
       },
       {
         "name": "app-search",
-        "version": "1.0.3"
+        "version": "1.0.4"
       },
       {
         "name": "app-serials-management",
@@ -170,7 +170,7 @@
       },
       {
         "name": "app-service-interaction",
-        "version": "1.0.0"
+        "version": "1.0.1"
       }
     ]
   },
