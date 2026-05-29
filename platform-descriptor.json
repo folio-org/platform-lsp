@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "2.1.0-SNAPSHOT.100200000009768"
+        "version": "2.1.0-SNAPSHOT.100200000009782"
       },
       {
         "name": "app-consortia",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "2.1.0-SNAPSHOT.100200000009833"
+        "version": "2.1.0-SNAPSHOT.100200000009868"
       },
       {
         "name": "app-inventory",
