@@ -1492,9 +1492,9 @@
     uuid "^9.0.0"
 
 "@folio/checkout@>=1.3.0":
-  version "13.1.1099000000000384"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/checkout/-/checkout-13.1.1099000000000384.tgz#d2465c596794c3dab1569eaee38bcc04225cb449"
-  integrity sha512-M9FwL7xF9yVU56DP21AJUSmmSGuIvFl+aOWJNo5comepLQBIRyODB78nt6+qfNCpP6+786dABN+TqOo/O76KhQ==
+  version "13.1.1099000000000387"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/checkout/-/checkout-13.1.1099000000000387.tgz#cfff5828c20458da512dfd6b6aeaf6a92ca1eed8"
+  integrity sha512-fkdpjnoNkbFheLDc0fNh8eXQrwhlEu7/oGGJcaOUrV6aoNWVrL/QQSnGyXkKnnD9oMjqzZjQ4nJyVhK2s1f6/w==
   dependencies:
     final-form "^4.19.1"
     inactivity-timer "^1.0.0"
@@ -1522,9 +1522,9 @@
     "@folio/plugin-find-user" "^8.1.0"
 
 "@folio/circulation@>=1.3.0", "@folio/circulation@>=12.0.0":
-  version "12.0.1099000000000417"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/circulation/-/circulation-12.0.1099000000000417.tgz#4d7bb6f97d0cdabcadc7b0deac33effd8c97a711"
-  integrity sha512-/eX8D02pa4hinS4eAbN39TTc74T3ZkZWj9OUwWJu6FYjBnuy9QoMqWFZkumnQ+XLhcvA5naPKPS+wPc/LlCwSA==
+  version "12.1.1099000000000433"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/circulation/-/circulation-12.1.1099000000000433.tgz#cc78b5486ad0758d7565da5d7e51acc5b74a05a5"
+  integrity sha512-zKozTqme8LR3lrsBUKsPQh3QPW+ILJZT3ag/R8kP89Zwf1hs0g7ZlLN/PvCbeENBQCBiijGePlCCy7U5A9/lwA==
   dependencies:
     "@folio/stripes-template-editor" "^3.2.0"
     codemirror "^5.61.1"
@@ -1654,9 +1654,9 @@
     react-query "^3.38.1"
 
 "@folio/eholdings@>=1.1.0":
-  version "11.2.1099000000000368"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000368.tgz#40db693c6b9676d2aed68b86c068ab2398ec9fce"
-  integrity sha512-/bNutsxsp6EjnXCV3/Qff7GLIHtHMglU7S+RH21vVK6/5KloQloxAz4Q6z+akqoS8eVGQLuK566lN07O9Mdl7A==
+  version "11.2.1099000000000373"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000373.tgz#e3aae9d4efccc3a57c13a2577bbd690cdff974eb"
+  integrity sha512-bZezckkJ4T3eZzqSjS0cLN5IaUFgDu17b4ZB7GeqQqXXVH2Mp8iyip1T8Cwg577aFDH/3tVJi7Twns0luTysZg==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
@@ -7226,12 +7226,12 @@ latest-version@^7.0.0:
     package-json "^8.1.0"
 
 launch-editor@^2.6.1:
-  version "2.13.2"
-  resolved "https://registry.yarnpkg.com/launch-editor/-/launch-editor-2.13.2.tgz#41d51baaf8afb393224b89bd2bcb4e02f2306405"
-  integrity sha512-4VVDnbOpLXy/s8rdRCSXb+zfMeFR0WlJWpET1iA9CQdlZDfwyLjUuGQzXU4VeOoey6AicSAluWan7Etga6Kcmg==
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/launch-editor/-/launch-editor-2.14.0.tgz#acef0cfda90ead4e0ab7fecb8ad0e1453bc7d3a6"
+  integrity sha512-Pj3ZOx9dD1BClS7YcSQx0An1PCF9wz4JpvbEmKvDxQtm0jxlkk5NhW8x0SBAKA/acHBKZaqdd5FFOWlXo500JA==
   dependencies:
     picocolors "^1.1.1"
-    shell-quote "^1.8.3"
+    shell-quote "^1.8.4"
 
 lie@3.1.1:
   version "3.1.1"
@@ -9304,7 +9304,7 @@ shallow-clone@^3.0.0:
   dependencies:
     kind-of "^6.0.2"
 
-shell-quote@^1.8.3:
+shell-quote@^1.8.4:
   version "1.8.4"
   resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.8.4.tgz#2edd9a4dcefc96649e2e2cb12f637b1f1d92a190"
   integrity sha512-VsC6n6vz1ihYYyZZwX7YZSF5l5x36ca17OC+a69h94YqB7X6XLwf+5MOgynYir2SLFUbl8gIYvBo8K8RoNQ6bQ==
