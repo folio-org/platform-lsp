@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000009719"
+        "version": "2.2.0-SNAPSHOT.100200000009734"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000009095"
+        "version": "3.4.0-SNAPSHOT.100200000009097"
       }
     ],
     "optional": [
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.0.0-SNAPSHOT.100200000001306"
+        "version": "1.1.0-SNAPSHOT.100200000002017"
       },
       {
         "name": "app-dcb",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000010432"
+        "version": "1.1.0-SNAPSHOT.100200000010447"
       },
       {
         "name": "app-erm-usage",
@@ -114,11 +114,11 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.1.0-SNAPSHOT.100200000009902"
+        "version": "1.1.0-SNAPSHOT.100200000009931"
       },
       {
         "name": "app-linked-data",
-        "version": "2.1.0-SNAPSHOT.100200000010398"
+        "version": "2.1.0-SNAPSHOT.100200000010400"
       },
       {
         "name": "app-lists",
@@ -186,7 +186,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.1.0-SNAPSHOT.100200000010048"
+        "version": "1.1.0-SNAPSHOT.100200000010082"
       }
     ],
     "experimental": [
