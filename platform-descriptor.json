@@ -42,11 +42,11 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000010210"
+        "version": "2.1.0-SNAPSHOT.100200000010229"
       },
       {
         "name": "app-agreements",
-        "version": "1.1.0-SNAPSHOT.100200000009851"
+        "version": "1.1.0-SNAPSHOT.100200000009871"
       },
       {
         "name": "app-authority-records",
@@ -58,7 +58,7 @@
       },
       {
         "name": "app-consortia",
-        "version": "1.5.0-SNAPSHOT.100200000010405"
+        "version": "1.5.0-SNAPSHOT.100200000010409"
       },
       {
         "name": "app-consortia-manager",
@@ -110,11 +110,11 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000002954"
+        "version": "1.1.0-SNAPSHOT.100200000002976"
       },
       {
         "name": "app-licenses",
-        "version": "1.1.0-SNAPSHOT.100200000009931"
+        "version": "1.1.0-SNAPSHOT.100200000009932"
       },
       {
         "name": "app-linked-data",
@@ -186,7 +186,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.1.0-SNAPSHOT.100200000010082"
+        "version": "1.1.0-SNAPSHOT.100200000010084"
       }
     ],
     "experimental": [
