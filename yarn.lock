@@ -1519,7 +1519,27 @@
   optionalDependencies:
     "@folio/plugin-find-user" "^8.1.0"
 
-"@folio/circulation@12.0.0", "@folio/circulation@^12.0.0":
+"@folio/circulation@12.0.1":
+  version "12.0.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/circulation/-/circulation-12.0.1.tgz#84e61114d338db5c4a2ce667f33ef8811808f877"
+  integrity sha512-syfZdeO6OKpjb0QtRHzY1bE5doNyzDl451s90ifSsg3hsN4m3T4SimydUI+ZcaNYbYRwtOE2bsnOImdq0KvQYg==
+  dependencies:
+    "@folio/stripes-template-editor" "^3.2.0"
+    codemirror "^5.61.1"
+    dompurify "^3.0.9"
+    final-form "^4.18.2"
+    final-form-arrays "^3.0.1"
+    final-form-set-field-data "^1.0.2"
+    html-to-react "^1.3.3"
+    lodash "^4.17.4"
+    moment-timezone "^0.5.33"
+    prop-types "^15.5.10"
+    react-codemirror2 "^7.2.1"
+    react-final-form "^6.3.0"
+    react-final-form-arrays "^3.1.0"
+    react-query "^3.39.3"
+
+"@folio/circulation@^12.0.0":
   version "12.0.0"
   resolved "https://repository.folio.org/repository/npm-folio/@folio/circulation/-/circulation-12.0.0.tgz#34a79c05bba1a60f69bd02b3a9c48b765095fb5e"
   integrity sha512-7JdyZvmS5j5qsA3BagxntgqzHYp9ADN4onInY1vFgx7yr9u9rW/OY4GpaxD8bL3k3uDzuD89gfoXVXl0SsefmA==
@@ -1583,13 +1603,13 @@
   optionalDependencies:
     "@folio/plugin-create-inventory-records" "^4.0.0||^5.0.0||^6.0.0||^7.0.0"
 
-"@folio/dashboard@7.1.0":
-  version "7.1.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/dashboard/-/dashboard-7.1.0.tgz#3573775fd5ef572a008f613169352bd836da5dd9"
-  integrity sha512-Bf3fhAIWierC2JqitjA50tU4TgDP6IVm/88LiG4zrQVX9LwCL+gG1aVnMBCUBIvgH/RKLfNDlPa4/BWX64nqog==
+"@folio/dashboard@7.1.1":
+  version "7.1.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/dashboard/-/dashboard-7.1.1.tgz#b9d87038a61da65483bb7786ba3241ea2124f9c9"
+  integrity sha512-Wt7h06fdfh9yzxas1MMU3AXI+OMWkMt0ZeSNrABR0cGFs2I9J4DZHMkXV+GjKys3hAnfHc5qrxkPDGApH98WfQ==
   dependencies:
     "@hello-pangea/dnd" "^16.6.0"
-    "@k-int/stripes-kint-components" "^5.15.0"
+    "@k-int/stripes-kint-components" "^5.37.0"
     compose-function "^3.0.3"
     final-form "^4.19.0"
     final-form-arrays "^3.0.1"
@@ -1651,10 +1671,10 @@
     react-inspector "^6.0.0"
     react-query "^3.38.1"
 
-"@folio/eholdings@11.1.0":
-  version "11.1.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/eholdings/-/eholdings-11.1.0.tgz#0f879e4a9212a79725316c73bad8ff49ae669095"
-  integrity sha512-HQxCON5Pm9P2pO5bKuDKl9/hAMHZsr7RJ7lyOsqiIkt2kbcmmKfJgA2EfjfAa5AjsaCYVjPbwaiZZxDqtS0HXw==
+"@folio/eholdings@11.1.1":
+  version "11.1.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/eholdings/-/eholdings-11.1.1.tgz#a37abb2c24036293c9c9e772454df75b910d344a"
+  integrity sha512-fh24ambrLfzumuhuuvCtO+k3dut775ZdgA2gc6gKbMaGyzOEO9SrD576Efebov9u+PEEVhMnZhgiTLDOrvPKCw==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
@@ -1673,12 +1693,12 @@
     redux-actions "^2.2.1"
     redux-observable "^1.2.0"
 
-"@folio/erm-comparisons@8.1.0":
-  version "8.1.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/erm-comparisons/-/erm-comparisons-8.1.0.tgz#44dc84245362c17b871eccfbc4f54a06612e55d5"
-  integrity sha512-AQwL3WKBdhCK5uOIQDsYdiGDooCK4Z2Vj4dXprsx3/TNaGkSwVFsceBYh0H/g4xT0fXHGwokDMG2kSR+eyJEIA==
+"@folio/erm-comparisons@8.1.1":
+  version "8.1.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/erm-comparisons/-/erm-comparisons-8.1.1.tgz#dbe3a84580ebe8a3886852e09632aee37c4c8cdf"
+  integrity sha512-pW32X+yuMwvyvaVZQdZWuH9nGVeWYEnlPhZaQ/ZSEUsW5iHXqcEALg6xQrJ5cQM1uJqYovdejKvIAZ+jEU5ayQ==
   dependencies:
-    "@k-int/stripes-kint-components" "^5.15.0"
+    "@k-int/stripes-kint-components" "^5.37.0"
     "@rehooks/local-storage" "^2.4.5"
     compose-function "^3.0.3"
     dayjs "^1.11.13"
@@ -1755,19 +1775,19 @@
     prop-types "^15.6.0"
     query-string "^7.1.2"
 
-"@folio/handler-stripes-registry@3.1.0":
-  version "3.1.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/handler-stripes-registry/-/handler-stripes-registry-3.1.0.tgz#44a07254ada28346b72f4b4a9c4dc067dc6217c3"
-  integrity sha512-INbZExxWELKxkrRm6o1ZgiGwei/Tun/DcHPGlPST9AMPbRGQIZxLcA+eUxm2iaRV95utn0N0wbUDvZlE7eP1KQ==
+"@folio/handler-stripes-registry@3.1.1":
+  version "3.1.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/handler-stripes-registry/-/handler-stripes-registry-3.1.1.tgz#3d093bf3a62d8e94bcdf14e518e78a29f65f3fb0"
+  integrity sha512-BKxbBts3CTZ/XE9SaYv0dVyrKj2VtZP5exGRyuzeqiiLgEiwgPUkSMjxvuAQnCckEuCqapLTVcHouTMifMEUTA==
   dependencies:
     dom-helpers "^3.4.0"
     lodash "^4.17.11"
     prop-types "^15.6.0"
 
-"@folio/inn-reach@6.1.0":
-  version "6.1.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/inn-reach/-/inn-reach-6.1.0.tgz#a2a7c9b3c436067cacee296fdbf04208f1355a9a"
-  integrity sha512-xxncavFR0ATu2k5AYbMQPwbvUGpIiVxLX2rhB9mchefrOAsUN30gJghrMk8W23lD+t8qTrUH84H5hRXeVHtCyQ==
+"@folio/inn-reach@6.1.1":
+  version "6.1.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/inn-reach/-/inn-reach-6.1.1.tgz#0d73b0cdb6b22d2fefcf36161e0f1d6cd8cc0ad7"
+  integrity sha512-uchU9oLR+dsD+BvvblM5aCeMzYVbIVXYZGcOsms/ZhIfLaeW43j43lOlCQeM4fpVeL0QtxeZ26RlyzcrSl0k2g==
   dependencies:
     "@folio/stripes-data-transfer-components" "^7.1.0"
     "@folio/stripes-template-editor" "^3.4.2"
@@ -1936,12 +1956,12 @@
     lodash "^4.17.21"
     prop-types "^15.6.0"
 
-"@folio/local-kb-admin@9.1.0":
-  version "9.1.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/local-kb-admin/-/local-kb-admin-9.1.0.tgz#9d3fb68603b9ac78c4cfa74cc30b7f31e8cb4beb"
-  integrity sha512-0gXPVLCMDz3nGVVLTBIbyRTxKLzFti4TtCXFpYN6wG4TxEnNJ9FcTlDOfKO/KOmd5qrBb3aZA/ubnY2lUGegqg==
+"@folio/local-kb-admin@9.1.1":
+  version "9.1.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/local-kb-admin/-/local-kb-admin-9.1.1.tgz#93c9cb60a38dfa3342d6a47415e5e139b52a9730"
+  integrity sha512-Djvb2bRNtgAaUxvyJFWy7+T4j3tSoeSiCY0seFPOwrtcgFWsu9kevc+cBNdZKqaXiRs7SNAaf8ZV5ly91bnRFA==
   dependencies:
-    "@k-int/stripes-kint-components" "^5.15.0"
+    "@k-int/stripes-kint-components" "^5.37.0"
     "@rehooks/local-storage" "^2.4.5"
     compose-function "^3.0.3"
     final-form "^4.18.5"
@@ -1952,10 +1972,10 @@
     react-final-form "^6.3.0"
     react-final-form-arrays "^3.1.1"
 
-"@folio/marc-authorities@8.0.0":
-  version "8.0.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/marc-authorities/-/marc-authorities-8.0.0.tgz#0564861e0e67a275ade4be5511dde7a4d7c5242a"
-  integrity sha512-uiJLOlPjj2Vcv9BP6lC1MCOjmGoRcw1bWLrp2DgocV1FVpo11DBYDzTCJ9Z1Ai72XCQqVlmVr64s2PsWoKPvag==
+"@folio/marc-authorities@8.0.1":
+  version "8.0.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/marc-authorities/-/marc-authorities-8.0.1.tgz#e11d9e8df8abfaecbfd7162b49be6424f3bc6d4b"
+  integrity sha512-/CIsQcwIeB5CU04TnjWjwslQka1V3NLngrnGIq1f0y3idD9pGEtoLT6Kl3DJzSdsEHwGGFhwtRxOuEdvlCgRoQ==
   dependencies:
     "@folio/stripes-acq-components" "^7.1.0"
     "@rehooks/local-storage" "^2.4.4"
@@ -2088,12 +2108,12 @@
   optionalDependencies:
     "@folio/plugin-find-eresource" "^8.1.0"
 
-"@folio/plugin-find-agreement@12.1.0":
-  version "12.1.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-find-agreement/-/plugin-find-agreement-12.1.0.tgz#f73b64856a49221944baa6acefb66b37d53461e5"
-  integrity sha512-6an0fEojJSl/fis6VmdVqFcSa3PHrtNenmf/9v4QY/13A7Dla4LxeyyoW6joyfArEXkTUs2pXPY0cgmyNEX5kQ==
+"@folio/plugin-find-agreement@12.1.1":
+  version "12.1.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-find-agreement/-/plugin-find-agreement-12.1.1.tgz#44b75a09b67b8126522c495ceaf6eb35c435ff64"
+  integrity sha512-j2J4uchF7JdZMRG4Ihnp4BjAQXgfuq/DEqz8ZZ1mgWk2kpJXDd1rsq1qeEkU4ga2IEyxdfiwYqQ0lRxSrZ1EXA==
   dependencies:
-    "@k-int/stripes-kint-components" "^5.11.0"
+    "@k-int/stripes-kint-components" "^5.37.0"
     dom-helpers "^3.4.0"
     lodash "^4.17.11"
     prop-types "^15.6.0"
@@ -2114,7 +2134,18 @@
     lodash "^4.17.11"
     prop-types "^15.6.0"
 
-"@folio/plugin-find-eresource@8.1.0", "@folio/plugin-find-eresource@^8.1.0":
+"@folio/plugin-find-eresource@8.1.1":
+  version "8.1.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-find-eresource/-/plugin-find-eresource-8.1.1.tgz#d61ab1595e828f48c6db85e33cce23afef2aa810"
+  integrity sha512-nu07wXCYzXJYOEecWxwEG58RD1wKZH4p+OrN6twGfDt+GtWLpFUdHZfAxDh/1Ges1uIXHnXt/xakoYr9CD6VgA==
+  dependencies:
+    "@k-int/stripes-kint-components" "^5.37.0"
+    dom-helpers "^3.4.0"
+    lodash "^4.17.11"
+    prop-types "^15.6.0"
+    query-string "^7.1.1"
+
+"@folio/plugin-find-eresource@^8.1.0":
   version "8.1.0"
   resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-find-eresource/-/plugin-find-eresource-8.1.0.tgz#868b55492a35adfaa866d6ca5404615fd92b817e"
   integrity sha512-kEiPdMLC921TcgKDWkFwLwEr9ofoY3o8lW3ggOUpSvuU0O/omCtpG1bwVL6J+MXMRNfnwf7jD2k/B219KEp4xg==
@@ -2175,12 +2206,12 @@
     lodash "^4.17.11"
     prop-types "^15.6.0"
 
-"@folio/plugin-find-license@12.1.0":
-  version "12.1.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-find-license/-/plugin-find-license-12.1.0.tgz#979df3c56f544c6d93fef118ad5ed99e7898708c"
-  integrity sha512-VhPmLs1uyOeqUpDlW8AYiazPkFykLErYab82s90zJ7JAmGDgBdYsRkmmpZ9G2FBVHq7BADBNzoROTGBQ6mvhow==
+"@folio/plugin-find-license@12.1.1":
+  version "12.1.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-find-license/-/plugin-find-license-12.1.1.tgz#daf3a29dee81821797ff6f3bf54d387de63a9a67"
+  integrity sha512-CYs6JhD3GSEjw2TxRAHj+ouJorkwCPKoUUSUntZ5MFQEubCRdXcOpO+Y4C//iRrauCSSvdc6lDRjgcTtU5Q+2w==
   dependencies:
-    "@k-int/stripes-kint-components" "^5.11.0"
+    "@k-int/stripes-kint-components" "^5.37.0"
     classnames "^2.2.5"
     dom-helpers "^3.4.0"
     lodash "^4.17.11"
@@ -2410,12 +2441,12 @@
   optionalDependencies:
     "@folio/plugin-find-po-line" "^6.0.0"
 
-"@folio/service-interaction@4.1.0":
-  version "4.1.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/service-interaction/-/service-interaction-4.1.0.tgz#5f56e57460f2402fe9d68bced65edaa838080a7f"
-  integrity sha512-xP97xclGtFjRNSrNXByzQUp6XUCfe/YhgXjbJRttBthuoJ/T30rk0oNiueGsbZrc9+TtJhlpWyUe62FUa+UoAg==
+"@folio/service-interaction@4.1.1":
+  version "4.1.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/service-interaction/-/service-interaction-4.1.1.tgz#d5fa39d8f0af2858de557bd912044ae828fd109e"
+  integrity sha512-PqyEWqKy1rxvcZbwm6aqIgZmiiPeW7fQjXbsGzFcbjF7E/AyPMxQWiUZFGvFCTu9RvdFgjdVcvcFPjTamEbBjA==
   dependencies:
-    "@k-int/stripes-kint-components" "^5.11.0"
+    "@k-int/stripes-kint-components" "^5.37.0"
     dom-helpers "^3.4.0"
     lodash "^4.17.11"
     prop-types "^15.6.0"
@@ -2451,10 +2482,10 @@
     react-virtualized-auto-sizer "^1.0.6"
     redux-form "^8.3.0"
 
-"@folio/stripes-authority-components@7.0.0":
-  version "7.0.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-authority-components/-/stripes-authority-components-7.0.0.tgz#3cd6dd2783669d75a98742120b660526fe968a1e"
-  integrity sha512-tG7ReRa4cUD/vcyMsAMq8Zwp2tPt/KVlDk8HPa4G0TZry9Vcc9NQ6QkTOR59j3iLSY4eqNe8szyPhn22o45IiQ==
+"@folio/stripes-authority-components@7.0.1":
+  version "7.0.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-authority-components/-/stripes-authority-components-7.0.1.tgz#76777d43d123d8bb2a90b77e84468b1e33daa420"
+  integrity sha512-FAkQ8j06ecmZvtVQWxW8Ly/15T1ajppByMWtQUDaOVA0EDjuYPeDj9uPebHth0eEgRPZZQik24uG2YnMX37Qdw==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     "@rehooks/local-storage" "^2.4.4"
@@ -3221,6 +3252,17 @@
   version "5.36.1"
   resolved "https://registry.yarnpkg.com/@k-int/stripes-kint-components/-/stripes-kint-components-5.36.1.tgz#a1cb8c4b8ead76b6b6627a7f3788dffc2eb771c0"
   integrity sha512-4Ih4fLSaHzewZwqzZCUmBtVQEH0Cqa6Fha012mYTdUjw3RjufDja8hk9JGV7PURnyZ0GPb1ijvChLi6PwTfsNg==
+  dependencies:
+    "@rehooks/local-storage" "^2.4.4"
+    compose-function "^3.0.3"
+    react-dropzone "^15.0.0"
+    react-resize-detector "^11.0.0"
+    zustand "^5.0.0"
+
+"@k-int/stripes-kint-components@^5.37.0":
+  version "5.37.0"
+  resolved "https://registry.yarnpkg.com/@k-int/stripes-kint-components/-/stripes-kint-components-5.37.0.tgz#c5827c4ff0cdec092d8c24871ff1fb91cf6ecd3b"
+  integrity sha512-0IZJVg7K5wZl3WIu3lCkezGVY+UhzjN5fDRi9fjP/XFMnEmUX+lTN+Jj586kvs+fjH5i6G84P+ne/gx+Z+uyAA==
   dependencies:
     "@rehooks/local-storage" "^2.4.4"
     compose-function "^3.0.3"
