@@ -1456,9 +1456,9 @@
     yup "^1.4.0"
 
 "@folio/calendar@>=2.0.5":
-  version "13.0.1099000000000252"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/calendar/-/calendar-13.0.1099000000000252.tgz#cf4a1823ea91d8214436afabd22420683553e608"
-  integrity sha512-hkUPRaSK3ST3lv4mNRq/YZj9bNDZomF+nBeza1fIIfiV831jm8GUcyN7yPdNqkE5JiYhiXm5fPP8Yh83BYjkSg==
+  version "13.0.1099000000000255"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/calendar/-/calendar-13.0.1099000000000255.tgz#34c9624a0d9d6d9af6fe5bec39c3d4a0e126e8cf"
+  integrity sha512-lSN7Bv+CaQbU8nwt8PMFo2NBS3YAcIBzaDAd1CM6vCn6iSWhvGtkIUhF8W6IPZdwkv00UN4BiUstsq/DIGLN4A==
   dependencies:
     "@types/memoizee" "^0.4.8"
     "@types/react-router-dom" "^5.2.0"
@@ -1621,9 +1621,9 @@
     react-window "^1.8.5"
 
 "@folio/data-import@>=0.0.0", "@folio/data-import@^10.0.0":
-  version "10.0.1099000000000322"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/data-import/-/data-import-10.0.1099000000000322.tgz#a71c8c7beae581899b364435c9144c25f77659ac"
-  integrity sha512-u2SGuxvccq3svNZC2bK0l48mKycevIbmvDhVppsUvBb93aG7GIW6Rs71273Z3FJvlBzoHj9vUurIxKfy1/j/Tg==
+  version "10.0.1099000000000325"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/data-import/-/data-import-10.0.1099000000000325.tgz#5de49d4d8e1d2294b5d5955074fbd2012f734f6c"
+  integrity sha512-RJFxIhT5FLxw4ZvD/Hh4/MojW4NVokOjskv/zivu0q/P/K3Qk+kxCjrVevdM57r7l84WtBthzMlGqtqxL6SXYw==
   dependencies:
     "@folio/stripes-acq-components" "^7.1.0"
     "@folio/stripes-data-transfer-components" "^7.1.0"
@@ -1632,7 +1632,6 @@
     final-form "^4.18.2"
     inflected "^2.0.4"
     lodash "^4.18.0"
-    moment "~2.29.4"
     prop-types "^15.6.0"
     react-final-form "^6.3.0"
     redux-form "^8.3.7"
@@ -1802,9 +1801,9 @@
     use-deep-compare "^1.1.0"
 
 "@folio/inventory@>=1.4.0":
-  version "14.1.1099000000001951"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.1.1099000000001951.tgz#492f1dc52d150a0c1b1cec31eea6525db1c5562e"
-  integrity sha512-GXzUqPT9CLQhvRk50d76PxpK0capzEZMAXZ5mDx9nmVqF1Noh8lrSY5i2XthCrB6ZHKOwOQTVI37XlY54IEVoA==
+  version "14.1.1099000000001961"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.1.1099000000001961.tgz#d75d5b8d172ffd752252cee21aee735686678955"
+  integrity sha512-D/oAK5b5tQ4Z3WDx96OSM3BNW9K5/YkdsW5j06DfHvmr4EAqCt+Hod+ipJPTTihrzTTzqChlU+zjvAFIk7UoyA==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -1887,9 +1886,9 @@
     uuid "^8.3.1"
 
 "@folio/licenses@>=2.0.0":
-  version "12.2.1099000000000368"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/licenses/-/licenses-12.2.1099000000000368.tgz#3b8c1a4146bdb740a850b2c0eb6482cba13fdd64"
-  integrity sha512-WNDoHqnPeS6hcA32aL4+FbT2IKRLqOY5lwlCcYqwK7FyFAdjWysVsUXp+xBe6smZn5eyj0cBs780CdllPqo0bQ==
+  version "12.2.1099000000000378"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/licenses/-/licenses-12.2.1099000000000378.tgz#f6e2dfdd2be1e9731bc0ab0a27ef547272102ff6"
+  integrity sha512-ORfJFyCVTJ55qLUbOHosKOXboKAUPRbwZP5gresWwyNsRNdjG4liukfK9jzkTQMCQcKRRnrgdvBsjf336drh+A==
   dependencies:
     "@k-int/stripes-kint-components" "^5.37.0"
     "@rehooks/local-storage" "^2.4.4"
@@ -2392,9 +2391,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/serials-management@>=1.0.0":
-  version "2.2.1099000000001150"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/serials-management/-/serials-management-2.2.1099000000001150.tgz#31de84f5f1532b40919da5a8b13d8cfbfe332e6c"
-  integrity sha512-iBenywZ/h3kRJ8d+pVoYBFEtDxVj3wpBpEZNqJz8kC3r+Pi4EhOCBN3D31+EaBza2WqLs72uSGRyB0vUDziEiA==
+  version "2.2.1099000000001159"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/serials-management/-/serials-management-2.2.1099000000001159.tgz#eb093af2134e1e0626ff6260c0382c9db6495b5f"
+  integrity sha512-i/cy/pCoV8WLtClSTOYP06RUMLMeAm3BW6cztF9L/Xs8voIro3ZngYju8VYtOkk8zz15EMKhqXDDuAO3srqR1w==
   dependencies:
     "@folio/stripes-acq-components" "^7.1.0"
     "@k-int/stripes-kint-components" "^5.37.0"
@@ -7599,7 +7598,7 @@ moment-timezone@^0.5.14, moment-timezone@^0.5.17, moment-timezone@^0.5.33:
   dependencies:
     moment "^2.29.4"
 
-moment@^2.10.2, moment@^2.25.3, moment@^2.29.4, moment@^2.30.1, moment@~2.29.0, moment@~2.29.4:
+moment@^2.10.2, moment@^2.25.3, moment@^2.29.4, moment@^2.30.1, moment@~2.29.0:
   version "2.29.4"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
   integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
@@ -9786,9 +9785,9 @@ ts-invariant@^0.10.3:
     tslib "^2.1.0"
 
 ts-loader@^9.4.1:
-  version "9.5.7"
-  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-9.5.7.tgz#582663e853646e18506cd5cc79feb354952731c0"
-  integrity sha512-/ZNrKgA3K3PtpMYOC71EeMWIloGw3IYEa5/t1cyz2r5/PyUwTXGzYJvcD3kfUvmhlfpz1rhV8B2O6IVTQ0avsg==
+  version "9.6.0"
+  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-9.6.0.tgz#50dfdea9c63ff9c5f4e89b04c1e3ce0d5d2946a1"
+  integrity sha512-dsJO0S+T7grTDWTc4a0nTygXGjKncVUpx8Y+af8EvI/D5WgTJby5UEk5eoMCB9EcLQmnvitqh99MqtjtHgAwFQ==
   dependencies:
     chalk "^4.1.0"
     enhanced-resolve "^5.0.0"
