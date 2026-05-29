@@ -42,15 +42,15 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000010229"
+        "version": "2.1.0-SNAPSHOT.100200000010231"
       },
       {
         "name": "app-agreements",
-        "version": "1.1.0-SNAPSHOT.100200000009871"
+        "version": "1.1.0-SNAPSHOT.100200000009872"
       },
       {
         "name": "app-authority-records",
-        "version": "1.1.0-SNAPSHOT.100200000005197"
+        "version": "1.1.0-SNAPSHOT.100200000005217"
       },
       {
         "name": "app-bulk-edit",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000002017"
+        "version": "1.1.0-SNAPSHOT.100200000002019"
       },
       {
         "name": "app-dcb",
