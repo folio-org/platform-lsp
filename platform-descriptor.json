@@ -58,7 +58,7 @@
       },
       {
         "name": "app-consortia",
-        "version": "1.4.0-SNAPSHOT.100200000009021"
+        "version": "1.5.0-SNAPSHOT.100200000010405"
       },
       {
         "name": "app-consortia-manager",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "2.1.0-SNAPSHOT.100200000010233"
+        "version": "2.1.0-SNAPSHOT.100200000010398"
       },
       {
         "name": "app-lists",
