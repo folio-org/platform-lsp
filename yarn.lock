@@ -1803,10 +1803,10 @@
   optionalDependencies:
     "@folio/plugin-find-user" "^8.1.0"
 
-"@folio/inventory-import@4.1.1":
-  version "4.1.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory-import/-/inventory-import-4.1.1.tgz#2fa74e93869af915ddad5e289d30d2eddba43348"
-  integrity sha512-VPzrYUChsL0aaIJNv9NYnGWP8/zMMfFNpSgKqo/pnpIXFTFCt3vPLYrCM1ALqWKfzUHVqWPZ79QjY0w65WS8Eg==
+"@folio/inventory-import@4.1.2":
+  version "4.1.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory-import/-/inventory-import-4.1.2.tgz#b16afbc67a9740cdbacc8300b9aee3d0ff90790b"
+  integrity sha512-5IZIVVNv2wFiHDbwzpkBu8I+dJfMB/yQ2BSVw4qdsybUxF61w+cYLGA0C4xabUFx3Xqj4uWjIn3o+b2bE0n4Uw==
   dependencies:
     "@folio/stripes-data-transfer-components" "^7.0.0"
     final-form-arrays "^3.0.2"
@@ -1819,10 +1819,10 @@
     react-inspector "^6.0.0"
     use-deep-compare "^1.1.0"
 
-"@folio/inventory@14.0.2":
-  version "14.0.2"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory/-/inventory-14.0.2.tgz#b930b4994a139a165a6535d77645a6461d5029fe"
-  integrity sha512-KGT3aMn4XgYHIhBZnxn0DrsJeT6NnPp84SbDeNidSSN4Jd3s+hdmKFP2uhlrJ1duckL2F0wr4QP5c1XuU0FdSQ==
+"@folio/inventory@14.0.3":
+  version "14.0.3"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory/-/inventory-14.0.3.tgz#ea333e8b64e6b2a2a1e3027abcd2ad99cf7ceb1b"
+  integrity sha512-nRenfUZXBAgP8dNXenHyZUhlN1eh3QK6eTf9TIEIIsr/f7bEAkMUQMX+9+Uf8b/e8dJCPTVe54GIyboiNgrjKQ==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -1904,12 +1904,12 @@
     redux-form "^8.3.0"
     uuid "^8.3.1"
 
-"@folio/licenses@12.1.0":
-  version "12.1.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/licenses/-/licenses-12.1.0.tgz#4b3cf5281b042a05564c4724edafdfb944f5f230"
-  integrity sha512-85NeXOXISNbsXyrpwdvEwptlNAm0zcwC+kXqCwBfIPCSYLWrHXF5BpLLW1RNiycnQY0cCN2W+HSv869ZKv5g+w==
+"@folio/licenses@12.1.1":
+  version "12.1.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/licenses/-/licenses-12.1.1.tgz#66f6def75bf1c07814cbe4f957a04c10e6e837d1"
+  integrity sha512-eFHQMZOU5sLBHrlgrqkQK1J69VptS3B/mlO5nqjppeK7dhaDeINtWibXvfDuSSw4Q8Ry1BxVpmhQk595OH7LmA==
   dependencies:
-    "@k-int/stripes-kint-components" "^5.15.0"
+    "@k-int/stripes-kint-components" "^5.37.0"
     "@rehooks/local-storage" "^2.4.4"
     compose-function "^3.0.3"
     final-form "^4.18.4"
@@ -2239,7 +2239,7 @@
     qs "^6.14.1"
     react-final-form "^6.3.0"
 
-"@folio/plugin-find-po-line@6.1.1", "@folio/plugin-find-po-line@^6.1.1":
+"@folio/plugin-find-po-line@6.1.1", "@folio/plugin-find-po-line@^6.1.0", "@folio/plugin-find-po-line@^6.1.1":
   version "6.1.1"
   resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-find-po-line/-/plugin-find-po-line-6.1.1.tgz#6714f925929595d6297d2437e8fa7be49eed17ae"
   integrity sha512-OXplfcQcvkOqpO7gadjl5N7LOgCLdrbzMZQDEhAsjC4reoSXelr/I4E2TjYgNFimcd2Aj+CkjnluZVv5o/GNUQ==
@@ -2423,13 +2423,13 @@
     "@folio/plugin-find-instance" "^10.0.0"
     "@folio/plugin-find-user" "^8.0.0"
 
-"@folio/serials-management@2.1.0":
-  version "2.1.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/serials-management/-/serials-management-2.1.0.tgz#b0248f89b765426456a8d6a040642d213dbb381c"
-  integrity sha512-z6af2DPR98JGhPyRGCzmP4f31LtGidgKcaEdb4hCOUOs73OF0MM50ZZ/nc8hFCjOJE166+rThzqBiLrzrx+M5w==
+"@folio/serials-management@2.1.1":
+  version "2.1.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/serials-management/-/serials-management-2.1.1.tgz#b7f1ad5b1930f78a6b76c185a71c258aa197c174"
+  integrity sha512-qf4eWTuLta4r76HwmfyP/Gvp1PR9dIVpiXx5Zi5O6K8calr4+t4Gu54h0m3Isc/g+krSQgwVtEj0byK0bvthuQ==
   dependencies:
     "@folio/stripes-acq-components" "^7.1.0"
-    "@k-int/stripes-kint-components" "^5.15.0"
+    "@k-int/stripes-kint-components" "^5.37.0"
     final-form "^4.18.4"
     final-form-arrays "^3.0.1"
     final-form-set-field-data "^1.0.2"
@@ -2439,7 +2439,7 @@
     react-final-form-arrays "^3.1.1"
     uuid "^11.1.0"
   optionalDependencies:
-    "@folio/plugin-find-po-line" "^6.0.0"
+    "@folio/plugin-find-po-line" "^6.1.0"
 
 "@folio/service-interaction@4.1.1":
   version "4.1.1"
@@ -3248,7 +3248,7 @@
     "@jsonjoy.com/buffers" "^1.0.0"
     "@jsonjoy.com/codegen" "^1.0.0"
 
-"@k-int/stripes-kint-components@^5.0.0", "@k-int/stripes-kint-components@^5.1.1", "@k-int/stripes-kint-components@^5.11.0", "@k-int/stripes-kint-components@^5.15.0", "@k-int/stripes-kint-components@^5.28.3", "@k-int/stripes-kint-components@^5.30.0":
+"@k-int/stripes-kint-components@^5.0.0", "@k-int/stripes-kint-components@^5.1.1", "@k-int/stripes-kint-components@^5.11.0", "@k-int/stripes-kint-components@^5.28.3", "@k-int/stripes-kint-components@^5.30.0":
   version "5.36.1"
   resolved "https://registry.yarnpkg.com/@k-int/stripes-kint-components/-/stripes-kint-components-5.36.1.tgz#a1cb8c4b8ead76b6b6627a7f3788dffc2eb771c0"
   integrity sha512-4Ih4fLSaHzewZwqzZCUmBtVQEH0Cqa6Fha012mYTdUjw3RjufDja8hk9JGV7PURnyZ0GPb1ijvChLi6PwTfsNg==
