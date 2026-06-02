@@ -1803,10 +1803,10 @@
   optionalDependencies:
     "@folio/plugin-find-user" "^8.1.0"
 
-"@folio/inventory-import@4.1.1":
-  version "4.1.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory-import/-/inventory-import-4.1.1.tgz#2fa74e93869af915ddad5e289d30d2eddba43348"
-  integrity sha512-VPzrYUChsL0aaIJNv9NYnGWP8/zMMfFNpSgKqo/pnpIXFTFCt3vPLYrCM1ALqWKfzUHVqWPZ79QjY0w65WS8Eg==
+"@folio/inventory-import@4.1.2":
+  version "4.1.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory-import/-/inventory-import-4.1.2.tgz#b16afbc67a9740cdbacc8300b9aee3d0ff90790b"
+  integrity sha512-5IZIVVNv2wFiHDbwzpkBu8I+dJfMB/yQ2BSVw4qdsybUxF61w+cYLGA0C4xabUFx3Xqj4uWjIn3o+b2bE0n4Uw==
   dependencies:
     "@folio/stripes-data-transfer-components" "^7.0.0"
     final-form-arrays "^3.0.2"
