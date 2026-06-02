@@ -42,11 +42,11 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000010231"
+        "version": "2.1.0-SNAPSHOT.100200000010323"
       },
       {
         "name": "app-agreements",
-        "version": "1.1.0-SNAPSHOT.100200000009947"
+        "version": "1.1.0-SNAPSHOT.100200000009959"
       },
       {
         "name": "app-authority-records",
