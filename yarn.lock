@@ -1371,13 +1371,13 @@
   optionalDependencies:
     "@folio/plugin-find-user" "^8.0.0"
 
-"@folio/agreements@12.1.0":
-  version "12.1.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/agreements/-/agreements-12.1.0.tgz#63fcf32a1de741d2253f283641b1de537fd63ea5"
-  integrity sha512-xxo8/QIZTD7/nnYw1a4XZiiB9tyYvGVG6LY3+sSm3UTrSj9rV01YmyuPHTx8xIx9rUxP1If3iJKoybv9yhwZ7Q==
+"@folio/agreements@12.1.1":
+  version "12.1.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/agreements/-/agreements-12.1.1.tgz#82f0036800d8061e47a3b71f1618e7587ef71123"
+  integrity sha512-hhDBypuaZC5wR5UC661C0+hlM9vCVaohNiSZ0k5BvgL83mg7mUEr4rFFKmvrBsGKiQuBJMFgNnVtrifcZ2lNHg==
   dependencies:
-    "@folio/stripes-acq-components" "^7.0.0"
-    "@k-int/stripes-kint-components" "^5.28.3"
+    "@folio/stripes-acq-components" "^7.1.0"
+    "@k-int/stripes-kint-components" "^5.37.0"
     "@rehooks/local-storage" "^2.4.4"
     compose-function "^3.0.3"
     final-form "^4.18.4"
@@ -3248,7 +3248,7 @@
     "@jsonjoy.com/buffers" "^1.0.0"
     "@jsonjoy.com/codegen" "^1.0.0"
 
-"@k-int/stripes-kint-components@^5.0.0", "@k-int/stripes-kint-components@^5.1.1", "@k-int/stripes-kint-components@^5.11.0", "@k-int/stripes-kint-components@^5.28.3", "@k-int/stripes-kint-components@^5.30.0":
+"@k-int/stripes-kint-components@^5.0.0", "@k-int/stripes-kint-components@^5.1.1", "@k-int/stripes-kint-components@^5.11.0", "@k-int/stripes-kint-components@^5.30.0":
   version "5.36.1"
   resolved "https://registry.yarnpkg.com/@k-int/stripes-kint-components/-/stripes-kint-components-5.36.1.tgz#a1cb8c4b8ead76b6b6627a7f3788dffc2eb771c0"
   integrity sha512-4Ih4fLSaHzewZwqzZCUmBtVQEH0Cqa6Fha012mYTdUjw3RjufDja8hk9JGV7PURnyZ0GPb1ijvChLi6PwTfsNg==
