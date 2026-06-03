@@ -1374,9 +1374,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/agreements@>=2.0.0":
-  version "12.2.1099000000002028"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/agreements/-/agreements-12.2.1099000000002028.tgz#4f59a539cefa34f9a25f3c70508e0cbcc2bc3962"
-  integrity sha512-KO1pH3/5FyIyY/+FWSFF0OfIrxJiOuwEhI2eyE8wA+Nltgw69aCeLFTm/SJe3rGA0gBOKiT6630+zAZQfacSZA==
+  version "12.2.1099000000002033"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/agreements/-/agreements-12.2.1099000000002033.tgz#f13946c65a1d92ba25325465c994d04ff80fdf9e"
+  integrity sha512-ywJxBDhB+NF2B8Bprb1Ne884PZv0lit7JyJrLywkgIJqprOPPNM84PhwwS72OjhY3uD1HExOTg3I+O6oyQxi2g==
   dependencies:
     "@folio/stripes-acq-components" "^7.1.0"
     "@k-int/stripes-kint-components" "^5.37.0"
@@ -1692,9 +1692,9 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/erm-usage@>=1.0.3":
-  version "12.0.1099000000000907"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-12.0.1099000000000907.tgz#cc459ff8d1961bd768918abbb39322afd0e4d1e3"
-  integrity sha512-rT9a9nWbYT49S/UaIEWvxL3QfUXMwT8XNPPKKCx5qd2WE3VFUBTp0nA/fByxRfjtYjhOBLKE0dwFzYyD6KVBLw==
+  version "12.0.1099000000000918"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-12.0.1099000000000918.tgz#ca1d0e03318caa469bf901b64ab94dd153389bdf"
+  integrity sha512-xdZmlRZ6zKnEevXLRKqle+Jy3WdHgRmdIe/ypaWowIHx56YyeGrtv0/Wo89zSGVINuQ2hnu2hpybuZ6dDao/0w==
   dependencies:
     "@folio/stripes-leipzig-components" "^1.0.0"
     compose-function "^3.0.3"
@@ -1702,7 +1702,6 @@
     final-form "^4.18.7"
     final-form-arrays "^3.0.2"
     lodash "^4.17.4"
-    moment-timezone "^0.5.14"
     prop-types "^15.6.0"
     react-dropzone "^10.2.2"
     react-final-form "^6.3.5"
