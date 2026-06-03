@@ -1872,12 +1872,12 @@
     "@folio/plugin-find-organization" "^6.0.0"
     "@folio/plugin-find-po-line" "^6.0.0"
 
-"@folio/ld-folio-wrapper@2.0.4":
-  version "2.0.4"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/ld-folio-wrapper/-/ld-folio-wrapper-2.0.4.tgz#e156eddae6d7ffbfd3003157c2008bf4c764d62e"
-  integrity sha512-kcogeYAG0+h6Fjg8bjVoSkC3LEzS4kDGYduP24DzjsDke2MT44ey3rCJrCPrqAW5/4wU3QjitCWVMISvnW/L1Q==
+"@folio/ld-folio-wrapper@2.0.5":
+  version "2.0.5"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/ld-folio-wrapper/-/ld-folio-wrapper-2.0.5.tgz#70ff736aa57eaaa142dd9ca7f0d2c10dc093bd9d"
+  integrity sha512-GyqYTa3a8IxMyiGo11V7AGmgCl4w1uaJDrM6VAP2kArIECO6Lody8MirBLVgmGe6vDPpjUmgt+2cOOEvS6ndXg==
   dependencies:
-    "@folio/linked-data" "^2.0.3"
+    "@folio/linked-data" "^2.0.4"
     prop-types "^15.6.0"
 
 "@folio/ldp@3.3.0":
@@ -1922,10 +1922,10 @@
     react-final-form-arrays "^3.1.0"
     react-router-prop-types "^1.0.4"
 
-"@folio/linked-data@^2.0.3":
-  version "2.0.3"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/linked-data/-/linked-data-2.0.3.tgz#31159e1f52713ec8312295b0697143ca555397d1"
-  integrity sha512-cmx0w26fehbmfU4zW8O3yq2hX4GOx+kawf6u0zgy3JuLnaZYRs2JBs4QFiHkufYTbpJ3CqyQJj9GJr75mNjT5g==
+"@folio/linked-data@^2.0.4":
+  version "2.0.4"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/linked-data/-/linked-data-2.0.4.tgz#afb5dd7645141bf2e73d94150471d7553fc6d1d0"
+  integrity sha512-1xjP4/WdJSpByzowvlK6nPv/VYDaTGwKXDfvLeY8JE6EjyDesmhP7C5zsmW/j4RqiK7U6s9ijEd0gfNOTdg7sA==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
