@@ -1519,10 +1519,10 @@
   optionalDependencies:
     "@folio/plugin-find-user" "^8.1.0"
 
-"@folio/circulation@12.0.1":
-  version "12.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/circulation/-/circulation-12.0.1.tgz#84e61114d338db5c4a2ce667f33ef8811808f877"
-  integrity sha512-syfZdeO6OKpjb0QtRHzY1bE5doNyzDl451s90ifSsg3hsN4m3T4SimydUI+ZcaNYbYRwtOE2bsnOImdq0KvQYg==
+"@folio/circulation@12.0.2":
+  version "12.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/circulation/-/circulation-12.0.2.tgz#1bb7288a9fe2f749a8bc8a2711ef5681bc0c9276"
+  integrity sha512-X0ANrx/uKKgmiJ598nG3wkyzh1jIFeVpNz57ihq2u7theOvS2ibuedqFsKTchdw4aWdjq1Osix/tZ8ka4ZpwKA==
   dependencies:
     "@folio/stripes-template-editor" "^3.2.0"
     codemirror "^5.61.1"
@@ -2402,10 +2402,10 @@
     react-final-form "^6.5.2"
     react-router-prop-types "^1.0.4"
 
-"@folio/requests@13.0.1":
-  version "13.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/requests/-/requests-13.0.1.tgz#5fe93adb912d1ff6123b15e0dcc65f4afb7a35d1"
-  integrity sha512-broiPrvAjVQlzmHbJKeoKRV7nix04MEiQoVcxvR132H7KIu3LTA794dqfo4lO978UnvlLtxGBy28bGv/Dk0owQ==
+"@folio/requests@13.0.2":
+  version "13.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/requests/-/requests-13.0.2.tgz#3b1401348acf636929d91df9f08c6bafd705c0e3"
+  integrity sha512-UNY3DNc+aPUl+ewJ67VZf138Jqv1TbbnJV5TR7SPcYrOtUXBKcw2TCU8IVZQXLiMTdMKE0baIzAPF9LTx/xxlA==
   dependencies:
     dompurify "^3.0.9"
     final-form "^4.20.7"
@@ -2896,10 +2896,10 @@
     redux-form "^8.0.0"
     uuid "9.0.0"
 
-"@folio/users@13.0.0":
-  version "13.0.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/users/-/users-13.0.0.tgz#dccfccbf8c25378b38d2cefe27f0916b756e548c"
-  integrity sha512-epk0kFmkfsEgU1K54T5ae9Msl2W5tyCc4T5YSL9fDUDLCwRjYpDRsZG+AD+DT1m7GWiSHf1JHcC+fkkfV2a7Yg==
+"@folio/users@13.0.1":
+  version "13.0.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/users/-/users-13.0.1.tgz#9f0c2e51c6c17c061810ba358a4a44be42e6520b"
+  integrity sha512-0zcg3B+N7X++AW/XY6WjATj0fzo71GPxMBxy/KK1Z+uJD/vaaOpd5RhUCRSe6lr6ORsCXkXbBvKnhyRLtITEQQ==
   dependencies:
     "@folio/stripes-util" "^7.1.0"
     compressorjs "^1.2.1"
