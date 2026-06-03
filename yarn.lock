@@ -1456,9 +1456,9 @@
     yup "^1.4.0"
 
 "@folio/calendar@>=2.0.5":
-  version "13.0.1099000000000255"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/calendar/-/calendar-13.0.1099000000000255.tgz#34c9624a0d9d6d9af6fe5bec39c3d4a0e126e8cf"
-  integrity sha512-lSN7Bv+CaQbU8nwt8PMFo2NBS3YAcIBzaDAd1CM6vCn6iSWhvGtkIUhF8W6IPZdwkv00UN4BiUstsq/DIGLN4A==
+  version "13.0.1099000000000259"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/calendar/-/calendar-13.0.1099000000000259.tgz#b61c80ddb80fa2f6cc719320e2e7be6dd48ed1b5"
+  integrity sha512-Wc75IGrUhEtVnTwIwr8R/K908APXyNA4pPwVR3XQHL41vtHdPDmB8oHPRtHXe5h7EmxoeMt6LRLb1DYUOc/Q8A==
   dependencies:
     "@types/memoizee" "^0.4.8"
     "@types/react-router-dom" "^5.2.0"
