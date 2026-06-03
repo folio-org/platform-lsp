@@ -17,15 +17,15 @@
     },
     {
       "name": "mgr-applications",
-      "version": "4.1.0-SNAPSHOT.2171"
+      "version": "4.1.0-SNAPSHOT.2174"
     },
     {
       "name": "mgr-tenants",
-      "version": "4.1.0-SNAPSHOT.2082"
+      "version": "4.1.0-SNAPSHOT.2089"
     },
     {
       "name": "mgr-tenant-entitlements",
-      "version": "4.1.0-SNAPSHOT.2082"
+      "version": "4.1.0-SNAPSHOT.2093"
     }
   ],
   "applications": {
