@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000009855"
+        "version": "2.2.0-SNAPSHOT.100200000009869"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000009212"
+        "version": "3.4.0-SNAPSHOT.100200000009229"
       }
     ],
     "optional": [
@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.1.0-SNAPSHOT.100200000009982"
+        "version": "1.1.0-SNAPSHOT.100200000009998"
       },
       {
         "name": "app-authority-records",
@@ -98,7 +98,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "2.1.0-SNAPSHOT.100200000010490"
+        "version": "2.1.0-SNAPSHOT.100200000010505"
       },
       {
         "name": "app-gobi",
