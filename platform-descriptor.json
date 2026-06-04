@@ -1,19 +1,19 @@
 {
   "name": "FOLIO LSP",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2025-ci.1",
+  "version": "R1-2025-ci.2",
   "eureka-components": [
     {
       "name": "folio-kong",
-      "version": "3.9.2"
+      "version": "3.9.4"
     },
     {
       "name": "folio-keycloak",
-      "version": "26.5.1"
+      "version": "26.5.4"
     },
     {
       "name": "folio-module-sidecar",
-      "version": "3.0.18"
+      "version": "3.0.19"
     },
     {
       "name": "mgr-applications",
@@ -21,7 +21,7 @@
     },
     {
       "name": "mgr-tenants",
-      "version": "3.0.6"
+      "version": "3.0.7"
     },
     {
       "name": "mgr-tenant-entitlements",
@@ -32,21 +32,21 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.0.51"
+        "version": "2.0.53"
       },
       {
         "name": "app-platform-complete",
-        "version": "2.5.3"
+        "version": "2.5.12"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "1.0.28"
+        "version": "1.0.30"
       },
       {
         "name": "app-bulk-edit",
-        "version": "1.0.9"
+        "version": "1.0.10"
       },
       {
         "name": "app-consortia",
@@ -58,7 +58,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "1.1.10"
+        "version": "1.1.11"
       },
       {
         "name": "app-edge-complete",
@@ -66,7 +66,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "2.0.4"
+        "version": "2.0.5"
       },
       {
         "name": "app-fqm",
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "1.1.6"
+        "version": "1.1.7"
       },
       {
         "name": "app-marc-migrations",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "1.0.3"
+        "version": "1.0.4"
       },
       {
         "name": "app-reading-room",
