@@ -1972,10 +1972,10 @@
     react-final-form "^6.3.0"
     react-final-form-arrays "^3.1.1"
 
-"@folio/marc-authorities@8.0.1":
-  version "8.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/marc-authorities/-/marc-authorities-8.0.1.tgz#e11d9e8df8abfaecbfd7162b49be6424f3bc6d4b"
-  integrity sha512-/CIsQcwIeB5CU04TnjWjwslQka1V3NLngrnGIq1f0y3idD9pGEtoLT6Kl3DJzSdsEHwGGFhwtRxOuEdvlCgRoQ==
+"@folio/marc-authorities@8.0.2":
+  version "8.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/marc-authorities/-/marc-authorities-8.0.2.tgz#416f4e861b0cd98ee06c7633b75e4e727b82a36d"
+  integrity sha512-uV/846GJKB6Ttq8iGBNxIycmaVwldk1wMU3XcIg8+iZ3qtzffmXyxVPQ0a5Sn+aKeVuPafUuHBkVdCC9S0FXwQ==
   dependencies:
     "@folio/stripes-acq-components" "^7.1.0"
     "@rehooks/local-storage" "^2.4.4"
