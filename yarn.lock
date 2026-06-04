@@ -1453,10 +1453,10 @@
     uuid "^9.0.0"
     yup "^1.4.0"
 
-"@folio/calendar@13.0.0":
-  version "13.0.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/calendar/-/calendar-13.0.0.tgz#842c0b246c7d7929a18f4b01aa466acd551529d3"
-  integrity sha512-qEWHeNYmZRwjPuiCgZhquF8g2fvKBJ4GI7ARDPI3A0btjeSbEJxHT8gVeILgeZYnTnEHV6VWfcSslEM2R/kMxg==
+"@folio/calendar@13.0.1":
+  version "13.0.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/calendar/-/calendar-13.0.1.tgz#0ad672f8e05de4bed92428fdc9393bde0c3dbca5"
+  integrity sha512-DX3V1UWYcwY9Miq2AfWrBoqNHTpc/bllS6YPsGkGEC/tEpLP462jwhwJswWUTgb+4yi9nTIix42ii89CnEMBiA==
   dependencies:
     "@types/memoizee" "^0.4.8"
     "@types/react-router-dom" "^5.2.0"
