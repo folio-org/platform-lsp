@@ -3248,18 +3248,7 @@
     "@jsonjoy.com/buffers" "^1.0.0"
     "@jsonjoy.com/codegen" "^1.0.0"
 
-"@k-int/stripes-kint-components@^5.0.0", "@k-int/stripes-kint-components@^5.1.1", "@k-int/stripes-kint-components@^5.11.0", "@k-int/stripes-kint-components@^5.30.0":
-  version "5.36.1"
-  resolved "https://registry.yarnpkg.com/@k-int/stripes-kint-components/-/stripes-kint-components-5.36.1.tgz#a1cb8c4b8ead76b6b6627a7f3788dffc2eb771c0"
-  integrity sha512-4Ih4fLSaHzewZwqzZCUmBtVQEH0Cqa6Fha012mYTdUjw3RjufDja8hk9JGV7PURnyZ0GPb1ijvChLi6PwTfsNg==
-  dependencies:
-    "@rehooks/local-storage" "^2.4.4"
-    compose-function "^3.0.3"
-    react-dropzone "^15.0.0"
-    react-resize-detector "^11.0.0"
-    zustand "^5.0.0"
-
-"@k-int/stripes-kint-components@^5.37.0":
+"@k-int/stripes-kint-components@^5.0.0", "@k-int/stripes-kint-components@^5.1.1", "@k-int/stripes-kint-components@^5.11.0", "@k-int/stripes-kint-components@^5.30.0", "@k-int/stripes-kint-components@^5.37.0":
   version "5.37.0"
   resolved "https://registry.yarnpkg.com/@k-int/stripes-kint-components/-/stripes-kint-components-5.37.0.tgz#c5827c4ff0cdec092d8c24871ff1fb91cf6ecd3b"
   integrity sha512-0IZJVg7K5wZl3WIu3lCkezGVY+UhzjN5fDRi9fjP/XFMnEmUX+lTN+Jj586kvs+fjH5i6G84P+ne/gx+Z+uyAA==
