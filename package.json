@@ -77,7 +77,7 @@
     "@folio/stripes": "10.1.4",
     "@folio/stripes-authority-components": "7.0.1",
     "@folio/stripes-build": "1.0.0",
-    "@folio/stripes-erm-components": "10.1.0",
+    "@folio/stripes-erm-components": "10.1.1",
     "@folio/stripes-inventory-components": "2.1.0",
     "@folio/stripes-marc-components": "2.1.0",
     "@folio/tags": "10.0.0",
