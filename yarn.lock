@@ -1371,10 +1371,10 @@
   optionalDependencies:
     "@folio/plugin-find-user" "^8.0.0"
 
-"@folio/agreements@12.1.1":
-  version "12.1.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/agreements/-/agreements-12.1.1.tgz#82f0036800d8061e47a3b71f1618e7587ef71123"
-  integrity sha512-hhDBypuaZC5wR5UC661C0+hlM9vCVaohNiSZ0k5BvgL83mg7mUEr4rFFKmvrBsGKiQuBJMFgNnVtrifcZ2lNHg==
+"@folio/agreements@12.1.3":
+  version "12.1.3"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/agreements/-/agreements-12.1.3.tgz#86e8b2bb6d3b87b6c1268428c983ecade4637837"
+  integrity sha512-yH2nVDNCZdpkVDEqMpvMAlH39ErQA0J56WT3KqcIGBvLo/+YeUshaJOoDsUn7GKFlMq5GH0ILSxcvLBFwzYSoA==
   dependencies:
     "@folio/stripes-acq-components" "^7.1.0"
     "@k-int/stripes-kint-components" "^5.37.0"
@@ -1710,10 +1710,10 @@
     react-final-form "^6.3.0"
     react-final-form-arrays "^3.1.1"
 
-"@folio/erm-usage@12.0.0":
-  version "12.0.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/erm-usage/-/erm-usage-12.0.0.tgz#c832936939ae565a51a0d223a587978da2650cbd"
-  integrity sha512-3M43PW89R2aP5msqsBZQ5MMvufnOa+s+ZndPkl9pFg7NMfLp3u+3m+6MjvQAxJWZ56Do7tQtWxn6YkxBuqdNLw==
+"@folio/erm-usage@12.0.1":
+  version "12.0.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/erm-usage/-/erm-usage-12.0.1.tgz#7b1f2a6a6422509fefbfbfe9e09bd35b34f2fb5a"
+  integrity sha512-nlf1BWluNXCpvGnYXzunRVEbgudcigjELWWPjBT7hoJptGOait+LCKGbyFvmdQ8JXwjtSNtRG3H+2hlbGAdTWw==
   dependencies:
     "@folio/stripes-leipzig-components" "^1.0.0"
     compose-function "^3.0.3"
@@ -1721,7 +1721,6 @@
     final-form "^4.18.7"
     final-form-arrays "^3.0.2"
     lodash "^4.17.4"
-    moment-timezone "^0.5.14"
     prop-types "^15.6.0"
     react-dropzone "^10.2.2"
     react-final-form "^6.3.5"
@@ -1972,10 +1971,10 @@
     react-final-form "^6.3.0"
     react-final-form-arrays "^3.1.1"
 
-"@folio/marc-authorities@8.0.1":
-  version "8.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/marc-authorities/-/marc-authorities-8.0.1.tgz#e11d9e8df8abfaecbfd7162b49be6424f3bc6d4b"
-  integrity sha512-/CIsQcwIeB5CU04TnjWjwslQka1V3NLngrnGIq1f0y3idD9pGEtoLT6Kl3DJzSdsEHwGGFhwtRxOuEdvlCgRoQ==
+"@folio/marc-authorities@8.0.2":
+  version "8.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/marc-authorities/-/marc-authorities-8.0.2.tgz#416f4e861b0cd98ee06c7633b75e4e727b82a36d"
+  integrity sha512-uV/846GJKB6Ttq8iGBNxIycmaVwldk1wMU3XcIg8+iZ3qtzffmXyxVPQ0a5Sn+aKeVuPafUuHBkVdCC9S0FXwQ==
   dependencies:
     "@folio/stripes-acq-components" "^7.1.0"
     "@rehooks/local-storage" "^2.4.4"
