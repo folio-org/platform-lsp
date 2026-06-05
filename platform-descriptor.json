@@ -1,7 +1,7 @@
 {
   "name": "FOLIO LSP (Trillium)",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2026.26",
+  "version": "R1-2026.27",
   "eureka-components": [
     {
       "name": "folio-kong",
@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-complete",
-        "version": "3.3.5"
+        "version": "3.3.6"
       },
       {
         "name": "app-platform-minimal",
@@ -46,15 +46,15 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.2"
-      },
-      {
-        "name": "app-authority-records",
         "version": "1.0.3"
       },
       {
+        "name": "app-authority-records",
+        "version": "1.0.4"
+      },
+      {
         "name": "app-bulk-edit",
-        "version": "2.0.3"
+        "version": "2.0.4"
       },
       {
         "name": "app-consortia",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.0.2"
+        "version": "1.0.3"
       },
       {
         "name": "app-dcb",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "3.0.0"
+        "version": "3.0.1"
       },
       {
         "name": "app-fqm",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.0.2"
+        "version": "1.0.3"
       },
       {
         "name": "app-linked-data",
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "2.0.2"
+        "version": "2.0.3"
       },
       {
         "name": "app-quick-marc",
