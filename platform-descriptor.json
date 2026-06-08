@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.1.0-SNAPSHOT.100200000005371"
+        "version": "1.1.0-SNAPSHOT.100200000005455"
       },
       {
         "name": "app-bulk-edit",
@@ -90,15 +90,15 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000010676"
+        "version": "1.1.0-SNAPSHOT.100200000010677"
       },
       {
         "name": "app-erm-usage",
-        "version": "3.1.0-SNAPSHOT.100200000010122"
+        "version": "3.1.0-SNAPSHOT.100200000010242"
       },
       {
         "name": "app-fqm",
-        "version": "2.1.0-SNAPSHOT.100200000010528"
+        "version": "2.1.0-SNAPSHOT.100200000010604"
       },
       {
         "name": "app-gobi",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000009755"
+        "version": "3.1.0-SNAPSHOT.100200000009904"
       },
       {
         "name": "app-marc-storage",
