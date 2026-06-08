@@ -1853,11 +1853,11 @@
     "@folio/plugin-find-po-line" "^6.0.0"
 
 "@folio/ld-folio-wrapper@>=1.0.0":
-  version "2.0.4099000000000486"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/ld-folio-wrapper/-/ld-folio-wrapper-2.0.4099000000000486.tgz#af60d598d309edabea1db22c543bd9b50f9eca02"
-  integrity sha512-HpnvubV0ynQGwgiUHVqWzisjLidd5vIMNdy2AwXPR+l3lUsUs4nCdthGZLSJXH1d5TxAVAf7jPeST6J4cVQakA==
+  version "2.0.5099000000000497"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/ld-folio-wrapper/-/ld-folio-wrapper-2.0.5099000000000497.tgz#cbcffb13c4e4e8e9e9671d9454874d5d7ef25afc"
+  integrity sha512-TNBu8y4+gJz+FwNmRdFL8LJevJhPwOapmkYyS3CuKLASo7GaX6ZnHwLiDc+GYsBJmA6To6Dct8wdMSHRXSZp8Q==
   dependencies:
-    "@folio/linked-data" "^2.0.3"
+    "@folio/linked-data" "^2.0.4"
     prop-types "^15.6.0"
 
 "@folio/ldp@>=1.1.0":
@@ -1902,16 +1902,16 @@
     react-final-form-arrays "^3.1.0"
     react-router-prop-types "^1.0.4"
 
-"@folio/linked-data@^2.0.3":
-  version "2.0.4099000000002513"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.4099000000002513.tgz#95cad312222378b4e836662d5de312257b51b92e"
-  integrity sha512-RbdYzzWc3cfaBAVBMDZ4JgOW25yiGxxPhqivcPKnRC4bDbst52CwdbIMmOKndbxy0ySgj//Tt/reAQ9qgEMb+g==
+"@folio/linked-data@^2.0.4":
+  version "2.0.4099000000002529"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.4099000000002529.tgz#70da19fc0d122b0a0ee151df75f5682e2ebcca5a"
+  integrity sha512-nPX+yOWBvyCWXEde86NTawSb9Fgq0UtATM3yZvL324m1AdHr0Qt03WkotVR+EcX4fzXxJB7YEStSdlKH47saDg==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
     "@dnd-kit/sortable" "^10.0.0"
     "@dnd-kit/utilities" "^3.2.2"
-    "@tanstack/react-query" "^5.97.0"
+    "@tanstack/react-query" "^5.101.0"
     classnames "^2.5.1"
     focus-trap-react "^12.0.0"
     lodash "^4.17.21"
@@ -1919,7 +1919,7 @@
     react-dom "^19.2.5"
     react-dropzone "^14.3.8"
     react-intl "^10.1.1"
-    react-router-dom "^7.14.2"
+    react-router-dom "^7.17.0"
     react-select "^5.10.2"
     uuid "^13.0.0"
     zustand "^5.0.12"
@@ -3718,7 +3718,7 @@
   resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.101.0.tgz#45391ce143c270b7e7a55bd1a6696918f20782d1"
   integrity sha512-cQetA74EB+seWySv1TTKr828TnP0u39m6LykwDXIo84SNortpDkp30TMEjkqtYCNP9c40uT/iwl6MLiufEt0Ow==
 
-"@tanstack/react-query@^5.97.0":
+"@tanstack/react-query@^5.101.0":
   version "5.101.0"
   resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.101.0.tgz#2dd56c5b96ec816d6b6ec9cee5c80ed298974733"
   integrity sha512-rLlJXSpkqfizLWgkR5+eLeIk0MvTx/meEIR7LRjxic+qxiQP8zVjq7BqQkiCMNLQBlLfuOLqqr6KO5GtrDlmSg==
@@ -8666,7 +8666,7 @@ react-router-dom@^5.2.0:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
-react-router-dom@^7.14.2:
+react-router-dom@^7.17.0:
   version "7.17.0"
   resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-7.17.0.tgz#e77527b4b7862f7b47ff26dd5b9315fb897b82a7"
   integrity sha512-fyU2yjGups/hE6Xz0I5ZYbVL8Gx29eCjgpHaRaTaVU+OOAdfRX05KsvyRm0GO8YQwOkhpU3MurW1jyMUJn+zSw==
