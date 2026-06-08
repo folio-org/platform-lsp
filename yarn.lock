@@ -1903,9 +1903,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/linked-data@^2.0.3":
-  version "2.0.4099000000002509"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.4099000000002509.tgz#700f97abd4982112d59493a8d9b9af4991b49f45"
-  integrity sha512-f44XWTFaARCiUrLGbZwx0UcFEtF71WR12+VFFRh6gq4NwzNJ+kTUwIbF370Loz7hMuap9rjaG9kwgk3shHPkyw==
+  version "2.0.4099000000002513"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.4099000000002513.tgz#95cad312222378b4e836662d5de312257b51b92e"
+  integrity sha512-RbdYzzWc3cfaBAVBMDZ4JgOW25yiGxxPhqivcPKnRC4bDbst52CwdbIMmOKndbxy0ySgj//Tt/reAQ9qgEMb+g==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -1919,7 +1919,7 @@
     react-dom "^19.2.5"
     react-dropzone "^14.3.8"
     react-intl "^10.1.1"
-    react-router-dom "^7.14.0"
+    react-router-dom "^7.14.2"
     react-select "^5.10.2"
     uuid "^13.0.0"
     zustand "^5.0.12"
@@ -8666,7 +8666,7 @@ react-router-dom@^5.2.0:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
-react-router-dom@^7.14.0:
+react-router-dom@^7.14.2:
   version "7.17.0"
   resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-7.17.0.tgz#e77527b4b7862f7b47ff26dd5b9315fb897b82a7"
   integrity sha512-fyU2yjGups/hE6Xz0I5ZYbVL8Gx29eCjgpHaRaTaVU+OOAdfRX05KsvyRm0GO8YQwOkhpU3MurW1jyMUJn+zSw==
