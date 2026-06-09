@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000009965"
+        "version": "2.2.0-SNAPSHOT.100200000009989"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000009346"
+        "version": "3.4.0-SNAPSHOT.100200000009348"
       }
     ],
     "optional": [
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.1.0-SNAPSHOT.100200000005455"
+        "version": "1.1.0-SNAPSHOT.100200000005474"
       },
       {
         "name": "app-bulk-edit",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.3.0-SNAPSHOT.100200000009251"
+        "version": "2.3.0-SNAPSHOT.100200000009252"
       },
       {
         "name": "app-eholdings",
@@ -138,7 +138,7 @@
       },
       {
         "name": "app-notification",
-        "version": "1.1.0-SNAPSHOT.100200000005935"
+        "version": "1.1.0-SNAPSHOT.100200000005936"
       },
       {
         "name": "app-oa",
@@ -154,7 +154,7 @@
       },
       {
         "name": "app-reading-room",
-        "version": "3.1.0-SNAPSHOT.100200000009697"
+        "version": "3.1.0-SNAPSHOT.100200000010000"
       },
       {
         "name": "app-reporting",
