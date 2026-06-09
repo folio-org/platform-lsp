@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.1.0-SNAPSHOT.100200000010000"
+        "version": "1.1.0-SNAPSHOT.100200000010119"
       },
       {
         "name": "app-authority-records",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.3.0-SNAPSHOT.100200000009252"
+        "version": "2.3.0-SNAPSHOT.100200000009253"
       },
       {
         "name": "app-eholdings",
