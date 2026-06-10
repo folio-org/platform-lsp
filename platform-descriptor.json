@@ -50,11 +50,11 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.1.0-SNAPSHOT.100200000005474"
+        "version": "1.1.0-SNAPSHOT.100200000005496"
       },
       {
         "name": "app-bulk-edit",
-        "version": "2.1.0-SNAPSHOT.100200000010034"
+        "version": "2.1.0-SNAPSHOT.100200000010057"
       },
       {
         "name": "app-consortia",
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "2.1.0-SNAPSHOT.100200000010159"
+        "version": "2.1.0-SNAPSHOT.100200000010203"
       },
       {
         "name": "app-ebsconet",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000010677"
+        "version": "1.1.0-SNAPSHOT.100200000010716"
       },
       {
         "name": "app-erm-usage",
@@ -130,7 +130,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000008713"
+        "version": "1.1.0-SNAPSHOT.100200000008907"
       },
       {
         "name": "app-mosaic",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000010346"
+        "version": "1.1.0-SNAPSHOT.100200000010533"
       },
       {
         "name": "app-service-interaction",
