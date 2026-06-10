@@ -86,7 +86,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.3.0-SNAPSHOT.100200000009253"
+        "version": "2.3.0-SNAPSHOT.100200000009271"
       },
       {
         "name": "app-eholdings",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "2.1.0-SNAPSHOT.100200000010112"
+        "version": "2.1.0-SNAPSHOT.100200000010133"
       },
       {
         "name": "app-inventory",
@@ -138,7 +138,7 @@
       },
       {
         "name": "app-notification",
-        "version": "1.1.0-SNAPSHOT.100200000005936"
+        "version": "1.1.0-SNAPSHOT.100200000005954"
       },
       {
         "name": "app-oa",
