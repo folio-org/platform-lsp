@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000009388"
+        "version": "3.4.0-SNAPSHOT.100200000009389"
       }
     ],
     "optional": [
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "2.1.0-SNAPSHOT.100200000010203"
+        "version": "2.1.0-SNAPSHOT.100200000010223"
       },
       {
         "name": "app-ebsconet",
@@ -130,7 +130,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000008907"
+        "version": "1.1.0-SNAPSHOT.100200000008926"
       },
       {
         "name": "app-mosaic",
