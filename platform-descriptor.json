@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010010"
+        "version": "2.2.0-SNAPSHOT.100200000010033"
       },
       {
         "name": "app-platform-complete",
@@ -130,7 +130,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000008926"
+        "version": "1.1.0-SNAPSHOT.100200000008928"
       },
       {
         "name": "app-mosaic",
@@ -162,7 +162,7 @@
       },
       {
         "name": "app-requests-ecs",
-        "version": "2.1.0-SNAPSHOT.100200000009643"
+        "version": "2.1.0-SNAPSHOT.100200000009982"
       },
       {
         "name": "app-requests-mediated",
