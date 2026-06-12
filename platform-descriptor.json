@@ -13,19 +13,19 @@
     },
     {
       "name": "folio-module-sidecar",
-      "version": "4.1.0-SNAPSHOT.2156"
+      "version": "4.1.0-SNAPSHOT.2162"
     },
     {
       "name": "mgr-applications",
-      "version": "4.1.0-SNAPSHOT.2177"
+      "version": "4.1.0-SNAPSHOT.2188"
     },
     {
       "name": "mgr-tenants",
-      "version": "4.1.0-SNAPSHOT.2097"
+      "version": "4.1.0-SNAPSHOT.2102"
     },
     {
       "name": "mgr-tenant-entitlements",
-      "version": "4.1.0-SNAPSHOT.2104"
+      "version": "4.1.0-SNAPSHOT.2113"
     }
   ],
   "applications": {
