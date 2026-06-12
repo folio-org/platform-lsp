@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010050"
+        "version": "2.2.0-SNAPSHOT.100200000010051"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000009391"
+        "version": "3.4.0-SNAPSHOT.100200000009409"
       }
     ],
     "optional": [
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "2.1.0-SNAPSHOT.100200000010133"
+        "version": "2.1.0-SNAPSHOT.100200000010174"
       },
       {
         "name": "app-inventory",
@@ -138,7 +138,7 @@
       },
       {
         "name": "app-notification",
-        "version": "1.1.0-SNAPSHOT.100200000005994"
+        "version": "1.1.0-SNAPSHOT.100200000005995"
       },
       {
         "name": "app-oa",
