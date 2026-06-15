@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010051"
+        "version": "2.2.0-SNAPSHOT.100200000010121"
       },
       {
         "name": "app-platform-complete",
@@ -50,11 +50,11 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.1.0-SNAPSHOT.100200000005539"
+        "version": "1.1.0-SNAPSHOT.100200000005609"
       },
       {
         "name": "app-bulk-edit",
-        "version": "2.1.0-SNAPSHOT.100200000010057"
+        "version": "2.1.0-SNAPSHOT.100200000010168"
       },
       {
         "name": "app-consortia",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000010716"
+        "version": "1.1.0-SNAPSHOT.100200000010825"
       },
       {
         "name": "app-erm-usage",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000003263"
+        "version": "1.1.0-SNAPSHOT.100200000003354"
       },
       {
         "name": "app-licenses",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "2.1.0-SNAPSHOT.100200000010648"
+        "version": "2.1.0-SNAPSHOT.100200000010779"
       },
       {
         "name": "app-lists",
@@ -126,11 +126,11 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000009904"
+        "version": "3.1.0-SNAPSHOT.100200000010047"
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000008945"
+        "version": "1.1.0-SNAPSHOT.100200000009015"
       },
       {
         "name": "app-mosaic",
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.1.0-SNAPSHOT.100200000004847"
+        "version": "1.1.0-SNAPSHOT.100200000004996"
       },
       {
         "name": "app-reading-room",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000010535"
+        "version": "1.1.0-SNAPSHOT.100200000010639"
       },
       {
         "name": "app-service-interaction",
