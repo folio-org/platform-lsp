@@ -48,7 +48,7 @@
     "@folio/orders": "9.0.4",
     "@folio/organizations": "7.0.0",
     "@folio/plugin-bursar-export": "6.0.0",
-    "@folio/plugin-create-inventory-records": "7.0.0",
+    "@folio/plugin-create-inventory-records": "7.0.1",
     "@folio/plugin-eusage-reports": "4.1.0",
     "@folio/plugin-find-agreement": "12.1.1",
     "@folio/plugin-find-authority": "5.1.0",

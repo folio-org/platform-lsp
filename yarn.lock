@@ -2080,7 +2080,21 @@
     react-final-form-listeners "^1.0.2"
     react-router-prop-types "^1.0.4"
 
-"@folio/plugin-create-inventory-records@7.0.0", "@folio/plugin-create-inventory-records@^4.0.0||^5.0.0||^6.0.0||^7.0.0", "@folio/plugin-create-inventory-records@^7.0.0":
+"@folio/plugin-create-inventory-records@7.0.1":
+  version "7.0.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-create-inventory-records/-/plugin-create-inventory-records-7.0.1.tgz#4b1c6f685dfd6f33d69a29f11aa88075b7dc302f"
+  integrity sha512-GGBLpBsoEAmeE1NMOXhAhVa/4ReAQ+LlbuZhJN+xJbCRldnsOMyykFO7uYWBxFttVx74I3HHhdB5Zv+G6LBdnQ==
+  dependencies:
+    classnames "^2.2.5"
+    final-form "^4.18.2"
+    final-form-arrays "^3.0.1"
+    lodash "^4.18.0"
+    prop-types "^15.6.0"
+    react-final-form "^6.3.0"
+    react-final-form-arrays "^3.1.0"
+    react-final-form-listeners "^1.0.2"
+
+"@folio/plugin-create-inventory-records@^4.0.0||^5.0.0||^6.0.0||^7.0.0", "@folio/plugin-create-inventory-records@^7.0.0":
   version "7.0.0"
   resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-create-inventory-records/-/plugin-create-inventory-records-7.0.0.tgz#d6515062075e602d5f2002470559733a1e032c23"
   integrity sha512-D8qSc1VJ4SAzHl13yOiA0MGyqrLhh/cb7isenfP5p3taSnhia899VLreKIUkLYVRYwFu4wp60Jgds2RBlIKT9g==
