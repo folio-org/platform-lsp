@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010121"
+        "version": "2.2.0-SNAPSHOT.100200000010123"
       },
       {
         "name": "app-platform-complete",
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "2.1.0-SNAPSHOT.100200000010223"
+        "version": "2.1.0-SNAPSHOT.100200000010312"
       },
       {
         "name": "app-ebsconet",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000010825"
+        "version": "1.1.0-SNAPSHOT.100200000010827"
       },
       {
         "name": "app-erm-usage",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000003354"
+        "version": "1.1.0-SNAPSHOT.100200000003355"
       },
       {
         "name": "app-licenses",
@@ -186,7 +186,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.1.0-SNAPSHOT.100200000010354"
+        "version": "1.1.0-SNAPSHOT.100200000010466"
       }
     ],
     "experimental": [
