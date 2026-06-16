@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010138"
+        "version": "2.2.0-SNAPSHOT.100200000010139"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000009427"
+        "version": "3.4.0-SNAPSHOT.100200000009498"
       }
     ],
     "optional": [
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "2.1.0-SNAPSHOT.100200000010328"
+        "version": "2.1.0-SNAPSHOT.100200000010329"
       },
       {
         "name": "app-ebsconet",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.3.0-SNAPSHOT.100200000009272"
+        "version": "2.3.0-SNAPSHOT.100200000009398"
       },
       {
         "name": "app-eholdings",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "2.1.0-SNAPSHOT.100200000010174"
+        "version": "2.1.0-SNAPSHOT.100200000010259"
       },
       {
         "name": "app-inventory",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "2.1.0-SNAPSHOT.100200000010779"
+        "version": "2.1.0-SNAPSHOT.100200000010796"
       },
       {
         "name": "app-lists",
@@ -154,7 +154,7 @@
       },
       {
         "name": "app-reading-room",
-        "version": "3.1.0-SNAPSHOT.100200000010000"
+        "version": "3.1.0-SNAPSHOT.100200000010154"
       },
       {
         "name": "app-reporting",
