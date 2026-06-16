@@ -1938,7 +1938,7 @@
 
 "@folio/local-kb-admin@https://github.com/folio-org/ui-local-kb-admin.git#ERM-4024":
   version "9.2.0"
-  resolved "https://github.com/folio-org/ui-local-kb-admin.git#c5274411932550ad98bb4b6cc9ea88e6e2a7dbc0"
+  resolved "https://github.com/folio-org/ui-local-kb-admin.git#25bccf5abee1f9b9dbdc2f82efa2ee2491726cf1"
   dependencies:
     "@k-int/stripes-kint-components" "^5.37.0"
     "@rehooks/local-storage" "^2.4.5"
@@ -2448,9 +2448,9 @@
     redux-form "^8.3.0"
 
 "@folio/stripes-authority-components@>=2.0.0":
-  version "7.1.1099000000000245"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-authority-components/-/stripes-authority-components-7.1.1099000000000245.tgz#cc511bfcb3a8cb146c6031586a7064906a09bfcd"
-  integrity sha512-3pe2xIa3fL9LetfLxLTXXfrK8f/jrwOSuHz6rosASUI0aAGkTRNUXzCNsrxLAwME4M2DN0FAleSP3QLgddm/oQ==
+  version "7.1.1099000000000253"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-authority-components/-/stripes-authority-components-7.1.1099000000000253.tgz#b1f3f105858026dba7fe22a9bd843091bf7e0076"
+  integrity sha512-9oHyxzSEdo5LSudYRTlIw8lx5908tD8pAPZ3x7fC05VX4XRdRCpw8JS297QcB0f/KYpFG/9H0o/t9URpOMbhig==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     "@rehooks/local-storage" "^2.4.4"
@@ -5524,9 +5524,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.328:
-  version "1.5.372"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.372.tgz#ae8ac69942a37b231773b8fb01759f73733599e3"
-  integrity sha512-M3yhbAlilnwqC8D21t28UCDGHyitShTmmLRU/H+b74P6Ski16Nb9HONYEaVpMj/pwC7BEo5B95FpjODLCWbtfA==
+  version "1.5.373"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.373.tgz#7a29b55c79bd9a8f47d0cd501985c4da2bad2f9e"
+  integrity sha512-G2Hym8JIf/QreuseqkDibgH8Ci8KfJzqGDKdakbhSx9UltwRBH2cBLAWU/lBX0sCdv0TlhyxQyDCnSfxgMWsjA==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
