@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010124"
+        "version": "2.2.0-SNAPSHOT.100200000010138"
       },
       {
         "name": "app-platform-complete",
@@ -50,11 +50,11 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.1.0-SNAPSHOT.100200000005609"
+        "version": "1.1.0-SNAPSHOT.100200000005626"
       },
       {
         "name": "app-bulk-edit",
-        "version": "2.1.0-SNAPSHOT.100200000010168"
+        "version": "2.1.0-SNAPSHOT.100200000010184"
       },
       {
         "name": "app-consortia",
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "2.1.0-SNAPSHOT.100200000010314"
+        "version": "2.1.0-SNAPSHOT.100200000010328"
       },
       {
         "name": "app-ebsconet",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000010827"
+        "version": "1.1.0-SNAPSHOT.100200000010842"
       },
       {
         "name": "app-erm-usage",
