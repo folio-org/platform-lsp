@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010139"
+        "version": "2.2.0-SNAPSHOT.100200000010140"
       },
       {
         "name": "app-platform-complete",
@@ -42,11 +42,11 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000010535"
+        "version": "2.1.0-SNAPSHOT.100200000010642"
       },
       {
         "name": "app-agreements",
-        "version": "1.1.0-SNAPSHOT.100200000010119"
+        "version": "1.1.0-SNAPSHOT.100200000010265"
       },
       {
         "name": "app-authority-records",
@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "2.1.0-SNAPSHOT.100200000010184"
+        "version": "2.1.0-SNAPSHOT.100200000010186"
       },
       {
         "name": "app-consortia",
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "2.1.0-SNAPSHOT.100200000010329"
+        "version": "2.1.0-SNAPSHOT.100200000010330"
       },
       {
         "name": "app-ebsconet",
@@ -102,7 +102,7 @@
       },
       {
         "name": "app-gobi",
-        "version": "1.2.0-SNAPSHOT.100200000009283"
+        "version": "1.2.0-SNAPSHOT.100200000010126"
       },
       {
         "name": "app-inn-reach",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.1.0-SNAPSHOT.100200000010062"
+        "version": "1.1.0-SNAPSHOT.100200000010330"
       },
       {
         "name": "app-linked-data",
