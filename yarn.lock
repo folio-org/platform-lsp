@@ -1436,9 +1436,9 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/bulk-edit@>=1.0.0":
-  version "5.1.1099000000001139"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/bulk-edit/-/bulk-edit-5.1.1099000000001139.tgz#3d00d985aef7b0aac4ba4d106cb9a0e7ed967c90"
-  integrity sha512-JzMbgHiHIoE0Mm5OC35kIzOeHCP9GTQsrpuw+Qgg83kJXZLgwnja1jiOeJ2PA6OFyrqmEI+Sh2BquEHByZgv/A==
+  version "5.1.1099000000001145"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/bulk-edit/-/bulk-edit-5.1.1099000000001145.tgz#0e5ef191606cea16513f5b446ca887963a6272f3"
+  integrity sha512-PIecnZmb4L3mIkhgvmBnNEmQ2uKJmxhKgdToV62PSCSQpvITCupNv/ezBA6xcetPjRTxbrFaKjwttCgwVI2lJw==
   dependencies:
     "@folio/plugin-query-builder" "^3.0.0"
     "@folio/stripes-acq-components" "^7.0.0"
@@ -1653,9 +1653,9 @@
     react-query "^3.38.1"
 
 "@folio/eholdings@>=1.1.0":
-  version "11.2.1099000000000387"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000387.tgz#0e32151ad426c9052bea36ec0592dd268e05487a"
-  integrity sha512-oRB7pNjhjq8kTC2hvrA+bSI1ngQAaOIKa/36NWMxxpr0UjOrO9P6bel5Ig66HzOe+TPcN9YwooZe1L47fkuhDg==
+  version "11.2.1099000000000390"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000390.tgz#2ee55c013869cea85cbcbda4bda9eef433e38397"
+  integrity sha512-6YwFlzEtR8mKQ3x20MnjnhF6wQ49UMv4EXgmPlafez2Qit8hMmsoHWwjkWINqQZmecguHH+fn38N9i0Qm/dUAQ==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
@@ -9797,9 +9797,9 @@ ts-invariant@^0.10.3:
     tslib "^2.1.0"
 
 ts-loader@^9.4.1:
-  version "9.6.0"
-  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-9.6.0.tgz#50dfdea9c63ff9c5f4e89b04c1e3ce0d5d2946a1"
-  integrity sha512-dsJO0S+T7grTDWTc4a0nTygXGjKncVUpx8Y+af8EvI/D5WgTJby5UEk5eoMCB9EcLQmnvitqh99MqtjtHgAwFQ==
+  version "9.6.1"
+  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-9.6.1.tgz#4a5e87a24c2f9f0e6f1fee3e844e4591f2628e55"
+  integrity sha512-8FMHnmxtpncUAu0ZjkqpXnOTlwc9eY95esH8WVN94guTPPdkg2ofVdiVM5j8L2lmjiGerXd56zXb/D2JyVQPLg==
   dependencies:
     chalk "^4.1.0"
     enhanced-resolve "^5.0.0"
