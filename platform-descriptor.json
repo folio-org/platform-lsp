@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.1.0-SNAPSHOT.100200000010281"
+        "version": "1.1.0-SNAPSHOT.100200000010283"
       },
       {
         "name": "app-authority-records",
@@ -122,7 +122,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.2.0-SNAPSHOT.100200000010643"
+        "version": "1.2.0-SNAPSHOT.100200000010674"
       },
       {
         "name": "app-marc-migrations",
