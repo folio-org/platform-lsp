@@ -13,11 +13,11 @@
     },
     {
       "name": "folio-module-sidecar",
-      "version": "4.1.0-SNAPSHOT.081ec0d"
+      "version": "4.1.0-SNAPSHOT.133bb27"
     },
     {
       "name": "mgr-applications",
-      "version": "4.1.0-SNAPSHOT.520433e"
+      "version": "4.1.0-SNAPSHOT.2bc8f27"
     },
     {
       "name": "mgr-tenants",
