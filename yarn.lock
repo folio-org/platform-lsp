@@ -1436,9 +1436,9 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/bulk-edit@>=1.0.0":
-  version "5.1.1099000000001145"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/bulk-edit/-/bulk-edit-5.1.1099000000001145.tgz#0e5ef191606cea16513f5b446ca887963a6272f3"
-  integrity sha512-PIecnZmb4L3mIkhgvmBnNEmQ2uKJmxhKgdToV62PSCSQpvITCupNv/ezBA6xcetPjRTxbrFaKjwttCgwVI2lJw==
+  version "5.1.1099000000001150"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/bulk-edit/-/bulk-edit-5.1.1099000000001150.tgz#60776b216e2c16e19554fa3881a179e8d4186641"
+  integrity sha512-Pun5sl+Xyg729+0JXrS5nqsyFhuGmKv+L/jMjybUwO9UI6kcoCYYb8PUP4e4N4ZD1IWH6xwQhkaSW27Zq6VBQw==
   dependencies:
     "@folio/plugin-query-builder" "^3.0.0"
     "@folio/stripes-acq-components" "^7.0.0"
