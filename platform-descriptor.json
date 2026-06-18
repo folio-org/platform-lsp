@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "2.1.0-SNAPSHOT.100200000010218"
+        "version": "2.1.0-SNAPSHOT.100200000010221"
       },
       {
         "name": "app-consortia",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.1.0-SNAPSHOT.100200000010330"
+        "version": "1.1.0-SNAPSHOT.100200000010365"
       },
       {
         "name": "app-linked-data",
