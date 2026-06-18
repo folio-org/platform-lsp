@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "2.1.0-SNAPSHOT.100200000010186"
+        "version": "2.1.0-SNAPSHOT.100200000010218"
       },
       {
         "name": "app-consortia",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000003370"
+        "version": "1.1.0-SNAPSHOT.100200000003405"
       },
       {
         "name": "app-licenses",
@@ -146,7 +146,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "2.1.0-SNAPSHOT.100200000010005"
+        "version": "2.1.0-SNAPSHOT.100200000010276"
       },
       {
         "name": "app-quick-marc",
