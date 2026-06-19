@@ -5885,15 +5885,15 @@ fast-xml-builder@^1.2.0:
     xml-naming "^0.1.0"
 
 fast-xml-parser@^5.5.8:
-  version "5.9.2"
-  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-5.9.2.tgz#89202abc4e823b43840dfe3e568aef6ec275b4b9"
-  integrity sha512-DYPkXnVSJHAGAkSBeVYhEo/seIpz2SLr9OQcX7m6lXaX3gvoB+DCKzFdZIEhZGI3I1DUhObBAUOT/v2xfoXz/w==
+  version "5.9.3"
+  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-5.9.3.tgz#9db7a6dba7ac6f8dc1ee924d69547b2d4750d60c"
+  integrity sha512-brCNCeScma/kqa54J4PIDriSSSLssRkuYaUCpvHJulGc3HGI/xxKUCTDcYkAdqJsyb//ydpbxecjC3hB9+tb/g==
   dependencies:
     "@nodable/entities" "^2.2.0"
     fast-xml-builder "^1.2.0"
     is-unsafe "^1.0.1"
     path-expression-matcher "^1.5.0"
-    strnum "^2.4.0"
+    strnum "^2.4.1"
     xml-naming "^0.1.0"
 
 fastparse@^1.0.0:
@@ -9576,7 +9576,7 @@ strip-json-comments@~2.0.1:
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
   integrity sha512-4gB8na07fecVVkOI6Rs4e7T6NOTki5EmL7TUduTs6bu3EdnSycntVJ4re8kgZA+wx9IueI2Y11bfbgwtzuE0KQ==
 
-strnum@^2.4.0:
+strnum@^2.4.1:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/strnum/-/strnum-2.4.1.tgz#85417f683113badea0fe7e17227676f889ff7e58"
   integrity sha512-M9eUSMT2dCB2cTNPG7UYj6KuK7RJR2SN2+yCV/fTW3xzTCS6EaGZ5pSMgDIjB7r8zSfTGk+dvvn9rTjpVS9Mwg==
