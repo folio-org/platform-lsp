@@ -100,7 +100,6 @@ defaults:
 env:
   STATE_FILE: platform-descriptor.json
   FAR_URL: 'https://far.ci.folio.org'
-  ARTIFACT_NAME: platform-lsp-update-files
   GH_TOKEN: ${{ github.token }}
 
 jobs:
@@ -260,7 +259,7 @@ jobs:
         if: steps.calculate-new-version.outputs.updated == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: 'platform-descriptor-files-${{ github.run_id }}'
+          name: 'platform-descriptor-files-${{ github.run_id }}-${{ inputs.release_branch }}'
           path: |
             ${{ env.STATE_FILE }}
             ${{ steps.fetch-base-descriptor.outputs.file_path }}
@@ -360,7 +359,7 @@ jobs:
       - name: 'Upload Stripes Artifact'
         uses: actions/upload-artifact@v4
         with:
-          name: 'package-json-files-${{ github.run_id }}'
+          name: 'package-json-files-${{ github.run_id }}-${{ inputs.release_branch }}'
           path: |
             package.json
             ${{ steps.fetch-base-package-json.outputs.file_path }}
@@ -380,19 +379,19 @@ jobs:
       updates_cnt: ${{ steps.build-change-report.outputs.updates_cnt }}
       descriptor_diff_json: ${{ steps.build-change-report.outputs.diff_json }}
       package_diff_json: ${{ steps.build-ui-diff.outputs.diff_json }}
-      artifact_name: ${{ env.ARTIFACT_NAME }}
+      artifact_name: platform-lsp-update-files-${{ inputs.release_branch }}
     steps:
       - name: 'Download Platform Descriptor Artifact'
         uses: actions/download-artifact@v4
         with:
-          name: 'platform-descriptor-files-${{ github.run_id }}'
+          name: 'platform-descriptor-files-${{ github.run_id }}-${{ inputs.release_branch }}'
           path: .
 
       - name: 'Download Stripes Artifact'
         if: needs.update-stripes-components.result == 'success'
         uses: actions/download-artifact@v4
         with:
-          name: 'package-json-files-${{ github.run_id }}'
+          name: 'package-json-files-${{ github.run_id }}-${{ inputs.release_branch }}'
           path: .
         continue-on-error: true
 
@@ -465,7 +464,7 @@ jobs:
       - name: 'Upload Combined Artifact for Commit'
         uses: actions/upload-artifact@v4
         with:
-          name: "${{ env.ARTIFACT_NAME }}"
+          name: "platform-lsp-update-files-${{ inputs.release_branch }}"
           path: |
             ${{ env.STATE_FILE }}
             package.json
