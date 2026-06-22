@@ -16,9 +16,10 @@ COPY . $STRIPES_HOME/
 
 WORKDIR $STRIPES_HOME
 
-# Install dependencies and build the application
-RUN apk upgrade --no-cache && \
-    apk add --no-cache alpine-sdk python3 && \
+# Upgrade existing and add additional dependencies and build the application
+RUN apk upgrade && \
+    apk add alpine-sdk python3 && \
+    rm -rf /var/cache/apk/* && \
     yarn config set python /usr/bin/python3 && \
     yarn config set @folio:registry https://repository.folio.org/repository/npm-$REGISTRY/ && \
     yarn install && \
