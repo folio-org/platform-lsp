@@ -6106,11 +6106,11 @@ focus-trap@^7.5.4:
     tabbable "^6.4.0"
 
 focus-trap@^8.2.1:
-  version "8.2.1"
-  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-8.2.1.tgz#ab192bbaf6f767f869d47e2e6f804e336ea5874a"
-  integrity sha512-6CxwrrFRquH7pDXb1mWxudkU9LSfYBMRZutpgddb2o6iwCk7cIRrBhyY3c8SGKcmIKdeMTrGSNg4Bedh2RSF/w==
+  version "8.2.2"
+  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-8.2.2.tgz#6e8a203f2228ca8b5eb95465433e69a5d5e48387"
+  integrity sha512-qV0g8hRYBqgACcFOH3f9wXc4zPKhr/0z9RI2a6ZijZ72EeBi4g8oBy8zAWuUR1TsMpOzwpUMFvjdasrC41Joug==
   dependencies:
-    tabbable "^6.4.0"
+    tabbable "^6.5.0"
 
 follow-redirects@^1.0.0:
   version "1.16.0"
@@ -9640,7 +9640,7 @@ symbol-observable@^4.0.0:
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-4.0.0.tgz#5b425f192279e87f2f9b937ac8540d1984b39205"
   integrity sha512-b19dMThMV4HVFynSAM1++gBHAbk2Tc/osgLIBZMKsyqh34jb2e8Os7T6ZW/Bt3pJFdBTd2JwAnAAEQV7rSNvcQ==
 
-tabbable@^6.4.0:
+tabbable@^6.4.0, tabbable@^6.5.0:
   version "6.5.0"
   resolved "https://registry.yarnpkg.com/tabbable/-/tabbable-6.5.0.tgz#a65101385a4fd6cbd580b7546da0170f307b535d"
   integrity sha512-wieBHXygIm7OyQOu5hQlkk62/WyCFYGlWg7L6/ZCUZwx0o398Zkn4pVmMyfYhfMG8kGrj/Krt8eIk6UKC6VzwA==
