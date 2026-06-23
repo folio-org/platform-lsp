@@ -1800,9 +1800,9 @@
     use-deep-compare "^1.1.0"
 
 "@folio/inventory@>=1.4.0":
-  version "14.1.1099000000001981"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.1.1099000000001981.tgz#e6e57d744ecf1abe8c48f925b7b4cf6a82148630"
-  integrity sha512-BWusJyA0/Sy80r39LJITG9YHx3EOkeHsPmr7aWG+PmioJMNE4YcbaaYAdoHzR77NojLG706DzSj/JymNiwAW3Q==
+  version "14.1.1099000000001997"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.1.1099000000001997.tgz#8fbc113dfefd4d755249c8830948168f3ca6a247"
+  integrity sha512-HrPkbLx6dGiWFiWyGfFlkZ3U6s9uR5mifMV4h5usWIpGoKc+RLlZCZwPJaL67EgnZRZEEJ3R3V6FFuYopAXtFg==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -2863,9 +2863,9 @@
     uuid "9.0.0"
 
 "@folio/users@>=2.17.0":
-  version "13.1.1099000000001427"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/users/-/users-13.1.1099000000001427.tgz#3340e2e8bfb98e659b2ffc800f6d9c9d9f85a17b"
-  integrity sha512-5JEBPqkCs8L6BMnB617bdJs5YFsjH6BDol+grRmadGN+DTsTihjoMWUBZG3OljtcBlJFif2ZHi6q6mN+flWAyg==
+  version "13.1.1099000000001431"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/users/-/users-13.1.1099000000001431.tgz#d01f007399e0f59494057b608abbaee5bfc998d6"
+  integrity sha512-9VSughWpuNvvStCjkR/Q63SBai9OgQPRRoVJvKkqMR5i5c8EP3OBg8dCbX+I4c/asbYd+RO+wQCre5gXitjyQA==
   dependencies:
     compressorjs "^1.2.1"
     dompurify "^3.2.0"
