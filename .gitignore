@@ -32,6 +32,7 @@ claude*
 .serena/
 skills-lock.json
 specs/
+graphify-out/
 
 # Miscellaneous
 *.class
