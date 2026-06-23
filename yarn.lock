@@ -2280,10 +2280,10 @@
     lodash "^4.17.4"
     prop-types "^15.6.0"
 
-"@folio/plugin-query-builder@3.0.2":
-  version "3.0.2"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-query-builder/-/plugin-query-builder-3.0.2.tgz#988efe3dafb8f30c9a485eefeff38e71281790c0"
-  integrity sha512-KiNCXqb2GTbf+WnQ1461h0XIFlKlJkQUqrnNN2fDJ37CFJR7sCBFMxChdsYSc7u4+MDKlp+s3Zvhw41fQqwfXg==
+"@folio/plugin-query-builder@3.0.3":
+  version "3.0.3"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-query-builder/-/plugin-query-builder-3.0.3.tgz#defa710baa30acc3b144f83c182d7a9ad2afd91a"
+  integrity sha512-fRQUTUsPYQ4ZjcvwjmrsUbKPq+CPUai+XSI/1aSppgOtyUOrPnLls/61Hdc9vPZBprD7EGZYsm2CbWup+4+xFQ==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
