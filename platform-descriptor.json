@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.0.53"
+        "version": "#RANCHER-3029"
       },
       {
         "name": "app-platform-complete",
