@@ -1541,12 +1541,11 @@
     react-final-form-arrays "^3.1.0"
     react-query "^3.39.3"
 
-"@folio/claims@>=1.0.0":
-  version "2.0.2099000000000314"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/claims/-/claims-2.0.2099000000000314.tgz#7b10db4baf119c5d45ad04d7a630cacb15e511de"
-  integrity sha512-dpEGsiHd9xnhSpltv3V+es1E0UT6eDJz0Cb3NGvC/F7gvsSzyjMSmwZbLt7rfkT/Eys4YfBjIY0/VDsjFLLHbg==
+"@folio/claims@https://github.com/folio-org/ui-claims.git#UICLAIM-31":
+  version "3.0.0"
+  resolved "https://github.com/folio-org/ui-claims.git#a42afe5c073e83c7c14e70c6d4527a81a2b07bca"
   dependencies:
-    "@folio/stripes-acq-components" "^7.0.0"
+    "@folio/stripes-acq-components" "^7.2.0"
     lodash "^4.17.21"
 
 "@folio/consortia-settings@>=1.0.0":
@@ -1653,15 +1652,9 @@
     react-query "^3.38.1"
 
 "@folio/eholdings@>=1.1.0":
-<<<<<<< HEAD
-  version "11.2.1099000000000387"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000387.tgz#0e32151ad426c9052bea36ec0592dd268e05487a"
-  integrity sha512-oRB7pNjhjq8kTC2hvrA+bSI1ngQAaOIKa/36NWMxxpr0UjOrO9P6bel5Ig66HzOe+TPcN9YwooZe1L47fkuhDg==
-=======
   version "11.2.1099000000000390"
   resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000390.tgz#2ee55c013869cea85cbcbda4bda9eef433e38397"
   integrity sha512-6YwFlzEtR8mKQ3x20MnjnhF6wQ49UMv4EXgmPlafez2Qit8hMmsoHWwjkWINqQZmecguHH+fn38N9i0Qm/dUAQ==
->>>>>>> origin/snapshot
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
@@ -1942,16 +1935,10 @@
     lodash "^4.17.21"
     prop-types "^15.6.0"
 
-<<<<<<< HEAD
-"@folio/local-kb-admin@https://github.com/folio-org/ui-local-kb-admin.git#ERM-4024":
-  version "9.2.0"
-  resolved "https://github.com/folio-org/ui-local-kb-admin.git#25bccf5abee1f9b9dbdc2f82efa2ee2491726cf1"
-=======
 "@folio/local-kb-admin@>=1.0.0":
   version "9.2.1099000000000253"
   resolved "https://repository.folio.org/repository/npm-folioci/@folio/local-kb-admin/-/local-kb-admin-9.2.1099000000000253.tgz#7f089b7da13714a993391355741dc48ee765e51e"
   integrity sha512-iHHP+DE6Sv205FwOQZgkb7hSZSkiiax/ZuEgO2Hcs+0x3mPbbAr+iX2XgHa9N6PvU7AC2L1XF+XYDXrZ546jgQ==
->>>>>>> origin/snapshot
   dependencies:
     "@k-int/stripes-kint-components" "^5.37.0"
     "@rehooks/local-storage" "^2.4.5"
@@ -2034,13 +2021,12 @@
     react-query "^3.39.3"
     react-router-prop-types "^1.0.4"
 
-"@folio/orders@>=1.1.0":
-  version "9.0.4099000000001012"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-9.0.4099000000001012.tgz#8845e3949c7490b9f68b46329b80ec7ec4f646ed"
-  integrity sha512-iToD7AKr6AsGXsmfV4IrUSlsF1u5vZpCwZWvhvHSW0hdWV6eA62UmdN+fkq73SSeiqhglFNQY5480UA/WPR0Dw==
+"@folio/orders@https://github.com/folio-org/ui-orders.git#UIOR-1519":
+  version "10.0.0"
+  resolved "https://github.com/folio-org/ui-orders.git#1df83f56f5637be8d3f50bbcf566095d843cf2f4"
   dependencies:
-    "@folio/plugin-find-po-line" "^6.1.1"
-    "@folio/stripes-acq-components" "~7.1.0"
+    "@folio/plugin-find-po-line" "^7.0.0"
+    "@folio/stripes-acq-components" "~7.2.0"
     "@folio/stripes-template-editor" "^3.2.0"
     classnames "^2.2.5"
     dompurify "^3.0.9"
@@ -2245,12 +2231,12 @@
     qs "^6.14.1"
     react-final-form "^6.3.0"
 
-"@folio/plugin-find-po-line@>=1.0.0", "@folio/plugin-find-po-line@^6.0.0", "@folio/plugin-find-po-line@^6.1.0", "@folio/plugin-find-po-line@^6.1.1":
-  version "6.1.1099000000000162"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-find-po-line/-/plugin-find-po-line-6.1.1099000000000162.tgz#0382c5454eff79d4da2ffd9725c948cf6dfa3115"
-  integrity sha512-A5kqCtElktrqC+ydbwl9sz3A6e1Eu/fIGoJTDEzmDnNyFrjQ9miRpMg1qYqvDRuYDri5m3S9MH277HA+Lo/X4w==
+"@folio/plugin-find-po-line@^6.0.0", "@folio/plugin-find-po-line@^6.1.0", "@folio/plugin-find-po-line@^7.0.0", "@folio/plugin-find-po-line@https://github.com/folio-org/ui-plugin-find-po-line.git#UIPFPOL-94":
+  version "7.0.0"
+  uid "3ebeb9d5a94158148b167e5c218d0c6b047ce9a8"
+  resolved "https://github.com/folio-org/ui-plugin-find-po-line.git#3ebeb9d5a94158148b167e5c218d0c6b047ce9a8"
   dependencies:
-    "@folio/stripes-acq-components" "~7.1.0"
+    "@folio/stripes-acq-components" "~7.2.0"
     lodash "^4.17.11"
     prop-types "^15.6.0"
 
@@ -2331,12 +2317,11 @@
     react-final-form "^6.3.0"
     uuid "^9.0.0"
 
-"@folio/receiving@>=1.0.0":
-  version "8.0.4099000000000520"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/receiving/-/receiving-8.0.4099000000000520.tgz#2b60609b6b0ea38b4df5fd81943a0824def6d832"
-  integrity sha512-FzcT+kb0SE+YwTfz4OtQ6HC27Ry04v0l5h8Mbb8/KV6Coqd1WgExq6MTI1Tcd+QSL+RSkF4FvUcsU33uqI5wmQ==
+"@folio/receiving@https://github.com/folio-org/ui-receiving.git#UIREC-504":
+  version "9.0.0"
+  resolved "https://github.com/folio-org/ui-receiving.git#571587f5550beb24ecad981f237dd93878e1c539"
   dependencies:
-    "@folio/stripes-acq-components" "~7.1.0"
+    "@folio/stripes-acq-components" "~7.2.0"
     final-form "^4.18.2"
     lodash "^4.17.5"
     prop-types "^15.5.10"
@@ -2349,7 +2334,7 @@
   optionalDependencies:
     "@folio/plugin-find-instance" "^10.0.0"
     "@folio/plugin-find-organization" "^6.0.0"
-    "@folio/plugin-find-po-line" "^6.0.0"
+    "@folio/plugin-find-po-line" "^7.0.0"
 
 "@folio/remote-storage@>=1.0.0":
   version "7.1.1099000000000153"
@@ -2438,10 +2423,9 @@
     lodash "^4.17.4"
     prop-types "^15.6.0"
 
-"@folio/stripes-acq-components@^7.0.0", "@folio/stripes-acq-components@^7.1.0", "@folio/stripes-acq-components@~7.1.0":
-  version "7.1.1099000000000561"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-acq-components/-/stripes-acq-components-7.1.1099000000000561.tgz#7bd999aac69430356783b091a427c040bd8ef7b7"
-  integrity sha512-VjeahlBL6EpliJ/VvDXbWKSPJl61+2doVjRl1PWoqdpAp4x6EFXlXRnoPiBVgltn8zjArdJmP5ldajw7P0MPMQ==
+"@folio/stripes-acq-components@^7.0.0", "@folio/stripes-acq-components@^7.1.0", "@folio/stripes-acq-components@^7.2.0", "@folio/stripes-acq-components@https://github.com/folio-org/stripes-acq-components.git#UISACQCOMP-300", "@folio/stripes-acq-components@~7.1.0", "@folio/stripes-acq-components@~7.2.0":
+  version "7.2.0"
+  resolved "https://github.com/folio-org/stripes-acq-components.git#0dba361d09064c3efb5f2c6b24cfdd36560c59f8"
   dependencies:
     "@folio/stripes-types" "^3.0.0"
     "@rehooks/local-storage" "^2.4.4"
@@ -2551,10 +2535,9 @@
     redux "^4.2.1"
     uuid "^9.0.0"
 
-"@folio/stripes-core@^11.0.0":
-  version "11.1.1099000000001912"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.1.1099000000001912.tgz#b78802fcc9663035b9fbe038df7afa71bdcb3b16"
-  integrity sha512-weneajjB5hDLC4a7awpTgRElX0ZkdbLBQwlZULRufhOHA/QfdsZqb5JPLUETgJCpScAfDAk3Z4eKlms64VDsww==
+"@folio/stripes-core@^11.0.0", "@folio/stripes-core@https://github.com/folio-org/stripes-core.git#STCOR-891":
+  version "11.1.1"
+  resolved "https://github.com/folio-org/stripes-core.git#57df9c6314d4843b9c34f74ad32d5dce39db3f6a"
   dependencies:
     "@apollo/client" "^3.2.1"
     "@module-federation/runtime" "^2.0.0"
@@ -2739,10 +2722,9 @@
     react-to-print "^2.3.2"
     uuid "^8.3.2"
 
-"@folio/stripes-types@^3.0.0":
-  version "3.1.1099000000000128"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-types/-/stripes-types-3.1.1099000000000128.tgz#c07b2e4a3e717d63008719678cd9396ddb4f9019"
-  integrity sha512-aPhSCQvDlXBabNZXWPj3/7FEXIieeT5sM5c9r0r4LRTA/TT+EIj1xuYm2MH8032tv3CRasR8sWprlAvWzRf9EQ==
+"@folio/stripes-types@^3.0.0", "@folio/stripes-types@https://github.com/folio-org/stripes-types.git#STTYPES-26":
+  version "3.1.0"
+  resolved "https://github.com/folio-org/stripes-types.git#c8360b6151815c33ebfc215e631b29fc63ef16f1"
   dependencies:
     "@folio/stripes-react-hotkeys" "^3.0.0"
     dayjs "^1.11.10"
@@ -5536,17 +5518,10 @@ ee-first@1.1.1:
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
-<<<<<<< HEAD
-electron-to-chromium@^1.5.328:
-  version "1.5.373"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.373.tgz#7a29b55c79bd9a8f47d0cd501985c4da2bad2f9e"
-  integrity sha512-G2Hym8JIf/QreuseqkDibgH8Ci8KfJzqGDKdakbhSx9UltwRBH2cBLAWU/lBX0sCdv0TlhyxQyDCnSfxgMWsjA==
-=======
 electron-to-chromium@^1.5.376:
   version "1.5.378"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.378.tgz#9ce9591ebed23e8a9119970305084b43a2906454"
   integrity sha512-VinvOAuuPmdD1guEgGv5f2Qp7/vlfqOrUOMYNnOD4wj3pit8kRsQHzfIf6teyUGWo15Tg5+bOJaRunvyltpVWQ==
->>>>>>> origin/snapshot
 
 emoji-regex@^8.0.0:
   version "8.0.0"
