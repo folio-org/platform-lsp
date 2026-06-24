@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.1.0-SNAPSHOT.100200000010393"
+        "version": "1.1.0-SNAPSHOT.100200000010436"
       },
       {
         "name": "app-authority-records",
@@ -98,7 +98,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "2.1.0-SNAPSHOT.100200000010914"
+        "version": "2.1.0-SNAPSHOT.100200000010935"
       },
       {
         "name": "app-gobi",
@@ -122,7 +122,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.2.0-SNAPSHOT.100200000010674"
+        "version": "1.2.0-SNAPSHOT.100200000010831"
       },
       {
         "name": "app-marc-migrations",
@@ -186,7 +186,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.1.0-SNAPSHOT.100200000010654"
+        "version": "1.1.0-SNAPSHOT.100200000010658"
       }
     ],
     "experimental": [
