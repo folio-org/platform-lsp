@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-minimal",
-        "version": "2.1.8"
+        "version": "#RANCHER-3029-R1-2026"
       }
     ],
     "optional": [
