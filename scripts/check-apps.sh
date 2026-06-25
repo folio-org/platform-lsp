@@ -81,9 +81,14 @@ echo "Checking required applications:"
 required_apps=$(jq -r '.applications.required[] | "\(.name)|\(.version)"' platform-descriptor.json)
 while IFS='|' read -r app_name current_version; do
     if [ -n "$app_name" ]; then
+        if [[ "$current_version" == \#* ]]; then
+            echo "$app_name: branch-pinned (${current_version}) - skipping FAR check and interface validation"
+            echo ""
+            continue
+        fi
         total_apps=$((total_apps + 1))
         latest_info=$(get_latest_version "$app_name")
-        
+
         if compare_versions "$app_name" "$current_version" "$latest_info"; then
             up_to_date=$((up_to_date + 1))
         else
@@ -102,9 +107,14 @@ echo "Checking optional applications:"
 optional_apps=$(jq -r '.applications.optional[] | "\(.name)|\(.version)"' platform-descriptor.json)
 while IFS='|' read -r app_name current_version; do
     if [ -n "$app_name" ]; then
+        if [[ "$current_version" == \#* ]]; then
+            echo "$app_name: branch-pinned (${current_version}) - skipping FAR check and interface validation"
+            echo ""
+            continue
+        fi
         total_apps=$((total_apps + 1))
         latest_info=$(get_latest_version "$app_name")
-        
+
         if compare_versions "$app_name" "$current_version" "$latest_info"; then
             up_to_date=$((up_to_date + 1))
         else
