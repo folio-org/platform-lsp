@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000010844"
+        "version": "2.1.0-SNAPSHOT.100200000010847"
       },
       {
         "name": "app-agreements",
@@ -58,7 +58,7 @@
       },
       {
         "name": "app-consortia",
-        "version": "1.5.0-SNAPSHOT.100200000011004"
+        "version": "1.5.0-SNAPSHOT.100200000011032"
       },
       {
         "name": "app-consortia-manager",
@@ -102,7 +102,7 @@
       },
       {
         "name": "app-gobi",
-        "version": "1.2.0-SNAPSHOT.100200000010126"
+        "version": "1.2.0-SNAPSHOT.100200000010332"
       },
       {
         "name": "app-inn-reach",
@@ -134,7 +134,7 @@
       },
       {
         "name": "app-mosaic",
-        "version": "1.2.0-SNAPSHOT.100200000009770"
+        "version": "1.2.0-SNAPSHOT.100200000010758"
       },
       {
         "name": "app-notification",
