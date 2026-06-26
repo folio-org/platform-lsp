@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.1.0-SNAPSHOT.100200000005759"
+        "version": "1.1.0-SNAPSHOT.100200000005860"
       },
       {
         "name": "app-bulk-edit",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000002554"
+        "version": "1.1.0-SNAPSHOT.100200000002622"
       },
       {
         "name": "app-dcb",
