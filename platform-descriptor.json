@@ -17,7 +17,7 @@
     },
     {
       "name": "mgr-applications",
-      "version": "4.1.0-SNAPSHOT.2239"
+      "version": "4.1.0-SNAPSHOT.2244"
     },
     {
       "name": "mgr-tenants",
@@ -25,7 +25,7 @@
     },
     {
       "name": "mgr-tenant-entitlements",
-      "version": "4.1.0-SNAPSHOT.2140"
+      "version": "4.1.0-SNAPSHOT.2143"
     }
   ],
   "applications": {
