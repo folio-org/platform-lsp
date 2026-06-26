@@ -2080,7 +2080,21 @@
     react-final-form-listeners "^1.0.2"
     react-router-prop-types "^1.0.4"
 
-"@folio/plugin-create-inventory-records@7.0.0", "@folio/plugin-create-inventory-records@^4.0.0||^5.0.0||^6.0.0||^7.0.0", "@folio/plugin-create-inventory-records@^7.0.0":
+"@folio/plugin-create-inventory-records@7.0.1":
+  version "7.0.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-create-inventory-records/-/plugin-create-inventory-records-7.0.1.tgz#4b1c6f685dfd6f33d69a29f11aa88075b7dc302f"
+  integrity sha512-GGBLpBsoEAmeE1NMOXhAhVa/4ReAQ+LlbuZhJN+xJbCRldnsOMyykFO7uYWBxFttVx74I3HHhdB5Zv+G6LBdnQ==
+  dependencies:
+    classnames "^2.2.5"
+    final-form "^4.18.2"
+    final-form-arrays "^3.0.1"
+    lodash "^4.18.0"
+    prop-types "^15.6.0"
+    react-final-form "^6.3.0"
+    react-final-form-arrays "^3.1.0"
+    react-final-form-listeners "^1.0.2"
+
+"@folio/plugin-create-inventory-records@^4.0.0||^5.0.0||^6.0.0||^7.0.0", "@folio/plugin-create-inventory-records@^7.0.0":
   version "7.0.0"
   resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-create-inventory-records/-/plugin-create-inventory-records-7.0.0.tgz#d6515062075e602d5f2002470559733a1e032c23"
   integrity sha512-D8qSc1VJ4SAzHl13yOiA0MGyqrLhh/cb7isenfP5p3taSnhia899VLreKIUkLYVRYwFu4wp60Jgds2RBlIKT9g==
@@ -2266,10 +2280,10 @@
     lodash "^4.17.4"
     prop-types "^15.6.0"
 
-"@folio/plugin-query-builder@3.0.2":
-  version "3.0.2"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-query-builder/-/plugin-query-builder-3.0.2.tgz#988efe3dafb8f30c9a485eefeff38e71281790c0"
-  integrity sha512-KiNCXqb2GTbf+WnQ1461h0XIFlKlJkQUqrnNN2fDJ37CFJR7sCBFMxChdsYSc7u4+MDKlp+s3Zvhw41fQqwfXg==
+"@folio/plugin-query-builder@3.0.3":
+  version "3.0.3"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/plugin-query-builder/-/plugin-query-builder-3.0.3.tgz#defa710baa30acc3b144f83c182d7a9ad2afd91a"
+  integrity sha512-fRQUTUsPYQ4ZjcvwjmrsUbKPq+CPUai+XSI/1aSppgOtyUOrPnLls/61Hdc9vPZBprD7EGZYsm2CbWup+4+xFQ==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
@@ -2895,10 +2909,10 @@
     redux-form "^8.0.0"
     uuid "9.0.0"
 
-"@folio/users@13.0.1":
-  version "13.0.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/users/-/users-13.0.1.tgz#9f0c2e51c6c17c061810ba358a4a44be42e6520b"
-  integrity sha512-0zcg3B+N7X++AW/XY6WjATj0fzo71GPxMBxy/KK1Z+uJD/vaaOpd5RhUCRSe6lr6ORsCXkXbBvKnhyRLtITEQQ==
+"@folio/users@13.0.2":
+  version "13.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/users/-/users-13.0.2.tgz#1b3e2ff89f2e3d6319dd945774adb0be82566589"
+  integrity sha512-3MSgn6TAg0OS4rglHoXG97nxDP+rIMZysfqylu8oPEwkCwAMVtZpJEY7nCkMkHRtk/2y0d0JPsvTViMNmTr66Q==
   dependencies:
     "@folio/stripes-util" "^7.1.0"
     compressorjs "^1.2.1"
