@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010317"
+        "version": "2.2.0-SNAPSHOT.100200000010359"
       },
       {
         "name": "app-platform-complete",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000003563"
+        "version": "1.1.0-SNAPSHOT.100200000003590"
       },
       {
         "name": "app-licenses",
@@ -126,11 +126,11 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000010116"
+        "version": "3.1.0-SNAPSHOT.100200000010275"
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000009050"
+        "version": "1.1.0-SNAPSHOT.100200000009246"
       },
       {
         "name": "app-mosaic",
