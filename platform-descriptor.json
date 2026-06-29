@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010415"
+        "version": "2.2.0-SNAPSHOT.100200000010438"
       },
       {
         "name": "app-platform-complete",
@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "2.1.0-SNAPSHOT.100200000010416"
+        "version": "2.1.0-SNAPSHOT.100200000010482"
       },
       {
         "name": "app-consortia",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000011037"
+        "version": "1.1.0-SNAPSHOT.100200000011136"
       },
       {
         "name": "app-erm-usage",
@@ -110,11 +110,11 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000003590"
+        "version": "1.1.0-SNAPSHOT.100200000003669"
       },
       {
         "name": "app-licenses",
-        "version": "1.1.0-SNAPSHOT.100200000010459"
+        "version": "1.1.0-SNAPSHOT.100200000010626"
       },
       {
         "name": "app-linked-data",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000010275"
+        "version": "3.1.0-SNAPSHOT.100200000010351"
       },
       {
         "name": "app-marc-storage",
