@@ -98,7 +98,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "2.1.0-SNAPSHOT.100200000011057"
+        "version": "2.1.0-SNAPSHOT.100200000011082"
       },
       {
         "name": "app-gobi",
@@ -138,7 +138,7 @@
       },
       {
         "name": "app-notification",
-        "version": "1.1.0-SNAPSHOT.100200000005995"
+        "version": "1.1.0-SNAPSHOT.100200000006399"
       },
       {
         "name": "app-oa",
