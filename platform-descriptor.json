@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.1.0-SNAPSHOT.100200000005860"
+        "version": "1.1.0-SNAPSHOT.100200000005961"
       },
       {
         "name": "app-bulk-edit",
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "2.1.0-SNAPSHOT.100200000010344"
+        "version": "2.1.0-SNAPSHOT.100200000010643"
       },
       {
         "name": "app-ebsconet",
@@ -86,11 +86,11 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.3.0-SNAPSHOT.100200000009398"
+        "version": "2.3.0-SNAPSHOT.100200000009711"
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000011138"
+        "version": "1.1.0-SNAPSHOT.100200000011160"
       },
       {
         "name": "app-erm-usage",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "2.1.0-SNAPSHOT.100200000011108"
+        "version": "2.1.0-SNAPSHOT.100200000011109"
       },
       {
         "name": "app-lists",
@@ -162,7 +162,7 @@
       },
       {
         "name": "app-requests-ecs",
-        "version": "2.1.0-SNAPSHOT.100200000009982"
+        "version": "2.1.0-SNAPSHOT.100200000010397"
       },
       {
         "name": "app-requests-mediated",
