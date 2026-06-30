@@ -13,6 +13,14 @@ inputs:
     description: 'FAR API base URL'
     required: false
     default: 'https://far.ci.folio.org'
+  package-json:
+    description: 'package.json content as JSON string; enables npm registry fallback for @folio/* packages absent from FAR uiModules'
+    required: false
+    default: ''
+  npm-registry-url:
+    description: 'npm registry URL override (passed as --registry to npm CLI); leave empty to use npm built-in default'
+    required: false
+    default: ''
 
 outputs:
   ui-modules:
@@ -28,7 +36,7 @@ runs:
   using: 'composite'
   steps:
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.x'
 
@@ -38,6 +46,8 @@ runs:
       env:
         APPLICATIONS_DATA: ${{ inputs.applications }}
         FAR_URL: ${{ inputs.far-url }}
+        PACKAGE_JSON_DATA: ${{ inputs.package-json }}
+        NPM_REGISTRY_URL: ${{ inputs.npm-registry-url }}
       run: |
         set -euo pipefail
 
@@ -46,10 +56,9 @@ runs:
         TMP_OUTPUT_FILE=$(mktemp -t ui-modules-output.XXXXX.json)
 
         cd "${{ github.action_path }}"
-        python3 fetch-updated-ui-modules.py \
-          --api-url "$FAR_URL" \
-          --modules "$APPLICATIONS_DATA" \
-          --output-file "$TMP_OUTPUT_FILE"
+        EXTRA_ARGS=()
+        [[ -n "$PACKAGE_JSON_DATA" ]] && EXTRA_ARGS+=(--package-json "$PACKAGE_JSON_DATA")
+        python3 fetch-updated-ui-modules.py --api-url "$FAR_URL" --modules "$APPLICATIONS_DATA" --output-file "$TMP_OUTPUT_FILE" --npm-registry-url "$NPM_REGISTRY_URL" "${EXTRA_ARGS[@]}"
 
         if [[ ! -f "$TMP_OUTPUT_FILE" ]]; then
           echo "::error::Output file was not created by the Python script"
