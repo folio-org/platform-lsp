@@ -114,7 +114,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.1.0-SNAPSHOT.100200000010677"
+        "version": "1.1.0-SNAPSHOT.100200000010678"
       },
       {
         "name": "app-linked-data",
@@ -186,7 +186,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.1.0-SNAPSHOT.100200000010834"
+        "version": "1.1.0-SNAPSHOT.100200000010835"
       }
     ],
     "experimental": [
