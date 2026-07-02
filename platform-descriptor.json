@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.0.4"
+        "version": "1.0.5"
       },
       {
         "name": "app-authority-records",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.0.3"
+        "version": "1.0.4"
       },
       {
         "name": "app-linked-data",
@@ -166,11 +166,11 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.0.2"
+        "version": "1.0.3"
       },
       {
         "name": "app-service-interaction",
-        "version": "1.0.2"
+        "version": "1.0.3"
       }
     ]
   },
