@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000010996"
+        "version": "2.1.0-SNAPSHOT.100200000011016"
       },
       {
         "name": "app-agreements",
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "2.1.0-SNAPSHOT.100200000010643"
+        "version": "2.1.0-SNAPSHOT.100200000010683"
       },
       {
         "name": "app-ebsconet",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000003690"
+        "version": "1.1.0-SNAPSHOT.100200000003735"
       },
       {
         "name": "app-licenses",
