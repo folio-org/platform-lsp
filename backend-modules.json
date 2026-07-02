@@ -9,13 +9,13 @@
     "id": "mod-login-keycloak-3.0.4"
   },
   {
-    "id": "mod-roles-keycloak-3.0.14"
+    "id": "mod-roles-keycloak-3.0.15"
   },
   {
-    "id": "mod-scheduler-3.0.8"
+    "id": "mod-scheduler-3.0.9"
   },
   {
-    "id": "mod-users-keycloak-3.0.12"
+    "id": "mod-users-keycloak-3.0.13"
   },
   {
     "id": "edge-inventory-2.2.2"
