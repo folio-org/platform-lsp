@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000009843"
+        "version": "3.4.0-SNAPSHOT.100200000009871"
       }
     ],
     "optional": [
@@ -46,7 +46,7 @@
       },
       {
         "name": "app-agreements",
-        "version": "1.1.0-SNAPSHOT.100200000010622"
+        "version": "1.1.0-SNAPSHOT.100200000010634"
       },
       {
         "name": "app-authority-records",
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "2.1.0-SNAPSHOT.100200000010683"
+        "version": "2.1.0-SNAPSHOT.100200000010697"
       },
       {
         "name": "app-ebsconet",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.1.0-SNAPSHOT.100200000010678"
+        "version": "1.1.0-SNAPSHOT.100200000010705"
       },
       {
         "name": "app-linked-data",
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-oa",
-        "version": "1.0.0-SNAPSHOT.100200000010818"
+        "version": "1.0.0-SNAPSHOT.100200000010830"
       },
       {
         "name": "app-oai-pmh",
