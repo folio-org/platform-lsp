@@ -86,11 +86,11 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.3.0-SNAPSHOT.100200000009715"
+        "version": "2.3.0-SNAPSHOT.100200000009763"
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000011160"
+        "version": "1.1.0-SNAPSHOT.100200000011211"
       },
       {
         "name": "app-erm-usage",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000003745"
+        "version": "1.1.0-SNAPSHOT.100200000003747"
       },
       {
         "name": "app-licenses",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "2.1.0-SNAPSHOT.100200000011150"
+        "version": "2.1.0-SNAPSHOT.100200000011161"
       },
       {
         "name": "app-lists",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000011005"
+        "version": "1.1.0-SNAPSHOT.100200000011015"
       },
       {
         "name": "app-service-interaction",
