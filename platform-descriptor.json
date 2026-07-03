@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000011029"
+        "version": "2.1.0-SNAPSHOT.100200000011032"
       },
       {
         "name": "app-agreements",
@@ -98,7 +98,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "2.1.0-SNAPSHOT.100200000011083"
+        "version": "2.1.0-SNAPSHOT.100200000011129"
       },
       {
         "name": "app-gobi",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000011015"
+        "version": "1.1.0-SNAPSHOT.100200000011018"
       },
       {
         "name": "app-service-interaction",
@@ -186,7 +186,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.1.0-SNAPSHOT.100200000010835"
+        "version": "1.1.0-SNAPSHOT.100200000010864"
       }
     ],
     "experimental": [
