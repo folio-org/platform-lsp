@@ -1671,10 +1671,10 @@
     react-inspector "^6.0.0"
     react-query "^3.38.1"
 
-"@folio/eholdings@11.1.1":
-  version "11.1.1"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/eholdings/-/eholdings-11.1.1.tgz#a37abb2c24036293c9c9e772454df75b910d344a"
-  integrity sha512-fh24ambrLfzumuhuuvCtO+k3dut775ZdgA2gc6gKbMaGyzOEO9SrD576Efebov9u+PEEVhMnZhgiTLDOrvPKCw==
+"@folio/eholdings@11.1.2":
+  version "11.1.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/eholdings/-/eholdings-11.1.2.tgz#17096b5ebddd273111f6a437925a71eefb7f3bc8"
+  integrity sha512-oDr4BKiVE5PzQisokIwz2SWgM+ArdD4J+IzGosAj2aHJwnxNkp2rYQsPUxuB1PGxMGt6pZrp1KsCU3N1Ixp1uw==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
