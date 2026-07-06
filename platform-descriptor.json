@@ -21,11 +21,11 @@
     },
     {
       "name": "mgr-tenants",
-      "version": "4.1.0-SNAPSHOT.2126"
+      "version": "4.1.0-SNAPSHOT.2129"
     },
     {
       "name": "mgr-tenant-entitlements",
-      "version": "4.1.0-SNAPSHOT.2146"
+      "version": "4.1.0-SNAPSHOT.2149"
     }
   ],
   "applications": {
