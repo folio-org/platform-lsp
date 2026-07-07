@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010556"
+        "version": "2.2.0-SNAPSHOT.100200000010564"
       },
       {
         "name": "app-platform-complete",
@@ -42,11 +42,11 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000011078"
+        "version": "2.1.0-SNAPSHOT.100200000011079"
       },
       {
         "name": "app-agreements",
-        "version": "1.1.0-SNAPSHOT.100200000010634"
+        "version": "1.1.0-SNAPSHOT.100200000010679"
       },
       {
         "name": "app-authority-records",
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "2.1.0-SNAPSHOT.100200000010697"
+        "version": "2.1.0-SNAPSHOT.100200000010743"
       },
       {
         "name": "app-ebsconet",
@@ -86,11 +86,11 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.3.0-SNAPSHOT.100200000009801"
+        "version": "2.3.0-SNAPSHOT.100200000009810"
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000011212"
+        "version": "1.1.0-SNAPSHOT.100200000011260"
       },
       {
         "name": "app-erm-usage",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000003747"
+        "version": "1.1.0-SNAPSHOT.100200000003796"
       },
       {
         "name": "app-licenses",
@@ -150,11 +150,11 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.1.0-SNAPSHOT.100200000005169"
+        "version": "1.1.0-SNAPSHOT.100200000005426"
       },
       {
         "name": "app-reading-room",
-        "version": "3.1.0-SNAPSHOT.100200000010154"
+        "version": "3.1.0-SNAPSHOT.100200000010593"
       },
       {
         "name": "app-reporting",
