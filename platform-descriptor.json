@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000009917"
+        "version": "3.4.0-SNAPSHOT.100200000009918"
       }
     ],
     "optional": [
@@ -50,11 +50,11 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.1.0-SNAPSHOT.100200000005987"
+        "version": "1.1.0-SNAPSHOT.100200000006069"
       },
       {
         "name": "app-bulk-edit",
-        "version": "2.1.0-SNAPSHOT.100200000010598"
+        "version": "2.1.0-SNAPSHOT.100200000010607"
       },
       {
         "name": "app-consortia",
@@ -98,7 +98,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "2.1.0-SNAPSHOT.100200000011136"
+        "version": "2.1.0-SNAPSHOT.100200000011174"
       },
       {
         "name": "app-gobi",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000003796"
+        "version": "1.1.0-SNAPSHOT.100200000003798"
       },
       {
         "name": "app-licenses",
