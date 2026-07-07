@@ -2716,9 +2716,9 @@
     prop-types "^15.7.2"
 
 "@folio/stripes-smart-components@^10.0.0":
-  version "10.1.1099000000000747"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-smart-components/-/stripes-smart-components-10.1.1099000000000747.tgz#8aadf733c5559472c1b0a44d79681d3f206edf66"
-  integrity sha512-J0CpRoZKks0sN+r38s33eXcj4p7J9Yh1jFDuHvzLDz2yh7xrdhzpJgHnPzUyNNa9gfEpSsWzzSH/GsrKnlvOIg==
+  version "10.1.1099000000000778"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-smart-components/-/stripes-smart-components-10.1.1099000000000778.tgz#2bce06ef751489ac5bfe521c8ec18095be40f3ed"
+  integrity sha512-GT+/47yaKT4NkJaGNyDyT9sKDL2YBiMTXuVrmx3igfZiEmRwNePTkHbj4um8QZOuZbJ+RuufSpsqk0VTtXCR0A==
   dependencies:
     "@babel/runtime" "^7.28.6"
     "@rehooks/local-storage" "^2.4.4"
@@ -2855,9 +2855,9 @@
     webpack-virtual-modules "^0.4.3"
 
 "@folio/stripes@>=10.0.0":
-  version "10.2.1099000000000255"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes/-/stripes-10.2.1099000000000255.tgz#242a7456ba2d92a466c4df18656e3e30d50e8fb9"
-  integrity sha512-8JAXGcZFUjpOoxuJgJozx7wD+3NKZQj+41uJT+c/GxAnEBpv9b6JNVyBYlIgKOh3kAbTpZtVGLkY2Yg6uGSeFQ==
+  version "10.2.1099000000000260"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes/-/stripes-10.2.1099000000000260.tgz#8efa21d137cc7592aa0f6d26f7f69f314ee81018"
+  integrity sha512-oH9nbsoUj+z5NvkFbepdmSeUgBeNZsjbjl2WoiIjhKpQHM3JJRHsTlm1QgTwYoWfqLiMhgiuvp2IpRKAGPqlaw==
   dependencies:
     "@folio/stripes-components" "^13.0.0"
     "@folio/stripes-connect" "^10.0.0"
@@ -5556,9 +5556,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.387:
-  version "1.5.388"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.388.tgz#002666dfda32e087c44fd01b7ce1719b6ec89c57"
-  integrity sha512-Pl/aJaqOOxYxda3vcx1IKSJimwYXHDkEnGn0F+kG2EE68dDtx2uCinaS+Vih8Z91B9t8CSAbiF/HKyWcnXjhzw==
+  version "1.5.389"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.389.tgz#538be9ebec78026d4daba6be321ab854dfac2a8f"
+  integrity sha512-cEto7aeOqBfU1D+c5py5pE+ooscKE75JifxLBdFUZsqAxRS6y7kebtxAZvICszSl05gPjYHDTjY+lXpyGvpJbg==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
