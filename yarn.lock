@@ -1853,9 +1853,9 @@
     "@folio/plugin-find-po-line" "^6.0.0"
 
 "@folio/ld-folio-wrapper@>=1.0.0":
-  version "2.0.5099000000000497"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/ld-folio-wrapper/-/ld-folio-wrapper-2.0.5099000000000497.tgz#cbcffb13c4e4e8e9e9671d9454874d5d7ef25afc"
-  integrity sha512-TNBu8y4+gJz+FwNmRdFL8LJevJhPwOapmkYyS3CuKLASo7GaX6ZnHwLiDc+GYsBJmA6To6Dct8wdMSHRXSZp8Q==
+  version "2.0.5099000000000503"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/ld-folio-wrapper/-/ld-folio-wrapper-2.0.5099000000000503.tgz#eaec93cf59ec5ad5e6e2d5f0d4db9b999ae210f5"
+  integrity sha512-dZAwj1oUP+1rxsJuFkN/KHsQ4KjuDIpfYb6FxbLnZgJuVIHF35LtIZG7dYT9KyL40Ra0IOYlq+KO1JI02ABM6w==
   dependencies:
     "@folio/linked-data" "^2.0.4"
     prop-types "^15.6.0"
@@ -1903,9 +1903,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/linked-data@^2.0.4":
-  version "2.0.4099000000002625"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.4099000000002625.tgz#bc13c58a5b3238afe99f1692367080abe6585779"
-  integrity sha512-U4AwG/VRug12DGYOUX25mc/xUfD4pMCsqJ258NnGTgpw4iBVQvw10NNbYe2yUOYWKwtE43XzMSe2HPCOrGklBw==
+  version "2.0.4099000000002628"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.4099000000002628.tgz#2e47041b8666441e9e081be2b4f03b6e0235bb04"
+  integrity sha512-mxi/citr4KGV4Hb0ghJPO6yxwB5skZ1IKOahQRWWF9fsmm0rYjHkdB4bdPvLM8OD0Nk8gZsuAkGBqrQRvcjP8g==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -2503,9 +2503,9 @@
     react-final-form "^6.3.0"
 
 "@folio/stripes-build@>=1.0.0":
-  version "2.0.1099000000000047"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-build/-/stripes-build-2.0.1099000000000047.tgz#eaf8d82da7d2d58e299a5849c0c4061c5226d898"
-  integrity sha512-++rldOoerDTBb7f0jx4cm6Bg3TNlJT8Wp7zYaMBuBjwRASVqreEh4gcMeiJqzXx1/4C6uOAfHrpRt9voiNAoAQ==
+  version "2.1.1099000000000089"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-build/-/stripes-build-2.1.1099000000000089.tgz#fd6cc4f12d3c1e4b9fe2febd863165013c2a1fea"
+  integrity sha512-If0nQFh6krQ/ClTd+PxyVaC989GTW0r6XF10KCTdVxvcftswPmhUdK2SaKt0B22IcG0Vb9FjQO5Q+REYttZrsw==
   dependencies:
     "@folio/stripes-webpack" "^7.0.0"
     configstore "^3.1.1"
