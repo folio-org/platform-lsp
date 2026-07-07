@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010564"
+        "version": "2.2.0-SNAPSHOT.100200000010565"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000009908"
+        "version": "3.4.0-SNAPSHOT.100200000009917"
       }
     ],
     "optional": [
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000010414"
+        "version": "3.1.0-SNAPSHOT.100200000010470"
       },
       {
         "name": "app-marc-storage",
