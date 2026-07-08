@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010577"
+        "version": "2.2.0-SNAPSHOT.100200000010580"
       },
       {
         "name": "app-platform-complete",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.3.0-SNAPSHOT.100200000009810"
+        "version": "2.3.0-SNAPSHOT.100200000009826"
       },
       {
         "name": "app-eholdings",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "2.1.0-SNAPSHOT.100200000011217"
+        "version": "2.1.0-SNAPSHOT.100200000011224"
       },
       {
         "name": "app-lists",
