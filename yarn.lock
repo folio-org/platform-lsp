@@ -1990,12 +1990,12 @@
     prop-types "^15.6.0"
 
 "@folio/oa@>=1.0.0":
-  version "3.1.1099000000000303"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/oa/-/oa-3.1.1099000000000303.tgz#bb4b17865adde09f26da06cc8c3481001fe79610"
-  integrity sha512-s3ZdU7uavcjezbE/UAqUT+a7RSeLHK8JEqiR/CYYUEG6NnhwoemOrgtmd6brBvsb3ihDDRgnWyu+S2ZUTqwfcw==
+  version "3.2.1099000000000315"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/oa/-/oa-3.2.1099000000000315.tgz#dff5a1c3891b902145e124e45e366ec53eb5bea1"
+  integrity sha512-nSLyZzkK+2m8lJR7uBX636PmVzG8EHMtx0sCbc9w7dsO9/w0V2NuXzm7GQ81qLZrcyMhFwhpdeOb4EyHENPaFQ==
   dependencies:
-    "@folio/stripes-acq-components" "^7.0.0"
-    "@k-int/stripes-kint-components" "^5.15.0"
+    "@folio/stripes-acq-components" "^7.1.0"
+    "@k-int/stripes-kint-components" "^5.37.0"
     classnames "^2.2.6"
     compose-function "^3.0.3"
     final-form "^4.18.5"
@@ -2003,7 +2003,7 @@
     final-form-focus "^1.1.2"
     lodash "^4.17.11"
     prop-types "^15.6.0"
-    query-string "^6.6.0"
+    query-string "^7.1.1"
     react-final-form "^6.3.0"
     react-final-form-arrays "^3.1.1"
 
@@ -2480,9 +2480,9 @@
     redux-form "^8.3.0"
 
 "@folio/stripes-authority-components@>=2.0.0":
-  version "7.1.1099000000000264"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-authority-components/-/stripes-authority-components-7.1.1099000000000264.tgz#f33e99ccad9aa73a2ce1b159e0ee4ba962fdd1ce"
-  integrity sha512-xY6peSOEK2OJMM9dypup6YEti8jfLQzjiiQP4sxM8whHhlDu11fzF+7Rz5LNhosm0Mh22CIe8ggT6P1SQ+PhhQ==
+  version "7.1.1099000000000267"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-authority-components/-/stripes-authority-components-7.1.1099000000000267.tgz#412e5103afbc466e3a3790a072310e508d51af84"
+  integrity sha512-JRHzB1GojhSiclCOnhEhu37vWO25Wqeshpm6BEvz0OkY8FPeeNOvEk39Mlpwbl9+Vz59W7pEw8SNbelcClX50g==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     "@rehooks/local-storage" "^2.4.4"
@@ -2571,9 +2571,9 @@
     uuid "^9.0.0"
 
 "@folio/stripes-core@^11.2.0":
-  version "11.2.1099000000001959"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.2.1099000000001959.tgz#a17a941cfe79522097404626160c8c17e261c9b2"
-  integrity sha512-tF3977AUw9ShJcTo4vGme63WYuDRGKYJ4dRqfGWzDDtWn+82Q9AbAElWPU1PMduzWEW8uNImsKl4vpieDAkyPg==
+  version "11.2.1099000000001967"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.2.1099000000001967.tgz#2ff4145cdaaa270e1ada3ed5c53f461b8ea01d88"
+  integrity sha512-pO0KLcpD8s25FOgKBV0eKYGcz6VLkS5h9CFYYaB264GziXZfWF4U7WTFRZD7RsaLtFpSKTNs3KFmFoEwyL3zIw==
   dependencies:
     "@apollo/client" "^3.2.1"
     "@module-federation/runtime" "^2.0.0"
@@ -2880,9 +2880,9 @@
     redux-form "^8.3.7"
 
 "@folio/tenant-settings@>=2.5.1":
-  version "11.0.1099000000000309"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/tenant-settings/-/tenant-settings-11.0.1099000000000309.tgz#8165604c10bf2e2fb27bb056ff2945e9d30bf73c"
-  integrity sha512-tB0uxwxj/4Zu6JgInXVFR7G/dK80unuSOO7Ge6iodsI1He9Zv4ntvryd+4cS6mcEUJq1OLIMYobwsZPgR7etWA==
+  version "11.0.1099000000000312"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/tenant-settings/-/tenant-settings-11.0.1099000000000312.tgz#97e5ba6d3192fe7aa03143e8e5b14e30ce577405"
+  integrity sha512-5160iri79SyuPkUuObzhqwnWV9WCXyNSEpiVII9DxXke2twRG0kkBIh6IxNilaFzvjDBy6BIGj46LfXCkczicg==
   dependencies:
     final-form "^4.18.2"
     lodash "^4.17.4"
@@ -3244,7 +3244,7 @@
     "@jsonjoy.com/buffers" "^1.0.0"
     "@jsonjoy.com/codegen" "^1.0.0"
 
-"@k-int/stripes-kint-components@^5.0.0", "@k-int/stripes-kint-components@^5.1.1", "@k-int/stripes-kint-components@^5.15.0", "@k-int/stripes-kint-components@^5.37.0":
+"@k-int/stripes-kint-components@^5.0.0", "@k-int/stripes-kint-components@^5.1.1", "@k-int/stripes-kint-components@^5.37.0":
   version "5.37.1"
   resolved "https://registry.yarnpkg.com/@k-int/stripes-kint-components/-/stripes-kint-components-5.37.1.tgz#e70109aa3627ea2bb80f5e61526468942ab1deea"
   integrity sha512-kKR2paYUlt4sKrLR2QkS7UNMiIlXryIGAqYl4/s63Rp30M8sdzIONZESlU5zYvHWKDZLttsRlre0TEheV7CqDQ==
