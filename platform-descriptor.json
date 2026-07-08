@@ -11,13 +11,13 @@
       "name": "folio-keycloak",
       "version": "26.5.4"
     },
-    {
+   {
       "name": "folio-module-sidecar",
-      "version": "4.1.0-SNAPSHOT.133bb27"
+      "version": "4.0.1"
     },
     {
       "name": "mgr-applications",
-      "version": "4.1.0-SNAPSHOT.2bc8f27"
+      "version": "4.0.1"
     },
     {
       "name": "mgr-tenants",
