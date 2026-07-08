@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000009918"
+        "version": "3.4.0-SNAPSHOT.100200000009928"
       }
     ],
     "optional": [
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.1.0-SNAPSHOT.100200000006069"
+        "version": "1.1.0-SNAPSHOT.100200000006081"
       },
       {
         "name": "app-bulk-edit",
@@ -102,7 +102,7 @@
       },
       {
         "name": "app-gobi",
-        "version": "1.2.0-SNAPSHOT.100200000010332"
+        "version": "1.2.0-SNAPSHOT.100200000010581"
       },
       {
         "name": "app-inn-reach",
@@ -142,11 +142,11 @@
       },
       {
         "name": "app-oa",
-        "version": "1.0.0-SNAPSHOT.100200000010868"
+        "version": "1.0.0-SNAPSHOT.100200000010888"
       },
       {
         "name": "app-oai-pmh",
-        "version": "2.1.0-SNAPSHOT.100200000010538"
+        "version": "2.1.0-SNAPSHOT.100200000010665"
       },
       {
         "name": "app-quick-marc",
