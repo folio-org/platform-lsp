@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "2.1.0-SNAPSHOT.100200000010610"
+        "version": "2.1.0-SNAPSHOT.100200000010688"
       },
       {
         "name": "app-inventory",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "2.1.0-SNAPSHOT.100200000011224"
+        "version": "2.1.0-SNAPSHOT.100200000011230"
       },
       {
         "name": "app-lists",
