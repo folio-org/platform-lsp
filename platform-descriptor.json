@@ -13,11 +13,11 @@
     },
     {
       "name": "folio-module-sidecar",
-      "version": "3.0.19"
+      "version": "4.1.0-native.40c9c94"
     },
     {
       "name": "mgr-applications",
-      "version": "3.0.6"
+      "version": "4.1.0-SNAPSHOT.2251"
     },
     {
       "name": "mgr-tenants",
@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.0.53"
+        "version": "#RANCHER-3051-SF"
       },
       {
         "name": "app-platform-complete",
