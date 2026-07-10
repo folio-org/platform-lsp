@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010593"
+        "version": "2.2.0-SNAPSHOT.100200000010599"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000009943"
+        "version": "3.4.0-SNAPSHOT.100200000009950"
       }
     ],
     "optional": [
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-oa",
-        "version": "1.0.0-SNAPSHOT.100200000010888"
+        "version": "1.0.0-SNAPSHOT.100200000010911"
       },
       {
         "name": "app-oai-pmh",
