@@ -118,7 +118,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "2.1.0-SNAPSHOT.100200000011231"
+        "version": "2.1.0-SNAPSHOT.100200000011240"
       },
       {
         "name": "app-lists",
@@ -130,7 +130,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000009469"
+        "version": "1.1.0-SNAPSHOT.100200000009477"
       },
       {
         "name": "app-mosaic",
