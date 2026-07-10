@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "2.5.19"
+        "version": "#RANCHER-3051-SF"
       }
     ],
     "optional": [
