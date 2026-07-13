@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010641"
+        "version": "2.2.0-SNAPSHOT.100200000010643"
       },
       {
         "name": "app-platform-complete",
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.1.0-SNAPSHOT.100200000006082"
+        "version": "1.1.0-SNAPSHOT.100200000006151"
       },
       {
         "name": "app-bulk-edit",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000011284"
+        "version": "1.1.0-SNAPSHOT.100200000011336"
       },
       {
         "name": "app-erm-usage",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.1.0-SNAPSHOT.100200000010786"
+        "version": "1.1.0-SNAPSHOT.100200000010828"
       },
       {
         "name": "app-linked-data",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000010470"
+        "version": "3.1.0-SNAPSHOT.100200000010542"
       },
       {
         "name": "app-marc-storage",
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.1.0-SNAPSHOT.100200000005426"
+        "version": "1.1.0-SNAPSHOT.100200000005501"
       },
       {
         "name": "app-reading-room",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000011073"
+        "version": "1.1.0-SNAPSHOT.100200000011134"
       },
       {
         "name": "app-service-interaction",
