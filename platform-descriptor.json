@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "2.1.0-SNAPSHOT.100200000010743"
+        "version": "2.1.0-SNAPSHOT.100200000010819"
       },
       {
         "name": "app-ebsconet",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.3.0-SNAPSHOT.100200000009826"
+        "version": "2.3.0-SNAPSHOT.100200000009887"
       },
       {
         "name": "app-eholdings",
@@ -94,11 +94,11 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "3.1.0-SNAPSHOT.100200000010875"
+        "version": "3.1.0-SNAPSHOT.100200000010932"
       },
       {
         "name": "app-fqm",
-        "version": "2.1.0-SNAPSHOT.100200000011198"
+        "version": "2.1.0-SNAPSHOT.100200000011248"
       },
       {
         "name": "app-gobi",
