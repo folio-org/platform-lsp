@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "2.1.0-SNAPSHOT.100200000010832"
+        "version": "2.1.0-SNAPSHOT.100200000010833"
       },
       {
         "name": "app-ebsconet",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "3.1.0-SNAPSHOT.100200000010945"
+        "version": "3.1.0-SNAPSHOT.100200000010946"
       },
       {
         "name": "app-fqm",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "2.1.0-SNAPSHOT.100200000010688"
+        "version": "2.1.0-SNAPSHOT.100200000010754"
       },
       {
         "name": "app-inventory",
