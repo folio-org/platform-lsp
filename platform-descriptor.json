@@ -5,7 +5,7 @@
   "eureka-components": [
     {
       "name": "folio-kong",
-      "version": "3.10.0-SNAPSHOT.35"
+      "version": "3.10.0-SNAPSHOT.37"
     },
     {
       "name": "folio-keycloak",
@@ -13,48 +13,48 @@
     },
     {
       "name": "folio-module-sidecar",
-      "version": "4.1.0-SNAPSHOT.2233"
+      "version": "4.1.0-SNAPSHOT.2261"
     },
     {
       "name": "mgr-applications",
-      "version": "4.1.0-SNAPSHOT.2244"
+      "version": "4.1.0-SNAPSHOT.2251"
     },
     {
       "name": "mgr-tenants",
-      "version": "4.1.0-SNAPSHOT.2126"
+      "version": "4.1.0-SNAPSHOT.2140"
     },
     {
       "name": "mgr-tenant-entitlements",
-      "version": "4.1.0-SNAPSHOT.2146"
+      "version": "4.1.0-SNAPSHOT.2153"
     }
   ],
   "applications": {
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010415"
+        "version": "2.2.0-SNAPSHOT.100200000010643"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000009672"
+        "version": "3.4.0-SNAPSHOT.100200000009951"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000010847"
+        "version": "2.1.0-SNAPSHOT.100200000011101"
       },
       {
         "name": "app-agreements",
-        "version": "1.1.0-SNAPSHOT.100200000010437"
+        "version": "1.1.0-SNAPSHOT.100200000010754"
       },
       {
         "name": "app-authority-records",
-        "version": "1.1.0-SNAPSHOT.100200000005860"
+        "version": "1.1.0-SNAPSHOT.100200000006151"
       },
       {
         "name": "app-bulk-edit",
-        "version": "2.1.0-SNAPSHOT.100200000010416"
+        "version": "2.1.0-SNAPSHOT.100200000010629"
       },
       {
         "name": "app-consortia",
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "2.1.0-SNAPSHOT.100200000010344"
+        "version": "2.1.0-SNAPSHOT.100200000010819"
       },
       {
         "name": "app-ebsconet",
@@ -86,51 +86,51 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.3.0-SNAPSHOT.100200000009398"
+        "version": "2.3.0-SNAPSHOT.100200000009887"
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000011037"
+        "version": "1.1.0-SNAPSHOT.100200000011336"
       },
       {
         "name": "app-erm-usage",
-        "version": "3.1.0-SNAPSHOT.100200000010300"
+        "version": "3.1.0-SNAPSHOT.100200000010933"
       },
       {
         "name": "app-fqm",
-        "version": "2.1.0-SNAPSHOT.100200000010981"
+        "version": "2.1.0-SNAPSHOT.100200000011250"
       },
       {
         "name": "app-gobi",
-        "version": "1.2.0-SNAPSHOT.100200000010332"
+        "version": "1.2.0-SNAPSHOT.100200000010595"
       },
       {
         "name": "app-inn-reach",
-        "version": "2.1.0-SNAPSHOT.100200000010383"
+        "version": "2.1.0-SNAPSHOT.100200000010688"
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000003590"
+        "version": "1.1.0-SNAPSHOT.100200000003874"
       },
       {
         "name": "app-licenses",
-        "version": "1.1.0-SNAPSHOT.100200000010459"
+        "version": "1.1.0-SNAPSHOT.100200000010828"
       },
       {
         "name": "app-linked-data",
-        "version": "2.1.0-SNAPSHOT.100200000010961"
+        "version": "2.1.0-SNAPSHOT.100200000011240"
       },
       {
         "name": "app-lists",
-        "version": "1.2.0-SNAPSHOT.100200000010831"
+        "version": "1.2.0-SNAPSHOT.100200000011027"
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000010275"
+        "version": "3.1.0-SNAPSHOT.100200000010542"
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000009246"
+        "version": "1.1.0-SNAPSHOT.100200000009477"
       },
       {
         "name": "app-mosaic",
@@ -138,23 +138,23 @@
       },
       {
         "name": "app-notification",
-        "version": "1.1.0-SNAPSHOT.100200000005995"
+        "version": "1.1.0-SNAPSHOT.100200000006399"
       },
       {
         "name": "app-oa",
-        "version": "1.0.0-SNAPSHOT.100200000010581"
+        "version": "1.0.0-SNAPSHOT.100200000010911"
       },
       {
         "name": "app-oai-pmh",
-        "version": "2.1.0-SNAPSHOT.100200000010276"
+        "version": "2.1.0-SNAPSHOT.100200000010666"
       },
       {
         "name": "app-quick-marc",
-        "version": "1.1.0-SNAPSHOT.100200000005169"
+        "version": "1.1.0-SNAPSHOT.100200000005501"
       },
       {
         "name": "app-reading-room",
-        "version": "3.1.0-SNAPSHOT.100200000010154"
+        "version": "3.1.0-SNAPSHOT.100200000010593"
       },
       {
         "name": "app-reporting",
@@ -162,7 +162,7 @@
       },
       {
         "name": "app-requests-ecs",
-        "version": "2.1.0-SNAPSHOT.100200000009982"
+        "version": "2.1.0-SNAPSHOT.100200000010568"
       },
       {
         "name": "app-requests-mediated",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000010639"
+        "version": "1.1.0-SNAPSHOT.100200000011134"
       },
       {
         "name": "app-service-interaction",
@@ -186,7 +186,7 @@
       },
       {
         "name": "app-serials-management",
-        "version": "1.1.0-SNAPSHOT.100200000010658"
+        "version": "1.1.0-SNAPSHOT.100200000010992"
       }
     ],
     "experimental": [
