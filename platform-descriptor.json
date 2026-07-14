@@ -86,7 +86,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.3.0-SNAPSHOT.100200000009887"
+        "version": "2.3.0-SNAPSHOT.100200000009897"
       },
       {
         "name": "app-eholdings",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "2.1.0-SNAPSHOT.100200000011240"
+        "version": "2.1.0-SNAPSHOT.100200000011295"
       },
       {
         "name": "app-lists",
