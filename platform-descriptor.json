@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000011101"
+        "version": "2.1.0-SNAPSHOT.100200000011174"
       },
       {
         "name": "app-agreements",
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "2.1.0-SNAPSHOT.100200000010831"
+        "version": "2.1.0-SNAPSHOT.100200000010832"
       },
       {
         "name": "app-ebsconet",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "3.1.0-SNAPSHOT.100200000010933"
+        "version": "3.1.0-SNAPSHOT.100200000010945"
       },
       {
         "name": "app-fqm",
