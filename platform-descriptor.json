@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "2.1.0-SNAPSHOT.100200000010833"
+        "version": "2.1.0-SNAPSHOT.100200000010846"
       },
       {
         "name": "app-ebsconet",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "3.1.0-SNAPSHOT.100200000010957"
+        "version": "3.1.0-SNAPSHOT.100200000010959"
       },
       {
         "name": "app-fqm",
