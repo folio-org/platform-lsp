@@ -1692,9 +1692,9 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/erm-usage@>=1.0.3":
-  version "12.0.1099000000000954"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-12.0.1099000000000954.tgz#f74c3581400204dbb8418b63d78acbbdfa7224a8"
-  integrity sha512-CWxXBIiA54qbA/d/lter5pHX6QCLy+jRZfbsNkuqEB8v/SDKopmXilJFebpW3oCidHnNZpNvwWG4MtWgtaEprA==
+  version "12.0.1099000000000959"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-12.0.1099000000000959.tgz#4f4189aaf0cca4577aa85f609c826948bcadcd88"
+  integrity sha512-MAYkMXTB1kZYi7pGHDs8F43J36erG5IaNIHeWC8Ig2jDsa2HVIGotIUwulgZmPA2wtxNb6KWwdc8uRJbuYuTww==
   dependencies:
     "@folio/stripes-leipzig-components" "^1.0.0"
     compose-function "^3.0.3"
@@ -1853,9 +1853,9 @@
     "@folio/plugin-find-po-line" "^6.0.0"
 
 "@folio/ld-folio-wrapper@>=1.0.0":
-  version "2.0.5099000000000503"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/ld-folio-wrapper/-/ld-folio-wrapper-2.0.5099000000000503.tgz#eaec93cf59ec5ad5e6e2d5f0d4db9b999ae210f5"
-  integrity sha512-dZAwj1oUP+1rxsJuFkN/KHsQ4KjuDIpfYb6FxbLnZgJuVIHF35LtIZG7dYT9KyL40Ra0IOYlq+KO1JI02ABM6w==
+  version "2.0.5099000000000506"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/ld-folio-wrapper/-/ld-folio-wrapper-2.0.5099000000000506.tgz#ebfa6bfacc2524e005f1ec5601ad55bf578aa810"
+  integrity sha512-/wDL9tIpMV8joNPADGEel0+IlMUxThlTfaplHnIBXv9Gi929ZVIyKDKi09RjhAP0i48brOD83HLVxJhDPIJXFA==
   dependencies:
     "@folio/linked-data" "^2.0.4"
     prop-types "^15.6.0"
@@ -2437,9 +2437,9 @@
     prop-types "^15.6.0"
 
 "@folio/stripes-acq-components@^7.0.0", "@folio/stripes-acq-components@^7.1.0", "@folio/stripes-acq-components@^7.2.0", "@folio/stripes-acq-components@~7.2.0":
-  version "7.2.1099000000000587"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-acq-components/-/stripes-acq-components-7.2.1099000000000587.tgz#06dff278dcb484204add05f480a6e6fe2770f704"
-  integrity sha512-MTbYjem7qaRGv3Igjb7zgklLJQ96keIswvNfSJ4SocUnMb+qM7wf8Y+tuCfppEUxC27MvI8M2RfJE1uxeZ1yeA==
+  version "7.2.1099000000000597"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-acq-components/-/stripes-acq-components-7.2.1099000000000597.tgz#c9e24cb2ccf0bef82b5311e3851d13e51ffdf078"
+  integrity sha512-agqKH2aPk/L/2USl6yyi/Q4FF0Pcjj1WJEbYHswLltG9AgmPHG4iErhIuq8FZSf5bfHwKry8qhyXth/HdEjLDg==
   dependencies:
     "@folio/stripes-types" "^3.0.0"
     "@rehooks/local-storage" "^2.4.4"
@@ -5551,9 +5551,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.389:
-  version "1.5.391"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.391.tgz#a210ae1e913357bb61d7d1c9f9a7986f80e247a9"
-  integrity sha512-YmCu4856jkgKT1Nh6fwRdeVrM6Ydf/fBnq51tpmSfX+jOcUMTxh31yH6hjKScRenhB2oDSvA9oooxcpjogPeig==
+  version "1.5.392"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.392.tgz#31e9f9af0d8df3d1489468a4242b173605617482"
+  integrity sha512-1yQq3VQCZRwsnYc67Oc+1fge6Lwtn0hzi6zmEVkB61Zx21kTbwJAW4dFLadl5Rc1tKhG/kSpYXnfiAhu0f0a1g==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
