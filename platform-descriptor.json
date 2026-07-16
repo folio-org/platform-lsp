@@ -9,7 +9,7 @@
     },
     {
       "name": "folio-keycloak",
-      "version": "26.7.0-SNAPSHOT.116"
+      "version": "26.7.0-SNAPSHOT.8bc952a"
     },
     {
       "name": "folio-module-sidecar",
