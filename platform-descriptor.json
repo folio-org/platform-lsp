@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000002622"
+        "version": "1.1.0-SNAPSHOT.100200000002928"
       },
       {
         "name": "app-dcb",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "2.1.0-SNAPSHOT.100200000011326"
+        "version": "2.1.0-SNAPSHOT.100200000011327"
       },
       {
         "name": "app-lists",
