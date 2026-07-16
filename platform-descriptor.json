@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "2.1.0-SNAPSHOT.100200000010846"
+        "version": "2.1.0-SNAPSHOT.100200000010859"
       },
       {
         "name": "app-ebsconet",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000003917"
+        "version": "1.1.0-SNAPSHOT.100200000003919"
       },
       {
         "name": "app-licenses",
