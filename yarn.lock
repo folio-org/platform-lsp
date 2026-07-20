@@ -2436,9 +2436,9 @@
     "@folio/plugin-find-po-line" "^6.1.0"
 
 "@folio/service-interaction@>=1.0.0":
-  version "4.2.1099000000000391"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/service-interaction/-/service-interaction-4.2.1099000000000391.tgz#2d9b8cd1dba71bf64c622d8aa05223f54f579d2c"
-  integrity sha512-3vO0pwNj1kxokUGtFEA2Fh5IN+8jDwCkZNM2GxDXh9M81soo18LHRmhOymM0qJNvM9/NgEWs3aYR4clPKgXl4Q==
+  version "4.2.1099000000000396"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/service-interaction/-/service-interaction-4.2.1099000000000396.tgz#7b9b7c2b66af10fcd0b472f23e357e0f776a19f2"
+  integrity sha512-1eG+ewpOPebXgSwBBD9NGWWyyXffPsa2Ws5n1LdKJG5DHmqDh6EzlFQKc2oSXkK05xYYRo18V6ONiV1z9MV08A==
   dependencies:
     "@k-int/stripes-kint-components" "^5.37.0"
     dom-helpers "^3.4.0"
@@ -3754,17 +3754,17 @@
   dependencies:
     defer-to-connect "^2.0.1"
 
-"@tanstack/query-core@5.101.2":
-  version "5.101.2"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.101.2.tgz#c901fb76b68169ff5e1e44017404e7e2e90ce1af"
-  integrity sha512-hH5MLoJhF7KaIGd7q3xTXGXvslI+GYlM1Z/35aSHHWaCJWB7XvTSHYuV3eM7tw+aE0mT/xMro4M4Q9rCGHT0lw==
+"@tanstack/query-core@5.101.3":
+  version "5.101.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.101.3.tgz#45fb30a36ac59dde6e6d17de9de97cf363b0ac26"
+  integrity sha512-pWLyu7AjFFVM5G+frjcL81kKEW9R8GCCPKnL3uaWbMwd2f3ZINFCuy+PtKkdz/+pKw/f/XMsFsYq/H+uJHM4GQ==
 
 "@tanstack/react-query@^5.101.0":
-  version "5.101.2"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.101.2.tgz#d886331bcd29df84bc04c45d93192b8207d17c7f"
-  integrity sha512-seDkr6kzGzX1okaaTtZPtgA688CDPlXUz1C6xSg0ESqn04Vuc8tlrYms1s3de+znBqhPVxFRfpAfUf+6XvfPWg==
+  version "5.101.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.101.3.tgz#1608209769e288ef95a450f782ed7eee66d1b062"
+  integrity sha512-ZjgcRwmQUSCythDPj6pE2NKFi9bpQegxIBxgt3hPytXI1ElFHNaa3A7aWW8vFaLCIRjPv467rbREYHbxcdgQbg==
   dependencies:
-    "@tanstack/query-core" "5.101.2"
+    "@tanstack/query-core" "5.101.3"
 
 "@types/body-parser@*":
   version "1.19.6"
