@@ -1475,9 +1475,9 @@
     utility-types "^3.10.0"
 
 "@folio/checkin@>=1.3.0":
-  version "12.0.1099000000000400"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/checkin/-/checkin-12.0.1099000000000400.tgz#95708959a3fad1c4f6a75d88fa060aa05d9cc237"
-  integrity sha512-zWgVzA1CgpxwwLrDU8akYcG2XY8t1n7lWMbjvZfUmNanbmEXmttGMnVJIfwqLV5ge1J4k4PewEdkeKfiwF1QVA==
+  version "12.0.1099000000000422"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/checkin/-/checkin-12.0.1099000000000422.tgz#479a59a76945a5ab9a8deea7496fec8118e3b985"
+  integrity sha512-RhxTNVW2Ro1qFoKO2CjoCgvJ9QnsjqhP8UcK2126yrnT8DaaqbNj3AeGS057YLx3b3589y6OTTIa6UwcryMKWw==
   dependencies:
     dateformat "^2.0.0"
     dompurify "^3.0.9"
@@ -1818,9 +1818,9 @@
     use-deep-compare "^1.1.0"
 
 "@folio/inventory@>=1.4.0":
-  version "14.1.1099000000002033"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.1.1099000000002033.tgz#be372a8a2b61aa8e38c1a3ca56a5f14d59ae411a"
-  integrity sha512-En4R1V2g0KK2Kl77mF0J1t1SnzUcfSbtBfd+WCnK7IqfUCelD9JphIGRTBM0CRexmegqwGeJmRziN+q57ksShA==
+  version "14.1.1099000000002036"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.1.1099000000002036.tgz#90eb6b7b7790af318184c9e2409bc29aeda62c0e"
+  integrity sha512-1kQwC+lfReAECNB7/2+0a7XmpaZ5WAa5vJzHKcqVm7X32Vb30OKHbjGBWhTnEYr3+ww7oKgUXfNxdNJk9wWMlQ==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -3754,17 +3754,17 @@
   dependencies:
     defer-to-connect "^2.0.1"
 
-"@tanstack/query-core@5.101.3":
-  version "5.101.3"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.101.3.tgz#45fb30a36ac59dde6e6d17de9de97cf363b0ac26"
-  integrity sha512-pWLyu7AjFFVM5G+frjcL81kKEW9R8GCCPKnL3uaWbMwd2f3ZINFCuy+PtKkdz/+pKw/f/XMsFsYq/H+uJHM4GQ==
+"@tanstack/query-core@5.101.4":
+  version "5.101.4"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.101.4.tgz#c01b4289b3094144d8ef96235aa506242cf83efa"
+  integrity sha512-gNwcvOJcRbLWPOLG/2OBm+zM+Yv+MKsXKEOWC57USuZDEsI71hEErQsiEGx5wX9rzWWkfwM0fVSPoiIFSsxfiw==
 
 "@tanstack/react-query@^5.101.0":
-  version "5.101.3"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.101.3.tgz#1608209769e288ef95a450f782ed7eee66d1b062"
-  integrity sha512-ZjgcRwmQUSCythDPj6pE2NKFi9bpQegxIBxgt3hPytXI1ElFHNaa3A7aWW8vFaLCIRjPv467rbREYHbxcdgQbg==
+  version "5.101.4"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.101.4.tgz#044137754d79aaa30a82f6e6c42488be79c86ea7"
+  integrity sha512-yRg2pfOCxIs4ZJW3XYYHU/WgtD04FHSnfHlpRT7h7pR77hwkdRG4wxbKe4aq6P0RvXUTBSQpQeadS1SUYUe+KA==
   dependencies:
-    "@tanstack/query-core" "5.101.3"
+    "@tanstack/query-core" "5.101.4"
 
 "@types/body-parser@*":
   version "1.19.6"
@@ -4453,9 +4453,9 @@ base64-js@^1.3.1:
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
 
 baseline-browser-mapping@^2.10.42:
-  version "2.10.44"
-  resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.10.44.tgz#2e074675e640b67cb3835c54c11aa2dd9119c0f8"
-  integrity sha512-T3ghW+sl/ZJ8w1v/yQx3qvJ9040DWoLBz8JT/CILbAKcFyG9b2MRe75v6W5uXjv6uH1lumK2Kv46y2zSkcej0Q==
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.11.0.tgz#25453328838032c7a514fbd238a171f744e9e854"
+  integrity sha512-oCu2wfipvX3AePSgmOuKkIywOu+8n9psz7hXYmk56ghpu3+7KzNIBopaOs4c9BrtdnTtW30unG9GTfHo7EwERQ==
 
 batch@0.6.1:
   version "0.6.1"
