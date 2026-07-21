@@ -297,13 +297,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      - name: 'Fetch updated UI modules list'
-        id: fetch-updated-ui-modules
-        uses: folio-org/platform-lsp/.github/actions/fetch-updated-ui-modules@master
-        with:
-          applications: ${{ needs.update-platform-descriptor.outputs.updated_applications }}
-          far-url: ${{ env.FAR_URL }}
-
       - name: 'Read package.json content'
         id: read-package-json
         uses: folio-org/platform-lsp/.github/actions/read-file@master
@@ -313,6 +306,14 @@ jobs:
           validate_json: true
           fail_on_missing: true
           output_content: true
+
+      - name: 'Fetch updated UI modules list'
+        id: fetch-updated-ui-modules
+        uses: folio-org/platform-lsp/.github/actions/fetch-updated-ui-modules@master
+        with:
+          applications: ${{ needs.update-platform-descriptor.outputs.updated_applications }}
+          far-url: ${{ env.FAR_URL }}
+          package-json: ${{ steps.read-package-json.outputs.file_content }}
 
       - name: 'Fetch base package.json'
         id: fetch-base-package-json
