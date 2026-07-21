@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "2.5.19"
+        "version": "2.5.20"
       }
     ],
     "optional": [
@@ -62,7 +62,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.0.16"
+        "version": "2.0.17"
       },
       {
         "name": "app-erm-usage",
