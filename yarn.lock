@@ -1621,9 +1621,9 @@
     react-window "^1.8.5"
 
 "@folio/data-import@>=0.0.0":
-  version "11.0.1099000000000342"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/data-import/-/data-import-11.0.1099000000000342.tgz#0f467878329cb947703f72622075b03d1b6eca00"
-  integrity sha512-2tSLgUClhdIa8t1+lMoEMEy4JaeUdZlQgeyGjwEy26IAyE+Jp/Kgb2gbFZdI16Nc9kUZVKQpqEpy5IJ8Hh6ATg==
+  version "11.0.1099000000000349"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/data-import/-/data-import-11.0.1099000000000349.tgz#260243283395b03a5a657e3603daeb7974be63f4"
+  integrity sha512-I5Z92JcmREghFIEa8M0V56bKLo/5JGQZNujKsRvRutiFNJMGBnPkNsOvLbK/7sJUpxKZsdATOANEO3YM4nJqQA==
   dependencies:
     "@folio/stripes-acq-components" "^7.1.0"
     "@folio/stripes-data-transfer-components" "^7.1.0"
@@ -2548,9 +2548,9 @@
     yargs "^17.3.1"
 
 "@folio/stripes-components@^13.0.0":
-  version "13.1.1099000000001533"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001533.tgz#90d7501e89842d617e2c6032ce5ca66f6bcccfba"
-  integrity sha512-yEM+FLn02mMMIHtZontfjTrGrOCPyCGXCwjkiproGZONldhC4bhjmXGF4ZaCD6ezirRX3MO5VdRGdBmDaUahbQ==
+  version "13.1.1099000000001559"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001559.tgz#8b9734390d202f5ef3709dc18c1ce48c6c0e5c73"
+  integrity sha512-ZpdABOZMrbAIwkZ1e+ro0NTd2XQMJv304hQzr9P/azSe1tB8YVi+4xAo6qO7dLfx0Lofkanu0jo9qAhQ84XT6Q==
   dependencies:
     "@folio/stripes-react-hotkeys" "^3.2.1"
     classnames "^2.2.5"
@@ -2805,9 +2805,9 @@
     query-string "^7.1.2"
 
 "@folio/stripes-webpack@^7.0.0":
-  version "7.0.1099000000000342"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-webpack/-/stripes-webpack-7.0.1099000000000342.tgz#243ab3b7b2a1bef39ddb46ad8645f30fca562b58"
-  integrity sha512-vQXCwQfDDzi7SW44EuFRseI/OtRQQ3TCYyEiwyU9kLvE6OdOTabELZaiP0HXIBu7gooOet4y91o7dUcSfbca9A==
+  version "7.0.1099000000000345"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-webpack/-/stripes-webpack-7.0.1099000000000345.tgz#72dd7e670185089047d5382dd863832826bcd08c"
+  integrity sha512-G4ZJzACAK1n8p59nipF8eY/us6PXblZbP4ocH62MMO6bmy4/RswDJQ/h3Hs2SMZOH/whmJXyE7dg70nPl1nb+A==
   dependencies:
     "@babel/core" "^7.9.0"
     "@babel/plugin-proposal-decorators" "^7.0.0"
