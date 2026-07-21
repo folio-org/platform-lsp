@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000011438"
+        "version": "1.1.0-SNAPSHOT.100200000011453"
       },
       {
         "name": "app-erm-usage",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000003995"
+        "version": "1.1.0-SNAPSHOT.100200000003996"
       },
       {
         "name": "app-licenses",
