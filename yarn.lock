@@ -1943,12 +1943,13 @@
     zustand "^5.0.14"
 
 "@folio/lists@>=1.2.0":
-  version "5.0.2099000000001059"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.2099000000001059.tgz#793b73a654d265a9d6e7585571f55d1988454c55"
-  integrity sha512-0wbsBU4zExVfE2TZJ+D6Za80DxP8hogyAXD8/Ae+SiRdo3dxgfszqhsJQ/324jBUrhlRG/EhjDAtAYYwsEOwXg==
+  version "5.0.2099000000001074"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.2099000000001074.tgz#6ab4b80aea61e72d74adabd67bce993f87126cca"
+  integrity sha512-9kBB3meWMbVkMdeFvsCs6LgTyo7U9YlC9cGRramCV45cpe3pRsT8Br+Ex6Y4qi9cnqLkaOQA+xYqb/uGK1NeGw==
   dependencies:
+    "@folio/plugin-find-user" "^8.1.0"
     "@folio/plugin-query-builder" "^3.0.0"
-    "@folio/stripes-acq-components" "~7.1.0"
+    "@folio/stripes-acq-components" "^7.2.0"
     date-fns "^2.29.3"
     ky "^0.33.2"
     lodash "^4.17.21"
