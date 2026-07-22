@@ -2023,13 +2023,13 @@
     react-query "^3.39.3"
     react-router-prop-types "^1.0.4"
 
-"@folio/orders@9.0.4":
-  version "9.0.4"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/orders/-/orders-9.0.4.tgz#eb5689d5946d81159602c573e9e3658a41114dc5"
-  integrity sha512-YgkIrK5D88603kO3Fn2YcGhYVQN1KRPrMZ17sTWM2VZJhaQqyWqwZmx7FCcEwZ3K8yxluuW892D5BXqHYjcBkg==
+"@folio/orders@9.0.5":
+  version "9.0.5"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/orders/-/orders-9.0.5.tgz#52b138a3876c924844cb6a8eced7f38b473c58d3"
+  integrity sha512-PPuA4V0bg5kOWALtUdlPE2JJIO5BsrR60zQgkHb/W5T/9tsKldA5XTwaofAQdOxMfuWESRvr/rTbyKJ/NLziBw==
   dependencies:
     "@folio/plugin-find-po-line" "^6.1.1"
-    "@folio/stripes-acq-components" "~7.1.0"
+    "@folio/stripes-acq-components" "~7.1.1"
     "@folio/stripes-template-editor" "^3.2.0"
     classnames "^2.2.5"
     dompurify "^3.0.9"
@@ -2473,7 +2473,7 @@
     lodash "^4.17.4"
     prop-types "^15.6.0"
 
-"@folio/stripes-acq-components@^7.0.0", "@folio/stripes-acq-components@^7.1.0", "@folio/stripes-acq-components@~7.1.0":
+"@folio/stripes-acq-components@^7.0.0", "@folio/stripes-acq-components@^7.1.0", "@folio/stripes-acq-components@~7.1.0", "@folio/stripes-acq-components@~7.1.1":
   version "7.1.0"
   resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-acq-components/-/stripes-acq-components-7.1.0.tgz#cae1f571e7b9a467314949430c283e58522a9f8b"
   integrity sha512-ACF7h+3LMIKoFY6TmCTYhX3As3U574nbp1lh78+Qtx26O0AWuj4h2FDMQCprtRaF5qMsOUMirV3DxooUxYI+/w==

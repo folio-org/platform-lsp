@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-complete",
-        "version": "3.3.8"
+        "version": "3.3.9"
       },
       {
         "name": "app-platform-minimal",
@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.0.14"
+        "version": "2.0.15"
       },
       {
         "name": "app-agreements",
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.0.3"
+        "version": "1.0.4"
       },
       {
         "name": "app-data-import",
@@ -98,7 +98,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "2.0.5"
+        "version": "2.0.6"
       },
       {
         "name": "app-gobi",
