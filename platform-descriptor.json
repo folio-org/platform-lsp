@@ -86,15 +86,15 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.0"
+        "version": "2.2.4"
       },
       {
         "name": "app-eholdings",
-        "version": "1.0.0"
+        "version": "1.0.2"
       },
       {
         "name": "app-erm-usage",
-        "version": "3.0.0"
+        "version": "3.0.1"
       },
       {
         "name": "app-fqm",
