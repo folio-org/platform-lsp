@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010784"
+        "version": "2.2.0-SNAPSHOT.100200000010785"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000010110"
+        "version": "3.4.0-SNAPSHOT.100200000010134"
       }
     ],
     "optional": [
@@ -98,7 +98,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "2.1.0-SNAPSHOT.100200000011363"
+        "version": "2.1.0-SNAPSHOT.100200000011382"
       },
       {
         "name": "app-gobi",
@@ -174,7 +174,7 @@
       },
       {
         "name": "app-rtac",
-        "version": "1.2.0-SNAPSHOT.100200000009508"
+        "version": "1.2.0-SNAPSHOT.100200000010971"
       },
       {
         "name": "app-search",
@@ -182,7 +182,7 @@
       },
       {
         "name": "app-service-interaction",
-        "version": "1.1.0-SNAPSHOT.100200000010665"
+        "version": "1.1.0-SNAPSHOT.100200000010702"
       },
       {
         "name": "app-serials-management",
