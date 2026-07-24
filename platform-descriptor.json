@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000011308"
+        "version": "2.1.0-SNAPSHOT.100200000011321"
       },
       {
         "name": "app-agreements",
@@ -98,7 +98,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "2.1.0-SNAPSHOT.100200000011394"
+        "version": "2.1.0-SNAPSHOT.100200000011397"
       },
       {
         "name": "app-gobi",
@@ -122,7 +122,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.2.0-SNAPSHOT.100200000011292"
+        "version": "1.2.0-SNAPSHOT.100200000011323"
       },
       {
         "name": "app-marc-migrations",
