@@ -126,7 +126,7 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000010703"
+        "version": "3.1.0-SNAPSHOT.100200000010704"
       },
       {
         "name": "app-marc-storage",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000011294"
+        "version": "1.1.0-SNAPSHOT.100200000011295"
       },
       {
         "name": "app-service-interaction",
