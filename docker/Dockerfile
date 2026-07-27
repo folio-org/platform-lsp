@@ -21,7 +21,7 @@ RUN apk upgrade --no-cache && \
     apk add --no-cache alpine-sdk python3 && \
     yarn config set python /usr/bin/python3 && \
     yarn config set @folio:registry https://repository.folio.org/repository/npm-$REGISTRY/ && \
-    yarn install && \
+    yarn install --ignore-scripts --non-interactive && \
     yarn build-module-descriptors && \
     yarn build output $BUILD_ARGS
 
