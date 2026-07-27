@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010842"
+        "version": "2.2.0-SNAPSHOT.100200000010843"
       },
       {
         "name": "app-platform-complete",
@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000011327"
+        "version": "2.1.0-SNAPSHOT.100200000011364"
       },
       {
         "name": "app-agreements",
@@ -74,11 +74,11 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000003017"
+        "version": "1.1.0-SNAPSHOT.100200000003077"
       },
       {
         "name": "app-dcb",
-        "version": "2.1.0-SNAPSHOT.100200000010921"
+        "version": "2.1.0-SNAPSHOT.100200000011015"
       },
       {
         "name": "app-ebsconet",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000011453"
+        "version": "1.1.0-SNAPSHOT.100200000011532"
       },
       {
         "name": "app-erm-usage",
@@ -106,11 +106,11 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "2.1.0-SNAPSHOT.100200000010754"
+        "version": "2.1.0-SNAPSHOT.100200000010929"
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000004077"
+        "version": "1.1.0-SNAPSHOT.100200000004078"
       },
       {
         "name": "app-licenses",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "2.1.0-SNAPSHOT.100200000011327"
+        "version": "2.1.0-SNAPSHOT.100200000011479"
       },
       {
         "name": "app-lists",
@@ -130,7 +130,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000009575"
+        "version": "1.1.0-SNAPSHOT.100200000009717"
       },
       {
         "name": "app-mosaic",
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.1.0-SNAPSHOT.100200000005555"
+        "version": "1.1.0-SNAPSHOT.100200000005696"
       },
       {
         "name": "app-reading-room",
@@ -174,11 +174,11 @@
       },
       {
         "name": "app-rtac",
-        "version": "1.2.0-SNAPSHOT.100200000010983"
+        "version": "1.2.0-SNAPSHOT.100200000011029"
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000011295"
+        "version": "1.1.0-SNAPSHOT.100200000011319"
       },
       {
         "name": "app-service-interaction",
