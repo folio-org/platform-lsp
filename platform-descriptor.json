@@ -21,7 +21,7 @@
     },
     {
       "name": "mgr-tenants",
-      "version": "4.0.0"
+      "version": "4.0.1"
     },
     {
       "name": "mgr-tenant-entitlements",
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "2.0.1"
+        "version": "2.0.2"
       },
       {
         "name": "app-ebsconet",
