@@ -1,0 +1,40 @@
+name: 'Check Applications (Snapshot)'
+description: 'Snapshot-cadence application version check: resolves versions from FAR, validates interfaces, and commits updates to the checked-out branch. Superseded by release-update-flow.yml once the snapshot branch moves onto the unified flow.'
+author: 'FOLIO Kitfox'
+
+inputs:
+  far_url:
+    description: 'FAR base URL'
+    required: true
+  log_file:
+    description: 'Path the script output is tee-ed to, for downstream error reporting'
+    required: false
+    default: '/tmp/check-apps-output.log'
+
+outputs:
+  exit_code:
+    description: 'Exit code of the check script (0 on success)'
+    value: ${{ steps.run.outputs.exit_code }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Check and update application versions'
+      id: run
+      shell: bash
+      env:
+        FAR_URL: ${{ inputs.far_url }}
+        LOG_FILE: ${{ inputs.log_file }}
+      run: |
+        echo "Running application version check..."
+
+        set +e
+        bash "${{ github.action_path }}/scripts/check-apps.sh" 2>&1 | tee "$LOG_FILE"
+        exit_code=${PIPESTATUS[0]}
+        set -e
+        echo "exit_code=${exit_code}" >> "$GITHUB_OUTPUT"
+        exit $exit_code
+
+branding:
+  icon: check-circle
+  color: green
