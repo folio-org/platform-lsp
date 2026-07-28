@@ -1,0 +1,46 @@
+name: 'Check Eureka Components (Snapshot)'
+description: 'Snapshot-cadence Eureka component version check: resolves versions from Docker Hub and commits updates to the checked-out branch. Superseded by release-update-flow.yml once the snapshot branch moves onto the unified flow.'
+author: 'FOLIO Kitfox'
+
+inputs:
+  docker_username:
+    description: 'Docker Hub username'
+    required: false
+    default: ''
+  docker_token:
+    description: 'Docker Hub token'
+    required: false
+    default: ''
+  log_file:
+    description: 'Path the script output is tee-ed to, for downstream error reporting'
+    required: false
+    default: '/tmp/check-core-output.log'
+
+outputs:
+  exit_code:
+    description: 'Exit code of the check script (0 on success)'
+    value: ${{ steps.run.outputs.exit_code }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Check and update Eureka component versions'
+      id: run
+      shell: bash
+      env:
+        DOCKERHUB_USERNAME: ${{ inputs.docker_username }}
+        DOCKERHUB_TOKEN: ${{ inputs.docker_token }}
+        LOG_FILE: ${{ inputs.log_file }}
+      run: |
+        echo "Running Eureka components version check..."
+
+        set +e
+        bash "${{ github.action_path }}/scripts/check-core.sh" 2>&1 | tee "$LOG_FILE"
+        exit_code=${PIPESTATUS[0]}
+        set -e
+        echo "exit_code=${exit_code}" >> "$GITHUB_OUTPUT"
+        exit $exit_code
+
+branding:
+  icon: check-circle
+  color: blue
