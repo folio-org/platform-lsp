@@ -9,7 +9,7 @@
     },
     {
       "name": "folio-keycloak",
-      "version": "26.6.0"
+      "version": "26.7.0"
     },
     {
       "name": "folio-module-sidecar",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "2.0.8"
+        "version": "2.0.9"
       },
       {
         "name": "app-inventory",
