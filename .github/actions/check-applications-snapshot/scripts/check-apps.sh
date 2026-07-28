@@ -34,29 +34,36 @@ compare_versions() {
     local app_name="$1"
     local current_version="$2"
     local latest_info="$3"
-    
+    local include_in_validation="$4"
+
     if [ -z "$latest_info" ]; then
         echo "❌ $app_name: Unable to fetch latest version (current: $current_version)"
         # Still add current app id to validation list even if we can't fetch latest
-        app_ids+=("${app_name}-${current_version}")
+        if [ "$include_in_validation" = "true" ]; then
+            app_ids+=("${app_name}-${current_version}")
+        fi
         return 1
     fi
-    
+
     # Split latest_info into version and id
     local latest_version=$(echo "$latest_info" | cut -d'|' -f1)
     local latest_id=$(echo "$latest_info" | cut -d'|' -f2)
-    
+
     if [ "$current_version" = "$latest_version" ]; then
         echo "✅ $app_name: Up to date ($current_version)"
         # Add current app id to the list (construct from name and version)
-        app_ids+=("${app_name}-${current_version}")
+        if [ "$include_in_validation" = "true" ]; then
+            app_ids+=("${app_name}-${current_version}")
+        fi
         return 0
     else
         echo "⚠️  $app_name: Version mismatch"
         echo "   Current: $current_version"
         echo "   Latest:  $latest_version"
         # Add newer app id to the list
-        app_ids+=("$latest_id")
+        if [ "$include_in_validation" = "true" ]; then
+            app_ids+=("$latest_id")
+        fi
         # Store update information for later use
         updates_needed+=("${app_name}:${current_version}:${latest_version}")
         return 1
@@ -89,7 +96,7 @@ while IFS='|' read -r app_name current_version; do
         total_apps=$((total_apps + 1))
         latest_info=$(get_latest_version "$app_name")
 
-        if compare_versions "$app_name" "$current_version" "$latest_info"; then
+        if compare_versions "$app_name" "$current_version" "$latest_info" "true"; then
             up_to_date=$((up_to_date + 1))
         else
             if [ -z "$latest_info" ]; then
@@ -115,7 +122,7 @@ while IFS='|' read -r app_name current_version; do
         total_apps=$((total_apps + 1))
         latest_info=$(get_latest_version "$app_name")
 
-        if compare_versions "$app_name" "$current_version" "$latest_info"; then
+        if compare_versions "$app_name" "$current_version" "$latest_info" "true"; then
             up_to_date=$((up_to_date + 1))
         else
             if [ -z "$latest_info" ]; then
@@ -127,6 +134,32 @@ while IFS='|' read -r app_name current_version; do
         echo ""
     fi
 done <<< "$optional_apps"
+
+# Process experimental applications (excluded from interface validation)
+echo "Checking experimental applications:"
+experimental_apps=$(jq -r '.applications.experimental // [] | .[] | "\(.name)|\(.version)"' platform-descriptor.json)
+while IFS='|' read -r app_name current_version; do
+    if [ -n "$app_name" ]; then
+        if [[ "$current_version" == \#* ]]; then
+            echo "$app_name: branch-pinned (${current_version}) - skipping FAR check and interface validation"
+            echo ""
+            continue
+        fi
+        total_apps=$((total_apps + 1))
+        latest_info=$(get_latest_version "$app_name")
+
+        if compare_versions "$app_name" "$current_version" "$latest_info" "false"; then
+            up_to_date=$((up_to_date + 1))
+        else
+            if [ -z "$latest_info" ]; then
+                failed=$((failed + 1))
+            else
+                outdated=$((outdated + 1))
+            fi
+        fi
+        echo ""
+    fi
+done <<< "$experimental_apps"
 
 # Summary
 echo "=== Summary ==="
@@ -184,10 +217,10 @@ if [ ${#app_ids[@]} -gt 0 ]; then
                 IFS=':' read -r app_name current_version new_version <<< "$update"
                 echo "Updating $app_name: $current_version → $new_version"
                 
-                # Use jq to update the version in the JSON file
+                # Update the version in whichever application group holds it. Selecting on
+                # type keeps this a valid path expression when a group is absent.
                 jq --arg name "$app_name" --arg new_ver "$new_version" '
-                    (.applications.required[] | select(.name == $name) | .version) = $new_ver |
-                    (.applications.optional[] | select(.name == $name) | .version) = $new_ver
+                    (.applications[] | select(type == "array") | .[] | select(.name == $name) | .version) = $new_ver
                 ' platform-descriptor.json > platform-descriptor.json.tmp && mv platform-descriptor.json.tmp platform-descriptor.json
             done
             
