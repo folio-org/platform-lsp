@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000011364"
+        "version": "2.1.0-SNAPSHOT.100200000011378"
       },
       {
         "name": "app-agreements",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000003077"
+        "version": "1.1.0-SNAPSHOT.100200000003089"
       },
       {
         "name": "app-dcb",
@@ -162,7 +162,7 @@
       },
       {
         "name": "app-requests-ecs",
-        "version": "2.1.0-SNAPSHOT.100200000010731"
+        "version": "2.1.0-SNAPSHOT.100200000010773"
       },
       {
         "name": "app-requests-mediated",
