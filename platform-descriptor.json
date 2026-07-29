@@ -5,7 +5,7 @@
   "eureka-components": [
     {
       "name": "folio-kong",
-      "version": "3.9.2"
+      "version": "3.9.6"
     },
     {
       "name": "folio-keycloak",
@@ -13,7 +13,7 @@
     },
     {
       "name": "folio-module-sidecar",
-      "version": "4.0.2"
+      "version": "4.0.0"
     },
     {
       "name": "mgr-applications",
