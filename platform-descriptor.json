@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010866"
+        "version": "2.2.0-SNAPSHOT.100200000010867"
       },
       {
         "name": "app-platform-complete",
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.1.0-SNAPSHOT.100200000006370"
+        "version": "1.1.0-SNAPSHOT.100200000006383"
       },
       {
         "name": "app-bulk-edit",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000003089"
+        "version": "1.1.0-SNAPSHOT.100200000003100"
       },
       {
         "name": "app-dcb",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000011532"
+        "version": "1.1.0-SNAPSHOT.100200000011556"
       },
       {
         "name": "app-erm-usage",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000004078"
+        "version": "1.1.0-SNAPSHOT.100200000004102"
       },
       {
         "name": "app-licenses",
@@ -126,11 +126,11 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000010704"
+        "version": "3.1.0-SNAPSHOT.100200000010751"
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000009717"
+        "version": "1.1.0-SNAPSHOT.100200000009741"
       },
       {
         "name": "app-mosaic",
@@ -182,7 +182,7 @@
       },
       {
         "name": "app-service-interaction",
-        "version": "1.1.0-SNAPSHOT.100200000010702"
+        "version": "1.1.0-SNAPSHOT.100200000010785"
       },
       {
         "name": "app-serials-management",
