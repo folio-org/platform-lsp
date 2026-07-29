@@ -1,7 +1,7 @@
 {
   "name": "FOLIO LSP (Trillium)",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2026.33",
+  "version": "R1-2026.34",
   "eureka-components": [
     {
       "name": "folio-kong",
@@ -9,7 +9,7 @@
     },
     {
       "name": "folio-keycloak",
-      "version": "26.6.0"
+      "version": "26.7.0"
     },
     {
       "name": "folio-module-sidecar",
@@ -21,7 +21,7 @@
     },
     {
       "name": "mgr-tenants",
-      "version": "4.0.0"
+      "version": "4.0.1"
     },
     {
       "name": "mgr-tenant-entitlements",
@@ -32,17 +32,17 @@
     "required": [
       {
         "name": "app-platform-complete",
-        "version": "3.3.9"
+        "version": "3.3.10"
       },
       {
         "name": "app-platform-minimal",
-        "version": "2.1.9"
+        "version": "2.1.10"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.0.15"
+        "version": "2.0.16"
       },
       {
         "name": "app-agreements",
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-dcb",
-        "version": "2.0.1"
+        "version": "2.0.2"
       },
       {
         "name": "app-ebsconet",
@@ -86,11 +86,11 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.4"
+        "version": "2.2.5"
       },
       {
         "name": "app-eholdings",
-        "version": "1.0.2"
+        "version": "1.0.3"
       },
       {
         "name": "app-erm-usage",
@@ -98,7 +98,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "2.0.6"
+        "version": "2.0.7"
       },
       {
         "name": "app-gobi",
@@ -106,11 +106,11 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "2.0.8"
+        "version": "2.0.9"
       },
       {
         "name": "app-inventory",
-        "version": "1.0.15"
+        "version": "1.0.16"
       },
       {
         "name": "app-licenses",
@@ -158,11 +158,11 @@
       },
       {
         "name": "app-rtac",
-        "version": "1.1.1"
+        "version": "1.1.2"
       },
       {
         "name": "app-search",
-        "version": "1.0.7"
+        "version": "1.0.8"
       },
       {
         "name": "app-serials-management",
