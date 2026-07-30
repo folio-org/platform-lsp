@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010867"
+        "version": "2.2.0-SNAPSHOT.100200000010881"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000010227"
+        "version": "3.4.0-SNAPSHOT.100200000010229"
       }
     ],
     "optional": [
@@ -70,7 +70,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.1.0-SNAPSHOT.100200000009386"
+        "version": "1.1.0-SNAPSHOT.100200000009497"
       },
       {
         "name": "app-data-import",
@@ -98,7 +98,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "2.1.0-SNAPSHOT.100200000011397"
+        "version": "2.1.0-SNAPSHOT.100200000011473"
       },
       {
         "name": "app-gobi",
@@ -122,7 +122,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.2.0-SNAPSHOT.100200000011323"
+        "version": "1.2.0-SNAPSHOT.100200000011403"
       },
       {
         "name": "app-marc-migrations",
@@ -146,7 +146,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "2.1.0-SNAPSHOT.100200000010666"
+        "version": "2.1.0-SNAPSHOT.100200000010953"
       },
       {
         "name": "app-quick-marc",
@@ -196,7 +196,7 @@
       },
       {
         "name": "app-rtac-cache",
-        "version": "1.1.0-SNAPSHOT.100200000005673"
+        "version": "1.1.0-SNAPSHOT.100200000007051"
       }
     ]
   },
