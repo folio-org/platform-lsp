@@ -36,13 +36,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000010189"
+        "version": "3.4.0-SNAPSHOT.100200000010227"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000011378"
+        "version": "2.1.0-SNAPSHOT.100200000011404"
       },
       {
         "name": "app-agreements",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000003100"
+        "version": "1.1.0-SNAPSHOT.100200000003112"
       },
       {
         "name": "app-dcb",
