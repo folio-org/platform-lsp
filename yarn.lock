@@ -1818,9 +1818,9 @@
     use-deep-compare "^1.1.0"
 
 "@folio/inventory@>=1.4.0":
-  version "14.1.1099000000002055"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.1.1099000000002055.tgz#975f146e9307ce961f25a69c3f3804e878194122"
-  integrity sha512-05g4mLgd+2B/ChiHMEj+Ns1fwRc5+8TM/o05/B1VekDLMSk0QPxx7wPPVNU1LROGTCxaAW2AKX/1kWcxqw9hiA==
+  version "14.1.1099000000002062"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.1.1099000000002062.tgz#da24fca9b49257621be6d15c430284903cab9bdc"
+  integrity sha512-ZaqE/zqVhuNaP/Dy+mO/Ga0kaQSW5DTGZrrv6XDPhwgf+VOGF7i2WOFBCLPjVVUAw3aTQxHd+b3TyUu8RmDu2A==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -1921,9 +1921,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/linked-data@^2.0.4":
-  version "2.0.4099000000002669"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.4099000000002669.tgz#606e31b02a0f628f3153dbe0f180160f879a80cb"
-  integrity sha512-8RwH/xxKb4sg2yBXag0KX0a+fVA52aAaNBo/amR8bz7V3IytgpkquwNEeSphnFppAaHAjEPXh/gnrSvKoAAXJQ==
+  version "2.0.4099000000002678"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.4099000000002678.tgz#be20a251c28a68e89f0f9af56e1ac5e151075e5e"
+  integrity sha512-PK3qmL5J38TiW3RAmv9YWwPRyAY9PFfOrG6EMgBFLIrgq4hTOfFCqbuUJskoubIyez8/Tuz6MBJw0itmC7ta6g==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
