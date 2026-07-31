@@ -13,7 +13,7 @@
     },
     {
       "name": "folio-module-sidecar",
-      "version": "4.0.0"
+      "version": "4.0.3"
     },
     {
       "name": "mgr-applications",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.16"
+        "version": "1.0.17"
       },
       {
         "name": "app-licenses",
