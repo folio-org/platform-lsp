@@ -1671,9 +1671,9 @@
     react-query "^3.38.1"
 
 "@folio/eholdings@>=1.1.0":
-  version "11.2.1099000000000460"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000460.tgz#81fb4e44b4f692352b22c29f426d6d55eacf20ed"
-  integrity sha512-qe8sZ2LIEZhgW8nsm7bXO9w7mmc99LF3ka5m+pS++RJ1n1G0ipOJn1+KGtCmRviLYTE9vL+vzCACv0RveDeAgg==
+  version "11.2.1099000000000471"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000471.tgz#e1701ac5921c6209aecc109bfaeec8c8f03cbc7f"
+  integrity sha512-zc/9gqS0a0GqC7XaDqkWgvZQB6pzdO6l3UWW2k24Fij8qnJv1OP1ncxXvQKrlFtT7QtQWyEkbycW8lbeabJNkw==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
@@ -5885,9 +5885,9 @@ fast-png@^6.2.0:
     pako "^2.1.0"
 
 fast-uri@^3.0.1:
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/fast-uri/-/fast-uri-3.1.4.tgz#3b3daf9ce68f41f956df0b505132c0cfce9ec7af"
-  integrity sha512-8JnbkQ4juDyvYs4mgFGQqg4yCYtFDtUtmp2QIQq11ZZe5CFQ5wcqm1rqDgAh/QdMySuBnPzMUiJUNZG5N/AiQw==
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/fast-uri/-/fast-uri-3.1.5.tgz#610f37419a030270430cecd68d74e3d4d96725d0"
+  integrity sha512-gHwA1O9LDIcKunMKhObS/HimwtehO1nPUECKAu5TpKgaO19fcWEl4bliWe1jWxVFvIXztJjjQ4L8XQ1EU9f7Jw==
 
 fast-xml-builder@^1.2.0:
   version "1.3.0"
