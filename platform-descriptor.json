@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.1.0-SNAPSHOT.100200000006383"
+        "version": "1.1.0-SNAPSHOT.100200000006412"
       },
       {
         "name": "app-bulk-edit",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000003112"
+        "version": "1.1.0-SNAPSHOT.100200000003126"
       },
       {
         "name": "app-dcb",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000011580"
+        "version": "1.1.0-SNAPSHOT.100200000011582"
       },
       {
         "name": "app-erm-usage",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000010751"
+        "version": "3.1.0-SNAPSHOT.100200000010776"
       },
       {
         "name": "app-marc-storage",
