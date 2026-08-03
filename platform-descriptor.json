@@ -9,7 +9,7 @@
     },
     {
       "name": "folio-keycloak",
-      "version": "26.8.0-SNAPSHOT.119"
+      "version": "26.8.0-SNAPSHOT.120"
     },
     {
       "name": "folio-module-sidecar",
@@ -21,7 +21,7 @@
     },
     {
       "name": "mgr-tenants",
-      "version": "4.1.0-SNAPSHOT.2145"
+      "version": "4.1.0-SNAPSHOT.2166"
     },
     {
       "name": "mgr-tenant-entitlements",
