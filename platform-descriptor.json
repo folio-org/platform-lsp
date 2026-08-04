@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000003166"
+        "version": "1.1.0-SNAPSHOT.100200000003176"
       },
       {
         "name": "app-dcb",
@@ -138,7 +138,7 @@
       },
       {
         "name": "app-notification",
-        "version": "1.1.0-SNAPSHOT.100200000006399"
+        "version": "1.1.0-SNAPSHOT.100200000006853"
       },
       {
         "name": "app-oa",
