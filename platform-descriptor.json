@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010937"
+        "version": "2.2.0-SNAPSHOT.100200000010948"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000010283"
+        "version": "3.4.0-SNAPSHOT.100200000010294"
       }
     ],
     "optional": [
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.3.0-SNAPSHOT.100200000010080"
+        "version": "2.3.0-SNAPSHOT.100200000010181"
       },
       {
         "name": "app-eholdings",
@@ -122,7 +122,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.2.0-SNAPSHOT.100200000011457"
+        "version": "1.2.0-SNAPSHOT.100200000011469"
       },
       {
         "name": "app-marc-migrations",
@@ -130,7 +130,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000009808"
+        "version": "1.1.0-SNAPSHOT.100200000009819"
       },
       {
         "name": "app-mosaic",
@@ -174,7 +174,7 @@
       },
       {
         "name": "app-rtac",
-        "version": "1.2.0-SNAPSHOT.100200000011030"
+        "version": "1.2.0-SNAPSHOT.100200000011135"
       },
       {
         "name": "app-search",
