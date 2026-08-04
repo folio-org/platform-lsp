@@ -1943,9 +1943,9 @@
     zustand "^5.0.14"
 
 "@folio/lists@>=1.2.0":
-  version "5.0.2099000000001091"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.2099000000001091.tgz#8298accf8440898ef14288415badefd37f8c9013"
-  integrity sha512-4PcJkpXOzVqRrHe6ERA//UI4HKv97ZgOFQJHrGINRzDUd6511tOpjdrFo1CpNIwIn3I9krnTpkj5yP/yqVyObA==
+  version "5.0.2099000000001094"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.2099000000001094.tgz#0cc151e5f1392e653bdd08e67beb97323ed86506"
+  integrity sha512-t++O7R82acYFq4ZxfPqbyp63SJDtQKGcOTQXI7fHHC87RnlBru2sZKGF2dU4u2N2B73L40t9pSFw40aHNDqshA==
   dependencies:
     "@folio/plugin-find-user" "^8.1.0"
     "@folio/plugin-query-builder" "^3.0.0"
