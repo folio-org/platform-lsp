@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010948"
+        "version": "2.2.0-SNAPSHOT.100200000010960"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000010295"
+        "version": "3.4.0-SNAPSHOT.100200000010305"
       }
     ],
     "optional": [
@@ -70,11 +70,11 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.1.0-SNAPSHOT.100200000009497"
+        "version": "1.1.0-SNAPSHOT.100200000009575"
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000003176"
+        "version": "1.1.0-SNAPSHOT.100200000003188"
       },
       {
         "name": "app-dcb",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000004194"
+        "version": "1.1.0-SNAPSHOT.100200000004196"
       },
       {
         "name": "app-licenses",
