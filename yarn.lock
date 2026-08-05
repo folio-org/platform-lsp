@@ -1522,9 +1522,9 @@
     "@folio/plugin-find-user" "^8.1.0"
 
 "@folio/circulation@>=1.3.0", "@folio/circulation@>=12.0.0":
-  version "12.1.1099000000000472"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/circulation/-/circulation-12.1.1099000000000472.tgz#e42f34c9205b8cf33c0edc6e1cfddb4691e08351"
-  integrity sha512-Od24xujRh66BA1Xy9RhHQNdnbECIfljGZDyCsOib8SfLh/CJzWxDAVIuSeOFL4nOAP6aIAfYWQ5PHrBk8NVM+Q==
+  version "12.1.1099000000000475"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/circulation/-/circulation-12.1.1099000000000475.tgz#e925b965cc010397f86700bdc8eec3e89790a460"
+  integrity sha512-PLOMHqJZ9gjFmKDcFu1ybmPSUD/T2tbDE1Aji83BeU5uqVpcYgc4pLMQuy6/0FsCY2n/0UhcG8LhizLlXj1npw==
   dependencies:
     "@folio/stripes-template-editor" "^3.2.0"
     codemirror "^5.61.1"
