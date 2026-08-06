@@ -10,9 +10,30 @@ on:
         required: true
         type: string
       update_branch:
-        description: 'Update branch name for this release branch'
-        required: true
+        description: 'Update branch name for this release branch (empty when need_pr is false)'
+        required: false
         type: string
+        default: ''
+      need_pr:
+        description: 'Deliver the update as a PR on update_branch; when false commit straight to release_branch'
+        required: false
+        type: boolean
+        default: true
+      pre_release:
+        description: "FAR preRelease filter: 'false', 'true' or 'only' (pre-release cadence)"
+        required: false
+        type: string
+        default: 'false'
+      descriptor_build_offset:
+        description: 'Offset added to the run number to form the platform build number (pre-release cadence)'
+        required: false
+        type: string
+        default: ''
+      skip_interface_validation:
+        description: 'Skip the inline FAR platform validation used by the direct-commit cadence'
+        required: false
+        type: boolean
+        default: false
       dry_run:
         description: 'Perform dry run without creating PRs'
         required: false
@@ -101,6 +122,10 @@ jobs:
       repo: ${{ github.repository }}
       release_branch: ${{ inputs.release_branch }}
       update_branch: ${{ inputs.update_branch }}
+      need_pr: ${{ inputs.need_pr }}
+      pre_release: ${{ inputs.pre_release }}
+      descriptor_build_offset: ${{ inputs.descriptor_build_offset }}
+      skip_interface_validation: ${{ inputs.skip_interface_validation }}
       workflow_run_number: ${{ github.run_number }}
       dry_run: ${{ inputs.dry_run }}
       pr_reviewers: ${{ inputs.pr_reviewers }}
