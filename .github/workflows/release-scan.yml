@@ -59,6 +59,10 @@ jobs:
     with:
       release_branch: ${{ matrix.branch }}
       update_branch: ${{ matrix.update_branch }}
+      need_pr: ${{ matrix.need_pr }}
+      pre_release: ${{ matrix.pre_release }}
+      descriptor_build_offset: ${{ matrix.descriptor_build_offset }}
+      skip_interface_validation: ${{ matrix.skip_interface_validation }}
       dry_run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
       pr_reviewers: ${{ needs.get-config.outputs.pr_reviewers }}
       pr_labels: ${{ needs.get-config.outputs.pr_labels }}
