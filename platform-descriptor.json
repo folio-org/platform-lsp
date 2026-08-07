@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010970"
+        "version": "2.2.0-SNAPSHOT.100200000010988"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000010328"
+        "version": "3.4.0-SNAPSHOT.100200000010334"
       }
     ],
     "optional": [
@@ -98,7 +98,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "2.1.0-SNAPSHOT.100200000011544"
+        "version": "2.1.0-SNAPSHOT.100200000011572"
       },
       {
         "name": "app-gobi",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000004216"
+        "version": "1.1.0-SNAPSHOT.100200000004224"
       },
       {
         "name": "app-licenses",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000011425"
+        "version": "1.1.0-SNAPSHOT.100200000011452"
       },
       {
         "name": "app-service-interaction",
