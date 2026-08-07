@@ -34,13 +34,6 @@ on:
         required: false
         type: boolean
         default: false
-      docker_org:
-        description: >-
-          Docker Hub namespace for Eureka component tags. Empty resolves per channel:
-          folioci when pre_release is 'only', otherwise folioorg.
-        required: false
-        type: string
-        default: ''
       dry_run:
         description: 'Perform dry run without creating PRs'
         required: false
@@ -133,7 +126,6 @@ jobs:
       pre_release: ${{ inputs.pre_release }}
       descriptor_build_offset: ${{ inputs.descriptor_build_offset }}
       skip_interface_validation: ${{ inputs.skip_interface_validation }}
-      docker_org: ${{ inputs.docker_org }}
       workflow_run_number: ${{ github.run_number }}
       dry_run: ${{ inputs.dry_run }}
       pr_reviewers: ${{ inputs.pr_reviewers }}
