@@ -15,7 +15,6 @@ branches:
       need_pr: false
       pre_release: "only"
       descriptor_build_offset: "100200000000000"
-      docker_org: "folioci"
   - R1-2025-ci:
       enabled: true
       name: "FOLIO R1-2025 (Sunflower) Version"
