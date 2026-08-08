@@ -9,7 +9,7 @@ update_config:
 
 branches:
   - snapshot:
-      enabled: true
+      enabled: false
       name: "FOLIO Snapshot Version"
       description: "FOLIO Snapshot LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system."
       need_pr: false
