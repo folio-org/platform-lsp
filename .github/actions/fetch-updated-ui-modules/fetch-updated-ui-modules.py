@@ -212,8 +212,19 @@ def fetch_app_descriptor(api_url: str, app_name: str, app_version: str, timeout:
 
 
 def fetch_all_descriptors(api_url: str, applications: List[Dict[str, str]], max_workers: int = 5) -> List[Tuple[Dict[str, str], Optional[Dict[str, Any]]]]:
-  """Fetch multiple application descriptors concurrently."""
+  """Fetch multiple application descriptors concurrently.
+
+  Branch-pinned entries (#<branch>) are skipped explicitly rather than left to fail. Their
+  descriptor is not in FAR, and urllib strips everything from the '#' onwards — the request
+  would go out as '/applications/<app>-', 404, and be swallowed as a warning, leaving that
+  application's UI modules silently frozen in package.json.
+  """
   results: List[Tuple[Dict[str, str], Optional[Dict[str, Any]]]] = []
+  pinned = [a for a in applications if str(a.get('version', '')).startswith('#')]
+  if pinned:
+    names = ', '.join(f"{a.get('name')} ({a.get('version')})" for a in pinned)
+    print(f"::notice::Skipping branch-pinned applications, not present in FAR: {names}")
+  applications = [a for a in applications if not str(a.get('version', '')).startswith('#')]
   with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
     future_to_app = {
       executor.submit(fetch_app_descriptor, api_url, app.get('name', ''), app.get('version', '')): app
