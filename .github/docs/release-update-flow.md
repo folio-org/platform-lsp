@@ -2,7 +2,92 @@
 
 **Core execution workflow for automated platform release updates**
 
-The Release Update Flow (`release-update-flow.yml`) is the execution engine that performs the actual work of updating platform descriptors and UI dependencies for FOLIO release branches. It orchestrates multi-stage updates, generates diff reports, commits changes, and manages pull requests.
+The Release Update Flow (`release-update-flow.yml`) is the execution engine that performs the actual work of updating platform descriptors and UI dependencies. It orchestrates multi-stage updates, generates diff reports, commits changes, and manages pull requests.
+
+Since RANCHER-3069 it serves **both** cadences — the release branches and `snapshot`. There is no separate implementation for snapshot; every branch is an entry in `.github/update-config.yml` and the differences are inputs, not code paths.
+
+## 🔀 Cadences
+
+| Concern | PR cadence (`need_pr: true`) | Direct-commit cadence (`need_pr: false`) |
+|---|---|---|
+| Branches | `R1-2025-ci`, `R1-2026` | `snapshot` |
+| Application versions | FAR, entries declare `preRelease: false` | FAR, entries declare `preRelease: only` |
+| Eureka component versions | Docker Hub `folioorg` tags | Docker Hub `folioci` tags |
+| Resolution scope | the template constraint, per entry | the template constraint, per entry |
+| Platform version | patch bump (no `descriptor_build_offset` set) | `<template version>.<offset + run_number>` |
+| `package.json` | UI modules pinned to exact versions | untouched (deliberate `>=` floors); `yarn.lock` refreshed |
+| Delivery | commit on `update_branch`, then PR | commit straight to the branch |
+| FAR validation | `release-pr-check.yml` on the PR | `validate-platform` inline, before the push |
+
+Component resolution is one algorithm for both: list the Docker Hub tags of the namespaces the entry's `preRelease` implies, following pagination, discard `latest`, filter by the template constraint and channel, take the newest by **semver**. Docker Hub orders tags by push time — `folioorg/mgr-tenants` returns `3.0.8, 4.0.1, 3.0.7, 4.0.0 …` because patches to an older line continue after a new major — so the returned order is never trusted.
+
+**Every** branch reads its constraints from `platform-descriptor-template.json` on the branch being updated. A missing template fails the run — falling back to the descriptor would keep two resolution models alive, which is what RANCHER-3069 removed.
+
+| constraint | meaning |
+|---|---|
+| `latest` | no window — newest in the declared `preRelease` channel |
+| `^X.Y.Z` | minor scope |
+| `~X.Y.Z` | patch scope |
+| `X.Y.Z` | exact pin, never queried |
+| `#<branch>` | branch pin, applications only — never queried, carried through verbatim |
+
+Release branches use ranges; `snapshot` uses `latest`. Nothing enforces that split — the validator does not know which branch it is running on — but a range on `snapshot` binds every entry to its current major, and at release preparation nearly every application bumps its major at once.
+
+## 📐 Resolution rule
+
+> Take the newest version satisfying the entry's constraint. If there is none, fail with the entry's name.
+
+There is no "keep what was there" path. A registry outage, an empty response and an all-out-of-scope response all stop the run, because a descriptor mixing one stale version with forty fresh ones is a combination nobody validated — it fails later at `/applications/validate-descriptors`, where the cause is far harder to see. A failed run is a signal to find out why the platform stopped moving.
+
+Because nothing is preserved, the resolvers never read `platform-descriptor.json`; the template is the only input.
+
+Nothing but a concrete version — or a branch pin, see below — may be written back. `assert_resolved` checks every entry before either action emits anything, because a leaked constraint does not self-heal: the next run would resolve to the same constraint the descriptor already holds, report "no changes", and skip the write, the reports and the commit — hourly, indefinitely.
+
+### Branch pins
+
+An application entry may read `"version": "#<branch>"` (RANCHER-2880). It is never queried and the literal reaches `platform-descriptor.json` untouched; the descriptor for such an application is the `application.lock.json` committed to that branch, which kitfox-github's `validate-application` fetches from GitHub raw.
+
+Two steps in this flow skip pinned entries explicitly rather than letting them fail:
+
+- `validate-platform` — FAR has no such version, and both `curl` and `urllib` truncate a URL at `#`, so the request would go out as `/applications/<app>-` and 404. The filter sits in the jq that builds the fetch list, so `application_count` reflects what is actually fetched. Note the cost: the pinned application's `provides` leave the validation payload with it, so pinning a platform base produces unresolved-dependency errors that come from the exclusion, not from a real conflict. The step warns about this.
+- `fetch-updated-ui-modules` — same truncation, but it swallows the 404 as a warning, which would leave that application's UI modules silently frozen in `package.json`.
+
+`folio-release-creator` deliberately does **not** skip them: packaging a tagged release whose descriptor pins a feature branch should fail loudly.
+
+Branch pins are applications-only; `update-eureka-components` rejects them. RANCHER-3070 will turn the skip into a resolution to the version built from that branch.
+
+### The `latest` keyword
+
+`latest` is the same word the `app-*` templates use for module versions, where `folio-application-generator` resolves it in the descriptor-loader layer (`OkapiModuleDescriptorLoader` sends `latest=1`, `S3ModuleDescriptorLoader` takes the newest object) rather than through `semver4j`. It is also what the retired bash path did: `check-apps.sh` asked FAR for `latest=1` and took `.applicationDescriptors[0].version` with no comparison at all.
+
+Two other things in these files are also spelled `latest` and are unrelated: FAR's `latest=N` query parameter caps how many recent versions the server returns, and the Docker Hub tag alias `latest` is discarded at fetch time, before any filtering.
+
+### Range windows
+
+For the range forms, the window matches how `semver4j` — the engine behind `/applications/validate-descriptors` — expands it, with `includePreRelease` set as `mgr-applications` sets it:
+
+```
+^2.1.0           ->  >=2.1.0           and <3.0.0-0
+^2.1.0-SNAPSHOT  ->  >=2.1.0-SNAPSHOT  and <3.0.0-0
+
+                        2.1.0-SNAPSHOT.11500   2.2.0-SNAPSHOT.10   2.1.0   3.0.0-SNAPSHOT
+^2.1.0                        no                     yes            yes         no
+^2.1.0-SNAPSHOT               yes                    yes            yes         no
+```
+
+A range on a pre-release branch therefore has to anchor on a pre-release stem: under `^2.1.0` the branch's own `2.1.0-SNAPSHOT.N` builds fall below the lower bound (SemVer rule 11.3).
+
+## 🏷️ `preRelease` per entry
+
+Each template entry may carry `preRelease`, the same `false` | `true` | `only` filter `folio-application-generator` reads from an application template. It defaults to `false` and drives three things at once:
+
+| `preRelease` | FAR query | candidates kept | Docker Hub namespaces |
+|---|---|---|---|
+| `false` | `preRelease=false` | releases only | `folioorg` |
+| `true` | `preRelease=true` | both | `folioorg` + `folioci`, merged |
+| `only` | `preRelease=only` | pre-releases only | `folioci` |
+
+The channel belongs to the entry, not the branch: one branch can legitimately need both namespaces. The branch-level `pre_release` key in `update-config.yml` is declared and unused, exactly as it is in kitfox-github's `application-update-flow.yml`.
 
 ## 🎯 Purpose
 
@@ -47,8 +132,12 @@ flowchart TD
 | Input | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
 | `repo` | string | ✓ | - | Repository name (`org/repo` format) |
-| `release_branch` | string | ✓ | - | Release branch to update (e.g., `R1-2025`) |
-| `update_branch` | string | ✓ | - | Update branch name for changes |
+| `release_branch` | string | ✓ | - | Branch to update (e.g., `R1-2026`, `snapshot`) |
+| `update_branch` | string | ✗ | `''` | Update branch; unused when `need_pr` is `false` |
+| `need_pr` | boolean | ✗ | `true` | Deliver as a PR; when `false` commit straight to `release_branch` |
+| `pre_release` | string | ✗ | `'false'` | Declared and unused; the channel is `preRelease` on each template entry |
+| `descriptor_build_offset` | string | ✗ | `''` | Offset added to the run number to form the platform build number |
+| `skip_interface_validation` | boolean | ✗ | `false` | Skip the inline `validate-platform` gate |
 | `workflow_run_number` | string | ✓ | - | GitHub run number for display |
 | `dry_run` | boolean | ✗ | `false` | Skip PR creation (validation mode) |
 | `pr_reviewers` | string | ✗ | `''` | Reviewers (comma-separated, `org/team` for teams) |
@@ -82,13 +171,14 @@ flowchart TD
 ### 2. update-platform-descriptor
 **Updates platform-descriptor.json with latest component versions**
 
-- Fetches base descriptor from release branch
-- Queries FOLIO Artifact Repository for latest versions of:
-  - Eureka components (backend modules)
-  - Applications (app descriptors)
-- Compares with current versions
-- Calculates new platform version (patch increment)
-- Generates updated descriptor artifact
+- Fetches the base descriptor from the release branch (for the diff report)
+- Requires and validates `platform-descriptor-template.json`
+- Resolves every entry to the newest version in its constraint window, failing if any entry has none:
+  - Eureka components from Docker Hub
+  - Applications from the FOLIO Application Registry
+- Diffs the result against the descriptor to decide whether anything changed
+- Calculates the new platform version — patch increment, or `<stem>.<offset + run_number>` when `descriptor_build_offset` is set
+- Generates the updated descriptor artifact
 
 **Outputs**: `updated`, `updated_components`, `updated_applications`, `new_version`, `failure_reason`
 
@@ -223,8 +313,9 @@ Prevents simultaneous updates to the same release/update branch combination.
 
 - `check-branch-and-pr-status` - Branch and PR detection
 - `fetch-base-file` - Base file retrieval for diffs
-- `update-eureka-components` - Backend component updates
-- `update-applications` - Application descriptor updates
+- `validate-descriptor-template` - Constraint and `preRelease` grammar check
+- `update-eureka-components` - Component resolution from Docker Hub
+- `update-applications` - Application resolution from FAR
 - `fetch-updated-ui-modules` - UI module version mapping
 - `update-package-json` - Dependency synchronization
 - `calculate-version-increment` - Version calculation

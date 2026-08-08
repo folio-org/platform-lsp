@@ -33,8 +33,12 @@ flowchart LR
 
 | Input | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
-| `release_branch` | string | ✓ | - | Release branch to scan (e.g., `R1-2025`) |
-| `update_branch` | string | ✓ | - | Update branch name for this release |
+| `release_branch` | string | ✓ | - | Branch to scan (e.g., `R1-2026`, `snapshot`) |
+| `update_branch` | string | ✗ | `''` | Update branch; unused when `need_pr` is `false` |
+| `need_pr` | boolean | ✗ | `true` | Deliver as a PR; when `false` commit straight to `release_branch` |
+| `pre_release` | string | ✗ | `'false'` | Declared and unused; the channel is `preRelease` on each template entry |
+| `descriptor_build_offset` | string | ✗ | `''` | Offset added to the run number to form the platform build number |
+| `skip_interface_validation` | boolean | ✗ | `false` | Skip the inline `validate-platform` gate |
 | `dry_run` | boolean | ✗ | `false` | Perform dry run without creating PRs |
 | `pr_reviewers` | string | ✗ | `''` | Comma-separated reviewers (users or `org/team`) |
 | `pr_labels` | string | ✗ | `''` | Comma-separated PR labels |
