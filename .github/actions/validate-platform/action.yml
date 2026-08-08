@@ -59,10 +59,23 @@ runs:
         echo "::notice::Platform descriptor loaded successfully"
 
         mkdir -p /tmp/app-descriptors
-        platform_apps=$(jq -c '
+
+         all_apps=$(jq -c '
           [.applications.required[]?, .applications.optional[]?]
           | map({name: .name, version: .version})
         ' "$PLATFORM_DESCRIPTOR.json")
+
+        pinned=$(echo "$all_apps" | jq -r '
+          map(select(.version | tostring | startswith("#"))) | map("\(.name) (\(.version))") | join(", ")
+        ')
+        if [[ -n "$pinned" ]]; then
+          echo "::notice::Skipping branch-pinned applications, not present in FAR: $pinned"
+          echo "::warning::Branch-pinned applications are excluded from the validation payload, so the interfaces they provide are unavailable to the rest. If a pinned application is a platform base (app-platform-minimal / app-platform-complete), expect unresolved-dependency errors that stem from the exclusion rather than from a real conflict."
+        fi
+
+        platform_apps=$(echo "$all_apps" | jq -c '
+          map(select((.version | tostring | startswith("#")) | not))
+        ')
 
         app_count=$(echo "$platform_apps" | jq 'length')
         echo "::notice::Found $app_count applications in platform descriptor"
