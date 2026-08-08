@@ -12,9 +12,30 @@ on:
         required: true
         type: string
       update_branch:
-        description: 'Update branch name for this release branch'
-        required: true
+        description: 'Update branch name for this release branch (empty when need_pr is false)'
+        required: false
         type: string
+        default: ''
+      need_pr:
+        description: 'Deliver the update as a PR on update_branch; when false commit straight to release_branch'
+        required: false
+        type: boolean
+        default: true
+      pre_release:
+        description: "FAR preRelease filter: 'false', 'true' or 'only' (pre-release cadence)"
+        required: false
+        type: string
+        default: 'false'
+      descriptor_build_offset:
+        description: 'Offset added to the run number to form the platform build number (pre-release cadence)'
+        required: false
+        type: string
+        default: ''
+      skip_interface_validation:
+        description: 'Skip the inline FAR platform validation used by the direct-commit cadence'
+        required: false
+        type: boolean
+        default: false
       workflow_run_number:
         description: 'GitHub run number for display'
         required: true
@@ -56,7 +77,7 @@ on:
         value: ${{ jobs.manage-pr.outputs.pr_url }}
       workflow_status:
         description: 'Overall workflow status (success/failure)'
-        value: ${{ (jobs.update-platform-descriptor.result == 'failure' || jobs.commit-changes.result == 'failure' || jobs.manage-pr.result == 'failure') && 'failure' || 'success' }}
+        value: ${{ (jobs.update-platform-descriptor.result == 'failure' || jobs.validate-platform.result == 'failure' || jobs.commit-changes.result == 'failure' || jobs.manage-pr.result == 'failure') && 'failure' || 'success' }}
       failure_reason:
         description: 'Reason for workflow failure if any'
         value: ${{ jobs.update-platform-descriptor.outputs.failure_reason || '' }}
@@ -99,8 +120,10 @@ defaults:
 
 env:
   STATE_FILE: platform-descriptor.json
+  TEMPLATE_FILE: platform-descriptor-template.json
   FAR_URL: 'https://far.ci.folio.org'
   GH_TOKEN: ${{ github.token }}
+  DESCRIPTOR_ARTIFACT: 'platform-descriptor-files-${{ github.run_id }}-${{ inputs.release_branch }}'
 
 jobs:
   determine-source-branch:
@@ -110,19 +133,24 @@ jobs:
       contents: read
       pull-requests: read
     outputs:
-      source_branch: ${{ steps.check-status.outputs.source_branch }}
-      update_branch_exists: ${{ steps.check-status.outputs.update_branch_exists }}
-      pr_exists: ${{ steps.check-status.outputs.pr_exists }}
-      pr_number: ${{ steps.check-status.outputs.pr_number }}
-      pr_url: ${{ steps.check-status.outputs.pr_url }}
+      source_branch: ${{ inputs.need_pr && steps.check-status.outputs.source_branch || inputs.release_branch }}
+      update_branch_exists: ${{ inputs.need_pr && steps.check-status.outputs.update_branch_exists || 'false' }}
+      pr_exists: ${{ inputs.need_pr && steps.check-status.outputs.pr_exists || 'false' }}
+      pr_number: ${{ inputs.need_pr && steps.check-status.outputs.pr_number || '' }}
+      pr_url: ${{ inputs.need_pr && steps.check-status.outputs.pr_url || '' }}
     steps:
       - name: 'Check branch and PR status'
         id: check-status
+        if: inputs.need_pr
         uses: folio-org/platform-lsp/.github/actions/check-branch-and-pr-status@master
         with:
           repo: ${{ inputs.repo }}
           release_branch: ${{ inputs.release_branch }}
           update_branch: ${{ inputs.update_branch }}
+
+      - name: 'Report direct-commit cadence'
+        if: ${{ !inputs.need_pr }}
+        run: echo "::notice::need_pr is false; updates commit directly to '${{ inputs.release_branch }}'"
 
   update-platform-descriptor:
     name: 'Update Platform Descriptor'
@@ -149,6 +177,7 @@ jobs:
       # this step can be removed.
       - name: 'Sync Application Descriptors to FAR'
         id: sync-to-far
+        if: inputs.need_pr
         uses: folio-org/platform-lsp/.github/actions/sync-applications-to-far@master
         with:
           descriptor-path: ${{ env.STATE_FILE }}
@@ -169,22 +198,19 @@ jobs:
           validate_json: true
           fail_on_missing: true
 
-      - name: 'Detect descriptor template'
+      - name: 'Resolve descriptor template'
         id: detect-template
         run: |
-          TEMPLATE_FILE="platform-descriptor-template.json"
-          if [ -f "$TEMPLATE_FILE" ]; then
-            echo "template_exists=true" >> "$GITHUB_OUTPUT"
-            echo "source_file=$TEMPLATE_FILE" >> "$GITHUB_OUTPUT"
-            echo "::notice::Template file found: $TEMPLATE_FILE"
-          else
-            echo "template_exists=false" >> "$GITHUB_OUTPUT"
-            echo "source_file=$STATE_FILE" >> "$GITHUB_OUTPUT"
-            echo "::notice::No template found; using $STATE_FILE"
+          set -euo pipefail
+          IFS=$'\n\t'
+          if [ ! -f "$TEMPLATE_FILE" ]; then
+            echo "::error::No descriptor template on branch '${{ needs.determine-source-branch.outputs.source_branch }}': expected '$TEMPLATE_FILE'"
+            exit 1
           fi
+          echo "source_file=$TEMPLATE_FILE" >> "$GITHUB_OUTPUT"
+          echo "::notice::Template file: $TEMPLATE_FILE"
 
       - name: 'Validate descriptor template'
-        if: steps.detect-template.outputs.template_exists == 'true'
         uses: folio-org/platform-lsp/.github/actions/validate-descriptor-template@master
         with:
           template-file: ${{ steps.detect-template.outputs.source_file }}
@@ -198,27 +224,20 @@ jobs:
           validate-schema: 'true'
           expected-types: '{"eureka-components":"array","applications":"object"}'
 
-      - name: 'Build constraint map from template'
-        id: build-constraint-map
-        if: steps.detect-template.outputs.template_exists == 'true'
-        uses: folio-org/platform-lsp/.github/actions/build-constraint-map@master
-        with:
-          eureka-components: ${{ steps.read-descriptor.outputs.eureka-components }}
-          applications: ${{ steps.read-descriptor.outputs.applications }}
-
       - name: 'Update Eureka Components'
         id: update-eureka-components
         uses: folio-org/platform-lsp/.github/actions/update-eureka-components@master
         with:
           components: ${{ steps.read-descriptor.outputs.eureka-components }}
-          constraint-map: ${{ steps.build-constraint-map.outputs.component-constraint-map || '{}' }}
+          docker-username: ${{ secrets.DOCKERHUB_USERNAME }}
+          docker-password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: 'Update Applications'
         id: update-applications
         uses: folio-org/platform-lsp/.github/actions/update-applications@master
         with:
           applications: ${{ steps.read-descriptor.outputs.applications }}
-          constraint-map: ${{ steps.build-constraint-map.outputs.app-constraint-map || '{}' }}
+          far-base-url: ${{ env.FAR_URL }}
 
       - name: 'Compare Components & Applications'
         id: compare-components
@@ -242,10 +261,23 @@ jobs:
           echo "::notice::PR already open — using release branch version ($RELEASE_VERSION) as base to avoid re-incrementing on each scan"
           echo "release_version=$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
 
+      - name: 'Read template version stem'
+        id: version-stem
+        env:
+          TEMPLATE_FILE: ${{ steps.detect-template.outputs.source_file }}
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          echo "value=$(jq -r '.version // empty' "$TEMPLATE_FILE")" >> "$GITHUB_OUTPUT"
+
       - name: 'Calculate New Version'
         id: calculate-new-version
         uses: folio-org/platform-lsp/.github/actions/calculate-version-increment@master
         with:
+          mode: ${{ inputs.descriptor_build_offset != '' && 'build-number' || 'increment' }}
+          base_version: ${{ steps.version-stem.outputs.value }}
+          build_offset: ${{ inputs.descriptor_build_offset }}
+          run_number: ${{ inputs.workflow_run_number }}
           current_version: ${{ needs.determine-source-branch.outputs.pr_exists == 'true' && steps.extract-release-version.outputs.release_version || steps.compare-components.outputs.previous_version }}
           changes_detected: ${{ steps.compare-components.outputs.changes_detected }}
 
@@ -273,7 +305,7 @@ jobs:
         if: steps.calculate-new-version.outputs.updated == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: 'platform-descriptor-files-${{ github.run_id }}-${{ inputs.release_branch }}'
+          name: ${{ env.DESCRIPTOR_ARTIFACT }}
           path: |
             ${{ env.STATE_FILE }}
             ${{ steps.fetch-base-descriptor.outputs.file_path }}
@@ -309,6 +341,7 @@ jobs:
 
       - name: 'Fetch updated UI modules list'
         id: fetch-updated-ui-modules
+        if: inputs.need_pr
         uses: folio-org/platform-lsp/.github/actions/fetch-updated-ui-modules@master
         with:
           applications: ${{ needs.update-platform-descriptor.outputs.updated_applications }}
@@ -317,6 +350,7 @@ jobs:
 
       - name: 'Fetch base package.json'
         id: fetch-base-package-json
+        if: inputs.need_pr
         uses: folio-org/platform-lsp/.github/actions/read-file@master
         with:
           file_path: package.json
@@ -329,7 +363,7 @@ jobs:
 
       - name: 'Update package.json dependencies'
         id: update-package-json
-        if: steps.fetch-updated-ui-modules.outputs.ui-modules != ''
+        if: inputs.need_pr && steps.fetch-updated-ui-modules.outputs.ui-modules != ''
         uses: folio-org/platform-lsp/.github/actions/update-package-json@master
         with:
           package-json: ${{ steps.read-package-json.outputs.file_content }}
@@ -399,7 +433,7 @@ jobs:
       - name: 'Download Platform Descriptor Artifact'
         uses: actions/download-artifact@v4
         with:
-          name: 'platform-descriptor-files-${{ github.run_id }}-${{ inputs.release_branch }}'
+          name: ${{ env.DESCRIPTOR_ARTIFACT }}
           path: .
 
       - name: 'Download Stripes Artifact'
@@ -487,14 +521,35 @@ jobs:
           if-no-files-found: warn
           retention-days: 1
 
+  validate-platform:
+    name: 'Validate Platform'
+    needs: update-platform-descriptor
+    if: |
+      !inputs.need_pr &&
+      !inputs.skip_interface_validation &&
+      needs.update-platform-descriptor.outputs.updated == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Validate platform descriptor against FAR'
+        uses: folio-org/platform-lsp/.github/actions/validate-platform@master
+        with:
+          platform_descriptor_artifact_name: ${{ env.DESCRIPTOR_ARTIFACT }}
+          far_url: ${{ env.FAR_URL }}
+
   commit-changes:
     name: 'Commit and Push Changes'
-    needs: [determine-source-branch, update-platform-descriptor, update-stripes-components, generate-reports]
-    if: needs.update-platform-descriptor.outputs.updated == 'true'
+    needs: [determine-source-branch, update-platform-descriptor, update-stripes-components, generate-reports, validate-platform]
+    if: |
+      always() &&
+      !cancelled() &&
+      needs.update-platform-descriptor.outputs.updated == 'true' &&
+      needs.update-stripes-components.result != 'failure' &&
+      needs.generate-reports.result == 'success' &&
+      (inputs.need_pr || needs.validate-platform.result != 'failure')
     uses: folio-org/kitfox-github/.github/workflows/commit-and-push-changes.yml@master
     with:
       repo: ${{ inputs.repo }}
-      branch: ${{ inputs.update_branch }}
+      branch: ${{ inputs.need_pr && inputs.update_branch || inputs.release_branch }}
       artifact_name: ${{ needs.generate-reports.outputs.artifact_name || 'platform-lsp-update-files' }}
       commit_message: |
         Update platform to ${{ needs.update-platform-descriptor.outputs.new_version }}.
@@ -511,6 +566,7 @@ jobs:
     needs: [determine-source-branch, update-platform-descriptor, update-stripes-components, generate-reports, commit-changes]
     if: |
       always() &&
+      inputs.need_pr &&
       !inputs.dry_run &&
       !cancelled() &&
       needs.update-platform-descriptor.result == 'success' &&
