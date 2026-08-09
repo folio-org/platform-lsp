@@ -1,0 +1,255 @@
+{
+  "name": "FOLIO LSP",
+  "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
+  "version": "R2-2025-SNAPSHOT",
+  "eureka-components": [
+    {
+      "name": "folio-kong",
+      "version": "latest",
+      "preRelease": "only"
+    },
+    {
+      "name": "folio-keycloak",
+      "version": "latest",
+      "preRelease": "only"
+    },
+    {
+      "name": "folio-module-sidecar",
+      "version": "latest",
+      "preRelease": "only"
+    },
+    {
+      "name": "mgr-applications",
+      "version": "latest",
+      "preRelease": "only"
+    },
+    {
+      "name": "mgr-tenants",
+      "version": "latest",
+      "preRelease": "only"
+    },
+    {
+      "name": "mgr-tenant-entitlements",
+      "version": "latest",
+      "preRelease": "only"
+    }
+  ],
+  "dependencies": {
+    "postgres": ">=16.0",
+    "kafka": ">=3.8.0",
+    "opensearch": ">=3.0.0"
+  },
+  "applications": {
+    "required": [
+      {
+        "name": "app-platform-minimal",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-platform-complete",
+        "version": "latest",
+        "preRelease": "only"
+      }
+    ],
+    "optional": [
+      {
+        "name": "app-acquisitions",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-agreements",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-authority-records",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-bulk-edit",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-consortia",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-consortia-manager",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-dashboard",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-data-export",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-data-import",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-dcb",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-ebsconet",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-edge-complete",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-eholdings",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-erm-usage",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-fqm",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-gobi",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-inn-reach",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-inventory",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-licenses",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-linked-data",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-lists",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-marc-migrations",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-marc-storage",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-mosaic",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-notification",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-oa",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-oai-pmh",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-quick-marc",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-reading-room",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-reporting",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-requests-ecs",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-requests-mediated",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-requests-mediated-ui",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-rtac",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-search",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-service-interaction",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-serials-management",
+        "version": "latest",
+        "preRelease": "only"
+      }
+    ],
+    "experimental": [
+      {
+        "name": "app-finc",
+        "version": "latest",
+        "preRelease": "only"
+      },
+      {
+        "name": "app-rtac-cache",
+        "version": "latest",
+        "preRelease": "only"
+      }
+    ]
+  }
+}
