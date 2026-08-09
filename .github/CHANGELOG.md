@@ -19,13 +19,13 @@ actions are superseded, and removed in a follow-up once a scheduled run has been
 
 #### One flow, one model: the descriptor template is mandatory
 
-Every branch the flow processes declares its constraints in `platform-descriptor-template.json`.
+Every branch the flow processes declares its constraints in `platform-descriptor.template.json`.
 `detect-template` no longer falls back to `platform-descriptor.json` when the template is
 missing — it fails, because a fallback keeps two resolution models alive.
 `validate-descriptor-template` therefore always runs. The `snapshot` branch gains a template using
 `latest` with `preRelease: "only"` across all six components and all three application groups.
 
-A release branch produced by `release-preparation-orchestrator.yml` writes `platform.template.json`,
+A release branch produced by `release-preparation-orchestrator.yml` writes `platform-descriptor.template.json`,
 a name the flow does not look for; such a branch now fails loudly rather than silently resolving
 against the descriptor. That is the pre-existing filename defect surfacing, not a new regression.
 
@@ -248,6 +248,65 @@ detector was `validate-platform` 404-ing on `app-acquisitions-latest`, and that 
 
 `filter_versions` also rejects an unrecognised scope outright. Previously such a token fell past
 both branches and silently meant "no upper bound" — a licence to jump majors.
+
+#### One template filename
+
+Three names for the same concept were live at once: `platform.template.json` on `master`,
+`platform-descriptor-template.json` on the release branches, and nothing at all on `snapshot`.
+All of them become **`platform-descriptor.template.json`**.
+
+This is not cosmetic. `release-preparation-orchestrator.yml` checks out `previous_release_branch`
+and requires its template *on that branch*, but only `master` ever carried the name it looked for —
+so `prepare-platform` hard-fails today for any real release branch. Unifying the name is the fix.
+
+Only two bindings exist (`release-update-flow.yml`'s `TEMPLATE_FILE` and the orchestrator's
+`PLATFORM_TEMPLATE_FILE`) — every action takes the path as an input, so nothing else changes.
+
+No legacy-name fallback: this PR and the two branch-rename PRs merge in the same window. A
+fallback would have meant two accepted names indefinitely, which is the same class of problem as
+the two resolution models this ticket removed.
+
+A side effect worth knowing: a newly cut branch used to inherit the previous release's template
+*and* receive the orchestrator's under a different name, and the flow read the stale inherited
+one. One name makes the artifact overwrite it.
+
+#### Added: a branch that is not ready yet no longer fails or stalls
+
+**Unresolved placeholders warn instead of failing.** The orchestrator seeds component versions as
+`^VERSION_<x>` for a human to replace. `validate-descriptor-template` rejected those as a hard
+error, so a freshly prepared branch failed loudly every hour.
+
+It now classifies them as *pending* rather than *invalid*: warn, set `valid=false`, **exit 0** —
+the same shape `generate-application-descriptor` already uses for `application.template.json`. A
+genuinely malformed constraint still exits 1. "Not yet" and "wrong" are different answers.
+
+The action gains `valid` and `failure_reason` outputs; the three resolver steps and `manage-pr`
+gate on `valid`. Everything else already keys off `updated`, which is empty when the resolvers
+are skipped. `manage-pr` needs its own gate because it runs under `always()` with a disjunction —
+without it, a branch with a leftover update branch and no open PR would get one titled "Release:
+Update to No updates".
+
+**The first run on a new branch now creates the descriptor.** The orchestrator deletes
+`platform-descriptor.json` when it cuts a branch, so the first scan has nothing to update.
+
+`Apply Descriptor Updates` reads the template when the descriptor is absent. Its jq already
+replaced `version`, `eureka-components` and `applications` wholesale, so only `name`,
+`description` and `dependencies` carry over — and on such a branch the template is the only place
+those exist. An existing descriptor always wins, so a branch already in service is unaffected.
+
+Three supporting changes:
+
+- `compare-components` treats an absent descriptor as `{}`, so every resolved entry compares as
+  new and `previous_version` falls to its existing `"unknown"`
+- `generate-diff.sh` treats an absent **or zero-byte** base the same way. Zero-byte is the case
+  that matters: `read-file` creates its output file before `git show` runs and leaves the empty
+  one behind, so an `-f` test would miss it. It also keys off the head rather than the base now,
+  because a first run is all additions and keying off the base reported "updated: 0" with an
+  empty PR body
+- the orchestrator writes `<branch>.0` instead of `<branch>`. `calculate-version-increment`
+  requires a trailing `.<number>`; a bare `R1-2026` matched nothing, so the branch would have
+  reported no update forever. `PLAIN_VERSION_RE` is anchored too — unanchored, it let a bare
+  `R1-2026` through
 
 #### Removed
 
