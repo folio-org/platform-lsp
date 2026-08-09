@@ -57,7 +57,7 @@ Extract fields with strict type validation:
     applications: ${{ steps.extract.outputs.applications }}
 ```
 
-The resolvers are fed `platform-descriptor-template.json`, not `platform-descriptor.json`. The
+The resolvers are fed `platform-descriptor.template.json`, not `platform-descriptor.json`. The
 template's entries carry constraints (`latest`, `^2.1.0`, `~2.1.0`); the descriptor's carry
 resolved versions, and a plain version is an exact pin that is never queried — so feeding the
 descriptor in resolves nothing.
@@ -272,7 +272,7 @@ the descriptor to decide whether anything moved.
   id: extract-template
   uses: folio-org/platform-lsp/.github/actions/extract-descriptor-fields@master
   with:
-    file-path: platform-descriptor-template.json
+    file-path: platform-descriptor.template.json
     fields: 'eureka-components,applications'
     validate-schema: 'true'
     expected-types: '{"eureka-components":"array","applications":"object"}'
@@ -388,7 +388,7 @@ jobs:
         id: extract
         uses: folio-org/platform-lsp/.github/actions/extract-descriptor-fields@master
         with:
-          file-path: platform-descriptor-template.json
+          file-path: platform-descriptor.template.json
           fields: 'eureka-components,applications,version'
           validate-schema: 'true'
           expected-types: |
