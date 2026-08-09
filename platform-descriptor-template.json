@@ -5,113 +5,92 @@
   "eureka-components": [
     {
       "name": "folio-kong",
-      "version": "^3.9.2",
-      "preRelease": "false"
+      "version": "^3.9.2"
     },
     {
       "name": "folio-keycloak",
-      "version": "^26.5.1",
-      "preRelease": "false"
+      "version": "^26.5.1"
     },
     {
       "name": "folio-module-sidecar",
-      "version": "~3.0.18",
-      "preRelease": "false"
+      "version": "~3.0.18"
     },
     {
       "name": "mgr-applications",
-      "version": "~3.0.6",
-      "preRelease": "false"
+      "version": "~3.0.6"
     },
     {
       "name": "mgr-tenants",
-      "version": "~3.0.6",
-      "preRelease": "false"
+      "version": "~3.0.6"
     },
     {
       "name": "mgr-tenant-entitlements",
-      "version": "~3.1.10",
-      "preRelease": "false"
+      "version": "~3.1.10"
     }
   ],
   "applications": {
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "~2.0.51",
-        "preRelease": "false"
+        "version": "~2.0.51"
       },
       {
         "name": "app-platform-complete",
-        "version": "~2.5.3",
-        "preRelease": "false"
+        "version": "~2.5.3"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "~1.0.28",
-        "preRelease": "false"
+        "version": "~1.0.28"
       },
       {
         "name": "app-bulk-edit",
-        "version": "~1.0.9",
-        "preRelease": "false"
+        "version": "~1.0.9"
       },
       {
         "name": "app-consortia",
-        "version": "~1.2.3",
-        "preRelease": "false"
+        "version": "~1.2.3"
       },
       {
         "name": "app-consortia-manager",
-        "version": "~1.1.1",
-        "preRelease": "false"
+        "version": "~1.1.1"
       },
       {
         "name": "app-dcb",
-        "version": "~1.1.10",
-        "preRelease": "false"
+        "version": "~1.1.10"
       },
       {
         "name": "app-edge-complete",
-        "version": "~2.0.16",
-        "preRelease": "false"
+        "version": "~2.0.16"
       },
       {
         "name": "app-erm-usage",
-        "version": "~2.0.4",
-        "preRelease": "false"
+        "version": "~2.0.4"
       },
       {
         "name": "app-fqm",
-        "version": "~1.0.15",
-        "preRelease": "false"
+        "version": "~1.0.15"
       },
       {
         "name": "app-inn-reach",
-        "version": "~1.0.6",
-        "preRelease": "false"
+        "version": "~1.0.6"
       },
       {
         "name": "app-linked-data",
-        "version": "~1.1.6",
-        "preRelease": "false"
+        "version": "~1.1.6"
       },
       {
         "name": "app-marc-migrations",
-        "version": "~2.0.5",
-        "preRelease": "false"
+        "version": "~2.0.5"
       },
       {
         "name": "app-oai-pmh",
-        "version": "~1.0.3",
-        "preRelease": "false"
+        "version": "~1.0.3"
       },
       {
         "name": "app-reading-room",
-        "version": "~2.0.2",
-        "preRelease": "false"
+        "version": "~2.0.2"
       }
     ]
   },
