@@ -58,10 +58,11 @@ runs:
 
       echo '::notice::Comparing descriptor components & applications with updated results'
 
-      # Validate descriptor file exists
+      # A branch fresh out of release preparation has no descriptor yet; an empty one
+      # makes every resolved entry compare as new, which is exactly right for a first run.
       if [ ! -f "$DESCRIPTOR_PATH" ]; then
-        echo "::error::Descriptor file not found: $DESCRIPTOR_PATH"
-        exit 1
+        echo "::warning::No descriptor at $DESCRIPTOR_PATH; treating every entry as new"
+        echo '{}' > "$DESCRIPTOR_PATH"
       fi
 
       # Validate descriptor is valid JSON
