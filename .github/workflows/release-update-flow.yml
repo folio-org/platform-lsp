@@ -120,7 +120,7 @@ defaults:
 
 env:
   STATE_FILE: platform-descriptor.json
-  TEMPLATE_FILE: platform-descriptor-template.json
+  TEMPLATE_FILE: platform-descriptor.template.json
   FAR_URL: 'https://far.ci.folio.org'
   GH_TOKEN: ${{ github.token }}
   DESCRIPTOR_ARTIFACT: 'platform-descriptor-files-${{ github.run_id }}-${{ inputs.release_branch }}'
@@ -161,7 +161,8 @@ jobs:
       updated_components: ${{ steps.compare-components.outputs.updated_eureka_components }}
       updated_applications: ${{ steps.compare-components.outputs.updated_applications }}
       new_version: ${{ steps.calculate-new-version.outputs.new_version }}
-      failure_reason: ${{ steps.calculate-new-version.outputs.failure_reason }}
+      failure_reason: ${{ steps.validate-template.outputs.failure_reason || steps.calculate-new-version.outputs.failure_reason }}
+      template_ready: ${{ steps.validate-template.outputs.valid }}
     steps:
       - name: 'Checkout Platform Repository'
         uses: actions/checkout@v4
@@ -171,13 +172,36 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
+      # Ahead of the FAR sync: a branch fresh out of release preparation has no descriptor
+      # for that step to read, and validating first keeps its failure off a branch that is
+      # simply not ready yet.
+      - name: 'Resolve descriptor template'
+        id: detect-template
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          if [ ! -f "$TEMPLATE_FILE" ]; then
+            echo "::error::No descriptor template on branch '${{ needs.determine-source-branch.outputs.source_branch }}': expected '$TEMPLATE_FILE'"
+            exit 1
+          fi
+          echo "source_file=$TEMPLATE_FILE" >> "$GITHUB_OUTPUT"
+          echo "::notice::Template file: $TEMPLATE_FILE"
+
+      # valid=false means the template still carries release-preparation placeholders. The
+      # action exits 0 in that case, so the branch is skipped rather than failing hourly.
+      - name: 'Validate descriptor template'
+        id: validate-template
+        uses: folio-org/platform-lsp/.github/actions/validate-descriptor-template@master
+        with:
+          template-file: ${{ steps.detect-template.outputs.source_file }}
+
       # TEMPORARY: Sync application descriptors from GitHub to FAR
       # This is a temporary solution until Eureka CI process is finalized.
       # Once Eureka CI automatically publishes descriptors to FAR on release,
       # this step can be removed.
       - name: 'Sync Application Descriptors to FAR'
         id: sync-to-far
-        if: inputs.need_pr
+        if: inputs.need_pr && steps.validate-template.outputs.valid == 'true'
         uses: folio-org/platform-lsp/.github/actions/sync-applications-to-far@master
         with:
           descriptor-path: ${{ env.STATE_FILE }}
@@ -196,24 +220,7 @@ jobs:
           ref: ${{ inputs.release_branch }}
           output_filename: platform-descriptor.base.json
           validate_json: true
-          fail_on_missing: true
-
-      - name: 'Resolve descriptor template'
-        id: detect-template
-        run: |
-          set -euo pipefail
-          IFS=$'\n\t'
-          if [ ! -f "$TEMPLATE_FILE" ]; then
-            echo "::error::No descriptor template on branch '${{ needs.determine-source-branch.outputs.source_branch }}': expected '$TEMPLATE_FILE'"
-            exit 1
-          fi
-          echo "source_file=$TEMPLATE_FILE" >> "$GITHUB_OUTPUT"
-          echo "::notice::Template file: $TEMPLATE_FILE"
-
-      - name: 'Validate descriptor template'
-        uses: folio-org/platform-lsp/.github/actions/validate-descriptor-template@master
-        with:
-          template-file: ${{ steps.detect-template.outputs.source_file }}
+          fail_on_missing: false
 
       - name: 'Extract descriptor fields'
         id: read-descriptor
@@ -226,6 +233,7 @@ jobs:
 
       - name: 'Update Eureka Components'
         id: update-eureka-components
+        if: steps.validate-template.outputs.valid == 'true'
         uses: folio-org/platform-lsp/.github/actions/update-eureka-components@master
         with:
           components: ${{ steps.read-descriptor.outputs.eureka-components }}
@@ -234,6 +242,7 @@ jobs:
 
       - name: 'Update Applications'
         id: update-applications
+        if: steps.validate-template.outputs.valid == 'true'
         uses: folio-org/platform-lsp/.github/actions/update-applications@master
         with:
           applications: ${{ steps.read-descriptor.outputs.applications }}
@@ -241,6 +250,7 @@ jobs:
 
       - name: 'Compare Components & Applications'
         id: compare-components
+        if: steps.validate-template.outputs.valid == 'true'
         uses: folio-org/platform-lsp/.github/actions/compare-components@master
         with:
           descriptor_path: ${{ env.STATE_FILE }}
@@ -253,7 +263,7 @@ jobs:
         run: |
           set -euo pipefail
           IFS=$'\n\t'
-          RELEASE_VERSION=$(jq -r '.version // empty' platform-descriptor.base.json)
+          RELEASE_VERSION=$(jq -r '.version // empty' platform-descriptor.base.json 2>/dev/null || true)
           if [ -z "$RELEASE_VERSION" ]; then
             echo "::warning::Release branch descriptor has no version field; falling back to update branch version"
             exit 0
@@ -278,7 +288,9 @@ jobs:
           base_version: ${{ steps.version-stem.outputs.value }}
           build_offset: ${{ inputs.descriptor_build_offset }}
           run_number: ${{ inputs.workflow_run_number }}
-          current_version: ${{ needs.determine-source-branch.outputs.pr_exists == 'true' && steps.extract-release-version.outputs.release_version || steps.compare-components.outputs.previous_version }}
+          # 'unknown' means the branch had no descriptor yet; the template's version is then
+          # the only stem available for the first increment.
+          current_version: ${{ needs.determine-source-branch.outputs.pr_exists == 'true' && steps.extract-release-version.outputs.release_version || (steps.compare-components.outputs.previous_version != 'unknown' && steps.compare-components.outputs.previous_version || steps.version-stem.outputs.value) }}
           changes_detected: ${{ steps.compare-components.outputs.changes_detected }}
 
       - name: 'Apply Descriptor Updates'
@@ -286,6 +298,7 @@ jobs:
         if: steps.calculate-new-version.outputs.updated == 'true'
         env:
           STATE_FILE: ${{ env.STATE_FILE }}
+          TEMPLATE_FILE: ${{ steps.detect-template.outputs.source_file }}
           NEW_VERSION: ${{ steps.calculate-new-version.outputs.new_version }}
           UPDATED_EUREKA_COMPONENTS: ${{ steps.compare-components.outputs.updated_eureka_components }}
           UPDATED_APPLICATIONS: ${{ steps.compare-components.outputs.updated_applications }}
@@ -293,10 +306,16 @@ jobs:
           set -euo pipefail
           IFS=$'\n\t'
           echo '::notice::Applying descriptor updates'
+          # A branch straight out of release preparation has the template but no descriptor —
+          # build from the template then. The jq replaces version, components and applications
+          # wholesale, so only name/description/dependencies carry over, and on such a branch
+          # the template is the only place those exist.
+          SOURCE="$STATE_FILE"
+          [ -f "$SOURCE" ] || { SOURCE="$TEMPLATE_FILE"; echo "::notice::No $STATE_FILE yet; creating it from $TEMPLATE_FILE"; }
           # Simple in-place update without reordering logic; Python update scripts now preserve original key order.
           jq --arg version "$NEW_VERSION" \
              --argjson components "$UPDATED_EUREKA_COMPONENTS" \
-             --argjson applications "$UPDATED_APPLICATIONS" '.version = $version | ."eureka-components" = $components | .applications = $applications' "$STATE_FILE" > "${STATE_FILE}.tmp"
+             --argjson applications "$UPDATED_APPLICATIONS" '.version = $version | ."eureka-components" = $components | .applications = $applications' "$SOURCE" > "${STATE_FILE}.tmp"
           mv "${STATE_FILE}.tmp" "$STATE_FILE"
           echo '::notice::Descriptor file updated'
           echo 'applied=true' >> "$GITHUB_OUTPUT"
@@ -570,6 +589,7 @@ jobs:
       !inputs.dry_run &&
       !cancelled() &&
       needs.update-platform-descriptor.result == 'success' &&
+      needs.update-platform-descriptor.outputs.template_ready == 'true' &&
       (
         needs.update-platform-descriptor.outputs.updated == 'true' ||
         (
