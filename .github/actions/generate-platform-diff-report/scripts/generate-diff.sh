@@ -3,9 +3,9 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # Validate input files exist
-if [ ! -f "$BASE_DESCRIPTOR" ]; then
-  echo "::error::Base descriptor not found: $BASE_DESCRIPTOR"
-  exit 1
+if [ ! -s "$BASE_DESCRIPTOR" ]; then
+  echo "::warning::Base descriptor absent or empty; reporting every entry as added"
+  echo '{}' > "$BASE_DESCRIPTOR"
 fi
 
 if [ ! -f "$HEAD_DESCRIPTOR" ]; then
@@ -25,15 +25,15 @@ collapse_lists() {
     --argjson B "$base_json" \
     --argjson H "$head_json" \
     --arg label "$label" '
-    def to_map: map({key:.name, value:.version}) | from_entries;
+    def to_map: (. // []) | map({key:.name, value:.version}) | from_entries;
     ($B | to_map) as $BM |
     ($H | to_map) as $HM |
     [
-      ($BM | keys[]) as $k |
-      select(($HM | has($k)) and ($BM[$k] != $HM[$k])) |
+      ($HM | keys[]) as $k |
+      select(($BM | has($k) | not) or ($BM[$k] != $HM[$k])) |
       {
         name: $k,
-        change: { old: $BM[$k], new: $HM[$k] },
+        change: { old: ($BM[$k] // "—"), new: $HM[$k] },
         group: $label
       }
     ]
