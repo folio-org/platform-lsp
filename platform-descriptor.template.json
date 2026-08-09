@@ -5,172 +5,213 @@
   "eureka-components": [
     {
       "name": "folio-kong",
-      "version": "^3.9.2"
+      "version": "^3.9.2",
+      "preRelease": "false"
     },
     {
       "name": "folio-keycloak",
-      "version": "^26.5.3"
+      "version": "^26.5.3",
+      "preRelease": "false"
     },
     {
       "name": "folio-module-sidecar",
-      "version": "~4.0.0"
+      "version": "~4.0.0",
+      "preRelease": "false"
     },
     {
       "name": "mgr-applications",
-      "version": "~4.0.0"
+      "version": "~4.0.0",
+      "preRelease": "false"
     },
     {
       "name": "mgr-tenants",
-      "version": "~4.0.0"
+      "version": "~4.0.0",
+      "preRelease": "false"
     },
     {
       "name": "mgr-tenant-entitlements",
-      "version": "~4.0.0"
+      "version": "~4.0.0",
+      "preRelease": "false"
     }
   ],
   "applications": {
     "required": [
       {
         "name": "app-platform-complete",
-        "version": "~3.3.0"
+        "version": "~3.3.0",
+        "preRelease": "false"
       },
       {
         "name": "app-platform-minimal",
-        "version": "~2.1.0"
+        "version": "~2.1.0",
+        "preRelease": "false"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "~2.0.0"
+        "version": "~2.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-agreements",
-        "version": "~1.0.0"
+        "version": "~1.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-authority-records",
-        "version": "~1.0.0"
+        "version": "~1.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-bulk-edit",
-        "version": "~2.0.0"
+        "version": "~2.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-consortia",
-        "version": "~1.4.0"
+        "version": "~1.4.0",
+        "preRelease": "false"
       },
       {
         "name": "app-consortia-manager",
-        "version": "~1.4.0"
+        "version": "~1.4.0",
+        "preRelease": "false"
       },
       {
         "name": "app-dashboard",
-        "version": "~1.0.0"
+        "version": "~1.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-data-export",
-        "version": "~1.0.0"
+        "version": "~1.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-data-import",
-        "version": "~1.0.0"
+        "version": "~1.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-dcb",
-        "version": "~2.0.0"
+        "version": "~2.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-ebsconet",
-        "version": "~1.1.0"
+        "version": "~1.1.0",
+        "preRelease": "false"
       },
       {
         "name": "app-edge-complete",
-        "version": "~2.2.0"
+        "version": "~2.2.0",
+        "preRelease": "false"
       },
       {
         "name": "app-eholdings",
-        "version": "~1.0.0"
+        "version": "~1.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-erm-usage",
-        "version": "~3.0.0"
+        "version": "~3.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-fqm",
-        "version": "~2.0.0"
+        "version": "~2.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-gobi",
-        "version": "~1.1.0"
+        "version": "~1.1.0",
+        "preRelease": "false"
       },
       {
         "name": "app-inn-reach",
-        "version": "~2.0.0"
+        "version": "~2.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-inventory",
-        "version": "~1.0.0"
+        "version": "~1.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-licenses",
-        "version": "~1.0.0"
+        "version": "~1.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-linked-data",
-        "version": "~2.0.0"
+        "version": "~2.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-lists",
-        "version": "~1.1.0"
+        "version": "~1.1.0",
+        "preRelease": "false"
       },
       {
         "name": "app-marc-migrations",
-        "version": "~3.0.0"
+        "version": "~3.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-marc-storage",
-        "version": "~1.0.0"
+        "version": "~1.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-mosaic",
-        "version": "~1.1.0"
+        "version": "~1.1.0",
+        "preRelease": "false"
       },
       {
         "name": "app-notification",
-        "version": "~1.0.0"
+        "version": "~1.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-oai-pmh",
-        "version": "~2.0.0"
+        "version": "~2.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-quick-marc",
-        "version": "~1.0.0"
+        "version": "~1.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-reading-room",
-        "version": "~3.0.0"
+        "version": "~3.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-reporting",
-        "version": "~1.5.0"
+        "version": "~1.5.0",
+        "preRelease": "false"
       },
       {
         "name": "app-rtac",
-        "version": "~1.1.0"
+        "version": "~1.1.0",
+        "preRelease": "false"
       },
       {
         "name": "app-search",
-        "version": "~1.0.0"
+        "version": "~1.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-serials-management",
-        "version": "~1.0.0"
+        "version": "~1.0.0",
+        "preRelease": "false"
       },
       {
         "name": "app-service-interaction",
-        "version": "~1.0.0"
+        "version": "~1.0.0",
+        "preRelease": "false"
       }
     ]
   },
