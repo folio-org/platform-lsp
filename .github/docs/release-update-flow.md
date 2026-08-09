@@ -21,7 +21,7 @@ Since RANCHER-3069 it serves **both** cadences — the release branches and `sna
 
 Component resolution is one algorithm for both: list the Docker Hub tags of the namespaces the entry's `preRelease` implies, following pagination, discard `latest`, filter by the template constraint and channel, take the newest by **semver**. Docker Hub orders tags by push time — `folioorg/mgr-tenants` returns `3.0.8, 4.0.1, 3.0.7, 4.0.0 …` because patches to an older line continue after a new major — so the returned order is never trusted.
 
-**Every** branch reads its constraints from `platform-descriptor-template.json` on the branch being updated. A missing template fails the run — falling back to the descriptor would keep two resolution models alive, which is what RANCHER-3069 removed.
+**Every** branch reads its constraints from `platform-descriptor.template.json` on the branch being updated. A missing template fails the run — falling back to the descriptor would keep two resolution models alive, which is what RANCHER-3069 removed.
 
 | constraint | meaning |
 |---|---|
@@ -32,6 +32,24 @@ Component resolution is one algorithm for both: list the Docker Hub tags of the 
 | `#<branch>` | branch pin, applications only — never queried, carried through verbatim |
 
 Release branches use ranges; `snapshot` uses `latest`. Nothing enforces that split — the validator does not know which branch it is running on — but a range on `snapshot` binds every entry to its current major, and at release preparation nearly every application bumps its major at once.
+
+## 🌱 A branch that is not ready yet
+
+A freshly prepared release branch passes through two states before it can be updated. Both are handled by mechanisms that already existed, not by new steps.
+
+**Unresolved placeholders.** `release-preparation-orchestrator.yml` seeds component versions as `^VERSION_<x>`, for a human to replace once the real versions are known. `validate-descriptor-template` classifies those as *pending* rather than *invalid*: it warns, sets `valid=false`, and **exits 0**. The three resolver steps and `manage-pr` are gated on `valid`, so the branch is skipped quietly instead of failing every hour. Everything else already keys off `updated`, which is empty when the resolvers are skipped.
+
+`manage-pr` needs its own gate because it runs under `always()` with a disjunction — without it, a branch with a leftover update branch and no open PR would get one titled "Release: Update to No updates".
+
+A genuinely malformed constraint still fails the run with exit 1. The distinction is "not yet" versus "wrong".
+
+This mirrors `generate-application-descriptor` in kitfox-github, which does the same for `application.template.json`.
+
+**No descriptor.** The orchestrator deletes `platform-descriptor.json` when it cuts the branch, so the first scan has to create it. `Apply Descriptor Updates` reads the template when the descriptor is absent — the jq it already ran replaces `version`, `eureka-components` and `applications` wholesale, so only `name`, `description` and `dependencies` carry over, and on such a branch the template is the only place those exist. An existing descriptor always wins, so nothing changes for a branch already in service.
+
+Two supporting one-liners: `compare-components` treats an absent descriptor as `{}`, which makes every resolved entry compare as new; and `generate-diff.sh` treats an absent *or zero-byte* base the same way — zero-byte matters because `read-file` creates its output file before `git show` runs and leaves the empty one behind.
+
+The template's `version` becomes the descriptor's on that first run, so in the PR cadence it must carry a trailing `.<number>` — `calculate-version-increment` matches nothing otherwise. The orchestrator writes `<branch>.0` for exactly this reason. The direct-commit cadence is exempt: it uses `descriptor_build_offset` and a deliberately suffix-less stem.
 
 ## 📐 Resolution rule
 
@@ -172,7 +190,7 @@ flowchart TD
 **Updates platform-descriptor.json with latest component versions**
 
 - Fetches the base descriptor from the release branch (for the diff report)
-- Requires and validates `platform-descriptor-template.json`
+- Requires and validates `platform-descriptor.template.json`
 - Resolves every entry to the newest version in its constraint window, failing if any entry has none:
   - Eureka components from Docker Hub
   - Applications from the FOLIO Application Registry
@@ -313,7 +331,7 @@ Prevents simultaneous updates to the same release/update branch combination.
 
 - `check-branch-and-pr-status` - Branch and PR detection
 - `fetch-base-file` - Base file retrieval for diffs
-- `validate-descriptor-template` - Constraint and `preRelease` grammar check
+- `validate-descriptor-template` - Constraint and `preRelease` grammar check; also decides whether the branch is ready at all
 - `update-eureka-components` - Component resolution from Docker Hub
 - `update-applications` - Application resolution from FAR
 - `fetch-updated-ui-modules` - UI module version mapping

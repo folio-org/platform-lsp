@@ -154,7 +154,7 @@ The pre-release channel is **not** a branch setting: it is `preRelease` on each 
 5. **Delivery**: committed straight to `snapshot`, no update branch and no PR
 6. **Notification**: Slack, with the descriptor diff and a commit link rather than a PR link
 
-The snapshot branch carries a `platform-descriptor-template.json` like every other branch the flow processes — a missing template is an error, not a fallback. Every entry looks like this:
+The snapshot branch carries a `platform-descriptor.template.json` like every other branch the flow processes — a missing template is an error, not a fallback. Every entry looks like this:
 
 ```json
 { "name": "app-acquisitions", "version": "latest", "preRelease": "only" }
