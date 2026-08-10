@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000010988"
+        "version": "2.2.0-SNAPSHOT.100200000011064"
       },
       {
         "name": "app-platform-complete",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000011660"
+        "version": "1.1.0-SNAPSHOT.100200000011749"
       },
       {
         "name": "app-erm-usage",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000004296"
+        "version": "1.1.0-SNAPSHOT.100200000004298"
       },
       {
         "name": "app-licenses",
@@ -126,11 +126,11 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000010813"
+        "version": "3.1.0-SNAPSHOT.100200000010929"
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000009819"
+        "version": "1.1.0-SNAPSHOT.100200000009932"
       },
       {
         "name": "app-mosaic",
@@ -162,7 +162,7 @@
       },
       {
         "name": "app-requests-ecs",
-        "version": "2.1.0-SNAPSHOT.100200000010773"
+        "version": "2.1.0-SNAPSHOT.100200000010969"
       },
       {
         "name": "app-requests-mediated",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000011452"
+        "version": "1.1.0-SNAPSHOT.100200000011521"
       },
       {
         "name": "app-service-interaction",
