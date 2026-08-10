@@ -1,22 +1,21 @@
 # Update Applications
 
-Update application versions by consulting the FOLIO Application Registry (FAR) respecting semver scope rules.
+Resolve application versions from the FOLIO Application Registry (FAR) against the constraints declared in the descriptor template.
 
 ## Description
 
-This action queries the FOLIO Application Registry (FAR) to discover newer versions for provided application entries and returns an updated JSON structure. It accepts either a flat array or grouped object of applications, fetches available versions from FAR, filters candidates by semantic versioning scope (major/minor/patch), and selects the appropriate newer version based on sort order. The action preserves the original input structure and updates versions in place where qualifying upgrades are found.
+This action queries FAR for every entry it is given and resolves each one to the **newest version satisfying the entry's constraint**. It accepts either a flat array or a grouped object, and preserves that shape on output.
+
+There is no "leave it unchanged" path. A FAR outage, an empty response and an all-out-of-scope response all fail the action, because a descriptor mixing one stale version with the rest fresh is a combination nobody validated. The action therefore never needs to know what `platform-descriptor.json` currently holds — the template is the only input.
 
 ## Inputs
 
 | Input | Description | Required | Default |
 |-------|-------------|----------|---------|
-| `applications` | JSON: either an array of `{"name":"app","version":"x.y.z"}` or grouped object `{"required":[...],"optional":[...],"<group>":[...]}` | Yes | - |
+| `applications` | JSON from the descriptor template: either an array of `{"name":"app","version":"^x.y.z","preRelease":"false"}` or a grouped object `{"required":[...],"optional":[...],"<group>":[...]}` | Yes | - |
 | `far-base-url` | FAR base URL | No | `https://far.ci.folio.org` |
-| `filter-scope` | SemVer scope to consider (major\|minor\|patch) | No | `patch` |
-| `sort-order` | Sort order for candidate versions within scope (asc\|desc) | No | `asc` |
 | `far-limit` | FAR query limit (max records) | No | `500` |
 | `far-latest` | FAR 'latest' query parameter (server side) | No | `50` |
-| `far-pre-release` | Include pre-release versions (true\|false) | No | `false` |
 | `request-timeout` | HTTP request timeout (seconds) | No | `10.0` |
 | `max-retries` | Maximum number of HTTP request retries | No | `3` |
 | `retry-backoff` | Base backoff time in seconds for retries | No | `1.0` |
@@ -40,21 +39,19 @@ This action queries the FOLIO Application Registry (FAR) to discover newer versi
     applications: >-
       {
         "required": [
-          {"name": "app-platform-minimal", "version": "2.0.19"},
-          {"name": "app-platform-complete", "version": "10.1.0"}
+          {"name": "app-platform-minimal", "version": "~2.0.19"},
+          {"name": "app-platform-complete", "version": "^10.1.0"}
         ],
         "optional": [
-          {"name": "app-consortia", "version": "1.2.1"}
+          {"name": "app-consortia", "version": "~1.2.1"}
         ]
       }
-    filter-scope: 'patch'
-    sort-order: 'asc'
 
 - name: Display updated applications
   run: echo '${{ steps.update-apps.outputs.updated-applications }}'
 ```
 
-### Basic Example with Flat Array Input
+### Pre-release Entries (snapshot cadence)
 
 ```yaml
 - name: Update application versions (flat)
@@ -63,10 +60,9 @@ This action queries the FOLIO Application Registry (FAR) to discover newer versi
   with:
     applications: >-
       [
-        {"name": "app-platform-minimal", "version": "2.0.19"},
-        {"name": "app-consortia", "version": "1.2.1"}
+        {"name": "app-platform-minimal", "version": "latest", "preRelease": "only"},
+        {"name": "app-consortia", "version": "latest", "preRelease": "only"}
       ]
-    filter-scope: 'minor'
     log-level: 'DEBUG'
 ```
 
@@ -78,9 +74,7 @@ This action queries the FOLIO Application Registry (FAR) to discover newer versi
   uses: folio-org/platform-lsp/.github/actions/update-applications@master
   with:
     applications: ${{ steps.read-descriptor.outputs.applications }}
-    filter-scope: ${{ inputs.scope }}
-    sort-order: 'asc'
-    far-pre-release: ${{ inputs.include_prerelease }}
+    far-base-url: ${{ env.FAR_URL }}
     log-level: 'INFO'
 
 - name: Parse updated platform version
@@ -93,31 +87,64 @@ This action queries the FOLIO Application Registry (FAR) to discover newer versi
 
 ## Behavior
 
-### SemVer Filtering
+### Constraint window
 
-- **patch scope**: Only considers versions that differ in the patch segment (e.g., 1.2.3 → 1.2.4)
-- **minor scope**: Considers versions that differ in minor or patch segments (e.g., 1.2.3 → 1.3.0)
-- **major scope**: Considers all newer versions (e.g., 1.2.3 → 2.0.0)
+| constraint | window |
+|---|---|
+| `latest` | none — the newest version in the channel |
+| `~2.1.0` | `>=2.1.0` and `<2.2.0-0` |
+| `^2.1.0` | `>=2.1.0` and `<3.0.0-0` |
+| `^2.1.0-SNAPSHOT` | `>=2.1.0-SNAPSHOT` and `<3.0.0-0` |
+| `2.1.0` | exact pin — never queried |
+| `#RANCHER-2870` | branch pin — never queried, carried through verbatim |
 
-### Sort Order
+For the range forms the prefix selects the scope and the version is the lower bound; the window matches how `semver4j` — the engine behind `/applications/validate-descriptors` — expands the range, with `includePreRelease` set as `mgr-applications` sets it.
 
-- **asc**: Sorts candidates ascending and selects the last (most conservative upgrade)
-- **desc**: Sorts candidates descending and selects the first (most aggressive upgrade)
+The scope is derived from the prefix and travels on the entry itself, alongside the stem it applies to — there is no separate map to keep in sync.
+
+A range on a pre-release branch has to anchor on a pre-release stem: under `^2.1.0` the branch's own `2.1.0-SNAPSHOT.N` builds fall below the lower bound (SemVer rule 11.3). `latest` has no such trap, which is why the `snapshot` template uses it.
+
+Anything else — `1.x`, `>=1.0.0 <2.0.0`, `a || b` — is rejected rather than misread as an exact pin.
+
+Note that FAR's `latest=N` query parameter (input `far-latest`) is a different thing: it caps how many recent versions the server returns.
+
+### Branch pins
+
+An application may be pinned to a feature branch by writing `"version": "#<branch>"`. Such an application is not in FAR — its descriptor is the `application.lock.json` committed to that branch — so this action does not query for it and carries the literal through into `platform-descriptor.json` unchanged. kitfox-github's `validate-application` resolves it from `raw.githubusercontent.com/folio-org/<app>/<branch>/application.lock.json`.
+
+The accepted shape is narrower than git's own ref rules: letters, digits, `.`, `-`, `_`, no slashes, no `..`, no leading or trailing punctuation. A slash would break `folio-release-creator`, which builds a filename as `<app>-<version>.json`.
+
+`#2.1.0` is rejected rather than treated as a pin — it is `^2.1.0` typed with the shift key held, and accepting it would leave the application quietly un-updated and unvalidated forever.
+
+Branch pins apply to applications only. `update-eureka-components` rejects them: components are Docker images and have no per-branch descriptor.
+
+RANCHER-3070 will change this from "skip" to "resolve to the version built from that branch".
+
+### `preRelease`
+
+Optional per entry, defaults to `false`. Same `false` | `true` | `only` filter that `folio-application-generator` reads from an application template. It is passed verbatim to FAR **and** applied to the returned candidates.
 
 ### Error Handling
 
-- FAR unreachable or non-200 response: Application version left unchanged
-- No qualifying versions found: Application version unchanged
-- Invalid JSON input: Action fails with clear error message
-- Network failures: Automatic retries with exponential backoff (total attempts = `max-retries + 1`)
+The action fails — it never leaves a version unchanged — on:
+
+- FAR unreachable or non-200 after retries
+- an empty FAR response for an entry
+- a response where no version satisfies the entry's constraint
+- invalid JSON, an unsupported constraint, or an unknown `preRelease` value
+- an entry that is not exactly `{name, version}` holding concrete semver, checked by `assert_resolved` before anything is emitted
+
+Network failures retry with exponential backoff first (total attempts = `max-retries + 1`).
+
+That last check is the only thing standing between a bug here and a corrupt descriptor. A leaked constraint does not self-heal: written into the descriptor, the next run would resolve to the same constraint the descriptor already holds, see no change, and skip everything — hourly, indefinitely. A leaked working key is worse, because `compare-components` diffs with jq's key-set-sensitive `==` (so it reports "changed" every run) while `validate-platform` and the diff report both re-project to `{name, version}` (so nothing looks wrong).
 
 ## Implementation Notes
 
-- Each unique application name triggers one FAR request (results cached within run)
-- Only numeric `major.minor.patch` segments are considered for version comparison
-- Non-numeric parts are coerced to `0` (e.g., `1.2.alpha` becomes `1.2.0`)
-- Pre-release ordering is not computed; `far-pre-release: true` only broadens the candidate pool
-- Output preserves original structure (flat array or grouped object)
+- Each `(application, preRelease)` pair triggers one FAR request, cached within the run
+- Only numeric `major.minor.patch` segments count for comparison; non-numeric parts coerce to `0`
+- Pre-release ordering is computed: `2.1.0-SNAPSHOT.100200000011364` ranks above `...006286` and below `2.1.0`; a non-numeric trailing segment (feature builds carry a commit hash) ranks as build `0`
+- `preRelease` is stripped from the output, which carries only `name` and `version`
+- Output preserves the original structure (flat array or grouped object)
 - GitHub Step Summary displays run metadata when available
 
 ## License

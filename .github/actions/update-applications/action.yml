@@ -4,30 +4,16 @@ description: Update application versions by consulting the FOLIO Application Reg
 inputs:
   applications:
     description: >-
-      JSON: either an array of {"name":"app","version":"x.y.z"} or grouped object
-      {"required":[...],"optional":[...],"<group>":[...]}
+      JSON taken from the descriptor template: either an array of
+      {"name":"app","version":"^x.y.z","preRelease":"false"} or a grouped object
+      {"required":[...],"optional":[...],"<group>":[...]}.
+      preRelease is optional and defaults to false; it is passed verbatim to FAR and also
+      filters the candidates locally.
     required: true
   far-base-url:
     description: FAR base URL
     required: false
     default: 'https://far.ci.folio.org'
-  filter-scope:
-    description: SemVer scope to consider (major|minor|patch)
-    required: false
-    default: 'patch'
-    type: choice
-    options:
-      - major
-      - minor
-      - patch
-  sort-order:
-    description: Sort order for candidate versions within scope (asc|desc)
-    required: false
-    default: 'asc'
-    type: choice
-    options:
-      - asc
-      - desc
   far-limit:
     description: FAR query limit (max records)
     required: false
@@ -36,14 +22,6 @@ inputs:
     description: FAR 'latest' query parameter (server side)
     required: false
     default: '50'
-  far-pre-release:
-    description: Include pre-release versions (true|false)
-    required: false
-    default: 'false'
-    type: choice
-    options:
-      - 'true'
-      - 'false'
   request-timeout:
     description: HTTP request timeout (seconds)
     required: false
@@ -60,12 +38,6 @@ inputs:
     description: Level of logging verbosity (INFO, DEBUG, WARNING, ERROR)
     required: false
     default: 'INFO'
-  constraint-map:
-    description: >-
-      JSON object mapping application name to resolved scope (minor|patch|exact).
-      Overrides global filter-scope per entry.
-    required: false
-    default: '{}'
 
 outputs:
   updated-applications:
@@ -103,17 +75,13 @@ runs:
       env:
         APPLICATIONS_JSON: ${{ inputs.applications }}
         FAR_BASE_URL: ${{ inputs.far-base-url }}
-        FILTER_SCOPE: ${{ inputs.filter-scope }}
-        SORT_ORDER: ${{ inputs.sort-order }}
         FAR_LIMIT: ${{ inputs.far-limit }}
         FAR_LATEST: ${{ inputs.far-latest }}
-        FAR_PRE_RELEASE: ${{ inputs.far-pre-release }}
         REQUEST_TIMEOUT: ${{ inputs.request-timeout }}
         MAX_RETRIES: ${{ inputs.max-retries }}
         RETRY_BACKOFF: ${{ inputs.retry-backoff }}
         PYTHONUNBUFFERED: '1'
         LOG_LEVEL: ${{ inputs.log-level }}
-        CONSTRAINT_MAP: ${{ inputs.constraint-map }}
       run: |
         set -euo pipefail
         IFS=$'\n\t'
@@ -124,9 +92,6 @@ runs:
           {
             echo '## Update Applications'
             echo "- Using FAR Base URL: $FAR_BASE_URL"
-            echo "- Filter scope: $FILTER_SCOPE"
-            echo "- Sort order: $SORT_ORDER"
-            echo "- Include pre-release versions: $FAR_PRE_RELEASE"
             echo "- Log level: $LOG_LEVEL"
           } >> "$GITHUB_STEP_SUMMARY"
         fi
@@ -136,7 +101,7 @@ runs:
         echo "$APPLICATIONS_JSON" > "$TEMP_JSON_FILE"
 
         # Run the script and capture its output
-        python "${GITHUB_ACTION_PATH}/update-applications.py" --filter-scope "$FILTER_SCOPE" --data "$(cat "$TEMP_JSON_FILE")"
+        python "${GITHUB_ACTION_PATH}/update-applications.py" --data "$(cat "$TEMP_JSON_FILE")"
         rm -f "$TEMP_JSON_FILE"
 
 branding:

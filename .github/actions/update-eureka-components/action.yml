@@ -1,33 +1,14 @@
 name: Update Eureka Components
-description: Resolve newer component versions from GitHub releases (respecting scope/order) when Docker images exist.
+description: Resolve component versions from Docker Hub, respecting the template constraint and preRelease filter.
 
 inputs:
   components:
     description: >
-      JSON array of component objects, e.g.
-      [{"name":"folio-kong","version":"3.9.1"}]
+      JSON array of component objects taken from the descriptor template, e.g.
+      [{"name":"folio-kong","version":"^3.9.1","preRelease":"false"}].
+      preRelease is optional and defaults to false; it selects both the tag channel and
+      the Docker Hub namespace (false -> folioorg, only -> folioci, true -> both).
     required: true
-  filter-scope:
-    description: SemVer scope to consider (major|minor|patch)
-    required: false
-    default: 'patch'
-    type: choice
-    options:
-      - major
-      - minor
-      - patch
-  sort-order:
-    description: Sort order for candidate versions within scope (asc|desc)
-    required: false
-    default: 'asc'
-    type: choice
-    options:
-      - asc
-      - desc
-  github-token:
-    description: GitHub token with at least read access (defaults to workflow GITHUB_TOKEN)
-    required: false
-    default: "${{ github.token }}"
   docker-username:
     description: Docker Hub username (optional for authenticated lookups)
     required: false
@@ -38,12 +19,6 @@ inputs:
     description: Level of logging verbosity (INFO, DEBUG, WARNING, ERROR)
     required: false
     default: 'INFO'
-  constraint-map:
-    description: >-
-      JSON object mapping component name to resolved scope (minor|patch|exact).
-      Overrides global filter-scope per entry.
-    required: false
-    default: '{}'
 
 outputs:
   updated-components:
@@ -79,15 +54,11 @@ runs:
       name: Run update script
       shell: bash
       env:
-        GITHUB_TOKEN: '${{ inputs.github-token }}'
         DOCKER_USERNAME: '${{ inputs.docker-username }}'
         DOCKER_PASSWORD: '${{ inputs.docker-password }}'
         PYTHONUNBUFFERED: '1'
         LOG_LEVEL: '${{ inputs.log-level }}'
         COMPONENTS_JSON: '${{ inputs.components }}'
-        FILTER_SCOPE: '${{ inputs.filter-scope }}'
-        SORT_ORDER: '${{ inputs.sort-order }}'
-        CONSTRAINT_MAP: '${{ inputs.constraint-map }}'
       run: |
         set -euo pipefail
         IFS=$'\n\t'
@@ -97,8 +68,6 @@ runs:
         if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
           {
             echo '## Update Eureka Components'
-            echo "- Filter scope: $FILTER_SCOPE"
-            echo "- Sort order: $SORT_ORDER"
             echo "- Log level: $LOG_LEVEL"
           } >> "$GITHUB_STEP_SUMMARY"
         fi
@@ -108,10 +77,7 @@ runs:
         printf '%s' "$COMPONENTS_JSON" > "$TEMP_JSON_FILE"
 
         # Run the script and capture its output
-        python "${GITHUB_ACTION_PATH}/update-eureka-components.py" \
-          --filter-scope "$FILTER_SCOPE" \
-          --sort-order "$SORT_ORDER" \
-          --data "$(cat "$TEMP_JSON_FILE")"
+        python "${GITHUB_ACTION_PATH}/update-eureka-components.py" --data "$(cat "$TEMP_JSON_FILE")"
         rm -f "$TEMP_JSON_FILE"
 
 branding:

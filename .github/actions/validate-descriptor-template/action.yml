@@ -7,10 +7,22 @@ inputs:
     description: 'Path to the descriptor template JSON file'
     required: true
 
+outputs:
+  valid:
+    description: >-
+      'true' when the template is ready to resolve. 'false' with a zero exit means it is
+      still awaiting placeholder replacement after release preparation — the caller should
+      skip the branch rather than fail. A malformed template fails the action outright.
+    value: ${{ steps.validate.outputs.valid }}
+  failure_reason:
+    description: 'Why the template is not usable, empty when valid'
+    value: ${{ steps.validate.outputs.failure_reason }}
+
 runs:
   using: 'composite'
   steps:
     - name: 'Validate descriptor template'
+      id: validate
       shell: bash
       env:
         TEMPLATE_FILE: ${{ inputs.template-file }}

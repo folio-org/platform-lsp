@@ -14,6 +14,7 @@ branches:
       description: "FOLIO Snapshot LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system."
       need_pr: false
       pre_release: "only"
+      descriptor_build_offset: "100200000000000"
   - R1-2025-ci:
       enabled: true
       name: "FOLIO R1-2025 (Sunflower) Version"

@@ -60,7 +60,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  PLATFORM_TEMPLATE_FILE: 'platform.template.json'
+  PLATFORM_TEMPLATE_FILE: 'platform-descriptor.template.json'
   UPDATE_CONFIG_FILE: '.github/update-config.yml'
   UPDATE_CONFIG_TEMPLATE_PATH: '.github/templates/update-config.yml.template'
 
@@ -412,7 +412,7 @@ jobs:
 
           echo "::notice::Updating platform version and eureka-components with preRelease flags"
           tmp2=$(mktemp)
-          jq --arg newVer "${{ inputs.new_release_branch }}" '
+          jq --arg newVer "${{ inputs.new_release_branch }}.0" '
             .version = $newVer
             | if ."eureka-components" then ."eureka-components" |= map(.version = ("^VERSION_" + .version) | .preRelease = "false") else . end
           ' "$PLATFORM_TEMPLATE_FILE" > "$tmp2"

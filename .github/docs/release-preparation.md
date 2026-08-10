@@ -301,10 +301,10 @@ prepare-platform:
   steps:
     - name: Update Platform Template
       run: |
-        # Update platform.template.json with version constraints and preRelease flags
+        # Update platform-descriptor.template.json with version constraints and preRelease flags
         # Set application versions to ^FULL.VERSION with preRelease: "false" (e.g., ^2.3.1)
         # Set eureka-components to ^VERSION placeholder with preRelease: "false"
-        # Set platform version to new_release_branch
+        # Set platform version to <new_release_branch>.0
         # Upload as artifact
 
 update-platform-config:
@@ -357,6 +357,26 @@ slack_notification:
         payload: |
           # Detailed failure reporting with failed application list
 ```
+
+## ✋ After the branch is cut: replace the placeholders
+
+The orchestrator leaves every `eureka-components` entry as `^VERSION_<previous>` — a placeholder, not a constraint. Component versions for a new release are not known at preparation time, so a human fills them in.
+
+The branch is added to `update-config.yml` with `enabled: true`, so `release-scan.yml` picks it up on the next hourly tick. Until the placeholders are replaced, `release-update-flow.yml` finds them, warns, and skips the branch:
+
+```
+::warning::Descriptor template still holds unresolved placeholders, skipping update:
+eureka-components[folio-kong].version='^VERSION_3.9.1'
+```
+
+The run stays green — this is a "not yet", not a failure. Nothing is committed and no PR is opened until someone edits `platform-descriptor.template.json` and replaces each `^VERSION_<x>` with a real constraint.
+
+Two things to get right in that edit:
+
+- **The constraint form.** `^X.Y.Z` tracks the minor, `~X.Y.Z` the patch, a plain version pins outright. `latest` is for `snapshot`, not for a release branch.
+- **The platform `version`.** The orchestrator writes `<branch>.0`; leave the trailing build segment in place. `calculate-version-increment` needs it, and without it the branch reports no update on every run.
+
+The first successful scan after that creates `platform-descriptor.json` on the branch — the orchestrator deliberately does not, since resolved versions are the update flow's output, not preparation's.
 
 ## 🔍 Advanced Features
 

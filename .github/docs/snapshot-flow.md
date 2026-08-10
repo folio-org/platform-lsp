@@ -127,17 +127,48 @@ The Snapshot Flow handles continuous integration of ongoing development (snapsho
 #### Platform Snapshot Synchronization
 *Based on [CI flow [snapshot] - Platform](https://folio-org.atlassian.net/wiki/spaces/FOLIJET/pages/887193724/CI+flow+snapshot)*
 
-**Trigger**: New application versions detected by scanning process
+**Trigger**: `release-scan.yml` (hourly cron), via the `snapshot` entry in `.github/update-config.yml`
+
+Since RANCHER-3069 the snapshot branch runs through the **same** chain as the release branches — `release-scan.yml` → `release-update.yml` → `release-update-flow.yml`. The former bash implementation (`ci-hourly-check.yaml`, `scripts/check-apps.sh`, `scripts/check-core.sh`) is retired.
+
+**Configuration**:
+
+```yaml
+  - snapshot:
+      enabled: true
+      need_pr: false                              # commit straight to the branch
+      pre_release: "only"                         # declared, unused — see below
+      descriptor_build_offset: "100200000000000"  # + run number = platform build number
+```
+
+The pre-release channel is **not** a branch setting: it is `preRelease` on each template entry, exactly as `folio-application-generator` reads it from an application template. The branch-level `pre_release` key stays declared and unused, matching kitfox-github's `application-update-flow.yml`.
 
 **Process Flow**:
-1. **Version Detection**: Platform scanning identifies new application and eureka-component versions
-2. **Platform Descriptor Update**: `platform-descriptor.json` updated with latest versions
-3. **Validation Process**:
-   - **JSON Validation**: Platform descriptor syntax verification
-   - **Dependency Resolution**: Application and component compatibility checks
-   - **Build Testing**: Complete platform composition validation
-4. **Environment Update**: Snapshot environment refreshed with new platform state
-5. **Notification**: Platform team notified of updates
+1. **Version Detection**:
+   - Applications: FAR with the entry's `preRelease` (`only` throughout the snapshot template); the newest build wins
+   - Eureka components: Docker Hub `folioci` tags — the namespace `preRelease: only` implies — newest by semver
+   - Every entry declares `latest`, so there is no version window; see below
+2. **Platform Descriptor Update**: versions applied, and `version` set to `<stem>.<offset + run_number>`
+3. **Validation**: `validate-platform` fetches every application descriptor from FAR and posts them to `/applications/validate-descriptors`; a failure blocks the push
+4. **Stripes**: `package.json` is left alone — it carries deliberate `>=` floors — while `yarn install` refreshes `yarn.lock`
+5. **Delivery**: committed straight to `snapshot`, no update branch and no PR
+6. **Notification**: Slack, with the descriptor diff and a commit link rather than a PR link
+
+The snapshot branch carries a `platform-descriptor.template.json` like every other branch the flow processes — a missing template is an error, not a fallback. Every entry looks like this:
+
+```json
+{ "name": "app-acquisitions", "version": "latest", "preRelease": "only" }
+```
+
+`latest` means no window: the newest version in the declared channel wins. That is exactly what the retired bash path did — `check-apps.sh` asked FAR for `latest=1` and took `.applicationDescriptors[0].version`, with no constraint and no comparison — and it is the same keyword the `app-*` templates already use for module versions.
+
+A range would have been a narrowing. `^2.1.0-SNAPSHOT` binds the entry to major 2; at release preparation nearly every application bumps its major at once, and the whole cadence would stall until someone regenerated the template. With `latest` the template is stable and needs no maintenance.
+
+Replayed against live FAR and Docker Hub, the `latest` template resolves all 47 entries to exactly the versions the snapshot descriptor already holds.
+
+Resolution is **newest in channel, or fail** — the descriptor is never read and never partially preserved, and `assert_resolved` refuses to emit an entry whose version is not concrete semver, so `latest` can never reach `platform-descriptor.json`.
+
+Ranges (`^`, `~`, exact pins) still work here if a specific entry ever needs to be held back; on a pre-release branch such a range must anchor on a `-SNAPSHOT` stem, because SemVer rule 11.3 sorts every `2.1.0-SNAPSHOT.N` below `2.1.0`.
 
 ## 📊 Versioning Strategy
 

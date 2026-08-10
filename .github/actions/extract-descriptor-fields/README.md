@@ -41,7 +41,7 @@ Extract fields with strict type validation:
   id: extract
   uses: folio-org/platform-lsp/.github/actions/extract-descriptor-fields@master
   with:
-    file-path: ${{ env.STATE_FILE }}
+    file-path: ${{ env.TEMPLATE_FILE }}
     fields: 'eureka-components,applications,version'
     validate-schema: 'true'
     expected-types: '{"eureka-components":"array","applications":"object","version":"string"}'
@@ -56,6 +56,11 @@ Extract fields with strict type validation:
   with:
     applications: ${{ steps.extract.outputs.applications }}
 ```
+
+The resolvers are fed `platform-descriptor.template.json`, not `platform-descriptor.json`. The
+template's entries carry constraints (`latest`, `^2.1.0`, `~2.1.0`); the descriptor's carry
+resolved versions, and a plain version is an exact pin that is never queried — so feeding the
+descriptor in resolves nothing.
 
 ### Extract from JSON Content
 
@@ -257,29 +262,39 @@ Example output:
 
 ## Integration with Other Actions
 
-### Extract → Update → Compare Pattern
+### Extract → Resolve → Compare Pattern
+
+Two files, two roles: constraints are read from the template, and the result is compared against
+the descriptor to decide whether anything moved.
 
 ```yaml
-- name: Extract current state
+- name: Extract constraints from the template
+  id: extract-template
+  uses: folio-org/platform-lsp/.github/actions/extract-descriptor-fields@master
+  with:
+    file-path: platform-descriptor.template.json
+    fields: 'eureka-components,applications'
+    validate-schema: 'true'
+    expected-types: '{"eureka-components":"array","applications":"object"}'
+
+- name: Extract current state from the descriptor
   id: extract-current
   uses: folio-org/platform-lsp/.github/actions/extract-descriptor-fields@master
   with:
     file-path: platform-descriptor.json
     fields: 'eureka-components,applications'
-    validate-schema: 'true'
-    expected-types: '{"eureka-components":"array","applications":"object"}'
 
 - name: Update Eureka Components
   id: update-eureka
   uses: folio-org/platform-lsp/.github/actions/update-eureka-components@master
   with:
-    components: ${{ steps.extract-current.outputs.eureka-components }}
+    components: ${{ steps.extract-template.outputs.eureka-components }}
 
 - name: Update Applications
   id: update-apps
   uses: folio-org/platform-lsp/.github/actions/update-applications@master
   with:
-    applications: ${{ steps.extract-current.outputs.applications }}
+    applications: ${{ steps.extract-template.outputs.applications }}
 
 - name: Compare for changes
   run: |
@@ -373,7 +388,7 @@ jobs:
         id: extract
         uses: folio-org/platform-lsp/.github/actions/extract-descriptor-fields@master
         with:
-          file-path: platform-descriptor.json
+          file-path: platform-descriptor.template.json
           fields: 'eureka-components,applications,version'
           validate-schema: 'true'
           expected-types: |
