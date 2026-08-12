@@ -1818,10 +1818,10 @@
     react-inspector "^6.0.0"
     use-deep-compare "^1.1.0"
 
-"@folio/inventory@14.0.5":
-  version "14.0.5"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory/-/inventory-14.0.5.tgz#c555509a53e54a9be9e4b2d86228df81aa8da95c"
-  integrity sha512-2ywyTQ1GARnyjlfW8sQZiLHEPV5Q8awz4noDTwAHF0waKlzGT7eIbyMdo7uyNv9mnnuHoYHMJSoCok/NXn63+w==
+"@folio/inventory@14.0.6":
+  version "14.0.6"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory/-/inventory-14.0.6.tgz#a14feaf639cbf29fb46f4be880cfc296d8fb8037"
+  integrity sha512-i5y2hVd5D7pcUnUzfrtBFPiTl/G32UYnKoMrPxSCti8xBFEcWFVrle8/zpt/wbxHZkV9tdH3PDmsvQabGUJHCQ==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
