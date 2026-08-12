@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000010451"
+        "version": "3.4.0-SNAPSHOT.100200000010453"
       }
     ],
     "optional": [
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000003306"
+        "version": "1.1.0-SNAPSHOT.100200000003329"
       },
       {
         "name": "app-dcb",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.3.0-SNAPSHOT.100200000010191"
+        "version": "2.3.0-SNAPSHOT.100200000010335"
       },
       {
         "name": "app-eholdings",
