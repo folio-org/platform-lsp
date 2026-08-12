@@ -2349,9 +2349,9 @@
     uuid "^9.0.0"
 
 "@folio/receiving@>=1.0.0":
-  version "9.0.1099000000000577"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/receiving/-/receiving-9.0.1099000000000577.tgz#ad690785eaf3ef50dd32c1b11eb49a00517d45b5"
-  integrity sha512-rqbLfKqbOh8NrkoBuoLAqevYGG19mQcD/vsre0nDomkAy++355Hm7mkiuayYxv0UmTRe7TuFAOfa66inRdvw2A==
+  version "9.0.1099000000000580"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/receiving/-/receiving-9.0.1099000000000580.tgz#f09fca29d4467c5546bf154ffe5cd18de28c104b"
+  integrity sha512-0yf6EfQ5nr+BSLNp0jauW6Hgqk8GTsyHbLF6uErtf1RfE6gIpELoI07ArUyzecVv61DKOrHhBYzcJj30mBbS2g==
   dependencies:
     "@folio/stripes-acq-components" "~7.2.0"
     final-form "^4.18.2"
@@ -4299,9 +4299,9 @@ ansi-regex@^5.0.1:
   integrity sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==
 
 ansi-regex@^6.2.2:
-  version "6.2.2"
-  resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-6.2.2.tgz#60216eea464d864597ce2832000738a0589650c1"
-  integrity sha512-Bq3SmSpyFHaWjPk8If9yc6svM8c56dB5BAtW4Qbw5jHTwwXXcTLoRMkpDJp6VL0XzlWaCHTXrkFURMYmD0sLqg==
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-6.3.0.tgz#247c8e7b70a1a43b10ce14c0226fcbf58e8815d5"
+  integrity sha512-WpDfL7NO6j7tH88IDBNVdUJxDh9nmCteAVW9dsep846XdwF4naCBK+/tGLX3KJgcpgMRXCFlTM2hKGoK9FsdrQ==
 
 ansi-styles@^4.0.0, ansi-styles@^4.1.0:
   version "4.3.0"
