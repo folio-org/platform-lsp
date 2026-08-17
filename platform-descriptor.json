@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000011129"
+        "version": "2.2.0-SNAPSHOT.100200000011272"
       },
       {
         "name": "app-platform-complete",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000003361"
+        "version": "1.1.0-SNAPSHOT.100200000003466"
       },
       {
         "name": "app-dcb",
@@ -130,7 +130,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000009989"
+        "version": "1.1.0-SNAPSHOT.100200000010123"
       },
       {
         "name": "app-mosaic",
