@@ -1671,10 +1671,10 @@
     react-inspector "^6.0.0"
     react-query "^3.38.1"
 
-"@folio/eholdings@11.1.2":
-  version "11.1.2"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/eholdings/-/eholdings-11.1.2.tgz#17096b5ebddd273111f6a437925a71eefb7f3bc8"
-  integrity sha512-oDr4BKiVE5PzQisokIwz2SWgM+ArdD4J+IzGosAj2aHJwnxNkp2rYQsPUxuB1PGxMGt6pZrp1KsCU3N1Ixp1uw==
+"@folio/eholdings@11.1.3":
+  version "11.1.3"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/eholdings/-/eholdings-11.1.3.tgz#df115db9835b8a21a6b8fb73f6c4bbbd099eb2b0"
+  integrity sha512-/wgbtlvLoQSvSN96MHiaAX8xX3iW4pjLeBJ5nCF/kh0OPiPlSwRyUq1NPEp8aecA2t9cxoNVML9U0Mfwd5G7Qw==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
@@ -1818,10 +1818,10 @@
     react-inspector "^6.0.0"
     use-deep-compare "^1.1.0"
 
-"@folio/inventory@14.0.5":
-  version "14.0.5"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory/-/inventory-14.0.5.tgz#c555509a53e54a9be9e4b2d86228df81aa8da95c"
-  integrity sha512-2ywyTQ1GARnyjlfW8sQZiLHEPV5Q8awz4noDTwAHF0waKlzGT7eIbyMdo7uyNv9mnnuHoYHMJSoCok/NXn63+w==
+"@folio/inventory@14.0.6":
+  version "14.0.6"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/inventory/-/inventory-14.0.6.tgz#a14feaf639cbf29fb46f4be880cfc296d8fb8037"
+  integrity sha512-i5y2hVd5D7pcUnUzfrtBFPiTl/G32UYnKoMrPxSCti8xBFEcWFVrle8/zpt/wbxHZkV9tdH3PDmsvQabGUJHCQ==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -2709,10 +2709,10 @@
   resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-logger/-/stripes-logger-1.0.0.tgz#588cdf4d27f90ce99389ccbb87a221fa6dd9e683"
   integrity sha512-YPd1NKDvEpr5d35o/P5Z1aCT37lujH0FR1CrJMJ9hiqe/qtva5ACte3BQdGGV02+M5sC13gBiITs6Vcx7A+GEg==
 
-"@folio/stripes-marc-components@2.1.0":
-  version "2.1.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-marc-components/-/stripes-marc-components-2.1.0.tgz#24279a608ef77716b7c1f358e1e56d5965ce47dc"
-  integrity sha512-OH8vkGy6gDSVHmfYqn1mVv8Jew5yBrkgqflFuVN0MpdAp6ILg53bI3DZSP+j3DFDznEPS0shc9I5701nGbRntQ==
+"@folio/stripes-marc-components@2.1.1":
+  version "2.1.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/stripes-marc-components/-/stripes-marc-components-2.1.1.tgz#9459187ad8e7c5a06980d73bbdea64be61c81f16"
+  integrity sha512-ksmV1fFILlRDWaesZJ12k4AnTKs/KuVUjEHYbzhdDJ8dFBe9lp6i7Jp9gezBbJMWjEWw1ba7wXdddqREmnSirw==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.3.2"
