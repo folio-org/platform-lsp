@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "2.1.0-SNAPSHOT.100200000011134"
+        "version": "2.1.0-SNAPSHOT.100200000011296"
       },
       {
         "name": "app-consortia",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000011796"
+        "version": "1.1.0-SNAPSHOT.100200000011949"
       },
       {
         "name": "app-erm-usage",
