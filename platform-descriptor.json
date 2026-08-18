@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000011307"
+        "version": "2.2.0-SNAPSHOT.100200000011310"
       },
       {
         "name": "app-platform-complete",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000003501"
+        "version": "1.1.0-SNAPSHOT.100200000003502"
       },
       {
         "name": "app-dcb",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "2.1.0-SNAPSHOT.100200000010951"
+        "version": "2.1.0-SNAPSHOT.100200000011352"
       },
       {
         "name": "app-inventory",
@@ -162,7 +162,7 @@
       },
       {
         "name": "app-requests-ecs",
-        "version": "2.1.0-SNAPSHOT.100200000010969"
+        "version": "2.1.0-SNAPSHOT.100200000011185"
       },
       {
         "name": "app-requests-mediated",
