@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000011273"
+        "version": "2.2.0-SNAPSHOT.100200000011307"
       },
       {
         "name": "app-platform-complete",
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.1.0-SNAPSHOT.100200000006412"
+        "version": "1.1.0-SNAPSHOT.100200000006854"
       },
       {
         "name": "app-bulk-edit",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000003499"
+        "version": "1.1.0-SNAPSHOT.100200000003500"
       },
       {
         "name": "app-dcb",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000011960"
+        "version": "1.1.0-SNAPSHOT.100200000011985"
       },
       {
         "name": "app-erm-usage",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000004540"
+        "version": "1.1.0-SNAPSHOT.100200000004541"
       },
       {
         "name": "app-licenses",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "2.1.0-SNAPSHOT.100200000011568"
+        "version": "2.1.0-SNAPSHOT.100200000011912"
       },
       {
         "name": "app-lists",
@@ -126,11 +126,11 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000010929"
+        "version": "3.1.0-SNAPSHOT.100200000011137"
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000010124"
+        "version": "1.1.0-SNAPSHOT.100200000010158"
       },
       {
         "name": "app-mosaic",
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.1.0-SNAPSHOT.100200000005808"
+        "version": "1.1.0-SNAPSHOT.100200000006136"
       },
       {
         "name": "app-reading-room",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000011521"
+        "version": "1.1.0-SNAPSHOT.100200000011731"
       },
       {
         "name": "app-service-interaction",
