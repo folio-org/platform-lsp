@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000010641"
+        "version": "3.4.0-SNAPSHOT.100200000010674"
       }
     ],
     "optional": [
@@ -54,7 +54,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "2.1.0-SNAPSHOT.100200000011296"
+        "version": "2.1.0-SNAPSHOT.100200000011361"
       },
       {
         "name": "app-consortia",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "3.1.0-SNAPSHOT.100200000011632"
+        "version": "3.1.0-SNAPSHOT.100200000011649"
       },
       {
         "name": "app-fqm",
