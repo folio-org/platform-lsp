@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000010684"
+        "version": "3.4.0-SNAPSHOT.100200000010693"
       }
     ],
     "optional": [
@@ -98,7 +98,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "2.1.0-SNAPSHOT.100200000011892"
+        "version": "2.1.0-SNAPSHOT.100200000011905"
       },
       {
         "name": "app-gobi",
@@ -122,7 +122,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.2.0-SNAPSHOT.100200000011803"
+        "version": "1.2.0-SNAPSHOT.100200000011887"
       },
       {
         "name": "app-marc-migrations",
