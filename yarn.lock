@@ -2338,9 +2338,9 @@
     prop-types "^15.6.0"
 
 "@folio/plugin-query-builder@>=1.0.0", "@folio/plugin-query-builder@^3.0.0":
-  version "3.0.2099000000001562"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-query-builder/-/plugin-query-builder-3.0.2099000000001562.tgz#11da50e04abb06a05de560862b58c96583e683a2"
-  integrity sha512-qkgVM8MZDg7EtQ1MqpzvuqG5jWzUtopK4TmnmEgQJCUUYyM3JGK9wsr5P1clOVv/gJn/oG+Od5I8pCBqk/dnKQ==
+  version "3.0.2099000000001611"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-query-builder/-/plugin-query-builder-3.0.2099000000001611.tgz#b86decbcc0627e914e7f167ee587a349deeae18c"
+  integrity sha512-7VOFj6gLkXHa4pn/4yQmdwUhtpY0LLn2MlS2LqLLGbzoXL4J2H5zn7vzHof+qZr7L26QOxbXkG28Oo8zDXCHpw==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
@@ -8802,9 +8802,9 @@ react@^19.2.5:
   integrity sha512-PWaYA1L/q9u2u7xYQi+Y3L3Yfnie7XyLeaJICV1MGD6LprsBxcAqGjYyr0eY3p+QdsA+x/Irkt4Qif8D63+Sbw==
 
 read-cache@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/read-cache/-/read-cache-1.0.0.tgz#e664ef31161166c9751cdbe8dbcf86b5fb58f774"
-  integrity sha512-Owdv/Ft7IjOgm/i0xvNDZ1LrRANRfew4b2prF3OWMQLxLfu3bS8FVhCsrSCMK4lR56Y9ya+AThoTpDCTxCmpRA==
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/read-cache/-/read-cache-1.0.1.tgz#b472a73bbbd3c9c8fc157d4e724f5b0a2c147e7c"
+  integrity sha512-vmdQ4JEAaAINu1pc2H9HdZIeL2+IQehMpelB7BMNiNIA+mFxA5/02ObFUhEHkNAtNZOBS7kFCZxziUr4ho1j7A==
   dependencies:
     pify "^2.3.0"
 
