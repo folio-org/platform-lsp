@@ -8042,11 +8042,6 @@ picomatch@^4.0.0, picomatch@^4.0.4:
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-4.0.5.tgz#51ea57a17d86f605f81039595fbc40ed06a55fab"
   integrity sha512-RvwwcruNjI1ncT5xRakeyS9Lf8lcItv34KD+aif+VH9kduAyfYBipGh12274xtenIPZ119/R9BdTBa8gAwSh0A==
 
-pify@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/pify/-/pify-2.3.0.tgz#ed141a6ac043a849ea588498e7dca8b15330e90c"
-  integrity sha512-udgsAY+fTnvv7kI7aaxbqwWNb0AHiB0qBO89PZKPkoTmGOgdbrHDKD+0B2X4uTfJ/FT1R09r9gTsjUjNJotuog==
-
 pify@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/pify/-/pify-3.0.0.tgz#e5a4acd2c101fdf3d9a4d07f0dbc4db49dd28176"
@@ -8802,11 +8797,9 @@ react@^19.2.5:
   integrity sha512-PWaYA1L/q9u2u7xYQi+Y3L3Yfnie7XyLeaJICV1MGD6LprsBxcAqGjYyr0eY3p+QdsA+x/Irkt4Qif8D63+Sbw==
 
 read-cache@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/read-cache/-/read-cache-1.0.1.tgz#b472a73bbbd3c9c8fc157d4e724f5b0a2c147e7c"
-  integrity sha512-vmdQ4JEAaAINu1pc2H9HdZIeL2+IQehMpelB7BMNiNIA+mFxA5/02ObFUhEHkNAtNZOBS7kFCZxziUr4ho1j7A==
-  dependencies:
-    pify "^2.3.0"
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/read-cache/-/read-cache-1.0.2.tgz#3bfa40e27574216bd893276ced75d81e6649ca52"
+  integrity sha512-/peqiBB/n07gQGLsWaHho3WfvUyRscw0gYTsEFMhrIe/nWLkYaf5SbKYjGYqtRV3aPwykJgF2VEMo1ac4bnsGA==
 
 readable-stream@^2.0.1:
   version "2.3.8"
@@ -9597,9 +9590,9 @@ supports-preserve-symlinks-flag@^1.0.0:
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
 svg-parser@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/svg-parser/-/svg-parser-2.0.4.tgz#fdc2e29e13951736140b76cb122c8ee6630eb6b5"
-  integrity sha512-e4hG1hRwoOdRb37cIMSgzNsxyzKfayW6VOflrwvR+/bzrkyxY/31WkbgnQpgtrNp1SdpJvpUAGTa/ZoiPNDuRQ==
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/svg-parser/-/svg-parser-2.0.5.tgz#8d159c6a927f9f712462505f6e796c551abe815a"
+  integrity sha512-FuT74puvVMJQ8sgFxgOKPex5MbxPeltqCXJV3wR9Xq+vPHaF+tTdE1lhJcwspUxjtjvXy1NwqcSLZx9UNwHawg==
 
 svg-pathdata@^6.0.3:
   version "6.0.3"
