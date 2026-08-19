@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000011342"
+        "version": "2.2.0-SNAPSHOT.100200000011347"
       },
       {
         "name": "app-platform-complete",
@@ -94,11 +94,11 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "3.1.0-SNAPSHOT.100200000011656"
+        "version": "3.1.0-SNAPSHOT.100200000011659"
       },
       {
         "name": "app-fqm",
-        "version": "2.1.0-SNAPSHOT.100200000011867"
+        "version": "2.1.0-SNAPSHOT.100200000011892"
       },
       {
         "name": "app-gobi",
