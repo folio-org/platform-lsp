@@ -1727,9 +1727,9 @@
     react-query "^3.38.1"
 
 "@folio/eholdings@>=1.1.0":
-  version "11.2.1099000000000554"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000554.tgz#1a65e87e4225a3c97e5edb812c5ce5d25833da86"
-  integrity sha512-rvWX3UV2R70ZduH/aElUZD/T42PNXG90VwdMoar8OWCKwKfYaTM5WOAOSXw+hyavqOzkXsShzHm0iKKsFLrCEQ==
+  version "11.2.1099000000000568"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000568.tgz#2006ce578fa23928402f902e39bc30903cd62f78"
+  integrity sha512-cNfCQVguJ1Npz2QnvyCpuXUhWbAS57RR36YG2UxTGhzkhkUyP1ubTBCGxueIhvc0OQH3BBGL/IGIpR/2rs2Cgg==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
@@ -2971,9 +2971,9 @@
     uuid "9.0.0"
 
 "@folio/users@>=2.17.0":
-  version "13.1.1099000000001487"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/users/-/users-13.1.1099000000001487.tgz#26ea6f544d2306fba1f068c7c6d64cc5fb81769d"
-  integrity sha512-lZgtgwvsgq7VvdRV3rM1xJ0MG2/fGx/cL8/VS0iP66S9Pryr7PGV95bi7Dy9c+COHpeitPpRfwZy/a1XkoHUlA==
+  version "13.1.1099000000001499"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/users/-/users-13.1.1099000000001499.tgz#06678694f81c46c20f82d64c016cf8971da73a60"
+  integrity sha512-sulqutKakzTUnXFdo2CDbeNOY+pQ4N9x7LIrQCCiUyWuVixB0+6ODbt4NSS8YcmuqX1+5IaxPvb/3QKqwZeEkQ==
   dependencies:
     compressorjs "^1.2.1"
     dompurify "^3.2.0"
