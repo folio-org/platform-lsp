@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000011383"
+        "version": "2.2.0-SNAPSHOT.100200000011417"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000010723"
+        "version": "3.4.0-SNAPSHOT.100200000010753"
       }
     ],
     "optional": [
@@ -58,7 +58,7 @@
       },
       {
         "name": "app-consortia",
-        "version": "1.5.0-SNAPSHOT.100200000011032"
+        "version": "1.5.0-SNAPSHOT.100200000012193"
       },
       {
         "name": "app-consortia-manager",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000012053"
+        "version": "1.1.0-SNAPSHOT.100200000012090"
       },
       {
         "name": "app-erm-usage",
