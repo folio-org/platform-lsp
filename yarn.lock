@@ -3817,17 +3817,17 @@
   dependencies:
     defer-to-connect "^2.0.1"
 
-"@tanstack/query-core@5.102.1":
-  version "5.102.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.102.1.tgz#f67b0e6133ade53b47fc7503877b7ec345aa3e97"
-  integrity sha512-bJTsrO2ODWSgg+x1leTsK036GBtmNNjnrF1Vk06J5fg/phYZLQIdXrBe0uf5xTItXYvIW1MtbLhyPw7cPMqUUQ==
+"@tanstack/query-core@5.102.2":
+  version "5.102.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.102.2.tgz#b320ef63aadf55d0ab55ee4f92b602f72521a9ed"
+  integrity sha512-zQ5794PXBlV5Wl7N23SR1/Ss+wPE/h2Ye4XlKpm3omN8i8b/Fd4DAdqpLS2AXj5M/RMObt3k5qy3E7kzt/AvBA==
 
 "@tanstack/react-query@^5.101.0":
-  version "5.102.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.102.1.tgz#a0fdde53571ad53d5ca3615a9410fb25f6b5f77e"
-  integrity sha512-DKJeRvxjsGUWhUVnVVXSseTS0SKBMLSkrz8dm7i08r93IQQ2gAfUkX1e801gVZ18KSwHiG5yng4tQm5+qSGS0w==
+  version "5.102.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.102.2.tgz#e336b8e9da552f052de67e24b380c7502764a820"
+  integrity sha512-KxU8ZyOEuJ81eTSgXa8GQbk/jO/rz0elYtNKt3VMtM2pRjeO8ADIu7sqqmEjFKJKqco9h2N1ojIDuHs6VfDItQ==
   dependencies:
-    "@tanstack/query-core" "5.102.1"
+    "@tanstack/query-core" "5.102.2"
 
 "@types/body-parser@*":
   version "1.19.6"
@@ -9590,9 +9590,9 @@ supports-preserve-symlinks-flag@^1.0.0:
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
 svg-parser@^2.0.4:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/svg-parser/-/svg-parser-2.0.5.tgz#8d159c6a927f9f712462505f6e796c551abe815a"
-  integrity sha512-FuT74puvVMJQ8sgFxgOKPex5MbxPeltqCXJV3wR9Xq+vPHaF+tTdE1lhJcwspUxjtjvXy1NwqcSLZx9UNwHawg==
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/svg-parser/-/svg-parser-2.1.0.tgz#f808c50953207b230fea6200d866697af61617a4"
+  integrity sha512-bwLf38YmY+TDYHJw1Ex0Co8c4yeXuJAo8YnXGZrscxrvYoVVIvLeniEkV1Ks/54VteMnL4FtyN1+P+TZJdUPmQ==
 
 svg-pathdata@^6.0.3:
   version "6.0.3"
