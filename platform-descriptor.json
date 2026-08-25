@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000012084"
+        "version": "2.1.0-SNAPSHOT.100200000012115"
       },
       {
         "name": "app-agreements",
@@ -58,7 +58,7 @@
       },
       {
         "name": "app-consortia",
-        "version": "1.5.0-SNAPSHOT.100200000012193"
+        "version": "1.5.0-SNAPSHOT.100200000012361"
       },
       {
         "name": "app-consortia-manager",
