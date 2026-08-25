@@ -118,15 +118,15 @@
       },
       {
         "name": "app-linked-data",
-        "version": "2.1.0-SNAPSHOT.100200000012152"
+        "version": "2.1.0-SNAPSHOT.100200000012156"
       },
       {
         "name": "app-lists",
-        "version": "1.2.0-SNAPSHOT.100200000011887"
+        "version": "1.2.0-SNAPSHOT.100200000012105"
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000011137"
+        "version": "3.1.0-SNAPSHOT.100200000011363"
       },
       {
         "name": "app-marc-storage",
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.1.0-SNAPSHOT.100200000006380"
+        "version": "1.1.0-SNAPSHOT.100200000006381"
       },
       {
         "name": "app-reading-room",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000011731"
+        "version": "1.1.0-SNAPSHOT.100200000011956"
       },
       {
         "name": "app-service-interaction",
