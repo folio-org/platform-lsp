@@ -1905,9 +1905,9 @@
     "@folio/plugin-find-instance" "^10.0.0"
 
 "@folio/invoice@>=1.0.0":
-  version "8.0.1099000000000561"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/invoice/-/invoice-8.0.1099000000000561.tgz#17d8b3f2852868391b6c9a22c9aead50bc3ad09a"
-  integrity sha512-fauduu0zC6+49T/44DyS5qJ43Vte52cELiZjIvEf3zAeTIoWVKqasWnGP1p2xdH0Lz6SHN3cxRtVfL5nnRwyVA==
+  version "8.0.1099000000000566"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/invoice/-/invoice-8.0.1099000000000566.tgz#dcfb0948ee40b5d1a1567037c4d3ed4b26b9e123"
+  integrity sha512-ltqQd4szby9PmikwkK6n6LZWJxLzwgz7M7x1PZnOvdjPg1HotUqGrhpR3J4daWyiUe5vvAdKqmV9Ta/8iVTEQg==
   dependencies:
     "@folio/stripes-acq-components" "~7.1.0"
     file-saver "^2.0.0"
@@ -2338,9 +2338,9 @@
     prop-types "^15.6.0"
 
 "@folio/plugin-query-builder@>=1.0.0", "@folio/plugin-query-builder@^3.0.0":
-  version "3.0.2099000000001666"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-query-builder/-/plugin-query-builder-3.0.2099000000001666.tgz#577fe1ff131bba8e1e862012e7739ed2f2855238"
-  integrity sha512-XOnB9YCpMxcBWcHmCoALymuSVBGFPsejgaO83ylbqK7FGJZM1cr0eel5Gaf+Ov3SxVPTfJGy0ZCfF11sBtKd9A==
+  version "3.0.2099000000001679"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-query-builder/-/plugin-query-builder-3.0.2099000000001679.tgz#4b9db170e71ae4d13568bffa923898f59af711a6"
+  integrity sha512-tiVUcXBuoBydBUNxJHJMyPvbGJgGq01tGlkzvoIQKaHDkvJGH4CyxQlbrY6JVqfgzQvG5I3tCHHmI0mOm7SezQ==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
@@ -2568,9 +2568,9 @@
     react-query "^3.39.3"
 
 "@folio/stripes-authorization-components@^2.0.0", "@folio/stripes-authorization-components@^2.1.0":
-  version "2.2.1099000000000647"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-authorization-components/-/stripes-authorization-components-2.2.1099000000000647.tgz#9b804e373cfae6db90d27977a990e6022c8d897a"
-  integrity sha512-4zpH3gMi1lGVE5i8T5aItBRazaG6WdXw6aYu358vH1vZJPA4x8ZEAXtvA+2qbsA1iGOBLlLEK60tt2LAWYKkEQ==
+  version "2.2.1099000000000650"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-authorization-components/-/stripes-authorization-components-2.2.1099000000000650.tgz#b9d76a631d6995704c640e43fff407301df1c9e8"
+  integrity sha512-7IeC41kU8O5w5aASxJaxBjdbuzzwGalWxOehviPbYeb1uPeR0rXXtkAOuOa1Ycbft656QFfHZr8zsDibSn8TDQ==
   dependencies:
     "@folio/plugin-select-application" "^2.0.0"
     classnames "^2.2.6"
@@ -3143,7 +3143,7 @@
   resolved "https://registry.yarnpkg.com/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.5.5.tgz#6912b00d2c631c0d15ce1a7ab57cd657f2a8f8ba"
   integrity sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og==
 
-"@jridgewell/trace-mapping@^0.3.24", "@jridgewell/trace-mapping@^0.3.25", "@jridgewell/trace-mapping@^0.3.28":
+"@jridgewell/trace-mapping@^0.3.24", "@jridgewell/trace-mapping@^0.3.25", "@jridgewell/trace-mapping@^0.3.28", "@jridgewell/trace-mapping@^0.3.31":
   version "0.3.31"
   resolved "https://registry.yarnpkg.com/@jridgewell/trace-mapping/-/trace-mapping-0.3.31.tgz#db15d6781c931f3a251a3dac39501c98a6082fd0"
   integrity sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==
@@ -7105,9 +7105,9 @@ js-sha3@0.8.0:
   integrity sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==
 
 js-yaml@^4.1.0:
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-4.3.1.tgz#01216c001d67f48e2cd560d708c7af21090a3848"
-  integrity sha512-CY6crGq313MX8GkwvB7tzgp99vjQxY1++5y10/BKN/GUfHqWaOGQMNZkBvqSzsZKWk/ijwHlWzzkLulsGHhjWQ==
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-4.3.2.tgz#8e44fb14a2643c59726bb15787b5f1512cb3d3fb"
+  integrity sha512-SFNOvSJ+Dgf/9An904Yx+CgSlIPCkIpao4qo51lpee25TIRejdH3rhR4EZMGoNx3/TP3O+wzWuiTFl4sqbltzA==
   dependencies:
     argparse "^2.0.1"
 
@@ -7604,14 +7604,14 @@ minimist@^1.2.0, minimist@^1.2.3, minimist@^1.2.5:
   integrity sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==
 
 minimizer-webpack-plugin@^5.6.1:
-  version "5.6.1"
-  resolved "https://registry.yarnpkg.com/minimizer-webpack-plugin/-/minimizer-webpack-plugin-5.6.1.tgz#289922a4c96c4ed1ddb76b8a00bd8074e89a2f7f"
-  integrity sha512-DoeAZz8Q1C1znwsUzej1fdoi4jCf7/+Em27ouLqfK/+3m8G+D7yDhUwrc3CNhjSzGUN1kn7Iv4sWmjflQHenpw==
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/minimizer-webpack-plugin/-/minimizer-webpack-plugin-5.7.0.tgz#16b4b57562b4e4aff8b82305a9cf0bdc3512eb06"
+  integrity sha512-0ReIvHAVVojdDOn+kmRzrT62A6Btc9KeAK6ANTpd8+S5mnm5RDdu+EN6924xLFFzb36Rkoj+xOXkDA0jTHId/g==
   dependencies:
-    "@jridgewell/trace-mapping" "^0.3.25"
+    "@jridgewell/trace-mapping" "^0.3.31"
     jest-worker "^27.4.5"
-    schema-utils "^4.3.0"
-    terser "^5.31.1"
+    schema-utils "^4.3.3"
+    terser "^5.51.0"
 
 moment-range@^4.0.2:
   version "4.0.2"
@@ -9159,7 +9159,7 @@ schema-utils@4.3.0:
     ajv-formats "^2.1.1"
     ajv-keywords "^5.1.0"
 
-schema-utils@^4.0.0, schema-utils@^4.2.0, schema-utils@^4.3.0, schema-utils@^4.3.3:
+schema-utils@^4.0.0, schema-utils@^4.2.0, schema-utils@^4.3.3:
   version "4.3.3"
   resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-4.3.3.tgz#5b1850912fa31df90716963d45d9121fdfc09f46"
   integrity sha512-eflK8wEtyOE6+hsaRVPxvUKYCpRgzLqDTb8krvAsRIwOGlHoSgYLgBXoubGgLd2fT41/OUYdb48v4k4WWHQurA==
@@ -9642,7 +9642,7 @@ tapable@^2.0.0, tapable@^2.2.1, tapable@^2.3.0, tapable@^2.3.3:
   resolved "https://registry.yarnpkg.com/tapable/-/tapable-2.3.3.tgz#5da7c9992c46038221267985ab28421a8879f160"
   integrity sha512-uxc/zpqFg6x7C8vOE7lh6Lbda8eEL9zmVm/PLeTPBRhh1xCgdWaQ+J1CUieGpIfm2HdtsUpRv+HshiasBMcc6A==
 
-terser@^5.10.0, terser@^5.31.1:
+terser@^5.10.0, terser@^5.51.0:
   version "5.51.0"
   resolved "https://registry.yarnpkg.com/terser/-/terser-5.51.0.tgz#7b331b3c5d01b600ac27ae0abbdc2f084dc9a230"
   integrity sha512-myiQ6aFnxDOjdiXdTlC8ngVccQD88uHXTx5RUQOSEnarDYgJMjDagwAQszcOusjvmf4YqWsxoD1+MY+oAJRmpw==
