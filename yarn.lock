@@ -1977,9 +1977,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/linked-data@^2.0.4":
-  version "2.0.4099000000002692"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.4099000000002692.tgz#9f2051790c311f848d73ae061d86dc8fd254c931"
-  integrity sha512-wipqvvgpcdRi/8bOjSstra/hZ5TltPJ6ZpcuByOAY5Gw//hOpvLLqSLxpHGLfYqrAoJYlC5U2TENG8v3XgdvOQ==
+  version "2.0.4099000000002701"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.4099000000002701.tgz#10f201bcaaf1fcecc1ecc0f1a2d82c6125358744"
+  integrity sha512-FB48shtonEqZmqAPWJzTBM5T6TT5CFvYFcz5FaTz+DjlFXPl7f57H99wxEMG8A+JVkrke/ojVjKcnyW4Lz6SiA==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -2375,9 +2375,9 @@
     prop-types "^15.6.0"
 
 "@folio/quick-marc@>=1.0.0", "@folio/quick-marc@^11.0.0":
-  version "11.1.1099000000000610"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/quick-marc/-/quick-marc-11.1.1099000000000610.tgz#665fb9f3131a937035d4d8bd9ea77b73f1950616"
-  integrity sha512-D5z0zDrvyhXxO6XRcLJxZdpr/uEjKCuUoxXZig5sLgKDV4Ld5WVpCGQsbx4ijPO2LfE8H8PcV2mDnOprPc2Ihw==
+  version "11.1.1099000000000613"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/quick-marc/-/quick-marc-11.1.1099000000000613.tgz#76e9fa6c2de491674dc2045c5ab6d895300d8bc0"
+  integrity sha512-dDtfmySHHB4OSx6PwpgXPmkyNQA4jdhgu3ZXoIB1uVY8d7sK2iHxP4MmZ3c7kTR4NcqoNtu12K4b9h6IxvL1wA==
   dependencies:
     "@folio/stripes-acq-components" "^7.1.0"
     classnames "^2.5.1"
@@ -3817,17 +3817,17 @@
   dependencies:
     defer-to-connect "^2.0.1"
 
-"@tanstack/query-core@5.102.5":
-  version "5.102.5"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.102.5.tgz#703a7e15324f217e4e27fd1528b8ff942750699e"
-  integrity sha512-RjCmHf9cPRYcH/dpO0Jagw3rxCM1bLzMKKSGzaDkQJADDKGpv5RFjN54IyHSOIPa822AUA7ASOXDjjy1jfyzIA==
+"@tanstack/query-core@5.102.6":
+  version "5.102.6"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.102.6.tgz#874ef53e9f5f4cb56dd2fa62341a0fd7dd880d85"
+  integrity sha512-jp+GucyQ+fel2ILb8ZLQeqMaAqZL/Bzaj+dKOQiPk4vPdf2rQPEV7heUyEVIhatpY42j4AFHav4DzBa1oTIp/A==
 
 "@tanstack/react-query@^5.101.0":
-  version "5.102.5"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.102.5.tgz#bccc7fc2303bbeda37f77fcddf2f971f63bc5af7"
-  integrity sha512-PyTmSq2nW4MnPuQ/T4hZbH2BYShpgCLSJNwCaPEEYO3RWd9yX611wOMm7etz2SZWVh4N7Azag5iZLMDqYTzfNA==
+  version "5.102.6"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.102.6.tgz#5456c885c75b08f7eb2320eff7f9ff68991fcd63"
+  integrity sha512-ANz4KZ8z80D85fiz5IAHjpb8XBPLrjOb/0natlD9Ascyy/3p96V86Zw8UbOfA0HDLcvK/A4gNd95r723y5UT2w==
   dependencies:
-    "@tanstack/query-core" "5.102.5"
+    "@tanstack/query-core" "5.102.6"
 
 "@types/body-parser@*":
   version "1.19.6"
