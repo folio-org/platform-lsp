@@ -2099,9 +2099,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/orders@>=1.1.0":
-  version "10.0.1099000000001123"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-10.0.1099000000001123.tgz#53603cb9c68005ea6440327ea53baafa13e8e390"
-  integrity sha512-lR0bqF7h6hs9sKRyLE2pODhwetmyaN2mOYRE6nHvxuP99O8DMEfZteUctcIs3Ox4N8kke/2rdKpE4rx9KI36Kg==
+  version "10.0.1099000000001128"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-10.0.1099000000001128.tgz#bcb9dcc719fb01ecd88a2c023bf7a33f9ba08c52"
+  integrity sha512-wGg12bfN6cuCwEXTuifzme20ji11Ah37U1IiqM3BvJ6HX4IBBxJfznxVMRaxRXWUkLnTSm/VYEfw5AxO1TodmQ==
   dependencies:
     "@folio/plugin-find-po-line" "^7.0.0"
     "@folio/stripes-acq-components" "~7.2.0"
@@ -3817,17 +3817,17 @@
   dependencies:
     defer-to-connect "^2.0.1"
 
-"@tanstack/query-core@5.102.6":
-  version "5.102.6"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.102.6.tgz#874ef53e9f5f4cb56dd2fa62341a0fd7dd880d85"
-  integrity sha512-jp+GucyQ+fel2ILb8ZLQeqMaAqZL/Bzaj+dKOQiPk4vPdf2rQPEV7heUyEVIhatpY42j4AFHav4DzBa1oTIp/A==
+"@tanstack/query-core@5.102.7":
+  version "5.102.7"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.102.7.tgz#a65a32394067230acefff3fa53bc9f133975bf1d"
+  integrity sha512-4TH8KQrCLoNs9Zvl1LW1iaZ9cZx3dGTgfZ1BnLrcRxMNnX/toe/dGbfvF/DkvbzRyfLfpMKZkembz3o0rnugtw==
 
 "@tanstack/react-query@^5.101.0":
-  version "5.102.6"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.102.6.tgz#5456c885c75b08f7eb2320eff7f9ff68991fcd63"
-  integrity sha512-ANz4KZ8z80D85fiz5IAHjpb8XBPLrjOb/0natlD9Ascyy/3p96V86Zw8UbOfA0HDLcvK/A4gNd95r723y5UT2w==
+  version "5.102.7"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.102.7.tgz#932d3541cf43d8909c4792aa6ba0810165f8cd88"
+  integrity sha512-bbd8T4jDIj9aPbNn11SsjNH8apKY4zspkrw63JRsNDXjpW5SRF7X0ipi7yrGd8DCs8QhYfhQJKqEj1YLru1DbQ==
   dependencies:
-    "@tanstack/query-core" "5.102.6"
+    "@tanstack/query-core" "5.102.7"
 
 "@types/body-parser@*":
   version "1.19.6"
@@ -3963,9 +3963,9 @@
   integrity sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==
 
 "@types/node@*":
-  version "26.3.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-26.3.0.tgz#757c33b17fe06db5a356582e9658603a1bd80caf"
-  integrity sha512-L3fgrnchriRC2ExBflb8j4uZZURHZfQsmQeyVzhjcHW4kkwVyo8/0h1B2MVzMTrYUJYu6G7EWs14hW/L9putqw==
+  version "26.4.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-26.4.0.tgz#4c4ca071c42241fe602741d02999f16b4e64c468"
+  integrity sha512-faiGnoIrLH/V8cibOMEAZ8pMw6oXqSukl29ra4mN8GdaB2ZewzeaLj+INpV5N+Z1eKWzY+IzaIZH2EIR6YZRNQ==
   dependencies:
     undici-types "~8.3.0"
 
@@ -5960,9 +5960,9 @@ fast-xml-builder@^1.2.0:
     xml-naming "^0.3.0"
 
 fast-xml-parser@^5.5.8:
-  version "5.11.0"
-  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-5.11.0.tgz#7cd9ea0e34c15619c1af0c7e2d8e183c891ee832"
-  integrity sha512-9IGxMqvqLOnqP+Egi1nqDHKv5k8aZ7r9n558enxcucmyVGEBNPAU+MOg/8jPIS7rO7sSq4gFm1/nHtiaubMruw==
+  version "5.11.1"
+  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-5.11.1.tgz#0ee672fcce1710c38185b8290d77e98806ff0bfb"
+  integrity sha512-TBw6K/fxoQGGjCmZDw9w/ZwP3uDcnTM4YH/g+PFRWr8sbe5idXtxNN6vITh4+1ruCZaho6uBFurElsA7F0zzgw==
   dependencies:
     "@nodable/entities" "^3.0.0"
     fast-xml-builder "^1.2.0"
@@ -9643,9 +9643,9 @@ tapable@^2.0.0, tapable@^2.2.1, tapable@^2.3.0, tapable@^2.3.3:
   integrity sha512-uxc/zpqFg6x7C8vOE7lh6Lbda8eEL9zmVm/PLeTPBRhh1xCgdWaQ+J1CUieGpIfm2HdtsUpRv+HshiasBMcc6A==
 
 terser@^5.10.0, terser@^5.51.0:
-  version "5.51.0"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.51.0.tgz#7b331b3c5d01b600ac27ae0abbdc2f084dc9a230"
-  integrity sha512-myiQ6aFnxDOjdiXdTlC8ngVccQD88uHXTx5RUQOSEnarDYgJMjDagwAQszcOusjvmf4YqWsxoD1+MY+oAJRmpw==
+  version "5.51.1"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.51.1.tgz#2f96ca9e26995c2db51da161fbf081c4df953c02"
+  integrity sha512-jxJxk3OtMbMeoDTtrSezoFRPDFleMDzBl+mFj4gB04HGQUfKnIMllFV1TVhWdsj9o54AlaTvLuNP9yWHzGD1BA==
   dependencies:
     "@jridgewell/source-map" "^0.3.3"
     acorn "^8.15.0"
