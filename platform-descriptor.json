@@ -42,7 +42,7 @@
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000012163"
+        "version": "2.1.0-SNAPSHOT.100200000012165"
       },
       {
         "name": "app-agreements",
@@ -90,11 +90,11 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000012233"
+        "version": "1.1.0-SNAPSHOT.100200000012272"
       },
       {
         "name": "app-erm-usage",
-        "version": "3.1.0-SNAPSHOT.100200000011900"
+        "version": "3.1.0-SNAPSHOT.100200000011944"
       },
       {
         "name": "app-fqm",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000004841"
+        "version": "1.1.0-SNAPSHOT.100200000004846"
       },
       {
         "name": "app-licenses",
