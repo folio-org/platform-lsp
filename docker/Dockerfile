@@ -24,7 +24,7 @@ RUN apk upgrade && \
     yarn config set @folio:registry https://repository.folio.org/repository/npm-$REGISTRY/ && \
     yarn install --ignore-scripts --non-interactive && \
     yarn build-module-descriptors && \
-    yarn build output $BUILD_ARGS --federate --no-minify
+    yarn build output $BUILD_ARGS --no-minify
 
 FROM nginx:stable-alpine
 

@@ -1,4 +1,8 @@
 // Documentation: https://folio-org.atlassian.net/wiki/spaces/DEV/pages/46858271/stripes.config.js+properties
+const modules = require("./stripes.modules");
+const extra = require("./stripes.extra");
+const { merge } = require('lodash');
+
 module.exports = {
   okapi: {
     'url': '${kongUrl}',
@@ -7,32 +11,32 @@ module.exports = {
   },
   config: {
     isEureka: true,
-    hasAllPerms: ${hasAllPerms},
-    idleSessionWarningSeconds: 60,
-    tenantOptions: ${tenantOptions},
-    aboutInstallDate: ${aboutInstallDate},
-    aboutInstallMessage: ${aboutInstallMsg},
-    isSingleTenant: ${isSingleTenant},
-    enableEcsRequests: ${enableEcsRequests},
-    rtr: {
-      idleSessionTTL: '1h',
-      idleModalTTL: '30s',
+    hasAllPerms: ${ hasAllPerms },
+idleSessionWarningSeconds: 60,
+  tenantOptions: ${ tenantOptions },
+aboutInstallDate: ${ aboutInstallDate },
+aboutInstallMessage: ${ aboutInstallMsg },
+isSingleTenant: ${ isSingleTenant },
+enableEcsRequests: ${ enableEcsRequests },
+rtr: {
+  idleSessionTTL: '1h',
+    idleModalTTL: '30s',
     },
-    logCategories: 'core,path,action,xhr',
-    logPrefix: '--',
+logCategories: 'core,path,action,xhr',
+  logPrefix: '--',
     maxUnpagedResourceCount: 2000,
-    showPerms: false,
-    preserveConsole: true,
-    useSecureTokens: true,
+      showPerms: false,
+        preserveConsole: true,
+          useSecureTokens: true,
   },
-  modules: {},
+modules: merge({}, modules, extra),
   branding: {
-    logo: {
-      src: './tenant-assets/opentown-libraries-logo.png',
+  logo: {
+    src: './tenant-assets/opentown-libraries-logo.png',
       alt: 'Opentown Libraries',
     },
-    favicon: {
-      src: './tenant-assets/folio-favicon.png',
+  favicon: {
+    src: './tenant-assets/folio-favicon.png',
     },
-  }
+}
 };
