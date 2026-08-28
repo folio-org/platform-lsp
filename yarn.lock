@@ -2375,9 +2375,9 @@
     prop-types "^15.6.0"
 
 "@folio/quick-marc@>=1.0.0", "@folio/quick-marc@^11.0.0":
-  version "11.1.1099000000000613"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/quick-marc/-/quick-marc-11.1.1099000000000613.tgz#76e9fa6c2de491674dc2045c5ab6d895300d8bc0"
-  integrity sha512-dDtfmySHHB4OSx6PwpgXPmkyNQA4jdhgu3ZXoIB1uVY8d7sK2iHxP4MmZ3c7kTR4NcqoNtu12K4b9h6IxvL1wA==
+  version "11.1.1099000000000616"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/quick-marc/-/quick-marc-11.1.1099000000000616.tgz#c4ddd2f69f604d0f6b8a27a82d5331d3290ae9bd"
+  integrity sha512-jyL5WI4mHjHAjgeKhTX0XNZh4Fss79cpC98zREH8u1KUZfmwZ2FMvv+CtXpmkhyMSWuY11k0os+FYyhqm8GFvw==
   dependencies:
     "@folio/stripes-acq-components" "^7.1.0"
     classnames "^2.5.1"
@@ -2568,9 +2568,9 @@
     react-query "^3.39.3"
 
 "@folio/stripes-authorization-components@^2.0.0", "@folio/stripes-authorization-components@^2.1.0":
-  version "2.2.1099000000000650"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-authorization-components/-/stripes-authorization-components-2.2.1099000000000650.tgz#b9d76a631d6995704c640e43fff407301df1c9e8"
-  integrity sha512-7IeC41kU8O5w5aASxJaxBjdbuzzwGalWxOehviPbYeb1uPeR0rXXtkAOuOa1Ycbft656QFfHZr8zsDibSn8TDQ==
+  version "2.2.1099000000000663"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-authorization-components/-/stripes-authorization-components-2.2.1099000000000663.tgz#06339885822de684118bed2c04fcda221ac289d8"
+  integrity sha512-/vvyeq/FSaDQmRpWBIsOulBNhVpl3x0vbMtY7vy+yno/80+piviQ5DA0oSk+RDE3xz5eUY1FLdzlBQ8BN5+E5Q==
   dependencies:
     "@folio/plugin-select-application" "^2.0.0"
     classnames "^2.2.6"
@@ -2605,9 +2605,9 @@
     yargs "^17.3.1"
 
 "@folio/stripes-components@^13.0.0":
-  version "13.1.1099000000001687"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001687.tgz#ca6c0368cbb840437dafc45c0f708dae664635c0"
-  integrity sha512-3csJv4ABaQoTAMmrX+98eI9CNXgXY75fu4UOPKS3kuKwNjitNekUYKXDl3SwdjPRrZaX6Zs32QmomjcExYkDlw==
+  version "13.1.1099000000001710"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001710.tgz#03498f484c2ffee595dacf0d3ebb8f04fb18e019"
+  integrity sha512-nO9Ga+6hTJoeNXyGs81dkozqTj8pGOKXUMeukbatM39x18kWapK7z8+YUj6s8WnOS2tVIIdvAjXA8KgL6xbzFw==
   dependencies:
     "@folio/stripes-react-hotkeys" "^3.2.1"
     classnames "^2.2.5"
@@ -2971,9 +2971,9 @@
     uuid "9.0.0"
 
 "@folio/users@>=2.17.0":
-  version "13.1.1099000000001506"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/users/-/users-13.1.1099000000001506.tgz#7dfbfeb7785aff8e8cbe5a74e74d62e65b87f186"
-  integrity sha512-iHAurqeiTBGyasfNySH3qbLE5V9rx9pRbAZhQMg6i6lT7OiVC0me1PGUCPBN3RfO7XuT7L8lbTGijDmPIoCWsQ==
+  version "13.1.1099000000001525"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/users/-/users-13.1.1099000000001525.tgz#a71939c49a7b710d480b8706c3ed57360784ef90"
+  integrity sha512-RJVi6VpFtVRceSWEIEOR5ujGIxRBZRSk+OSr4avRQJeM760l/qjePYoZ3Pz06dwD2w87nTdWuxxyWarwTMx6PA==
   dependencies:
     compressorjs "^1.2.1"
     dompurify "^3.2.0"
@@ -8684,11 +8684,11 @@ react-router-dom@^5.2.0:
     tiny-warning "^1.0.0"
 
 react-router-dom@^7.17.0:
-  version "7.18.2"
-  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-7.18.2.tgz#00bf1d0ce8bf17a6d831949aacda72a6120e4926"
-  integrity sha512-AIKJ/jgGlFb3EbfCXk5Gzshiwt+l3mqbCrNjmEWMMjqQxNJ3svBa6bgzFyCC2Sw3RA0VWF1kg3uQf2OFhxb8hw==
+  version "7.18.3"
+  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-7.18.3.tgz#0688c91b4b376c8b0dcaf0a0064975d52a32e0f7"
+  integrity sha512-ytVbyBBM7vMfRCam25r0WMhSVSom909A8p+8m0/f1w853dz/xfFu6etAT2SEbVoSnI+ZoPRDqIsQXVT89gp7kg==
   dependencies:
-    react-router "7.18.2"
+    react-router "7.18.3"
 
 react-router-prop-types@^1.0.4, react-router-prop-types@^1.0.5:
   version "1.0.5"
@@ -8713,10 +8713,10 @@ react-router@5.3.4, react-router@^5.2.0:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
-react-router@7.18.2:
-  version "7.18.2"
-  resolved "https://registry.yarnpkg.com/react-router/-/react-router-7.18.2.tgz#a76c46ce9e5edacd4f51289d5a71f71305db9152"
-  integrity sha512-aUVMjFm3GAPTTZL7oYr5E7ETiqfQCHRLH+B+5afnICvf0r7kkK4eR6SMuwbSTJw/7t+12khT/Kahij49fqOCIg==
+react-router@7.18.3:
+  version "7.18.3"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-7.18.3.tgz#2a3257aa7c5edd5a71f878063e4c7f3fcfc4b76a"
+  integrity sha512-gyXgtdr5uACJ5b1Q4udzjVV+tb/rlHIMJKuJ0e89R4Kzgz47z/rgP0dIKxktqIEUhDHluGTPJJH/wRha7CyqsA==
   dependencies:
     cookie "^1.0.1"
     set-cookie-parser "^2.6.0"
