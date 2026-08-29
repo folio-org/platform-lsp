@@ -2579,9 +2579,9 @@
     react-final-form "^6.3.0"
 
 "@folio/stripes-build@>=1.0.0":
-  version "2.1.1099000000000089"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-build/-/stripes-build-2.1.1099000000000089.tgz#fd6cc4f12d3c1e4b9fe2febd863165013c2a1fea"
-  integrity sha512-If0nQFh6krQ/ClTd+PxyVaC989GTW0r6XF10KCTdVxvcftswPmhUdK2SaKt0B22IcG0Vb9FjQO5Q+REYttZrsw==
+  version "2.1.1099000000000092"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-build/-/stripes-build-2.1.1099000000000092.tgz#8722783ef734d6bdeab55778fd8094bb055df41d"
+  integrity sha512-mttx7XGRhA+pRO17csyZAueVfbGSuwxai4FROXH4EGy+L6Udjxq5g/BpxnORQdDTGJxgDHw0ZZXpgn55Vaf+Yg==
   dependencies:
     "@folio/stripes-webpack" "^7.0.0"
     configstore "^3.1.1"
@@ -2600,7 +2600,7 @@
     resolve-pkg "^1.0.0"
     semver "^7.5.0"
     update-notifier "^6.0.2"
-    webpack "^5.104.1"
+    webpack "~5.109.2"
     webpack-bundle-analyzer "^4.4.2"
     yargs "^17.3.1"
 
@@ -10183,7 +10183,7 @@ webpack-virtual-modules@^0.4.3:
   resolved "https://registry.yarnpkg.com/webpack-virtual-modules/-/webpack-virtual-modules-0.4.6.tgz#3e4008230731f1db078d9cb6f68baf8571182b45"
   integrity sha512-5tyDlKLqPfMqjT3Q9TAqf2YqjwmnUleZwzJi1A5qXnlBCdj2AtOJ6wAWdglTIDOPgOiOrXeBeFcsQ8+aGQ6QbA==
 
-webpack@^5.104.1, webpack@~5.109:
+webpack@~5.109, webpack@~5.109.2:
   version "5.109.2"
   resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.109.2.tgz#b58dc289561c3282db35c210a99379a836a4c28d"
   integrity sha512-U9/cvLzxObKNEZ9+TtdqrHM5/9z3lgl2c+c4BzbqGxFQvQvBAq87yql5A8pQ+rrMbS496MZJeF5enVBndIy2hw==
