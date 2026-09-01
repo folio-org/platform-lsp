@@ -16,10 +16,10 @@ get_latest_docker_tag() {
     local response=$(curl -s -u "$DOCKERHUB_USERNAME:$DOCKERHUB_TOKEN" "$url")
     local latest_date=$(echo "$response" | jq -r '[.results[] | select(.name == "latest") | .last_updated] | first // empty')
     local latest_day=$(echo "$latest_date" | cut -d"T" -f1)
-    local matched_tag=$(echo "$response" | jq -r --arg day "$latest_day" '[.results[] | select(.name != "latest") | select(.last_updated | startswith($day)) | .name] | first // empty')
+    local matched_tag=$(echo "$response" | jq -r --arg day "$latest_day" '[.results[] | select(.name != "latest") | select(.last_updated | startswith($day)) | select(.name | test("^.+-SNAPSHOT\\.pr\\d+\\.[0-9a-f]{7}$") | not) | .name] | first // empty')
     
     if [ -z "$matched_tag" ]; then
-        matched_tag=$(echo "$response" | jq -r '[.results[] | select(.name != "latest") | .name] | first // empty')
+        matched_tag=$(echo "$response" | jq -r '[.results[] | select(.name != "latest") | select(.name | test("^.+-SNAPSHOT\\.pr\\d+\\.[0-9a-f]{7}$") | not) | .name] | first // empty')
     fi
 
     if [ -z "$matched_tag" ]; then
