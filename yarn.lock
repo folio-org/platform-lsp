@@ -1999,9 +1999,9 @@
     zustand "^5.0.14"
 
 "@folio/lists@>=1.2.0":
-  version "5.0.2099000000001113"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.2099000000001113.tgz#4f418f03a9e839f06a88c223600d8024feb4b34e"
-  integrity sha512-Ogtt1lMn66Xyv5R6vBu7fPmpvEqddJy1HfUVMcRI/N7TJeUO3OFOAR5zDnSsJ2oWWDtHwudCuk4nvv/koelceg==
+  version "5.0.2099000000001116"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.2099000000001116.tgz#0faf89d1d442b578b45c63a9e21167c6c9a5b871"
+  integrity sha512-5P3DFyxm8airTcaDUvGijBM7MMFpMDLDDwdzmCg/lCu3XsR/Q+RLvcTkqm9xGB+oLLlBE76sBZ6ooMjbiO7ZnA==
   dependencies:
     "@folio/plugin-find-user" "^8.1.0"
     "@folio/plugin-query-builder" "^3.0.0"
