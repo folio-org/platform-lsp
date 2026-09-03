@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000011633"
+        "version": "2.2.0-SNAPSHOT.100200000011651"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000010973"
+        "version": "3.4.0-SNAPSHOT.100200000010980"
       }
     ],
     "optional": [
@@ -58,7 +58,7 @@
       },
       {
         "name": "app-consortia",
-        "version": "1.5.0-SNAPSHOT.100200000012401"
+        "version": "1.5.0-SNAPSHOT.100200000012453"
       },
       {
         "name": "app-consortia-manager",
