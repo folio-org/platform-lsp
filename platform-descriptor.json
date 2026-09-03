@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000011651"
+        "version": "2.2.0-SNAPSHOT.100200000011654"
       },
       {
         "name": "app-platform-complete",
@@ -174,7 +174,7 @@
       },
       {
         "name": "app-rtac",
-        "version": "1.2.0-SNAPSHOT.100200000011135"
+        "version": "1.2.0-SNAPSHOT.100200000011851"
       },
       {
         "name": "app-search",
