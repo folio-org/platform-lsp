@@ -1,8 +1,10 @@
 # Hourly application version check and update workflow
 name: LSP Hourly Check and Update
 on:
-  schedule:
-    - cron: "0 * * * *"
+  # RANCHER-3137: snapshot now runs through release-scan.yml. The schedule is off so the
+  # two paths cannot race on the branch; workflow_dispatch stays live as the rollback lever.
+  # schedule:
+  #   - cron: "0 * * * *"
 
   workflow_dispatch:
     inputs:

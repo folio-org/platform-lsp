@@ -73,6 +73,11 @@ ORGS_BY_PRE_RELEASE = {
     "true": (RELEASE_ORG, PRE_RELEASE_ORG),
 }
 
+# Pull-request candidate images, e.g. 26.8.0-SNAPSHOT.pr114.ce54207. Some components
+# publish per-PR builds into the same namespace as the regular CI images; those builds come
+# from a branch and must never reach a shared environment. See RANCHER-3136.
+PR_CANDIDATE_TAG_RE = re.compile(r"-SNAPSHOT\.pr\d+\.[0-9a-f]{7,}$")
+
 # Retry configuration constants (tunable without altering business logic)
 MAX_RETRIES = 3
 RETRY_BACKOFF_BASE = 2
@@ -191,6 +196,11 @@ def fetch_docker_tags(org: str, image: str, session: Optional[requests.Session] 
     'latest' is discarded: it is an alias Docker Hub does not resolve for us, and on a
     release namespace it points at the newest push, which is not necessarily the newest
     version (patches to an older line are pushed after a new major).
+
+    Pull-request candidates are discarded here rather than in filter_versions so they never
+    become a candidate at all. Ranking alone would not hold them back: their suffix carries
+    no numeric build segment, so they lose inside their own base version but still win over
+    every lower one.
     """
     sess = session or requests.Session()
     headers: Dict[str, str] = {}
@@ -208,7 +218,8 @@ def fetch_docker_tags(org: str, image: str, session: Optional[requests.Session] 
             )
         payload = resp.json() or {}
         names.extend(r["name"] for r in (payload.get("results") or [])
-                     if isinstance(r, dict) and r.get("name") and r["name"] != "latest")
+                     if isinstance(r, dict) and r.get("name") and r["name"] != "latest"
+                     and not PR_CANDIDATE_TAG_RE.search(r["name"]))
         url = payload.get("next")
         if not url:
             break
