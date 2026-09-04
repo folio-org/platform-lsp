@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000011654"
+        "version": "2.2.0-SNAPSHOT.100200000011659"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000010981"
+        "version": "3.4.0-SNAPSHOT.100200000010989"
       }
     ],
     "optional": [
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000012303"
+        "version": "1.1.0-SNAPSHOT.100200000012316"
       },
       {
         "name": "app-erm-usage",
