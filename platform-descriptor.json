@@ -1,7 +1,7 @@
 {
   "name": "FOLIO LSP",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2027-SNAPSHOT.100200000003114",
+  "version": "R1-2027-SNAPSHOT.100200000003115",
   "eureka-components": [
     {
       "name": "folio-kong",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000003795"
+        "version": "1.1.0-SNAPSHOT.100200000003830"
       },
       {
         "name": "app-dcb",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000012316"
+        "version": "1.1.0-SNAPSHOT.100200000012332"
       },
       {
         "name": "app-erm-usage",
@@ -126,11 +126,11 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000011414"
+        "version": "3.1.0-SNAPSHOT.100200000011454"
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000010461"
+        "version": "1.1.0-SNAPSHOT.100200000010502"
       },
       {
         "name": "app-mosaic",
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.1.0-SNAPSHOT.100200000006437"
+        "version": "1.1.0-SNAPSHOT.100200000006478"
       },
       {
         "name": "app-reading-room",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000012007"
+        "version": "1.1.0-SNAPSHOT.100200000012047"
       },
       {
         "name": "app-service-interaction",
