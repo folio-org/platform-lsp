@@ -221,11 +221,20 @@ jobs:
           path: ./${{ env.PLATFORM_DESCRIPTOR_FILE }}
           retention-days: 1
 
+      - name: Generate App Token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.EUREKA_CI_APP_ID }}
+          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+          owner: ${{ env.REPO_OWNER }}
+          repositories: ${{ env.REPO_NAME }}
+
       - name: Create Check Run
         id: create-check
         uses: actions/github-script@v7
         with:
-          github-token: ${{ env.GH_TOKEN }}
+          github-token: ${{ steps.app-token.outputs.token }}
           script: |
             const { data: checkRun } = await github.rest.checks.create({
               owner: '${{ env.REPO_OWNER }}',
@@ -253,10 +262,19 @@ jobs:
       validation_passed: ${{ steps.validate.outputs.validation_passed }}
       failure_reason: ${{ steps.validate.outputs.failure_reason || 'Check workflow logs for details' }}
     steps:
+      - name: Generate App Token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.EUREKA_CI_APP_ID }}
+          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+          owner: ${{ env.REPO_OWNER }}
+          repositories: ${{ env.REPO_NAME }}
+
       - name: Update Check Run - Validating
         uses: actions/github-script@v7
         with:
-          github-token: ${{ env.GH_TOKEN }}
+          github-token: ${{ steps.app-token.outputs.token }}
           script: |
             await github.rest.checks.update({
               owner: '${{ env.REPO_OWNER }}',
@@ -289,10 +307,19 @@ jobs:
           ref: ${{ env.HEAD_SHA }}
           token: ${{ env.GH_TOKEN }}
 
+      - name: Generate App Token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.EUREKA_CI_APP_ID }}
+          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+          owner: ${{ env.REPO_OWNER }}
+          repositories: ${{ env.REPO_NAME }}
+
       - name: Update Check Run - Compiling stripes (UI)
         uses: actions/github-script@v7
         with:
-          github-token: ${{ env.GH_TOKEN }}
+          github-token: ${{ steps.app-token.outputs.token }}
           script: |
             await github.rest.checks.update({
               owner: '${{ env.REPO_OWNER }}',
@@ -337,11 +364,20 @@ jobs:
     if: always() && needs.pre-check.outputs.validation_status == 'success'
     runs-on: ubuntu-latest
     steps:
+      - name: Generate App Token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.EUREKA_CI_APP_ID }}
+          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+          owner: ${{ env.REPO_OWNER }}
+          repositories: ${{ env.REPO_NAME }}
+
       - name: Finalize Check Run
         if: always()
         uses: actions/github-script@v7
         with:
-          github-token: ${{ env.GH_TOKEN }}
+          github-token: ${{ steps.app-token.outputs.token }}
           script: |
             let conclusion, title, summary;
             const validationPassed = '${{ needs.validate-platform.outputs.validation_passed }}';
