@@ -2,25 +2,32 @@
 
 ## Purpose
 
-Validates platform release pull requests by verifying platform descriptors, dependencies, and Stripes UI compilation. Creates a GitHub check run with detailed results and sends Slack notifications.
+Validates platform release pull requests by verifying platform descriptors, dependencies, and Stripes UI compilation. Publishes the `eureka-ci/release-platform-validation` check run with detailed results and sends Slack notifications.
 
 ## Triggers
 
-- **workflow_dispatch**: Manual execution (current configuration)
-- **pull_request**: Automated on PR events _(currently disabled, planned for future)_
+- **workflow_dispatch**: the only declared trigger.
+- Automated in practice via the Eureka CI GitHub App webhook listener, which dispatches this workflow for
+  `pull_request` (opened, reopened, synchronize, ready_for_review), `check_suite` and `check_run` events on
+  `folio-org/platform-lsp`. The mappings live in
+  `kitfox-github/gh-app-webhook-listener/terraform/environments/github_events_config.json`.
+- The in-file `pull_request` / `pull_request_target` triggers remain commented out; the webhook path is used
+  instead, so the workflow runs automatically despite declaring only `workflow_dispatch`.
 
 ## Workflow Inputs
 
 | Input | Type | Default | Required | Description |
 |-------|------|---------|----------|-------------|
-| `repo_owner` | string | _context-derived_ | No | Repository owner |
-| `repo_name` | string | _context-derived_ | No | Repository name |
-| `pr_number` | string | _context-derived_ | No | Pull request number |
-| `head_sha` | string | _context-derived_ | No | Head commit SHA |
-| `node-version` | string | `20.x` | No | Node.js version for Stripes build |
-| `folio-npm-registry` | string | `https://repository.folio.org/repository/npm-folio/` | No | FOLIO NPM registry URL |
-| `yarn-lock-retention-days` | number | `1` | No | Artifact retention period |
-| `allow-lint-errors` | boolean | `true` | No | Continue on lint errors _(currently disabled)_ |
+| `repo_owner` | string | `folio-org` | Yes | Repository owner |
+| `repo_name` | string | `platform-lsp` | Yes | Repository name |
+| `pr_number` | string | - | Yes | Pull request number |
+| `head_sha` | string | - | Yes | Head commit SHA |
+| `node-version` | string | `22` | Yes | Node.js version for Stripes build |
+| `folio-npm-registry` | string | `https://repository.folio.org/repository/npm-folio/` | Yes | FOLIO NPM registry URL |
+| `yarn-lock-retention-days` | number | `1` | Yes | Artifact retention period |
+
+`pr_number` being required is why this workflow cannot serve a `merge_group` event: that mapping carries no
+pull request number.
 
 ## Job Flow
 
@@ -67,7 +74,7 @@ flowchart TD
 **Skip Conditions**:
 - Configuration file (`.github/update-config.yml`) not found
 - Release scanning disabled in configuration
-- Target branch not in `release_branches` list
+- Target branch not listed under `branches`
 - Required PR labels missing
 
 ---
@@ -79,7 +86,8 @@ flowchart TD
 - `check_run_id`: GitHub check run identifier
 
 **Actions**:
-- Creates check run named `eureka-ci/release-platform-validation`
+- Mints an Eureka CI App installation token (`actions/create-github-app-token@v3`)
+- Creates check run named `eureka-ci/release-platform-validation`, published as the Eureka CI App
 - Uploads `platform-descriptor.json` as artifact (1-day retention)
 
 ---
@@ -111,6 +119,8 @@ flowchart TD
 
 ### finalize-check-run
 **Responsibility**: Update GitHub check run with final status and results.
+
+Mints its own App token first, like every job that touches the check run.
 
 **Conclusion Logic**:
 - `failure`: Validation or build failed
@@ -156,19 +166,42 @@ flowchart TD
 ## Configuration Requirements
 
 ### Repository File
-**`.github/update-config.yml`** must exist with:
+**`.github/update-config.yml`** must exist on `master`, in the schema `get-update-config` parses:
+
 ```yaml
-enabled: true
-release_branches:
-  - master
-  - R1-2024
-pr_labels:
-  - release-ready
+update_config:
+  enabled: true
+  update_branch_format: version-update/{0}
+  labels:
+    - version-update
+  ruleset:
+    enabled: true
+    required_checks:
+      - context: "eureka-ci/release-platform-validation"
+
+branches:
+  - snapshot:
+      enabled: true
+      need_pr: false
+  - R1-2026:
+      enabled: true
+      need_pr: true
+      ruleset:
+        enabled: true
 ```
+
+`branches` is a list of single-key maps, one per branch. The workflow skips a branch that is absent from it,
+and skips any branch whose `need_pr` is not `true`.
+
+The `ruleset` block is what makes this check *required*: `branch-ruleset-automation.yml` turns it into a
+GitHub branch ruleset naming `eureka-ci/release-platform-validation` as a required status check. See
+[Update Configuration Schema](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/update-config.md)
+for the full schema.
 
 ### Repository Variables
 | Variable | Purpose | Required |
 |----------|---------|----------|
+| `EUREKA_CI_APP_ID` | Eureka CI GitHub App ID, used to mint the check-run token | Yes |
 | `FAR_URL` | FOLIO Artifact Repository URL | Yes |
 | `SLACK_NOTIF_CHANNEL` | Team Slack channel ID | No |
 | `GENERAL_SLACK_NOTIF_CHANNEL` | General Slack channel ID | No |
@@ -176,7 +209,20 @@ pr_labels:
 ### Repository Secrets
 | Secret | Purpose | Required |
 |--------|---------|----------|
+| `EUREKA_CI_APP_KEY` | Eureka CI GitHub App private key | Yes |
 | `EUREKA_CI_SLACK_BOT_TOKEN` | Slack bot OAuth token | Only if notifications enabled |
+
+## Check Run Identity
+
+The check run is created and updated with an **Eureka CI App installation token**, not `GITHUB_TOKEN`. This is
+required, not stylistic: the branch ruleset pins each required check to an `integration_id`, resolved from
+`EUREKA_CI_APP_ID`. A check run published with `GITHUB_TOKEN` belongs to the GitHub Actions app instead, so it
+would never satisfy the rule and the PR would sit on "Expected — waiting for status to be reported".
+
+A check run can only be updated by the app that created it, so all four jobs that touch it —
+`create-check-run`, `validate-platform`, `build-stripes`, `finalize-check-run` — mint their own App token.
+Everything else (checkout, artifacts, `get-pr-info`, `is-commit-in-pr`, reading repository variables) still
+uses `GITHUB_TOKEN`.
 
 ## Permissions
 
@@ -187,21 +233,23 @@ permissions:
   statuses: write
 ```
 
+These apply to `GITHUB_TOKEN`. Note that `checks: write` no longer covers the check run itself — that is
+written under the App token described above.
+
 ## Usage Example
 
-### Manual Trigger (Current)
+### Manual Trigger
 ```bash
 gh workflow run release-pr-check.yml \
   --repo folio-org/platform-lsp \
   -f pr_number=123 \
-  -f head_sha=abc123def456 \
-  -f node-version=20.x
+  -f head_sha=abc123def456
 ```
 
-### Future Automated Trigger
-Once `pull_request` trigger is enabled, the workflow will run automatically when:
-- PR is opened/synchronized/reopened
-- Required labels are added
+### Automated Trigger
+The webhook listener dispatches the same workflow with the same inputs when a PR is opened, reopened,
+synchronized or marked ready for review, and on `check_suite` / `check_run` events. Re-enabling the in-file
+`pull_request` trigger would duplicate that path, not replace it.
 
 ## Artifacts
 
@@ -219,6 +267,8 @@ Once `pull_request` trigger is enabled, the workflow will run automatically when
 ## Related Documentation
 
 - [Composite Action: validate-platform](../actions/validate-platform/README.md) _(if exists)_
-- [Update Configuration Schema](../update-config.yml)
+- [Repository configuration](../update-config.yml) — this repository's `update-config.yml`
+- [Update Configuration Schema](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/update-config.md) — the schema that file follows
+- [Branch Ruleset Automation](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/branch-ruleset-automation.md) — how the required check becomes required
 - [FOLIO CI/CD Standards](https://github.com/folio-org/kitfox-github)
 

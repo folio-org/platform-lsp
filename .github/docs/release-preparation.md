@@ -319,6 +319,8 @@ update-platform-config:
         #   - preRelease: <from input parameter> (default: "false")
         #   - name: <from input parameter> (optional, platform-specific)
         #   - description: <from input parameter> (optional, platform-specific)
+        #   - ruleset.enabled: <same value as need_pr>
+        # If the file is absent, seed it from .github/templates/update-config.yml.template
         # Use jq to dynamically build branch configuration
         # Use yq for reliable YAML manipulation
         # Upload as artifact with include-hidden-files: true to preserve .github/ structure
@@ -362,7 +364,7 @@ slack_notification:
 
 The orchestrator leaves every `eureka-components` entry as `^VERSION_<previous>` — a placeholder, not a constraint. Component versions for a new release are not known at preparation time, so a human fills them in.
 
-The branch is added to `update-config.yml` with `enabled: true`, so `release-scan.yml` picks it up on the next hourly tick. Until the placeholders are replaced, `release-update-flow.yml` finds them, warns, and skips the branch:
+The branch is added to `update-config.yml` with `enabled: true`, so `release-scan.yml` picks it up on the next hourly tick. The same commit carries `ruleset.enabled` set to the branch's `need_pr` value, and because the commit touches `update-config.yml` on `master` it also dispatches `branch-ruleset-automation.yml`, which provisions the branch's ruleset. Until the placeholders are replaced, `release-update-flow.yml` finds them, warns, and skips the branch:
 
 ```
 ::warning::Descriptor template still holds unresolved placeholders, skipping update:
