@@ -39,18 +39,45 @@ flowchart TD
 
 ### Repository Configuration
 
-The workflow reads configuration from `.github/update-config.yml`:
+The workflow reads configuration from `.github/update-config.yml` on `master`, through the shared
+`get-update-config` action:
 
 ```yaml
-release:
-  branches:
-    - name: R1-2024
-      update_branch: R1-2024-updates
-    - name: R2-2024
-      update_branch: R2-2024-updates
-  pr_reviewers: team-lead,senior-dev
-  pr_labels: automated-update,release
+update_config:
+  enabled: true                                 # master switch for the whole repository
+  update_branch_format: version-update/{0}      # {0} = branch name
+  labels:
+    - version-update
+  pr_reviewers:
+    - folio-org/kitfox
+    - folio-org/fse-platform
+  ruleset:                                      # branch rulesets, applied by kitfox-github
+    enabled: true
+    required_checks:
+      - context: "eureka-ci/release-platform-validation"
+
+branches:
+  - snapshot:
+      enabled: true
+      need_pr: false                            # direct commit
+      pre_release: "only"
+      ruleset:
+        enabled: false                          # no ruleset while the branch takes direct commits
+  - R1-2026:
+      enabled: true
+      need_pr: true                             # update PR
+      pre_release: "false"
+      ruleset:
+        enabled: true
 ```
+
+`branches` is a list of single-key maps; a branch whose `enabled` is not `true` is skipped entirely, before
+its ruleset is even resolved, so an existing ruleset is left untouched rather than disabled.
+
+The `ruleset` block is not consumed by this workflow. It is read by `branch-ruleset-automation.yml` in
+kitfox-github, dispatched on a push that touches this file. See
+[Update Configuration Schema](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/update-config.md)
+for the full schema, including the deep-merge rules between the global and per-branch blocks.
 
 ### Workflow Inputs
 
@@ -107,7 +134,8 @@ Prevents overlapping executions:
 ## 📋 Related Workflows
 
 - [release-update.yml](../workflows/release-update.yml) – Individual branch update workflow
-- [update-config.yml](../update-config.yml) – Configuration schema
+- [update-config.yml](../update-config.yml) – this repository's configuration
+- [Update Configuration Schema](https://github.com/folio-org/kitfox-github/blob/master/.github/docs/update-config.md) – the schema it follows
 
 ## 🔍 Monitoring
 

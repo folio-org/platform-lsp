@@ -139,7 +139,24 @@ Since RANCHER-3069 the snapshot branch runs through the **same** chain as the re
       need_pr: false                              # commit straight to the branch
       pre_release: "only"                         # declared, unused — see below
       descriptor_build_offset: "100200000000000"  # + run number = platform build number
+      ruleset:
+        enabled: false                            # no ruleset while the branch takes direct commits
+        merge_queue:
+          enabled: true                           # staged for RANCHER-3118, inert until enabled: true
+          check_response_timeout_minutes: 300
+          max_entries_to_build: 1
+          max_entries_to_merge: 1
 ```
+
+The `ruleset` block is declared but switched off, and the two settings are coupled. A merge-queue rule
+rejects direct pushes, so an active ruleset would stop the hourly commit dead — `release-update-flow` pushes
+under `GITHUB_TOKEN`, which is not the configured bypass actor. RANCHER-3118 flips `need_pr: true` and
+`ruleset.enabled: true` in one commit, at which point delivery moves from a direct commit to an update PR
+gated by the nightly deployment. The queue parameters are sized for that: one entry at a time, and a
+300-minute check timeout against a deployment that runs about two hours.
+
+The branch inherits the global `required_checks` — a single context, `eureka-ci/release-platform-validation`,
+published by `release-pr-check.yml` on a pull request and by the merge-group workflow on a merge group.
 
 The pre-release channel is **not** a branch setting: it is `preRelease` on each template entry, exactly as `folio-application-generator` reads it from an application template. The branch-level `pre_release` key stays declared and unused, matching kitfox-github's `application-update-flow.yml`.
 
@@ -236,7 +253,7 @@ Registry        App Descriptor     Platform Descriptor
 - **Artifact Rollback**: Previous stable version maintained
 
 ### Application Update Failures
-- **Snapshot Branch Protection**: Failed updates don't enter snapshot branch
+- **Validation Gate**: failed updates are dropped before the commit, so they never reach the snapshot branch. This is workflow logic, not GitHub branch protection — the branch carries no ruleset while `ruleset.enabled` is `false`
 - **Detailed Error Reporting**: Specific module conflicts identified
 - **Team Notifications**: Application maintainers notified of issues
 
