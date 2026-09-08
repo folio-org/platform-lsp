@@ -6,6 +6,25 @@ update_config:
   pr_reviewers:
     - folio-org/kitfox
     - folio-org/fse-platform
+  ruleset:
+    enabled: true
+    pattern: "{0}-eureka-ci"
+    required_checks:
+      - context: "eureka-ci/release-platform-validation"
+    merge_queue:
+      # Switch to true in RANCHER-3140, once a workflow publishes the required check on merge_group.
+      # Until then the queue would wait for a check that cannot report and eject the PR on timeout.
+      enabled: false
+      merge_method: "SQUASH"
+      grouping_strategy: "ALLGREEN"
+      check_response_timeout_minutes: 60
+      max_entries_to_build: 5
+      max_entries_to_merge: 5
+      min_entries_to_merge: 1
+      min_entries_to_merge_wait_minutes: 5
+    bypass_actors:
+      - actor_type: "Integration"
+        bypass_mode: "always"
 
 branches:
   - snapshot:
@@ -15,15 +34,27 @@ branches:
       need_pr: false
       pre_release: "only"
       descriptor_build_offset: "100200000000000"
+      ruleset:
+        # Enable only with need_pr: true (RANCHER-3118); the merge queue rule rejects the hourly direct commit
+        enabled: false
+        merge_queue:
+          enabled: true
+          check_response_timeout_minutes: 300
+          max_entries_to_build: 1
+          max_entries_to_merge: 1
   - R1-2025-ci:
       enabled: true
       name: "FOLIO R1-2025 (Sunflower) Version"
       description: "FOLIO R1-2025 (Sunflower) is a major release that includes significant updates and new features for the FOLIO platform."
       need_pr: true
       pre_release: "false"
+      ruleset:
+        enabled: true
   - R1-2026:
       enabled: true
       name: "FOLIO R1-2026 (Trillium) Version"
       description: "FOLIO R1-2026 (Trillium) is a major release that includes significant updates and new features for the FOLIO platform."
       need_pr: true
       pre_release: "false"
+      ruleset:
+        enabled: true
