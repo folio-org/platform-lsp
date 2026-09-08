@@ -5,17 +5,39 @@ update_config:
     - version-update
   pr_reviewers:
     - folio-org/kitfox
+    - folio-org/fse-platform
+  ruleset:
+    enabled: true
+    pattern: "{0}-eureka-ci"
+    required_checks:
+      - context: "eureka-ci/release-platform-validation"
+    merge_queue:
+      enabled: false
+      merge_method: "SQUASH"
+      grouping_strategy: "ALLGREEN"
+      check_response_timeout_minutes: 60
+      max_entries_to_build: 5
+      max_entries_to_merge: 5
+      min_entries_to_merge: 1
+      min_entries_to_merge_wait_minutes: 5
+    bypass_actors:
+      - actor_type: "Integration"
+        bypass_mode: "always"
 
 branches:
   - snapshot:
       enabled: true
-      name: "FOLIO Sunflower Version"
+      name: "FOLIO Snapshot Version"
       description: "FOLIO Snapshot LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system."
       need_pr: false
       pre_release: "only"
+      ruleset:
+        enabled: false
 #  - R2-2024:
 #      enabled: true
 #      need_pr: true
 #      pre_release: "false"
 #      name: "FOLIO Sunflower Release"
-#      description: "FOLIO Sunflower LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system."6
+#      description: "FOLIO Sunflower LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system."
+#      ruleset:
+#        enabled: true
