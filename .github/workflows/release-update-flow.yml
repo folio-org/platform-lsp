@@ -31,6 +31,11 @@ on:
         required: false
         type: string
         default: ''
+      yarn_lock_update:
+        description: "yarn.lock policy: 'always' re-resolves the lock every run, 'on_package_change' lets it follow package.json, 'never' leaves it untouched"
+        required: false
+        type: string
+        default: 'always'
       skip_interface_validation:
         description: 'Skip the inline FAR platform validation used by the direct-commit cadence'
         required: false
@@ -360,7 +365,6 @@ jobs:
 
       - name: 'Fetch updated UI modules list'
         id: fetch-updated-ui-modules
-        if: inputs.need_pr
         uses: folio-org/platform-lsp/.github/actions/fetch-updated-ui-modules@master
         with:
           applications: ${{ needs.update-platform-descriptor.outputs.updated_applications }}
@@ -369,7 +373,6 @@ jobs:
 
       - name: 'Fetch base package.json'
         id: fetch-base-package-json
-        if: inputs.need_pr
         uses: folio-org/platform-lsp/.github/actions/read-file@master
         with:
           file_path: package.json
@@ -382,7 +385,7 @@ jobs:
 
       - name: 'Update package.json dependencies'
         id: update-package-json
-        if: inputs.need_pr && steps.fetch-updated-ui-modules.outputs.ui-modules != ''
+        if: steps.fetch-updated-ui-modules.outputs.ui-modules != ''
         uses: folio-org/platform-lsp/.github/actions/update-package-json@master
         with:
           package-json: ${{ steps.read-package-json.outputs.file_content }}
@@ -410,13 +413,20 @@ jobs:
           check-latest: true
 
       - name: 'Install dependencies'
-        run: yarn install --ignore-scripts --non-interactive
+        if: inputs.yarn_lock_update != 'never'
+        run: |
+          if [ "${{ inputs.yarn_lock_update }}" = "always" ]; then
+            rm -f yarn.lock
+          fi
+          yarn install --ignore-scripts --non-interactive
 
       - name: 'List FOLIO packages'
+        if: inputs.yarn_lock_update != 'never'
         run: yarn list --pattern @folio
 
       - name: 'Check if yarn.lock was updated'
         id: check-yarn-lock
+        if: inputs.yarn_lock_update != 'never'
         run: |
           if git diff --name-only | grep -q "^yarn.lock$"; then
             echo "yarn-lock-updated=true" >> "$GITHUB_OUTPUT"
