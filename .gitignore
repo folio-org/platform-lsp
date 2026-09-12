@@ -16,6 +16,8 @@ output
 .history/
 
 # Ignore user-specific AI/development tool artifacts
+.memsearch/
+.opencode/
 .agents/
 .cursor/
 .claude/
