@@ -66,6 +66,12 @@ on:
       updated:
         description: 'Whether updates were found'
         value: ${{ jobs.update.outputs.updated }}
+      yarn_lock_updated:
+        description: 'Whether yarn.lock changed in this run'
+        value: ${{ jobs.update.outputs.yarn_lock_updated }}
+      commit_sha:
+        description: 'SHA of the commit made by this run, if any'
+        value: ${{ jobs.update.outputs.commit_sha }}
       pr_created:
         description: 'Whether a PR was created'
         value: ${{ jobs.update.outputs.pr_created }}
@@ -186,7 +192,7 @@ jobs:
           pr_created: ${{ needs.update.outputs.pr_created }}
           pr_url: ${{ needs.update.outputs.pr_url }}
           pr_number: ${{ needs.update.outputs.pr_number }}
-          commit_sha: ${{ github.sha }}
+          commit_sha: ${{ needs.update.outputs.commit_sha || github.sha }}
           failure_reason: ${{ needs.update.outputs.failure_reason }}
           dry_run: ${{ inputs.dry_run }}
           workflow_run_id: ${{ github.run_id }}
@@ -213,7 +219,7 @@ jobs:
           pr_created: ${{ needs.update.outputs.pr_created }}
           pr_url: ${{ needs.update.outputs.pr_url }}
           pr_number: ${{ needs.update.outputs.pr_number }}
-          commit_sha: ${{ github.sha }}
+          commit_sha: ${{ needs.update.outputs.commit_sha || github.sha }}
           failure_reason: ${{ needs.update.outputs.failure_reason }}
           dry_run: ${{ inputs.dry_run }}
           workflow_run_id: ${{ github.run_id }}
@@ -232,6 +238,8 @@ jobs:
       UPDATE_BRANCH: ${{ inputs.update_branch }}
       UPDATE_RESULT: ${{ needs.update.result }}
       UPDATED: ${{ needs.update.outputs.updated }}
+      YARN_LOCK_UPDATED: ${{ needs.update.outputs.yarn_lock_updated }}
+      COMMIT_SHA: ${{ needs.update.outputs.commit_sha || github.sha }}
       UPDATES_CNT: ${{ needs.update.outputs.updates_cnt }}
       UPDATES_MARKDOWN: ${{ needs.update.outputs.updates_markdown }}
       UI_UPDATES_MARKDOWN: ${{ needs.update.outputs.ui_updates_markdown }}
@@ -287,9 +295,20 @@ jobs:
                   echo "**Pull Request:** [#$PR_NUMBER]($PR_URL)"
                   echo ""
                 else
-                  echo "**Commit:** [\`${{ github.sha }}\`](https://github.com/${{ github.repository }}/commit/${{ github.sha }})"
+                  echo "**Commit:** [\`$COMMIT_SHA\`](https://github.com/${{ github.repository }}/commit/$COMMIT_SHA)"
                   echo ""
                 fi
+              elif [[ "$YARN_LOCK_UPDATED" == "true" ]]; then
+                echo "### ✅ yarn.lock Updated"
+                echo ""
+                echo "No descriptor changes; \`yarn.lock\` was re-resolved and committed"
+                echo ""
+                if [[ "$PR_CREATED" == "true" && -n "$PR_URL" ]]; then
+                  echo "**Pull Request:** [#$PR_NUMBER]($PR_URL)"
+                else
+                  echo "**Commit:** [\`$COMMIT_SHA\`](https://github.com/${{ github.repository }}/commit/$COMMIT_SHA)"
+                fi
+                echo ""
               else
                 echo "### ✨ No Updates Needed"
                 echo "All modules are already up to date"
