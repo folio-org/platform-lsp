@@ -2,8 +2,12 @@
 
 import argparse
 import json
+import re
 import sys
 from typing import Any, Dict, List, Tuple
+
+EXACT_VERSION_RE = re.compile(r'^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$')
+COMPARATOR_RE = re.compile(r'^(>=|<=|>|<|=|\^|~)?(\d+(?:\.\d+){0,2}(?:-[0-9A-Za-z.-]+)?)$')
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -54,6 +58,54 @@ def is_version_higher(new_version: str, old_version: str) -> bool:
   return new_parts > old_parts
 
 
+def pad_version(version: str, length: int) -> List[int]:
+  parts = parse_version(version)
+  return parts + [0] * (length - len(parts))
+
+
+def satisfies_comparator(version: str, comparator: str) -> bool:
+  """Evaluate one npm comparator (>=, <=, >, <, =, ^, ~ or bare) against version."""
+  match = COMPARATOR_RE.match(comparator)
+  if not match:
+    raise ValueError(f"unsupported constraint syntax: {comparator}")
+
+  operator, base = match.groups()
+  base_parts = parse_version(base)
+  length = max(len(base_parts), 3)
+  actual = pad_version(version, length)
+  lower = pad_version(base, length)
+
+  if operator == '>=':
+    return actual >= lower
+  if operator == '>':
+    return actual > lower
+  if operator == '<=':
+    return actual <= lower
+  if operator == '<':
+    return actual < lower
+  if operator in ('=', None):
+    return actual == lower
+
+  # ^ keeps the first non-zero component fixed, ~ keeps major.minor; a shorter base fixes fewer components
+  if operator == '^':
+    fixed = next((i for i, part in enumerate(lower) if part), 0)
+  else:
+    fixed = 1
+  fixed = min(fixed, len(base_parts) - 1)
+  upper = lower[:fixed] + [lower[fixed] + 1] + [0] * (length - fixed - 1)
+  return lower <= actual < upper
+
+
+def satisfies(version: str, constraint: str) -> bool:
+  """Return True if version matches an npm range: '||' separates alternatives, spaces AND comparators."""
+  results = [
+    all([satisfies_comparator(version, comparator) for comparator in alternative.split()])
+    for alternative in constraint.split('||')
+    if alternative.strip()
+  ]
+  return any(results)
+
+
 def load_json_safely(json_string: str, description: str) -> Any:
   """Load JSON string with error handling and exit on failure."""
   try:
@@ -70,11 +122,12 @@ def validate_module(module: Dict[str, Any]) -> bool:
   return "name" in module and "version" in module
 
 
-def update_dependencies(package_json: Dict[str, Any], ui_modules: List[Dict[str, Any]], ignore_list: List[str] = None) -> Tuple[List[Dict[str, Any]], Dict[str, str]]:
+def update_dependencies(package_json: Dict[str, Any], ui_modules: List[Dict[str, Any]], ignore_list: List[str] = None) -> Tuple[List[Dict[str, Any]], Dict[str, str], List[str]]:
   """Update package_json dependencies based on ui_modules list.
 
-  Returns a tuple of (updated_modules_list, not_found_modules_map).
-  Business logic unchanged: only upgrade if new version is higher and dependency exists.
+  Returns a tuple of (updated_modules_list, not_found_modules_map, constraint_violations).
+  Exact pins are upgraded when the new version is higher and the dependency exists.
+  Range constraints are never rewritten: the new version must satisfy them, otherwise a violation is recorded.
   Modules in ignore_list are excluded from not_found_modules_map.
   """
   if ignore_list is None:
@@ -85,6 +138,7 @@ def update_dependencies(package_json: Dict[str, Any], ui_modules: List[Dict[str,
 
   updated_modules: List[Dict[str, Any]] = []
   not_found_modules: Dict[str, str] = {}
+  violations: List[str] = []
 
   for module in ui_modules:
     if not validate_module(module):
@@ -102,6 +156,16 @@ def update_dependencies(package_json: Dict[str, Any], ui_modules: List[Dict[str,
       continue
 
     old_version = package_json["dependencies"][package_name]
+
+    if not EXACT_VERSION_RE.match(old_version):
+      try:
+        if satisfies(new_version, old_version):
+          print(f"Skipping {package_name}: {new_version} satisfies constraint {old_version}")
+        else:
+          violations.append(f"{package_name} {new_version} does not satisfy constraint {old_version}")
+      except ValueError as error:
+        violations.append(f"{package_name}: {error}")
+      continue
 
     if new_version == old_version:
       print(f"Skipping {package_name}: already at version {new_version}")
@@ -123,7 +187,7 @@ def update_dependencies(package_json: Dict[str, Any], ui_modules: List[Dict[str,
       }
     })
 
-  return updated_modules, not_found_modules
+  return updated_modules, not_found_modules, violations
 
 
 def save_results(output_file: str, package_json: Dict[str, Any], updated_modules: List[Dict[str, Any]], not_found_modules: Dict[str, str]) -> None:
@@ -164,7 +228,7 @@ def main() -> None:
     sys.exit(1)
 
   # Update dependencies
-  updated_modules, not_found_modules = update_dependencies(package_json, ui_modules, ignore_not_found)
+  updated_modules, not_found_modules, violations = update_dependencies(package_json, ui_modules, ignore_not_found)
 
   # Save results
   save_results(args.output_file, package_json, updated_modules, not_found_modules)
@@ -174,11 +238,16 @@ def main() -> None:
   print(f"Updated {len(updated_modules)} dependencies")
   print(f"Not found: {len(not_found_modules)} modules")
 
-  # Exit code kept at 0 regardless, to avoid failing workflows when no updates.
   if updated_modules:
     print("Dependencies were updated")
   else:
     print("No dependencies were updated")
+
+  # A range constraint the new module version falls outside of must be fixed by hand in package.json
+  if violations:
+    for violation in violations:
+      print(f"::error::{violation}; update the constraint in package.json")
+    sys.exit(1)
   sys.exit(0)
 
 
