@@ -14,7 +14,10 @@ Declares how `update-stripes-components` treats `yarn.lock`:
 
 - `always` — delete the lock before `yarn install`, so every range constraint in `package.json`
   re-resolves to the newest published module. Set on `snapshot`, whose `>=` floors are otherwise
-  never re-resolved because Yarn keeps a lock that still satisfies `package.json`.
+  never re-resolved because Yarn keeps a lock that still satisfies `package.json`. The stripes job
+  runs on every scan under this policy, not only when the descriptor changed — packages outside any
+  application (`@folio/stripes` and what it pulls in) never move the descriptor. A changed lock with an
+  unchanged descriptor is committed alone as `Update yarn.lock.`; an unchanged lock commits nothing.
 - `on_package_change` — keep the lock; `yarn install` moves only the entries whose pins changed.
   Set on `R1-2025-ci` and `R1-2026`; `release-preparation-orchestrator.yml` writes it into every
   new release branch's entry.
@@ -43,7 +46,7 @@ A refreshed lock lands in the same commit as the descriptor.
 
 #### Modified Workflows
 
-- `release-scan.yml`, `release-update.yml`, `release-update-flow.yml` — `yarn_lock_update` input; `package.json` steps ungated from `need_pr`; yarn steps keyed on the policy
+- `release-scan.yml`, `release-update.yml`, `release-update-flow.yml` — `yarn_lock_update` input; `package.json` steps ungated from `need_pr`; yarn steps keyed on the policy; lock-only artifact and commit when `always` finds a changed lock without a descriptor change
 - `release-preparation-orchestrator.yml` — new branch entries get `yarn_lock_update: "on_package_change"`
 
 ---
