@@ -31,12 +31,14 @@ branches:
       description: "FOLIO Snapshot LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system."
       need_pr: false
       pre_release: "only"
+      yarn_lock_update: "always"
       ruleset:
         enabled: false
 #  - R2-2024:
 #      enabled: true
 #      need_pr: true
 #      pre_release: "false"
+#      yarn_lock_update: "on_package_change"
 #      name: "FOLIO Sunflower Release"
 #      description: "FOLIO Sunflower LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system."
 #      ruleset:
