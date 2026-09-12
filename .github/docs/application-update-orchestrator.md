@@ -89,6 +89,7 @@ Combines all application configurations into a single matrix:
   - `need_pr`: Whether to create PR
   - `pre_release`: Module version filter mode
   - `descriptor_build_offset`: Version offset
+  - `yarn_lock_update`: `yarn.lock` policy (`always` | `on_package_change` | `never`)
   - `rely_on_FAR`: FAR dependency flag
   - `pr_reviewers`: Reviewers list
   - `pr_labels`: Labels list

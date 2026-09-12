@@ -15,11 +15,14 @@ Since RANCHER-3069 it serves **both** cadences — the release branches and `sna
 | Eureka component versions | Docker Hub `folioorg` tags | Docker Hub `folioci` tags |
 | Resolution scope | the template constraint, per entry | the template constraint, per entry |
 | Platform version | patch bump (no `descriptor_build_offset` set) | `<template version>.<offset + run_number>` |
-| `package.json` | UI modules pinned to exact versions | untouched (deliberate `>=` floors); `yarn.lock` refreshed |
+| `package.json` | exact pins follow the application descriptors | `>=` floors, validated against the descriptors, never rewritten |
+| `yarn.lock` | `yarn_lock_update: on_package_change` — kept; `yarn install` moves only the entries whose pins changed | `yarn_lock_update: always` — deleted before `yarn install`, every floor re-resolves to the newest published build |
 | Delivery | commit on `update_branch`, then PR | commit straight to the branch |
 | FAR validation | `release-pr-check.yml` on the PR | `validate-platform` inline, before the push |
 
 Component resolution is one algorithm for both: list the Docker Hub tags of the namespaces the entry's `preRelease` implies, following pagination, discard `latest`, filter by the template constraint and channel, take the newest by **semver**. Docker Hub orders tags by push time — `folioorg/mgr-tenants` returns `3.0.8, 4.0.1, 3.0.7, 4.0.0 …` because patches to an older line continue after a new major — so the returned order is never trusted.
+
+The `package.json` steps run on every branch. `update-package-json` rewrites a UI module only when its current value is an exact version; a range constraint is left to yarn, but the version the application descriptor now carries must satisfy it — otherwise the job fails, nothing is committed for that branch, and the constraint has to be corrected in `package.json` by hand. The lock policy is the branch's `yarn_lock_update` key in `update-config.yml` (`always` | `on_package_change` | `never`, default `always`; `never` skips the yarn steps altogether). `need_pr` governs delivery only, so a branch can move from direct commits to PRs without its `package.json` or `yarn.lock` policy changing (RANCHER-3143).
 
 **Every** branch reads its constraints from `platform-descriptor.template.json` on the branch being updated. A missing template fails the run — falling back to the descriptor would keep two resolution models alive, which is what RANCHER-3069 removed.
 
@@ -155,6 +158,7 @@ flowchart TD
 | `need_pr` | boolean | ✗ | `true` | Deliver as a PR; when `false` commit straight to `release_branch` |
 | `pre_release` | string | ✗ | `'false'` | Declared and unused; the channel is `preRelease` on each template entry |
 | `descriptor_build_offset` | string | ✗ | `''` | Offset added to the run number to form the platform build number |
+| `yarn_lock_update` | string | ✗ | `'always'` | `yarn.lock` policy: `always` deletes the lock before `yarn install`, `on_package_change` keeps it, `never` skips the yarn steps |
 | `skip_interface_validation` | boolean | ✗ | `false` | Skip the inline `validate-platform` gate |
 | `workflow_run_number` | string | ✓ | - | GitHub run number for display |
 | `dry_run` | boolean | ✗ | `false` | Skip PR creation (validation mode) |
@@ -205,8 +209,10 @@ flowchart TD
 
 - Fetches UI module mappings from updated applications
 - Queries FOLIO Artifact Repository for NPM package versions
-- Updates `dependencies` section of package.json
+- Updates exact pins in the `dependencies` section of package.json
+- Fails the job when a range constraint does not admit the module version the application now carries
 - Tracks missing UI modules for reporting
+- Runs `yarn install` according to `yarn_lock_update` and uploads `yarn.lock` when it changed
 
 **Outputs**: `has_updates`, `updated_count`, `not_found_ui_report`
 
