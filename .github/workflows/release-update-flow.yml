@@ -74,6 +74,12 @@ on:
       updated:
         description: 'Whether the platform descriptor was updated'
         value: ${{ jobs.update-platform-descriptor.outputs.updated }}
+      yarn_lock_updated:
+        description: 'Whether yarn.lock changed in this run'
+        value: ${{ jobs.update-stripes-components.outputs.yarn_lock_updated }}
+      commit_sha:
+        description: 'SHA of the commit made by this run, if any'
+        value: ${{ jobs.commit-changes.outputs.commit_sha }}
       pr_created:
         description: 'Whether a PR was created or updated'
         value: ${{ jobs.manage-pr.outputs.pr_created == 'true' || jobs.manage-pr.outputs.pr_updated == 'true' }}
@@ -435,8 +441,10 @@ jobs:
         if: inputs.yarn_lock_update != 'never'
         run: |
           if git diff --name-only | grep -q "^yarn.lock$"; then
+            echo "::notice::yarn.lock changed:$(git diff --shortstat -- yarn.lock)"
             echo "yarn-lock-updated=true" >> "$GITHUB_OUTPUT"
           else
+            echo "::notice::yarn.lock unchanged"
             echo "yarn-lock-updated=false" >> "$GITHUB_OUTPUT"
           fi
 
