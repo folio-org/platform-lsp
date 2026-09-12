@@ -491,6 +491,7 @@ jobs:
                 enabled: true,
                 need_pr: $need_pr,
                 preRelease: $prerelease,
+                yarn_lock_update: "on_package_change",
                 ruleset: {
                   enabled: $need_pr
                 }

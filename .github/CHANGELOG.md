@@ -6,6 +6,51 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+### Fixed - RANCHER-3143: `yarn.lock` refresh on `snapshot`; `package.json` handling independent of `need_pr`
+
+#### `yarn_lock_update` branch key in `update-config.yml`
+
+Declares how `update-stripes-components` treats `yarn.lock`:
+
+- `always` — delete the lock before `yarn install`, so every range constraint in `package.json`
+  re-resolves to the newest published module. Set on `snapshot`, whose `>=` floors are otherwise
+  never re-resolved because Yarn keeps a lock that still satisfies `package.json`. The stripes job
+  runs on every scan under this policy, not only when the descriptor changed — packages outside any
+  application (`@folio/stripes` and what it pulls in) never move the descriptor. A changed lock with an
+  unchanged descriptor is committed alone as `Update yarn.lock.`; an unchanged lock commits nothing.
+- `on_package_change` — keep the lock; `yarn install` moves only the entries whose pins changed.
+  Set on `R1-2025-ci` and `R1-2026`; `release-preparation-orchestrator.yml` writes it into every
+  new release branch's entry.
+- `never` — skip the yarn steps.
+
+Default `always`. Read by `get-update-config` (`kitfox-github`) and passed through
+`release-scan.yml` → `release-update.yml` → `release-update-flow.yml`. Until the `kitfox-github`
+change is on `master` the matrix carries an empty value, which behaves like `on_package_change`.
+
+#### `package.json`: exact pins are rewritten, range constraints are validated
+
+The `package.json` steps in `update-stripes-components` run on every branch instead of only when
+`need_pr` is `true`, so `need_pr` governs delivery alone and a branch can switch to PRs without
+changing how its dependencies are handled. `update-package-json` rewrites a UI module only when
+its current value is an exact version. A range constraint (`>=`, `^`, `~`, comparators joined by
+spaces, `||` alternatives) is left to yarn, but the version the application descriptor now
+carries must satisfy it — otherwise the action reports each violation with `::error::` and exits
+`1`, the job fails, nothing is committed for that branch, and the constraint has to be corrected
+in `package.json` by hand.
+
+A refreshed lock lands in the same commit as the descriptor.
+
+#### Modified GitHub Actions
+
+- `update-package-json` — `satisfies()` range check, `::error::` + exit `1` on a violation
+
+#### Modified Workflows
+
+- `release-scan.yml`, `release-update.yml`, `release-update-flow.yml` — `yarn_lock_update` input; `package.json` steps ungated from `need_pr`; yarn steps keyed on the policy; lock-only artifact and commit when `always` finds a changed lock without a descriptor change
+- `release-preparation-orchestrator.yml` — new branch entries get `yarn_lock_update: "on_package_change"`
+
+---
+
 ### Changed - RANCHER-3069: Snapshot cadence folded into the release update flow
 
 The `snapshot` branch is now an ordinary entry in `.github/update-config.yml`, processed by the

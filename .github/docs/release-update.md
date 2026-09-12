@@ -38,6 +38,7 @@ flowchart LR
 | `need_pr` | boolean | ✗ | `true` | Deliver as a PR; when `false` commit straight to `release_branch` |
 | `pre_release` | string | ✗ | `'false'` | Declared and unused; the channel is `preRelease` on each template entry |
 | `descriptor_build_offset` | string | ✗ | `''` | Offset added to the run number to form the platform build number |
+| `yarn_lock_update` | string | ✗ | `'always'` | `yarn.lock` policy: `always`, `on_package_change` or `never` |
 | `skip_interface_validation` | boolean | ✗ | `false` | Skip the inline `validate-platform` gate |
 | `dry_run` | boolean | ✗ | `false` | Perform dry run without creating PRs |
 | `pr_reviewers` | string | ✗ | `''` | Comma-separated reviewers (users or `org/team`) |

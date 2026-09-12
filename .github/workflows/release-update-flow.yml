@@ -31,6 +31,11 @@ on:
         required: false
         type: string
         default: ''
+      yarn_lock_update:
+        description: "yarn.lock policy: 'always' re-resolves the lock every run, 'on_package_change' lets it follow package.json, 'never' leaves it untouched"
+        required: false
+        type: string
+        default: 'always'
       skip_interface_validation:
         description: 'Skip the inline FAR platform validation used by the direct-commit cadence'
         required: false
@@ -333,12 +338,16 @@ jobs:
   update-stripes-components:
     name: 'Update Stripes Components'
     needs: [determine-source-branch, update-platform-descriptor]
-    if: needs.update-platform-descriptor.outputs.updated == 'true'
+    if: |
+      needs.update-platform-descriptor.result == 'success' &&
+      needs.update-platform-descriptor.outputs.template_ready == 'true' &&
+      (needs.update-platform-descriptor.outputs.updated == 'true' || inputs.yarn_lock_update == 'always')
     runs-on: ubuntu-latest
     outputs:
       has_updates: ${{ steps.update-package-json.outputs.has-updates }}
       updated_count: ${{ steps.update-package-json.outputs.updated-count }}
       not_found_ui_report: ${{ steps.update-package-json.outputs.not-found-ui-report }}
+      yarn_lock_updated: ${{ steps.check-yarn-lock.outputs.yarn-lock-updated }}
     steps:
       - name: 'Checkout Platform Repository'
         uses: actions/checkout@v4
@@ -360,7 +369,7 @@ jobs:
 
       - name: 'Fetch updated UI modules list'
         id: fetch-updated-ui-modules
-        if: inputs.need_pr
+        if: needs.update-platform-descriptor.outputs.updated == 'true'
         uses: folio-org/platform-lsp/.github/actions/fetch-updated-ui-modules@master
         with:
           applications: ${{ needs.update-platform-descriptor.outputs.updated_applications }}
@@ -369,7 +378,7 @@ jobs:
 
       - name: 'Fetch base package.json'
         id: fetch-base-package-json
-        if: inputs.need_pr
+        if: needs.update-platform-descriptor.outputs.updated == 'true'
         uses: folio-org/platform-lsp/.github/actions/read-file@master
         with:
           file_path: package.json
@@ -382,7 +391,7 @@ jobs:
 
       - name: 'Update package.json dependencies'
         id: update-package-json
-        if: inputs.need_pr && steps.fetch-updated-ui-modules.outputs.ui-modules != ''
+        if: needs.update-platform-descriptor.outputs.updated == 'true' && steps.fetch-updated-ui-modules.outputs.ui-modules != ''
         uses: folio-org/platform-lsp/.github/actions/update-package-json@master
         with:
           package-json: ${{ steps.read-package-json.outputs.file_content }}
@@ -410,13 +419,20 @@ jobs:
           check-latest: true
 
       - name: 'Install dependencies'
-        run: yarn install --ignore-scripts --non-interactive
+        if: inputs.yarn_lock_update != 'never'
+        run: |
+          if [ "${{ inputs.yarn_lock_update }}" = "always" ]; then
+            rm -f yarn.lock
+          fi
+          yarn install --ignore-scripts --non-interactive
 
       - name: 'List FOLIO packages'
+        if: inputs.yarn_lock_update != 'never'
         run: yarn list --pattern @folio
 
       - name: 'Check if yarn.lock was updated'
         id: check-yarn-lock
+        if: inputs.yarn_lock_update != 'never'
         run: |
           if git diff --name-only | grep -q "^yarn.lock$"; then
             echo "yarn-lock-updated=true" >> "$GITHUB_OUTPUT"
@@ -425,6 +441,7 @@ jobs:
           fi
 
       - name: 'Upload Stripes Artifact'
+        if: needs.update-platform-descriptor.outputs.updated == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: 'package-json-files-${{ github.run_id }}-${{ inputs.release_branch }}'
@@ -433,6 +450,14 @@ jobs:
             ${{ steps.fetch-base-package-json.outputs.file_path }}
             ${{ steps.check-yarn-lock.outputs.yarn-lock-updated == 'true' && 'yarn.lock' || '' }}
           if-no-files-found: warn
+          retention-days: 1
+
+      - name: 'Upload yarn.lock Artifact'
+        if: needs.update-platform-descriptor.outputs.updated != 'true' && steps.check-yarn-lock.outputs.yarn-lock-updated == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'yarn-lock-${{ github.run_id }}-${{ inputs.release_branch }}'
+          path: yarn.lock
           retention-days: 1
 
   generate-reports:
@@ -561,20 +586,22 @@ jobs:
     if: |
       always() &&
       !cancelled() &&
-      needs.update-platform-descriptor.outputs.updated == 'true' &&
       needs.update-stripes-components.result != 'failure' &&
-      needs.generate-reports.result == 'success' &&
-      (inputs.need_pr || needs.validate-platform.result != 'failure')
+      (inputs.need_pr || needs.validate-platform.result != 'failure') &&
+      (
+        (needs.update-platform-descriptor.outputs.updated == 'true' && needs.generate-reports.result == 'success') ||
+        (needs.update-platform-descriptor.outputs.updated != 'true' && needs.update-stripes-components.outputs.yarn_lock_updated == 'true')
+      )
     uses: folio-org/kitfox-github/.github/workflows/commit-and-push-changes.yml@master
     with:
       repo: ${{ inputs.repo }}
       branch: ${{ inputs.need_pr && inputs.update_branch || inputs.release_branch }}
-      artifact_name: ${{ needs.generate-reports.outputs.artifact_name || 'platform-lsp-update-files' }}
+      artifact_name: ${{ needs.update-platform-descriptor.outputs.updated == 'true' && needs.generate-reports.outputs.artifact_name || format('yarn-lock-{0}-{1}', github.run_id, inputs.release_branch) }}
       commit_message: |
-        Update platform to ${{ needs.update-platform-descriptor.outputs.new_version }}.
+        ${{ needs.update-platform-descriptor.outputs.updated == 'true' && format('Update platform to {0}.', needs.update-platform-descriptor.outputs.new_version) || 'Update yarn.lock.' }}
 
-        **Total applications/components updated:** ${{ needs.generate-reports.outputs.updates_cnt || '0' }}
-        ${{ needs.generate-reports.outputs.updates_markdown }}
+        ${{ needs.update-platform-descriptor.outputs.updated == 'true' && format('**Total applications/components updated:** {0}', needs.generate-reports.outputs.updates_cnt || '0') || '' }}
+        ${{ needs.update-platform-descriptor.outputs.updated == 'true' && needs.generate-reports.outputs.updates_markdown || '' }}
       dry_run: ${{ inputs.dry_run }}
       use_github_app: true
       source_branch: ${{ needs.determine-source-branch.outputs.source_branch }}
@@ -595,6 +622,10 @@ jobs:
         (
           needs.determine-source-branch.outputs.pr_exists != 'true' &&
           needs.determine-source-branch.outputs.update_branch_exists == 'true'
+        ) ||
+        (
+          needs.determine-source-branch.outputs.pr_exists != 'true' &&
+          needs.commit-changes.result == 'success'
         )
       )
     runs-on: ubuntu-latest
@@ -610,7 +641,8 @@ jobs:
         id: build-pr-body
         if: |
           needs.update-platform-descriptor.outputs.updated == 'true' ||
-          needs.determine-source-branch.outputs.update_branch_exists == 'true'
+          needs.determine-source-branch.outputs.update_branch_exists == 'true' ||
+          needs.commit-changes.result == 'success'
         uses: folio-org/platform-lsp/.github/actions/build-pr-body@master
         with:
           new_version: ${{ needs.update-platform-descriptor.outputs.new_version }}

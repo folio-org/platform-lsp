@@ -34,6 +34,7 @@ branches:
       need_pr: false
       pre_release: "only"
       descriptor_build_offset: "100200000000000"
+      yarn_lock_update: "always"
       ruleset:
         # Enable only with need_pr: true (RANCHER-3118); the merge queue rule rejects the hourly direct commit
         enabled: false
@@ -48,6 +49,7 @@ branches:
       description: "FOLIO R1-2025 (Sunflower) is a major release that includes significant updates and new features for the FOLIO platform."
       need_pr: true
       pre_release: "false"
+      yarn_lock_update: "on_package_change"
       ruleset:
         enabled: true
   - R1-2026:
@@ -56,5 +58,6 @@ branches:
       description: "FOLIO R1-2026 (Trillium) is a major release that includes significant updates and new features for the FOLIO platform."
       need_pr: true
       pre_release: "false"
+      yarn_lock_update: "on_package_change"
       ruleset:
         enabled: true

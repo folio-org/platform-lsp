@@ -29,6 +29,11 @@ on:
         required: false
         type: string
         default: ''
+      yarn_lock_update:
+        description: "yarn.lock policy: 'always' re-resolves the lock every run, 'on_package_change' lets it follow package.json, 'never' leaves it untouched"
+        required: false
+        type: string
+        default: 'always'
       skip_interface_validation:
         description: 'Skip the inline FAR platform validation used by the direct-commit cadence'
         required: false
@@ -125,6 +130,7 @@ jobs:
       need_pr: ${{ inputs.need_pr }}
       pre_release: ${{ inputs.pre_release }}
       descriptor_build_offset: ${{ inputs.descriptor_build_offset }}
+      yarn_lock_update: ${{ inputs.yarn_lock_update }}
       skip_interface_validation: ${{ inputs.skip_interface_validation }}
       workflow_run_number: ${{ github.run_number }}
       dry_run: ${{ inputs.dry_run }}

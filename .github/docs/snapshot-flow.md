@@ -139,6 +139,7 @@ Since RANCHER-3069 the snapshot branch runs through the **same** chain as the re
       need_pr: false                              # commit straight to the branch
       pre_release: "only"                         # declared, unused — see below
       descriptor_build_offset: "100200000000000"  # + run number = platform build number
+      yarn_lock_update: "always"                  # every scan: delete yarn.lock, yarn install, commit the lock if it changed
       ruleset:
         enabled: false                            # no ruleset while the branch takes direct commits
         merge_queue:
