@@ -25,11 +25,13 @@ Composite GitHub Action that updates `package.json` dependencies using an input 
 1. Module names starting with `folio_` are converted to scoped `@folio/` names.
 2. A dependency is updated only if:
    - It already exists in `package.json.dependencies`.
+   - Its current value is an exact version (`X.Y.Z`, optionally with a pre-release suffix).
    - The new version is strictly higher (numeric comparison of dotted segments; non-digit characters ignored except leading `v^~`).
 3. Equal or lower versions are ignored (skipped with log message).
-4. Missing dependencies are collected in `not-found-ui-report` but never added, unless they are in the `ignore-not-found` list.
-5. Modules in the `ignore-not-found` list are still skipped if not found, but excluded from the `not-found-ui-report` output.
-6. Exit code is always `0` (action never fails solely due to no updates).
+4. A range constraint (`>=1.0.0`, `^1.0.0`, `~1.0.0`, comparators joined by spaces, alternatives by `||`) is never rewritten — yarn resolves it. The new module version must satisfy it: if it does not, or the constraint syntax is not supported, the violation is reported with `::error::` and the action exits `1` after writing its results. The operator fixes the constraint in `package.json`.
+5. Missing dependencies are collected in `not-found-ui-report` but never added, unless they are in the `ignore-not-found` list.
+6. Modules in the `ignore-not-found` list are still skipped if not found, but excluded from the `not-found-ui-report` output.
+7. Exit code is `0` whether or not anything was updated; only a constraint violation makes it `1`.
 
 ## Example Usage
 
