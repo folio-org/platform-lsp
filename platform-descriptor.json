@@ -1,7 +1,7 @@
 {
   "name": "FOLIO LSP",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2027-SNAPSHOT.100200000003169",
+  "version": "R1-2027-SNAPSHOT.100200000003170",
   "eureka-components": [
     {
       "name": "folio-kong",
@@ -130,7 +130,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000010516"
+        "version": "1.1.0-SNAPSHOT.100200000010560"
       },
       {
         "name": "app-mosaic",
