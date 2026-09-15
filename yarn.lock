@@ -1598,9 +1598,9 @@
     react-query "^3.39.3"
 
 "@folio/claims@>=1.0.0":
-  version "3.0.1099000000000331"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/claims/-/claims-3.0.1099000000000331.tgz#d4a0460c5dce058b27e3102cad10b6d7334fa5b3"
-  integrity sha512-/9JUDONQ0jlqUrCA6ltuMaH4qm0t/syHisCRoDd/RKCDTW3GJIOO61EIaH2NGBpIzMdARNvbqsdT1KYIz+iwBw==
+  version "3.0.1099000000000336"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/claims/-/claims-3.0.1099000000000336.tgz#75a5e1849de9191369970e3320f9ca96d3ea4315"
+  integrity sha512-SM6P1ZMrDZLTGh0YXpow/HKgs6xFkPuTSn9aKJJIUPaDlswa6WAE//HM3QvMnv5Uh+zOmavm8Ijg4NbTVjm3Eg==
   dependencies:
     "@folio/stripes-acq-components" "^7.2.0"
     lodash "^4.17.21"
@@ -1677,9 +1677,9 @@
     react-window "^1.8.5"
 
 "@folio/data-import@>=0.0.0":
-  version "11.0.1099000000000384"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/data-import/-/data-import-11.0.1099000000000384.tgz#41800a57a633c6ade5b483f93045a74459cfbb64"
-  integrity sha512-TuopLsUi5PSROZ6dsc2U13SpvqfyhWpnhAb9w6PeQyY2bN7MENNcC5yp7Cz45nDFhrio7GNSoEitn9oBZWYnTA==
+  version "11.0.1099000000000399"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/data-import/-/data-import-11.0.1099000000000399.tgz#00ad3af911e76295d47da2dffc23e5d5a4ab2f90"
+  integrity sha512-b4aBYE1ZO4VL1KrPEESn+Z6b63ThwWjyHX67K8f2UEwR8S/kixqBDTTtw30yZoGPbHHQDdrx1maR8JB/t/nH5w==
   dependencies:
     "@folio/stripes-acq-components" "^7.1.0"
     "@folio/stripes-data-transfer-components" "^7.1.0"
@@ -1783,9 +1783,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/export-manager@>=1.0.0":
-  version "5.0.1099000000000191"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/export-manager/-/export-manager-5.0.1099000000000191.tgz#ea9a7f735b7019e5bb9e02b637c8032112a86216"
-  integrity sha512-TGt5PfDQXyj/FMnaTRrHvQGJHwKPOg21uUeUFz3rt56VYn9sz1kwYZeRlNUXSal0wCwWxNOADmDjiMBs4vyiLg==
+  version "5.1.1099000000000199"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/export-manager/-/export-manager-5.1.1099000000000199.tgz#70090a4ee71911427fc730fe7c22090931c330bb"
+  integrity sha512-bAvSOrm/+IcUYcIL1x2GlEBfel+vFhlRrJFuqekU50WUcUupEdcgHH/FqVoWnxGTPPHTbqge0arSleOyEBg/BQ==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     final-form "^4.0.0"
@@ -2040,9 +2040,9 @@
     "@folio/quick-marc" "^11.0.0"
 
 "@folio/mosaic-settings@>=1.0.0":
-  version "1.1.1099000000000151"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/mosaic-settings/-/mosaic-settings-1.1.1099000000000151.tgz#9d1fc41cdc9bddc3dc9195ea84a5b8c0205774dc"
-  integrity sha512-RVdvz3JEXpSemhXowEfVls5WuXvNJ8PkNMV3h5Yt1u9aj2qwBc0xS2xCuZLajRvCQ6QDJVDyDsNQqRG3MqzTLw==
+  version "1.2.1099000000000159"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/mosaic-settings/-/mosaic-settings-1.2.1099000000000159.tgz#4981500d06078a8b169272c26b93393887e344e7"
+  integrity sha512-EEuaW1on8b4OoonbDEJXIuESjvvM5sHclbLsELvo3KOFLLOs6cWDsoZ0Yw3n29e4yWfI/grKIo6Hw6hXAyI/bQ==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
 
@@ -3963,9 +3963,9 @@
   integrity sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==
 
 "@types/node@*":
-  version "26.5.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-26.5.1.tgz#b19c390e15813f402a94b86e3af9042f792138be"
-  integrity sha512-CzNm2FezW4VR/LjG6yUdiEgLE/rAQ9Slj5gCu/C2VrdcW7I0ahNZ8DRbHT7zOZ6r3ONgd/bsQIeSaoDGrd1C6g==
+  version "26.6.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-26.6.0.tgz#61778795a7c1110c4862715831c2cabdff5595b2"
+  integrity sha512-FWWQhDlKSnEJVe+CTJCQL8Fol7s1MKo3Ud0fjryxoOoH+hwMIPxol0MguYrLi2I0VvIFwOU2DwdWET2+px15qg==
   dependencies:
     undici-types "~8.9.0"
 
@@ -4518,9 +4518,9 @@ base64-js@^1.3.1:
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
 
 baseline-browser-mapping@^2.11.23:
-  version "2.11.23"
-  resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.11.23.tgz#304c980a35de0f460cf12985359d6e11494c1ab4"
-  integrity sha512-le521dGVfxM7yRX0EikCoSz+rOK+hHzdDt/E7mG1jOJB/6WAAUuwVroLwaB7ApaUsz5Q0kFlDXLSA9MheUIfRQ==
+  version "2.11.24"
+  resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.11.24.tgz#3dd9518c97d4003f4f131645d116664e2dd37aea"
+  integrity sha512-hYrgxie335U08WqICoGqKRzV1HFXv6zdxwJE4ekCb80CM9a0SVVsN4QPwT67RraRo+9h8IATk6uxHJw7QSkdOg==
 
 batch@0.6.1:
   version "0.6.1"
@@ -5615,9 +5615,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.427:
-  version "1.5.428"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.428.tgz#36bdb39055d71ab08a54855508ef33940bc467e6"
-  integrity sha512-1JxbaFJj1bRKurj1uY3l4xxpU9kOUAUjcIgApj0qu1Pao5GhoIWI8iL0BeMYJ2njig1hBx0A7eKD9VGjH9wlHw==
+  version "1.5.429"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.429.tgz#1f9bf3eea3c99942dd86d66e121e8b864c26f01e"
+  integrity sha512-/1ENIE3cx4HTIx4IfPZFaOunJmsrSVTnj6coXoRVbiJUbkeTyFkJvBeWGkdgh08OhFbxYLMT1kbkwFVSarq6Ow==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -8697,11 +8697,11 @@ react-router-dom@^5.2.0:
     tiny-warning "^1.0.0"
 
 react-router-dom@^7.17.0:
-  version "7.18.3"
-  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-7.18.3.tgz#0688c91b4b376c8b0dcaf0a0064975d52a32e0f7"
-  integrity sha512-ytVbyBBM7vMfRCam25r0WMhSVSom909A8p+8m0/f1w853dz/xfFu6etAT2SEbVoSnI+ZoPRDqIsQXVT89gp7kg==
+  version "7.18.4"
+  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-7.18.4.tgz#07b72b8aab2d80af847425107f966f1688c703d0"
+  integrity sha512-yrfmJHIpDG7taCpqKjT1G5B6q3O2K+RN8/fgNf0lTjCwiPbQ0ei6vXX9ZjQR+7ld8Tr7Z5xmyMnZ8YJrphWQUw==
   dependencies:
-    react-router "7.18.3"
+    react-router "7.18.4"
 
 react-router-prop-types@^1.0.4, react-router-prop-types@^1.0.5:
   version "1.0.5"
@@ -8726,10 +8726,10 @@ react-router@5.3.4, react-router@^5.2.0:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
-react-router@7.18.3:
-  version "7.18.3"
-  resolved "https://registry.yarnpkg.com/react-router/-/react-router-7.18.3.tgz#2a3257aa7c5edd5a71f878063e4c7f3fcfc4b76a"
-  integrity sha512-gyXgtdr5uACJ5b1Q4udzjVV+tb/rlHIMJKuJ0e89R4Kzgz47z/rgP0dIKxktqIEUhDHluGTPJJH/wRha7CyqsA==
+react-router@7.18.4:
+  version "7.18.4"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-7.18.4.tgz#dc30cbb27e936f06d9e1d75ab648b317deb698a4"
+  integrity sha512-PUPQcMhMGRAslLcvtlPz/kmzBEWPhLdgLFrL7pLNepBL6dX0lWj4WD2cUYVgYCuT3jxvghYFg81cDTj44DhetQ==
   dependencies:
     cookie "^1.0.1"
     set-cookie-parser "^2.6.0"
