@@ -1713,9 +1713,9 @@
     "@folio/plugin-find-organization" "^6.0.0"
 
 "@folio/developer@>=1.5.0":
-  version "11.0.1099000000000408"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/developer/-/developer-11.0.1099000000000408.tgz#e50cd6a812ad8ff86470348041b9624fd72a6efb"
-  integrity sha512-fNzlbNKHvsncQOohsu4je3A0OhxIO0puXuH5J7HthDaNH6zpDFy/P2+vtGdDCfod3cSWMv7YReW4jWRzLX9WBg==
+  version "11.0.1099000000000419"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/developer/-/developer-11.0.1099000000000419.tgz#e38c5d5b512cd1b5b251286472e68d15167108bd"
+  integrity sha512-GnETTSFcAGGDFMm4Ge8Bu3a441y02Idou1IMkPjKhmlrQlqNhtPoWAk1VkD7yuggBX4R12P1prjnWbfVp3Sexw==
   dependencies:
     chart.js "^4.4.0"
     ky "^0.23.0"
@@ -8463,9 +8463,9 @@ react-dom@^19.2.5:
     scheduler "^0.28.0"
 
 react-draggable@^4.4.6, react-draggable@^4.5.0:
-  version "4.7.1"
-  resolved "https://registry.yarnpkg.com/react-draggable/-/react-draggable-4.7.1.tgz#e502c3cfe0cc97d691e12aaa377a975fce097d71"
-  integrity sha512-wa3tzfFnYt3yaZLuyU58fl1TNunfWfBekDgWhZA1+gb2jnp42wZ0ymuopR6M5kqDYmm4hKmzGlcKWjZf3Zb6RQ==
+  version "4.7.2"
+  resolved "https://registry.yarnpkg.com/react-draggable/-/react-draggable-4.7.2.tgz#296e6cfe74a75067bbde11ac25810b4bb1a832b4"
+  integrity sha512-pmqDx72EqhMGoJe/x42ZO2wJ9TIz7qJ5OPnFu6lVWWznEuJumlSjR+J0V4tNyDFhUo6dVvv56FeiTqN+arTgnw==
   dependencies:
     clsx "^2.1.1"
     prop-types "^15.8.1"
