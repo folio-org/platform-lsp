@@ -1,7 +1,7 @@
 {
   "name": "FOLIO LSP",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2027-SNAPSHOT.100200000003178",
+  "version": "R1-2027-SNAPSHOT.100200000003179",
   "eureka-components": [
     {
       "name": "folio-kong",
@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000011071"
+        "version": "3.4.0-SNAPSHOT.100200000011072"
       }
     ],
     "optional": [
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.1.0-SNAPSHOT.100200000007142"
+        "version": "1.1.0-SNAPSHOT.100200000007316"
       },
       {
         "name": "app-bulk-edit",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000003896"
+        "version": "1.1.0-SNAPSHOT.100200000003897"
       },
       {
         "name": "app-dcb",
@@ -90,11 +90,11 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000012398"
+        "version": "1.1.0-SNAPSHOT.100200000012399"
       },
       {
         "name": "app-erm-usage",
-        "version": "3.1.0-SNAPSHOT.100200000012033"
+        "version": "3.1.0-SNAPSHOT.100200000012074"
       },
       {
         "name": "app-fqm",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "2.1.0-SNAPSHOT.100200000011707"
+        "version": "2.1.0-SNAPSHOT.100200000011740"
       },
       {
         "name": "app-inventory",
@@ -126,11 +126,11 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000011454"
+        "version": "3.1.0-SNAPSHOT.100200000011519"
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000010561"
+        "version": "1.1.0-SNAPSHOT.100200000010569"
       },
       {
         "name": "app-mosaic",
