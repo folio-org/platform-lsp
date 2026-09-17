@@ -9,7 +9,7 @@
     },
     {
       "name": "folio-keycloak",
-      "version": "26.7.0"
+      "version": "26.7.1"
     },
     {
       "name": "folio-module-sidecar",
@@ -17,15 +17,15 @@
     },
     {
       "name": "mgr-applications",
-      "version": "3.0.6"
+      "version": "4.0.2"
     },
     {
       "name": "mgr-tenants",
-      "version": "3.0.8"
+      "version": "4.0.1"
     },
     {
       "name": "mgr-tenant-entitlements",
-      "version": "3.1.10"
+      "version": "4.0.1"
     }
   ],
   "applications": {
@@ -96,7 +96,7 @@
   },
   "dependencies": {
     "postgres": ">=16.0",
-    "kafka": ">=3.5.1",
-    "opensearch": ">=2.19.0"
+    "kafka": ">=4.2.0",
+    "opensearch": ">=3.5.0"
   }
 }
