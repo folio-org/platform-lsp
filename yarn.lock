@@ -1858,9 +1858,9 @@
     "@folio/plugin-find-user" "^8.1.0"
 
 "@folio/inventory-import@>=4.0.0":
-  version "4.1.2099000000000272"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory-import/-/inventory-import-4.1.2099000000000272.tgz#52314ca464bcdea88cb3c102ab810779d6a85492"
-  integrity sha512-W9uyS52TPYNpAMm2IPR4QSk+q9So31pBxpPrUZX2CcTGgLpDxfTizc18z1MQOr/p9KVNu93UaOjJevD0aOYFUQ==
+  version "4.1.2099000000000274"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory-import/-/inventory-import-4.1.2099000000000274.tgz#07f9dee19e344817723f24767e9913de52ae2c46"
+  integrity sha512-h9/ZXniHAelQzQT0F9WBp+IM8Ms7DjrTYz4AqalRqFavrJS9gYjODsBsswyLRFNrMTgtAP8w89cZvEe8UkHk2g==
   dependencies:
     "@folio/stripes-data-transfer-components" "^7.0.0"
     final-form-arrays "^3.0.2"
@@ -4518,9 +4518,9 @@ base64-js@^1.3.1:
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
 
 baseline-browser-mapping@^2.11.23:
-  version "2.11.24"
-  resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.11.24.tgz#3dd9518c97d4003f4f131645d116664e2dd37aea"
-  integrity sha512-hYrgxie335U08WqICoGqKRzV1HFXv6zdxwJE4ekCb80CM9a0SVVsN4QPwT67RraRo+9h8IATk6uxHJw7QSkdOg==
+  version "2.11.25"
+  resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.11.25.tgz#88b942ce372bdf2d6a2652136bbf7826c65c77be"
+  integrity sha512-gMmEShwwq7FJqMwvfRwvCl00v4kN+KOfJqXn+f4nrufak5gNHJOksd/60Dvjuz7sI8Y5WiSFBa8FEYr+zoyqCw==
 
 batch@0.6.1:
   version "0.6.1"
