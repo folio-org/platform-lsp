@@ -2099,9 +2099,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/orders@>=1.1.0":
-  version "10.0.1099000000001155"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-10.0.1099000000001155.tgz#385b0f71b416961f5070bff0ea8cd0a970cb4ea0"
-  integrity sha512-wRSwdWppUUX7cKJ3yn6LHHmvXpY6SXn2X2pBOhAyzbYnmBU3QoekXLZ1SfPYOd0yjcXTCsQuhTJapZtbyl0w4g==
+  version "10.0.1099000000001158"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-10.0.1099000000001158.tgz#5f11f492470e9f3b4a0040b507562d2448a47147"
+  integrity sha512-ao+VDUQT1sBFfbGSkSTAUS3Ehx2EHXm3yhmiuqCEODNbfsGJEZKZ4UNY+0doUPkoU0yVikWGHThSr5LOgonSIA==
   dependencies:
     "@folio/plugin-find-po-line" "^7.0.0"
     "@folio/stripes-acq-components" "~7.2.0"
@@ -5615,9 +5615,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.427:
-  version "1.5.431"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.431.tgz#dad0cd11dc4dee9ae0d677e5e7ac6bc42b489204"
-  integrity sha512-AAVihz2YwJeOdAynX8MUtqpvjY0gaiARp/7+r4kwqgzqXMrfG1qDN7vwT80uxAoOQRPcZH8t73EI+CA/1OJN8A==
+  version "1.5.432"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.432.tgz#a2093952fa04109cd223faac77d0c7081b3f0532"
+  integrity sha512-4qa5o+sI3qFR+p1C6wZvY99x6q/3tR34n+ezZvWiJ9s0HJaaKwN6h1HTupFfv4fiSdQYMZWtVFBuzHdAXo1BnA==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
