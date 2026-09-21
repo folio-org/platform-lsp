@@ -1977,26 +1977,26 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/linked-data@^2.0.5":
-  version "2.0.4099000000002701"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.4099000000002701.tgz#10f201bcaaf1fcecc1ecc0f1a2d82c6125358744"
-  integrity sha512-FB48shtonEqZmqAPWJzTBM5T6TT5CFvYFcz5FaTz+DjlFXPl7f57H99wxEMG8A+JVkrke/ojVjKcnyW4Lz6SiA==
+  version "2.0.4099000000002720"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.4099000000002720.tgz#ec03751b965654f7f73f6897c153671988a1a8fc"
+  integrity sha512-45gvpCWF13x5IDfZuYp+hZuZzRQUokBXhaDhGznGCt+IwmvX0e7jZzaYdXezLZnzolkA8zSupI1N+XtxFaRlFQ==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
     "@dnd-kit/sortable" "^10.0.0"
     "@dnd-kit/utilities" "^3.2.2"
-    "@tanstack/react-query" "^5.101.0"
+    "@tanstack/react-query" "^5.103.1"
     classnames "^2.5.1"
-    focus-trap-react "^12.0.2"
+    focus-trap-react "^12.0.3"
     lodash "^4.17.21"
-    react "^19.2.5"
-    react-dom "^19.2.5"
-    react-dropzone "^14.3.8"
-    react-intl "^10.1.13"
-    react-router-dom "^7.17.0"
+    react "^19.3.0"
+    react-dom "^19.3.0"
+    react-dropzone "^20.1.2"
+    react-intl "^12.1.0"
+    react-router-dom "^7.18.4"
     react-select "^5.10.2"
-    uuid "^14.0.0"
-    zustand "^5.0.14"
+    uuid "^14.0.2"
+    zustand "^5.0.15"
 
 "@folio/lists@>=1.2.0":
   version "5.0.2099000000001116"
@@ -2099,9 +2099,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/orders@>=1.1.0":
-  version "10.0.1099000000001158"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-10.0.1099000000001158.tgz#5f11f492470e9f3b4a0040b507562d2448a47147"
-  integrity sha512-ao+VDUQT1sBFfbGSkSTAUS3Ehx2EHXm3yhmiuqCEODNbfsGJEZKZ4UNY+0doUPkoU0yVikWGHThSr5LOgonSIA==
+  version "10.0.1099000000001161"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-10.0.1099000000001161.tgz#4e47f4f4ac504fab0920b822d6027e6502cb6e94"
+  integrity sha512-gkg/EgwUtvCV+mKT0K9PHlGuZjW7biqTzsVX0TdolmavREczGcf0XC4FLRI3ZhgAtmIq5aosFnDi4tFr9jEcSQ==
   dependencies:
     "@folio/plugin-find-po-line" "^7.0.0"
     "@folio/stripes-acq-components" "~7.2.0"
@@ -3036,6 +3036,13 @@
   dependencies:
     "@formatjs/icu-skeleton-parser" "2.1.11"
 
+"@formatjs/icu-messageformat-parser@3.5.20":
+  version "3.5.20"
+  resolved "https://registry.yarnpkg.com/@formatjs/icu-messageformat-parser/-/icu-messageformat-parser-3.5.20.tgz#2775334b80cb20a4e2cfc2fe92bc1e0554567be0"
+  integrity sha512-DUzCb2iskGDKvLU7P+nz/rjpmN59luoTRbWHFFNYNnZTxWCKvwPI94rNll99TGZaI6XoTbDF0QGegk21GFrQZQ==
+  dependencies:
+    "@formatjs/icu-skeleton-parser" "2.1.12"
+
 "@formatjs/icu-skeleton-parser@1.8.16":
   version "1.8.16"
   resolved "https://registry.yarnpkg.com/@formatjs/icu-skeleton-parser/-/icu-skeleton-parser-1.8.16.tgz#13f81f6845c7cf6599623006aacaf7d6b4ad2970"
@@ -3048,6 +3055,11 @@
   version "2.1.11"
   resolved "https://registry.yarnpkg.com/@formatjs/icu-skeleton-parser/-/icu-skeleton-parser-2.1.11.tgz#09226edf55a18e3fea80304d2cc95aaeb0095436"
   integrity sha512-j8cUmOJzVgkHuS0QiQ6ga76UIoLOFSAMWhs7aZJztH3aAdCOAE6vpC8KVvFB4cU10ON0y2/5oOVmPJ43s2lTwA==
+
+"@formatjs/icu-skeleton-parser@2.1.12":
+  version "2.1.12"
+  resolved "https://registry.yarnpkg.com/@formatjs/icu-skeleton-parser/-/icu-skeleton-parser-2.1.12.tgz#5471028b1f2516c63456aba92d109a0d230d2a0f"
+  integrity sha512-ca7tZMLpfHX3sUD7hP6gE/qr6Iq89EDd3ZLeRhbsB7r0UD55DGJq+tmFLzrGrnx5StahUevQmQQVtbDRHsfDHA==
 
 "@formatjs/intl-localematcher@0.6.2":
   version "0.6.2"
@@ -3067,14 +3079,14 @@
     intl-messageformat "10.7.18"
     tslib "^2.8.0"
 
-"@formatjs/intl@4.2.1":
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/@formatjs/intl/-/intl-4.2.1.tgz#f8261d076eceb875bdfa9871c9c42415b2acbce9"
-  integrity sha512-GiL0cReencWQkhfJedNLMe0Aorb/wyTRJdi+hLgG9gsDPy4yw2N+EkMcijf5+oGKd5jde75tr5nujsPg78bUTw==
+"@formatjs/intl@6.1.2":
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl/-/intl-6.1.2.tgz#15cc4bacc230c052d79007a939a0f7eb72e23981"
+  integrity sha512-YH3Ldfa2vmavWgBlCyrT9WiobphTXlNHnHxhhB6nLSUOxmitJ6Bzqzg61uBcnc6yhKTU+YRo8hLhEatOZrVJUg==
   dependencies:
     "@formatjs/fast-memoize" "3.1.7"
-    "@formatjs/icu-messageformat-parser" "3.5.18"
-    intl-messageformat "11.2.15"
+    "@formatjs/icu-messageformat-parser" "3.5.20"
+    intl-messageformat "12.1.2"
 
 "@graphql-typed-document-node/core@^3.1.1":
   version "3.2.0"
@@ -3822,7 +3834,7 @@
   resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.103.2.tgz#9dd1792b42046808c1e8e997807b83137012dedd"
   integrity sha512-I8DkFXls5jXLqtm8+QpOhEmG07hIblhSZFzafg9wHsMSEvMzULy9hK17wU1T/ahfhMbtITJhbxutwwCoihkR7A==
 
-"@tanstack/react-query@^5.101.0":
+"@tanstack/react-query@^5.103.1":
   version "5.103.2"
   resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.103.2.tgz#1d063909424ecf259fd88f974a4ecafe32edcfed"
   integrity sha512-B+fWiYZBc+0uUD5zDZAeLw9dKj7XEsdnuu6zRZ+no6LNKpeE3P3bJ+N6HINjcIlWR6fW3vUoTneEaGa2V6ehqw==
@@ -4444,6 +4456,11 @@ attr-accept@^2.0.0, attr-accept@^2.2.2, attr-accept@^2.2.4:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/attr-accept/-/attr-accept-2.2.5.tgz#d7061d958e6d4f97bf8665c68b75851a0713ab5e"
   integrity sha512-0bDNnY/u6pPwHDMoF0FieU354oBi0a8rD9FcsLwzcGWbc8KS8KPIi7y+s13OlVY+gMWc/9xEMUgNE6Qm8ZllYQ==
+
+attr-accept@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/attr-accept/-/attr-accept-4.0.0.tgz#e038002c875830b2b98774918abfd4bdeb7d9c97"
+  integrity sha512-hmCnJClmeKNKlsBHgbM8yLZRiQZ4/20UXbLJb6OUT16eWcM5/xNZerr80a/zCYob768KIGq++aLrQNTuwPsIOQ==
 
 autoprefixer@^10.4.13:
   version "10.6.1"
@@ -6041,6 +6058,11 @@ file-selector@^2.1.0:
   dependencies:
     tslib "^2.7.0"
 
+file-selector@^5.0.0:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/file-selector/-/file-selector-5.0.1.tgz#9a8f7a944559efe4115bef40df885ac2092b0651"
+  integrity sha512-v0g/PTeuQgvKCBrVRsfVudvwXlRHSWHEQkVgKawgCGHkEpKA1clp3Om5jvEVhz8G9W/mOYjJH9FhkH4C888PgQ==
+
 fill-range@^7.1.1:
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/fill-range/-/fill-range-7.1.1.tgz#44265d3cac07e3ea7dc247516380643754a05292"
@@ -6159,7 +6181,7 @@ flexboxgrid2@^7.2.0:
   dependencies:
     normalize.css "^7.0.0"
 
-focus-trap-react@^12.0.2:
+focus-trap-react@^12.0.3:
   version "12.0.3"
   resolved "https://registry.yarnpkg.com/focus-trap-react/-/focus-trap-react-12.0.3.tgz#710dd253934ba34b7f06abaa55be441ad7923b94"
   integrity sha512-4eXtzhRTtFrxle9Tkl0Wkj8SFJnWz3i3yb5e53Mdn4E8XZQ/Lzqom9U4uUAJ8wd7yDmyGVP96dxwQZXLXd4sbg==
@@ -6813,7 +6835,15 @@ intl-messageformat@10.7.18:
     "@formatjs/icu-messageformat-parser" "2.11.4"
     tslib "^2.8.0"
 
-intl-messageformat@11.2.15, intl-messageformat@^11.1.2:
+intl-messageformat@12.1.2:
+  version "12.1.2"
+  resolved "https://registry.yarnpkg.com/intl-messageformat/-/intl-messageformat-12.1.2.tgz#4aa9fb0615303d17d6c97d0114f47590a6eb541e"
+  integrity sha512-Y7ZnMtT/04nVJnjf1/x/AkfP5we/iN0AhckDdlFPtnetk6/VTuj2OPW5SE7steMd3UNaOtky4KJJY6jwyvWfJg==
+  dependencies:
+    "@formatjs/fast-memoize" "3.1.7"
+    "@formatjs/icu-messageformat-parser" "3.5.20"
+
+intl-messageformat@^11.1.2:
   version "11.2.15"
   resolved "https://registry.yarnpkg.com/intl-messageformat/-/intl-messageformat-11.2.15.tgz#02c5e1db35fcad7bd2a694073061e862e4213353"
   integrity sha512-W4VNytsXyWgW5lvVchmsb9xgA5rSKqoflu3/IQ9UCtB0z4R+Bx9MoEkwFT/+30RCl/KzUoH0QGGe9lppF5SuvQ==
@@ -8455,7 +8485,7 @@ react-dom@^18.2.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.2"
 
-react-dom@^19.2.5:
+react-dom@^19.3.0:
   version "19.3.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-19.3.0.tgz#a0ff19161d7f4e9be5469a07278b0c06e00f9001"
   integrity sha512-JDk8dgif51OjFoDE70+OT9ICyYr+69HlmihNwp1+Nsfbna3t5sIiCa9ZJktDmQ4/1b/rn26hIAR2uYXDMr5r0Q==
@@ -8488,15 +8518,6 @@ react-dropzone@^11.3.4:
     file-selector "^0.4.0"
     prop-types "^15.8.1"
 
-react-dropzone@^14.3.8:
-  version "14.4.1"
-  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-14.4.1.tgz#a33b5c348365bfc73d5fec69c91cb32c350cb9d4"
-  integrity sha512-QDuV76v3uKbHiH34SpwifZ+gOLi1+RdsCO1kl5vxMT4wW8R82+sthjvBw4th3NHF/XX6FBsqDYZVNN+pnhaw0g==
-  dependencies:
-    attr-accept "^2.2.4"
-    file-selector "^2.1.0"
-    prop-types "^15.8.1"
-
 react-dropzone@^15.0.0:
   version "15.0.0"
   resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-15.0.0.tgz#bd03c7c2b14fe4ea9db1a9c74502b85339f2e505"
@@ -8505,6 +8526,14 @@ react-dropzone@^15.0.0:
     attr-accept "^2.2.4"
     file-selector "^2.1.0"
     prop-types "^15.8.1"
+
+react-dropzone@^20.1.2:
+  version "20.1.2"
+  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-20.1.2.tgz#f05d27cb331800c8019f1faf3c2699e21d66806d"
+  integrity sha512-gj2m31ZmYOZjTuW6CDfx38/WW2JlbuQ/X2Il8cOwIWa7Znp7vQSPJFtRfDbAjusBuoXzAYktI+r2R6iKMaRTPw==
+  dependencies:
+    attr-accept "^4.0.0"
+    file-selector "^5.0.0"
 
 react-easy-crop@^5.0.5:
   version "5.5.7"
@@ -8578,14 +8607,14 @@ react-intl-formatted-duration@^4.0.0:
   dependencies:
     intl-unofficial-duration-unit-format "3.0.0"
 
-react-intl@^10.1.13:
-  version "10.2.2"
-  resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-10.2.2.tgz#4818a74be7f951576a02c829685273902c598d8f"
-  integrity sha512-LUzjoxGMbk9PWS4Kdr2QAYX8sqIuB3EKiFs6fi4kCgGAgWNlrYlq9ZLKxBg9Yeg9xeaFfeZ139FZ4Ub2w5L6SQ==
+react-intl@^12.1.0:
+  version "12.1.2"
+  resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-12.1.2.tgz#a8ff8778e7ba95234bfefc5ebab74b5801c3c66d"
+  integrity sha512-+vRvVasUvksPtilKw00ayU5/HrXD+/XmlN7CG5782nkK8GhUc59uw4GsAzqBkf90Ei6a+4JSAgB1AFLS7kEDDg==
   dependencies:
-    "@formatjs/icu-messageformat-parser" "3.5.18"
-    "@formatjs/intl" "4.2.1"
-    intl-messageformat "11.2.15"
+    "@formatjs/icu-messageformat-parser" "3.5.20"
+    "@formatjs/intl" "6.1.2"
+    intl-messageformat "12.1.2"
 
 react-intl@^7.1.10:
   version "7.1.14"
@@ -8696,7 +8725,7 @@ react-router-dom@^5.2.0:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
-react-router-dom@^7.17.0:
+react-router-dom@^7.18.4:
   version "7.18.4"
   resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-7.18.4.tgz#07b72b8aab2d80af847425107f966f1688c703d0"
   integrity sha512-yrfmJHIpDG7taCpqKjT1G5B6q3O2K+RN8/fgNf0lTjCwiPbQ0ei6vXX9ZjQR+7ld8Tr7Z5xmyMnZ8YJrphWQUw==
@@ -8804,7 +8833,7 @@ react@^18.2.0:
   dependencies:
     loose-envify "^1.1.0"
 
-react@^19.2.5:
+react@^19.3.0:
   version "19.3.0"
   resolved "https://registry.yarnpkg.com/react/-/react-19.3.0.tgz#e20aa3a14687075ce863351b5878b0608c3fbfb2"
   integrity sha512-E8LUcbtBWt20bbl2YoHfx4ZDBdxVTfOKtCZn9cDSJ4l6/nuoApcpIBcj47t2wZoVX8g2ZHuMHbiShgCR1T5Sog==
@@ -10042,7 +10071,7 @@ uuid@^11.1.0:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-11.1.1.tgz#f6d81d2e1c65d00762e5e29b16c5d2d995e208ad"
   integrity sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==
 
-uuid@^14.0.0:
+uuid@^14.0.2:
   version "14.0.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-14.0.2.tgz#d5ae03e4db0881c87271f8b0b9bd7312d02c799a"
   integrity sha512-xZe/16rV4aa+HGSOCiY2YeLT1OybRLrrkL/Rqaq7p7GMVXjFh+6wN4oMYgjFmnSnhY8t6Xpdl2l9qmnHYuMHwQ==
@@ -10408,7 +10437,7 @@ zustand@^4.1.1, zustand@^4.5.4:
   dependencies:
     use-sync-external-store "^1.2.2"
 
-zustand@^5.0.0, zustand@^5.0.14:
+zustand@^5.0.0, zustand@^5.0.15:
   version "5.0.15"
   resolved "https://registry.yarnpkg.com/zustand/-/zustand-5.0.15.tgz#42bddf35647cb80a818a8943a69f6618c126fcfe"
   integrity sha512-MpSEjRiBkA9crSYeOUH32rJC7SVqAbm0Fqcqge/bUi2PPoLcBWKOsG+C8mevmpr8TwXHBVkChbbJiyvkE+i/3A==
