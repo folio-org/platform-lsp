@@ -1,7 +1,7 @@
 {
   "name": "FOLIO LSP",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2027-SNAPSHOT.100200000003210",
+  "version": "R1-2027-SNAPSHOT.100200000003211",
   "eureka-components": [
     {
       "name": "folio-kong",
@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000011755"
+        "version": "2.2.0-SNAPSHOT.100200000011776"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000011079"
+        "version": "3.4.0-SNAPSHOT.100200000011105"
       }
     ],
     "optional": [
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.1.0-SNAPSHOT.100200000007329"
+        "version": "1.1.0-SNAPSHOT.100200000007351"
       },
       {
         "name": "app-bulk-edit",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000003929"
+        "version": "1.1.0-SNAPSHOT.100200000003930"
       },
       {
         "name": "app-dcb",
@@ -86,15 +86,15 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.3.0-SNAPSHOT.100200000010335"
+        "version": "2.3.0-SNAPSHOT.100200000010957"
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000012405"
+        "version": "1.1.0-SNAPSHOT.100200000012432"
       },
       {
         "name": "app-erm-usage",
-        "version": "3.1.0-SNAPSHOT.100200000012080"
+        "version": "3.1.0-SNAPSHOT.100200000012109"
       },
       {
         "name": "app-fqm",
@@ -106,11 +106,11 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "2.1.0-SNAPSHOT.100200000011753"
+        "version": "2.1.0-SNAPSHOT.100200000011773"
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000004994"
+        "version": "1.1.0-SNAPSHOT.100200000005013"
       },
       {
         "name": "app-licenses",
@@ -126,11 +126,11 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000011519"
+        "version": "3.1.0-SNAPSHOT.100200000011552"
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000010576"
+        "version": "1.1.0-SNAPSHOT.100200000010603"
       },
       {
         "name": "app-mosaic",
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.1.0-SNAPSHOT.100200000006478"
+        "version": "1.1.0-SNAPSHOT.100200000006578"
       },
       {
         "name": "app-reading-room",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000012067"
+        "version": "1.1.0-SNAPSHOT.100200000012145"
       },
       {
         "name": "app-service-interaction",
