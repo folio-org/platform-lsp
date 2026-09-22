@@ -2338,9 +2338,9 @@
     prop-types "^15.6.0"
 
 "@folio/plugin-query-builder@>=1.0.0", "@folio/plugin-query-builder@^3.0.0":
-  version "3.0.2099000000001704"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-query-builder/-/plugin-query-builder-3.0.2099000000001704.tgz#bb3d81f157fb58b0a921b83d09e922f2b086b42e"
-  integrity sha512-+/bSDufzBtLqhEgS3bbbSC1mohoNcUMLPwkBhPF5Mj0Slptq8AfRfN6VPgqNTrCiTg6If5d1tPZjeCKSpl/HQQ==
+  version "3.0.2099000000001709"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-query-builder/-/plugin-query-builder-3.0.2099000000001709.tgz#eb01738b6fc3c1d116f9ab31f23f86086bf025d0"
+  integrity sha512-qur4UyQMjJ9WSxCrfNoh0DE2wzgk0eSjKyVZU4pWNy0OrvTRyd56cxA4adjiFK2z0qbuhSinDJipArNTfQa6Iw==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
@@ -2647,9 +2647,9 @@
     uuid "^9.0.0"
 
 "@folio/stripes-core@^11.2.0":
-  version "11.2.1099000000002020"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.2.1099000000002020.tgz#df6e5677bdaf8e116c624e6e1a182ce11c62ef53"
-  integrity sha512-RGGvDPeGlbupoWvmnBGR+6G/kS5XBwLeZZs7Zr6Pca3yy4QQfwuezhTpCSUKtpApfnT8pR07657jdCKfIAm/Fw==
+  version "11.2.1099000000002027"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.2.1099000000002027.tgz#e06e6b2b3034a8dba16c6287ae436029caf9ee73"
+  integrity sha512-VzsMX4u02kuqLKA6oiuaqzDrW4ZFe5jiiJr8dUs/w9zO2x686ylu/CV3NpI2/2vKEb28S8aLoCrCdY+Ezk9zyw==
   dependencies:
     "@apollo/client" "^3.2.1"
     "@module-federation/runtime" "^2.0.0"
@@ -2970,9 +2970,9 @@
     uuid "9.0.0"
 
 "@folio/users@>=2.17.0":
-  version "13.1.1099000000001608"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/users/-/users-13.1.1099000000001608.tgz#0bcb1c2fef0fc48b399becdbb232415cadafa94c"
-  integrity sha512-1Mj8PukLQJpFO6hxF90arMW9wWSPC3Bd01NOJEVDEitwfoCoWByQ4NLeqi+D7jC8nyek18Pyaci2fC72luhdsQ==
+  version "13.1.1099000000001626"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/users/-/users-13.1.1099000000001626.tgz#9efef7aca7675039a4609eb127e452fbe7b2eb24"
+  integrity sha512-NKG8D3E1KBfTLfR9/LXmq8Bj1e4LMFWhxZTEJJ7yCaXnuDfbeN5fZMf3QG0VHInpXSxFiGtneS9lARWP2LtXog==
   dependencies:
     compressorjs "^1.2.1"
     dompurify "^3.2.0"
@@ -6229,9 +6229,9 @@ fresh@~0.5.2:
   integrity sha512-zJ2mQYM18rEFOudeV4GShTGIQ7RbzA7ozbU9I/XBpm7kqgMywgmylMwXHxZJmkVoYkna9d2pVXVXPdYTP9ej8Q==
 
 fs-extra@^11.1.1:
-  version "11.4.0"
-  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-11.4.0.tgz#f88ed6d180ac9e14b61b08e679468f0b1b6b4730"
-  integrity sha512-EQsFzMUJkCKGr1ePqlYADkIUmHW1s3ZXr5Yqy6wbGrfUCphpl2maM/kyOIRA2HpP3AaFQTZXD4ldjek+nccddA==
+  version "11.4.1"
+  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-11.4.1.tgz#6a01ca80008eacf3ca1ffde5ef79088f68203a5a"
+  integrity sha512-KYAb4c9BJQI6QqGKthV68OHe0badztdXJWKo0WtBA9IuCFPTKvE5ZdUBglP833aMjhaSPNO4A5j/EkzZtGlKjA==
   dependencies:
     graceful-fs "^4.2.0"
     jsonfile "^6.0.1"
