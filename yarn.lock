@@ -2970,9 +2970,9 @@
     uuid "9.0.0"
 
 "@folio/users@>=2.17.0":
-  version "13.1.1099000000001626"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/users/-/users-13.1.1099000000001626.tgz#9efef7aca7675039a4609eb127e452fbe7b2eb24"
-  integrity sha512-NKG8D3E1KBfTLfR9/LXmq8Bj1e4LMFWhxZTEJJ7yCaXnuDfbeN5fZMf3QG0VHInpXSxFiGtneS9lARWP2LtXog==
+  version "13.1.1099000000001632"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/users/-/users-13.1.1099000000001632.tgz#e402fd918a2dafdc7be376c78907ba6770c376d6"
+  integrity sha512-Wv2jDVb222Tn4Zkmfs7WbY9alL8uIF3k0E3cRdKJ/RfdW0C4DtaGPhaEpc4yvcVYkf6jpcxX8LeB/saQdD+UMA==
   dependencies:
     compressorjs "^1.2.1"
     dompurify "^3.2.0"
