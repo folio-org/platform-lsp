@@ -2970,9 +2970,9 @@
     uuid "9.0.0"
 
 "@folio/users@>=2.17.0":
-  version "13.1.1099000000001632"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/users/-/users-13.1.1099000000001632.tgz#e402fd918a2dafdc7be376c78907ba6770c376d6"
-  integrity sha512-Wv2jDVb222Tn4Zkmfs7WbY9alL8uIF3k0E3cRdKJ/RfdW0C4DtaGPhaEpc4yvcVYkf6jpcxX8LeB/saQdD+UMA==
+  version "13.1.1099000000001640"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/users/-/users-13.1.1099000000001640.tgz#b0123f6102de3efeee0c52985bf56fa47bf4d4d0"
+  integrity sha512-TjkWyj9CXQL/QmWZ0eaUMBecKboSHxum7lxILms8rBkNCBNwI6OpLmM4vGdQcVChMyaOCGRMENWH3xIn+iL4+g==
   dependencies:
     compressorjs "^1.2.1"
     dompurify "^3.2.0"
@@ -4680,9 +4680,9 @@ buffer@^6.0.3:
     ieee754 "^1.2.1"
 
 bundle-name@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/bundle-name/-/bundle-name-4.1.0.tgz#f3b96b34160d6431a19d7688135af7cfb8797889"
-  integrity sha512-tjwM5exMg6BGRI+kNmTntNsvdZS1X8BFYS6tnJ2hdH0kVxM6/eVZ2xy+FqStSWvYmtfFMDLIxurorHwDKfDz5Q==
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/bundle-name/-/bundle-name-4.1.1.tgz#d9ecc7a201aee8e2f5a717a081215c2e2a3827b0"
+  integrity sha512-DdH81/zPLVS11EUgWq3tEu/xn+EzljlMYooDNdzWEnFha3R3NBMpMV1UqYIpjYHV/SgpFKMIX1Oh7o06SjM/oA==
   dependencies:
     run-applescript "^7.0.0"
 
