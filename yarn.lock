@@ -1677,9 +1677,9 @@
     react-window "^1.8.5"
 
 "@folio/data-import@>=0.0.0":
-  version "11.0.1099000000000413"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/data-import/-/data-import-11.0.1099000000000413.tgz#dee1c6fca85d86ab1d92123215ea0ce25132b419"
-  integrity sha512-6TcY2ORWY0P07HuGaOHUNPXgC4SYO+0w0G6lQqJdZfv12AzQTs04hH1ALHLmWghdC2Sj9v5Vk86O9XOwcqg7/Q==
+  version "11.0.1099000000000418"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/data-import/-/data-import-11.0.1099000000000418.tgz#d1451e27af52cb989c538bf0bac6a6933c05f916"
+  integrity sha512-X04eEa5oKijOblnDb9cRqE6ZMPm4Z9XD4SwUcKDdyNb5/D1HVCzd7Yz8vinvVAtoSwtr/zI/Cv0CLD2imKPWNg==
   dependencies:
     "@folio/stripes-acq-components" "^7.1.0"
     "@folio/stripes-data-transfer-components" "^7.1.0"
@@ -1727,9 +1727,9 @@
     react-query "^3.38.1"
 
 "@folio/eholdings@>=1.1.0":
-  version "11.2.1099000000000622"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000622.tgz#31e3aa4e0245c2e299bc04606d5476ca5f25d3b6"
-  integrity sha512-H9skIwpsV4R0AFaX6nZIBqw3x5v/ABaLg04XaoSO2CHn8FDyPgOJvHipjJSK/FEaYTrv5/LM9LUqmEww4sUmhg==
+  version "11.2.1099000000000629"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000629.tgz#e209319780762ee420a29d4d711cd5461076a8b6"
+  integrity sha512-Xv54o/d2tXaQysz3rNVPHuQ0cXSqx1ERA0LbB6tKyS/JZo/OzwNgtcrMo4W8liLcJVfWAFefL80iXVoK/s8eQA==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
