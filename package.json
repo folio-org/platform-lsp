@@ -111,6 +111,7 @@
     "brace-expansion": "^1.1.12",
     "colors": "1.4.0",
     "final-form": "^4.20.4",
+    "handlebars": "4.7.9",
     "minimatch": "~3.1.5",
     "minimist": "^1.2.3",
     "moment": "~2.29.0",
