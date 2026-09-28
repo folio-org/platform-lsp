@@ -1839,9 +1839,9 @@
     prop-types "^15.6.0"
 
 "@folio/inn-reach@>=1.1.0":
-  version "6.2.1099000000000269"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inn-reach/-/inn-reach-6.2.1099000000000269.tgz#217a131c6f5fda1ebff18f4d5c9fb6aca1ac3c11"
-  integrity sha512-UlSEEVeTR5gFNX/0V1tRREx9M058hcQ+E5nGLhZgKfZO37YiQ17lAhqQxpQ5DKie0YeXOKr73gW0GbRd7o7HtQ==
+  version "6.2.1099000000000274"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inn-reach/-/inn-reach-6.2.1099000000000274.tgz#5ec5adfa947f48614468d4a343f6d12df83e1117"
+  integrity sha512-MnOLBYjwcZLQryZRYOC1U/3MkCFfnX3SnzGHVpOv4Q9EK5QNBdFSIhdG2RDF+9AwSDHo7QkdrDJhxlBQpL6WjA==
   dependencies:
     "@folio/stripes-data-transfer-components" "^7.1.0"
     "@folio/stripes-template-editor" "^3.4.2"
@@ -2970,9 +2970,9 @@
     uuid "9.0.0"
 
 "@folio/users@>=2.17.0":
-  version "13.1.1099000000001640"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/users/-/users-13.1.1099000000001640.tgz#b0123f6102de3efeee0c52985bf56fa47bf4d4d0"
-  integrity sha512-TjkWyj9CXQL/QmWZ0eaUMBecKboSHxum7lxILms8rBkNCBNwI6OpLmM4vGdQcVChMyaOCGRMENWH3xIn+iL4+g==
+  version "13.1.1099000000001643"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/users/-/users-13.1.1099000000001643.tgz#9bf56c2181fc1985d6092b3ee38901ce77ef15fa"
+  integrity sha512-c0IV8h9wPCy9JUAn3s4oE9zqf/8VifvsFFFJpvNDYfPxrFGoMzlykJDs+zWyt2NzpPpi+mRMXVGusY6p8aHGpA==
   dependencies:
     compressorjs "^1.2.1"
     dompurify "^3.2.0"
@@ -8932,9 +8932,9 @@ reflect-metadata@^0.2.2:
   integrity sha512-urBwgfrvVP/eAyXx4hluJivBKzuEbSQs9rKWCrCkbSxNv8mxPcUZKeuoF3Uy4mJl3Lwprp6yy5/39VWigZ4K6Q==
 
 regenerate-unicode-properties@^10.2.2:
-  version "10.2.2"
-  resolved "https://registry.yarnpkg.com/regenerate-unicode-properties/-/regenerate-unicode-properties-10.2.2.tgz#aa113812ba899b630658c7623466be71e1f86f66"
-  integrity sha512-m03P+zhBeQd1RGnYxrGyDAPpWX/epKirLrp8e3qevZdVkKtnCrjjWczIbYc8+xd6vcTStVlqfycTx1KR4LOr0g==
+  version "10.3.0"
+  resolved "https://registry.yarnpkg.com/regenerate-unicode-properties/-/regenerate-unicode-properties-10.3.0.tgz#73981205a914f7ce12e9518f6c073119e46f3b7c"
+  integrity sha512-9ns8odR8e9q3otKeHj3DE80jZYKg6zVeZKE+zQmRKXFoVUcuiTGeO6iusDhPRoIQQPVPRvH+SfBhrTud4eczuw==
   dependencies:
     regenerate "^1.4.2"
 

@@ -1,7 +1,7 @@
 {
   "name": "FOLIO LSP",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2027-SNAPSHOT.100200000003248",
+  "version": "R1-2027-SNAPSHOT.100200000003249",
   "eureka-components": [
     {
       "name": "folio-kong",
@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000011813"
+        "version": "2.2.0-SNAPSHOT.100200000011818"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000011129"
+        "version": "3.4.0-SNAPSHOT.100200000011146"
       }
     ],
     "optional": [
@@ -50,7 +50,7 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.1.0-SNAPSHOT.100200000007351"
+        "version": "1.1.0-SNAPSHOT.100200000007393"
       },
       {
         "name": "app-bulk-edit",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000012455"
+        "version": "1.1.0-SNAPSHOT.100200000012473"
       },
       {
         "name": "app-erm-usage",
@@ -106,11 +106,11 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "2.1.0-SNAPSHOT.100200000011797"
+        "version": "2.1.0-SNAPSHOT.100200000011814"
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000005038"
+        "version": "1.1.0-SNAPSHOT.100200000005055"
       },
       {
         "name": "app-licenses",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "2.1.0-SNAPSHOT.100200000012280"
+        "version": "2.1.0-SNAPSHOT.100200000012394"
       },
       {
         "name": "app-lists",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000011552"
+        "version": "3.1.0-SNAPSHOT.100200000011593"
       },
       {
         "name": "app-marc-storage",
