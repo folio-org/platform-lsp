@@ -1999,9 +1999,9 @@
     zustand "^5.0.15"
 
 "@folio/lists@>=1.2.0":
-  version "5.0.2099000000001116"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.2099000000001116.tgz#0faf89d1d442b578b45c63a9e21167c6c9a5b871"
-  integrity sha512-5P3DFyxm8airTcaDUvGijBM7MMFpMDLDDwdzmCg/lCu3XsR/Q+RLvcTkqm9xGB+oLLlBE76sBZ6ooMjbiO7ZnA==
+  version "5.0.2099000000001124"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.2099000000001124.tgz#e8b66f2eac9af69f3066505322039eae033b6a05"
+  integrity sha512-6CRtGcAjgTiHBtiW48l8Qsw0VNTXhVYj64uamtybwqnVh6FM5ojBTBFiXdSsSBXnrxLbqAYmInb2jgzEtOQJ6A==
   dependencies:
     "@folio/plugin-find-user" "^8.1.0"
     "@folio/plugin-query-builder" "^3.0.0"
@@ -2605,9 +2605,9 @@
     yargs "^17.3.1"
 
 "@folio/stripes-components@^13.0.0":
-  version "13.1.1099000000001802"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001802.tgz#fd8929191eac7c910cde773b78787fa03755e5ab"
-  integrity sha512-NtITVqLKnZGlU2xWhKMduhY74qHWIZJwq3+x1l9E3FTO/zCuBGude8cccmONDBzrWz5rtYJMFQU6EPKv0H364A==
+  version "13.1.1099000000001812"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001812.tgz#2df370088f63c792f3842ec2128953e8781782f0"
+  integrity sha512-5nykA2SE7QXFeFN+U8Clxj+VPhpDOBF/x8e3hP5D2K1yuloQWwR8xrraRfWS3V8itmsEOtaiAEl5KlPuvjcG2g==
   dependencies:
     classnames "^2.2.5"
     currency-codes "2.1.0"
@@ -5657,9 +5657,9 @@ encodeurl@~2.0.0:
   integrity sha512-Q0n9HRi4m6JuGIV1eFlmvJB7ZEVxu93IrMyiMsGC0lrMJMWzRgx6WGquyfQgZVb31vhGgXnfmPNNXmxnOkRBrg==
 
 enhanced-resolve@^5.24.4:
-  version "5.25.1"
-  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.25.1.tgz#9d919bfa898b116e58f20e95127c047693158771"
-  integrity sha512-nGXts5znJzmWPu+mIE9izCOzdg63oJca2mDzGWWTth7sr4aCToKcoyFVBQwN75Ij5Pf6p510EwkTqViTRzDV+w==
+  version "5.26.0"
+  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.26.0.tgz#9dfb47d050ed6c87f2c6d43b4d7e30f8c0a91ed7"
+  integrity sha512-9vhedylFonb2YGogzUKX6+Ja72gOJbN1QHAqdrvqLwhdl/QWbKopzoUC9EbQNVsAns/bx/4uyqalrQAoy1IByw==
   dependencies:
     graceful-fs "^4.2.4"
     tapable "^2.3.3"
@@ -8931,7 +8931,7 @@ reflect-metadata@^0.2.2:
   resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.2.2.tgz#400c845b6cba87a21f2c65c4aeb158f4fa4d9c5b"
   integrity sha512-urBwgfrvVP/eAyXx4hluJivBKzuEbSQs9rKWCrCkbSxNv8mxPcUZKeuoF3Uy4mJl3Lwprp6yy5/39VWigZ4K6Q==
 
-regenerate-unicode-properties@^10.2.2:
+regenerate-unicode-properties@^10.3.0:
   version "10.3.0"
   resolved "https://registry.yarnpkg.com/regenerate-unicode-properties/-/regenerate-unicode-properties-10.3.0.tgz#73981205a914f7ce12e9518f6c073119e46f3b7c"
   integrity sha512-9ns8odR8e9q3otKeHj3DE80jZYKg6zVeZKE+zQmRKXFoVUcuiTGeO6iusDhPRoIQQPVPRvH+SfBhrTud4eczuw==
@@ -8961,12 +8961,12 @@ regexp.prototype.flags@^1.5.1:
     set-function-name "^2.0.2"
 
 regexpu-core@^6.3.1:
-  version "6.4.0"
-  resolved "https://registry.yarnpkg.com/regexpu-core/-/regexpu-core-6.4.0.tgz#3580ce0c4faedef599eccb146612436b62a176e5"
-  integrity sha512-0ghuzq67LI9bLXpOX/ISfve/Mq33a4aFRzoQYhnnok1JOFpmE/A2TBGkNVenOGEeSBCjIiWcc6MVOG5HEQv0sA==
+  version "6.5.2"
+  resolved "https://registry.yarnpkg.com/regexpu-core/-/regexpu-core-6.5.2.tgz#269ba4235d9cc3fb49297ecda74f5f9a24d596cc"
+  integrity sha512-zkmVH92DlzjSFc4xKGZp/2BXIFrDIdBQBC8gUXKCsMgKYb1bkCkxfSuoW1werDjaTEMTbULkHtKFHe1L+Abnaw==
   dependencies:
     regenerate "^1.4.2"
-    regenerate-unicode-properties "^10.2.2"
+    regenerate-unicode-properties "^10.3.0"
     regjsgen "^0.8.0"
     regjsparser "^0.13.0"
     unicode-match-property-ecmascript "^2.0.0"
