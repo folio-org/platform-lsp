@@ -1766,9 +1766,9 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/erm-usage@>=1.0.3":
-  version "13.0.1099000000001078"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-13.0.1099000000001078.tgz#be2cecf3ff49be86d3cfbd8c27fbc0efe706aa1c"
-  integrity sha512-0IEJJXZkJ/OsvTVm964wiSwzSz/IR7MMpgy4lAq/Bd3BVAWORXxnXcETHZRP1t19wOFw8qITDcYhKJ+HPxYiWQ==
+  version "13.0.1099000000001081"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-13.0.1099000000001081.tgz#f6c4c3d4fae6939bd105cc3e5a9953baf3820055"
+  integrity sha512-Tgb24FfAieokdW4t2AQDUMGNXPhuU+aCTbFqfosPBABkVMKScLYSaTG5ss9QefTEHMuuJy++BekO7SdmwhLVlA==
   dependencies:
     "@folio/stripes-leipzig-components" "^1.0.0"
     compose-function "^3.0.3"
@@ -2605,9 +2605,9 @@
     yargs "^17.3.1"
 
 "@folio/stripes-components@^13.0.0":
-  version "13.1.1099000000001812"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001812.tgz#2df370088f63c792f3842ec2128953e8781782f0"
-  integrity sha512-5nykA2SE7QXFeFN+U8Clxj+VPhpDOBF/x8e3hP5D2K1yuloQWwR8xrraRfWS3V8itmsEOtaiAEl5KlPuvjcG2g==
+  version "13.1.1099000000001817"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001817.tgz#b3b835e4476f3675aef09ada4bed4c7897a22e58"
+  integrity sha512-qun4ameenvQVDntpjpidQ3mzReOQOB9Wh6yemmf1/wiwl0wkPxYNXhReMhDyx8StJn6fEP9/M+JHNFC5t+y47w==
   dependencies:
     classnames "^2.2.5"
     currency-codes "2.1.0"
@@ -2835,9 +2835,9 @@
     uuid "^8.3.2"
 
 "@folio/stripes-types@^3.0.0":
-  version "3.1.1099000000000141"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-types/-/stripes-types-3.1.1099000000000141.tgz#653e38d84642417cf83e41d198f9192eabf6482e"
-  integrity sha512-tK1WPY0o/6wViVN9UyXkv0aTAsJJ2bCgtVWi8qCLlDQmP71Xzw+Q87acelMsuSebSyFgc3IGBLqN+/udfSXhdg==
+  version "3.1.1099000000000146"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-types/-/stripes-types-3.1.1099000000000146.tgz#b0fc0495e6b77e1f4dfd4f17e597180fb8a1bc2b"
+  integrity sha512-X/rg/ukc8TLMcQFE17jkSeb9u+LuSYt5U04B77hmZtA0OieFgLx1fZZa2h9UlDN1H1uP1mtd9z0r4NLiUxlHKw==
   dependencies:
     "@folio/stripes-react-hotkeys" "^3.0.0"
     dayjs "^1.11.10"
