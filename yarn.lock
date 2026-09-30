@@ -1924,13 +1924,13 @@
     uuid "^14.0.0"
     zustand "^5.0.12"
 
-"@folio/lists@>=1.2.0":
-  version "5.0.2099000000001059"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.2099000000001059.tgz#793b73a654d265a9d6e7585571f55d1988454c55"
-  integrity sha512-0wbsBU4zExVfE2TZJ+D6Za80DxP8hogyAXD8/Ae+SiRdo3dxgfszqhsJQ/324jBUrhlRG/EhjDAtAYYwsEOwXg==
+"@folio/lists@https://github.com/folio-org/ui-lists#e6b4e8a956f4b7201c3f4fe8459b41cb4d461507":
+  version "5.0.2"
+  resolved "https://github.com/folio-org/ui-lists#e6b4e8a956f4b7201c3f4fe8459b41cb4d461507"
   dependencies:
+    "@folio/plugin-find-user" "^8.1.0"
     "@folio/plugin-query-builder" "^3.0.0"
-    "@folio/stripes-acq-components" "~7.1.0"
+    "@folio/stripes-acq-components" "^7.2.0"
     date-fns "^2.29.3"
     ky "^0.33.2"
     lodash "^4.17.21"
@@ -2430,6 +2430,28 @@
   version "7.1.1099000000000561"
   resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-acq-components/-/stripes-acq-components-7.1.1099000000000561.tgz#7bd999aac69430356783b091a427c040bd8ef7b7"
   integrity sha512-VjeahlBL6EpliJ/VvDXbWKSPJl61+2doVjRl1PWoqdpAp4x6EFXlXRnoPiBVgltn8zjArdJmP5ldajw7P0MPMQ==
+  dependencies:
+    "@folio/stripes-types" "^3.0.0"
+    "@rehooks/local-storage" "^2.4.4"
+    classnames "^2.2.5"
+    dom-helpers "^3.4.0"
+    final-form "^4.18.2"
+    final-form-arrays "^3.0.2"
+    lodash "^4.17.11"
+    prop-types "^15.7.2"
+    query-string "^7.1.2"
+    react-beautiful-dnd "^13.1.0"
+    react-dropzone "^10.0.0"
+    react-final-form "^6.3.0"
+    react-final-form-arrays "^3.1.1"
+    react-to-print "^2.15.1"
+    react-virtualized-auto-sizer "^1.0.6"
+    redux-form "^8.3.0"
+
+"@folio/stripes-acq-components@^7.2.0":
+  version "7.2.1099000000000629"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-acq-components/-/stripes-acq-components-7.2.1099000000000629.tgz#aa475408f45e7ef35c6e42e932ea3c44df738772"
+  integrity sha512-ivBZApGHw9yqFurfX/k4NWrBc2rB1vadyhyN+X8oz4OtW9owH9hRoydjy0LOj5AEMDJ7s++wc0A+nzqm+qURJA==
   dependencies:
     "@folio/stripes-types" "^3.0.0"
     "@rehooks/local-storage" "^2.4.4"

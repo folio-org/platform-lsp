@@ -41,7 +41,7 @@
     "@folio/ldp": ">=1.1.0",
     "@folio/ld-folio-wrapper": ">=1.0.0",
     "@folio/licenses": ">=2.0.0",
-    "@folio/lists": ">=1.2.0",
+    "@folio/lists": "https://github.com/folio-org/ui-lists#e6b4e8a956f4b7201c3f4fe8459b41cb4d461507",
     "@folio/local-kb-admin": ">=1.0.0",
     "@folio/marc-authorities": ">=1.0.0",
     "@folio/mosaic-settings": ">=1.0.0",
