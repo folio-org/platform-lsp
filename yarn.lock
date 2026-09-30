@@ -1999,9 +1999,9 @@
     zustand "^5.0.15"
 
 "@folio/lists@>=1.2.0":
-  version "5.0.2099000000001124"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.2099000000001124.tgz#e8b66f2eac9af69f3066505322039eae033b6a05"
-  integrity sha512-6CRtGcAjgTiHBtiW48l8Qsw0VNTXhVYj64uamtybwqnVh6FM5ojBTBFiXdSsSBXnrxLbqAYmInb2jgzEtOQJ6A==
+  version "5.0.2099000000001131"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.2099000000001131.tgz#1ca00ee8896f54e2af1dcffa787c5962e9688455"
+  integrity sha512-Tzr31Mgq7c7TjSVnRnO7TRXOua1CdqpxJThvnXsyJU8KF2miyyhBmqOfJjsrtXLKJB6LvXOogQXB/qIeWGl8iw==
   dependencies:
     "@folio/plugin-find-user" "^8.1.0"
     "@folio/plugin-query-builder" "^3.0.0"
@@ -4764,9 +4764,9 @@ camelcase@^7.0.1:
   integrity sha512-xlx1yCK2Oc1APsPXDL2LdlNP6+uu8OCDdhOBSVT279M/S+y75O30C2VuD8T2ogdePBBl7PfPF4504tnLgX3zfw==
 
 caniuse-lite@^1.0.30001810, caniuse-lite@^1.0.30001813:
-  version "1.0.30001813"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001813.tgz#acc16d52a011b87873b14e3c62040bb273c270eb"
-  integrity sha512-zfjJo4rM0+fUomGDBW/xcDjhIwz/210DGvip2MAMDZ8KHcRPnOHmEgHPZP0UHlZoxr8fYKVJOqcORhYQcG4FKQ==
+  version "1.0.30001814"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001814.tgz#7a9e1d107dd60f6ad3dacc74df6f6d53a9dbcf9b"
+  integrity sha512-/Uaf1lAzr59XcMpW0o96WoEfr+VXK2OX4U9AgFoiSHsVJ4HppnIFUjtYzsyDH2+tgANaQb2/oxYGwCPapN1FpA==
 
 canvg@^3.0.11:
   version "3.0.11"
