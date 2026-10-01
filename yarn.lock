@@ -1727,9 +1727,9 @@
     react-query "^3.38.1"
 
 "@folio/eholdings@>=1.1.0":
-  version "11.2.1099000000000647"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000647.tgz#ccb4989914a44b744432c88fb8787d0151f26a62"
-  integrity sha512-qt3k6zfbyCWhb8Mk/mvb+1lH1rUQC+ZRQx/dW9KKk9sB0TJecW2Mc9+U8jS/Q2ENrm7lmX2NjrqHkfjMpUmEJg==
+  version "11.2.1099000000000650"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000650.tgz#c97bfdb4d12cf7f71c9a43e371ffb4bfe77e757e"
+  integrity sha512-80bsb0Xo4oAzst9UDb74bikmyzEdLWZfJmmnFyrxlIu/4N5txBoEfSfdgQsRpf9PuP9lWGrhsPlECrhVE/wfsw==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
@@ -1766,9 +1766,9 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/erm-usage@>=1.0.3":
-  version "13.0.1099000000001081"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-13.0.1099000000001081.tgz#f6c4c3d4fae6939bd105cc3e5a9953baf3820055"
-  integrity sha512-Tgb24FfAieokdW4t2AQDUMGNXPhuU+aCTbFqfosPBABkVMKScLYSaTG5ss9QefTEHMuuJy++BekO7SdmwhLVlA==
+  version "13.0.1099000000001090"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-13.0.1099000000001090.tgz#55da365e8e3d47ea832dab5f8b943a02a72a97e3"
+  integrity sha512-lsl4PpVbiuPKYgHVvSN0oLJgynQRfatCnS2mWnF2KDqhjAW50JfDiudNWh8B2IyEU1ifVwrnWtegsLBL3faLrw==
   dependencies:
     "@folio/stripes-leipzig-components" "^1.0.0"
     compose-function "^3.0.3"
@@ -6204,9 +6204,9 @@ focus-trap@^8.2.2:
     tabbable "^6.5.0"
 
 follow-redirects@^1.0.0:
-  version "1.16.0"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.16.0.tgz#28474a159d3b9d11ef62050a14ed60e4df6d61bc"
-  integrity sha512-y5rN/uOsadFT/JfYwhxRS5R7Qce+g3zG97+JrtFZlC9klX/W5hD7iiLzScI4nZqUS7DNUdhPgw4xI8W2LuXlUw==
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.16.1.tgz#6e0efa40a727fb369b98dab15883ec34787d675e"
+  integrity sha512-FNvFGzoMLWmE6Yj9spb/zjd7yiNCHiAW9/Tg9CXrQ8wuu32HtlJOwWO11OJafl5FfY3DxTdQ0vj42zU1kvv5jg==
 
 form-data-encoder@^2.1.2:
   version "2.1.4"
