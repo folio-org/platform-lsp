@@ -6197,9 +6197,9 @@ focus-trap@^7.5.4:
     tabbable "^6.4.0"
 
 focus-trap@^8.2.2:
-  version "8.2.2"
-  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-8.2.2.tgz#6e8a203f2228ca8b5eb95465433e69a5d5e48387"
-  integrity sha512-qV0g8hRYBqgACcFOH3f9wXc4zPKhr/0z9RI2a6ZijZ72EeBi4g8oBy8zAWuUR1TsMpOzwpUMFvjdasrC41Joug==
+  version "8.2.3"
+  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-8.2.3.tgz#9edfa1725a528fa99552d96efbf9fa3675db822a"
+  integrity sha512-LTNHZwcFM7bSdU1cG1ExoaTEzoGmdjw+EzDotolZmLTCbm0ll2k6J3NL+WfqP14nGLxAp+XDJgwlT2DtNhcukA==
   dependencies:
     tabbable "^6.5.0"
 
