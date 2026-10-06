@@ -1727,9 +1727,9 @@
     react-query "^3.38.1"
 
 "@folio/eholdings@>=1.1.0":
-  version "11.2.1099000000000677"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000677.tgz#a968b62d40060a670a88cad959f0045ae580b84c"
-  integrity sha512-xE+W5RyAHEm3BAGptHP2vbx9FsVf0Jc38PH5mWvQDkkncJhBROaRd91DGapAHvy2y6YjAj/v2LHC7ktFgG0A1A==
+  version "11.2.1099000000000686"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000686.tgz#952a6c931f6872cc8eaff10973c0989db668eb70"
+  integrity sha512-/JaeMXH4lXu5bw51/Nk1bS69MREZwahGaEudVQ44yxHu7vlXRQoYlJ+6ec3wfIoURLJCd/IhlWHbxWe9qZUhrg==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
@@ -2605,9 +2605,9 @@
     yargs "^17.3.1"
 
 "@folio/stripes-components@^13.0.0":
-  version "13.1.1099000000001852"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001852.tgz#d136501071b05f63668955f366a19d033d94707d"
-  integrity sha512-j6JHh/3VEeoVwIcHEVkCZML+ruwKY2+czDZRIZppgKJVHkcIP8O1HqaJuKD4ov3lVpOHieqI9psPhiBGzDp3hg==
+  version "13.1.1099000000001855"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001855.tgz#6548a06c5428de5b8926b52d71d53dad46143b9b"
+  integrity sha512-oo38yPHbAnS6rhsXaV6MIQq6DBD3o4L3q/D2cvD/6hm85YF/tbPDqbXglDBRiIKBzHKJsMrYLPWBACNdDnAd6g==
   dependencies:
     "@tiptap/core" "^3.31.3"
     "@tiptap/extension-text-align" "^3.31.3"
@@ -2757,9 +2757,9 @@
     zustand "^4.1.1"
 
 "@folio/stripes-leipzig-components@^1.0.0":
-  version "1.0.1099000000000230"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-leipzig-components/-/stripes-leipzig-components-1.0.1099000000000230.tgz#28a446f7e2a8221aa2108a44ce9b6e5d6c31aed6"
-  integrity sha512-01wxP/P/Lcx2d+NUqzqXIkkMJmjR5QXVTHtAG6R4cruUsrj5TW3MYhkGdocZKswISZqDm/HtgcNDSLT8TBWWWA==
+  version "1.1.1099000000000233"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-leipzig-components/-/stripes-leipzig-components-1.1.1099000000000233.tgz#30b6b9a0c21c8d241669fbde5b5033c2fbd533fb"
+  integrity sha512-vrBlxqB+tpyFWidbNGqgzx2phaeMIngNr10Ey1QSAk2UDEIx0CEY4gixLAt2/o4+t4+ANo5DjZ2xx+PchG+PaA==
   dependencies:
     final-form-arrays "^3.0.2"
     lodash "^4.17.4"
@@ -9324,9 +9324,9 @@ regjsgen@^0.8.0:
   integrity sha512-RvwtGe3d7LvWiDQXeQw8p5asZUmfU1G/l6WbUXeHta7Y2PEIvBTwH6E2EfmYUK8pxcxEdEmaomqyp0vZZ7C+3Q==
 
 regjsparser@^0.13.0:
-  version "0.13.3"
-  resolved "https://registry.yarnpkg.com/regjsparser/-/regjsparser-0.13.3.tgz#2f0ac72d6d4604d4b38f841ff537ebd9b72fd214"
-  integrity sha512-ycwFAS14Jw4mppvmK4GR/J6u3WpWpjkEApehuHtLc/8VpPNpDMbQ4WjqwplXifGeyKOzHSFLmSPqzksDQE2Sfg==
+  version "0.13.4"
+  resolved "https://registry.yarnpkg.com/regjsparser/-/regjsparser-0.13.4.tgz#a04c6a6976abd511561f275107243e83e05efa2d"
+  integrity sha512-EWV80YgFaVgFrjGCAsV7oybp4GOxbls5RzBg8OB0nKEVXsBJR1JlV8Di1JhCROg3MzTfe1RI8yitIm1eOs68iA==
   dependencies:
     jsesc "~3.1.0"
 
