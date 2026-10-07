@@ -1766,11 +1766,11 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/erm-usage@>=1.0.3":
-  version "13.0.1099000000001107"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-13.0.1099000000001107.tgz#9a60b955cb8576a0032d263bce29fe5c1e9fa03a"
-  integrity sha512-bpuT0x+mAiEjym0z8gxlWjCKj2ROIZW467KlJ2hQTw+N4HuR6QCI0pg74Pf+PPhrHzui2Y/negNA5UmGUo89Yw==
+  version "13.0.1099000000001116"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-13.0.1099000000001116.tgz#e794fc5980cdb36e925cab37a93b6a541390d3e2"
+  integrity sha512-BNm73ukaU8InEmiZUvfNNExGCaWOB2TtJsM00qJEvbD1PRdSQp36yNMhjySu2jzoY8X6yabU05rRsRdc+3LbuA==
   dependencies:
-    "@folio/stripes-leipzig-components" "^1.0.0"
+    "@folio/stripes-leipzig-components" "^1.1.0"
     compose-function "^3.0.3"
     file-saver "^2.0.0"
     final-form "^4.18.7"
@@ -2756,7 +2756,7 @@
     query-string "^5.0.0"
     zustand "^4.1.1"
 
-"@folio/stripes-leipzig-components@^1.0.0":
+"@folio/stripes-leipzig-components@^1.1.0":
   version "1.1.1099000000000233"
   resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-leipzig-components/-/stripes-leipzig-components-1.1.1099000000000233.tgz#30b6b9a0c21c8d241669fbde5b5033c2fbd533fb"
   integrity sha512-vrBlxqB+tpyFWidbNGqgzx2phaeMIngNr10Ey1QSAk2UDEIx0CEY4gixLAt2/o4+t4+ANo5DjZ2xx+PchG+PaA==
@@ -5836,9 +5836,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.439:
-  version "1.5.447"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.447.tgz#05424160941641b1939b3ccf15a1b9f0f302b5e9"
-  integrity sha512-vhYiRwTPq7tvwplP6fOFVRJxfZifavlr6tK8FD1EO5RxRuvZ9qdQM0lr1mvNBeDe1s2XrfL3n5BBwvigXJ7KuA==
+  version "1.5.449"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.449.tgz#94cc7307abf5ec39d1afa619e53072c26a8ef8d1"
+  integrity sha512-dKeYk/3SFQz+nXi5whp3OuJzeWABEG4zCtkWJ9+Vby1E1iFM2y0gElRtQvNXRPJTsj8WAF4HMP7hvP790QtJ9g==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
