@@ -1999,9 +1999,9 @@
     zustand "^5.0.15"
 
 "@folio/lists@>=1.2.0":
-  version "5.0.2099000000001136"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.2099000000001136.tgz#ca7d5ecfb39ec2f67fbd19bbea85541ede59981a"
-  integrity sha512-/ON8stNV3t6P4nBcxyxNGFe9kHFEHOYo4B+oMsDMSxjMcAmBrP5BGG0r/JYoSxET5r9DP4V2vQDLQwzCG5R3tA==
+  version "5.0.2099000000001139"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.2099000000001139.tgz#3c601629dcd09ccfb18ac33a982a5f4b63b240c9"
+  integrity sha512-yjYRbbqAiTmg2zx9IUmnS+TIAYDEuxMOe13Vo/9WgUnIMippTv+lHU4YSbo7Qn7kkBjBxMiKezlVbvIUTgui1A==
   dependencies:
     "@folio/plugin-find-user" "^8.1.0"
     "@folio/plugin-query-builder" "^3.0.0"
@@ -5836,9 +5836,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.439:
-  version "1.5.450"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.450.tgz#f767b5dd5c399bdd9e3ca4ef6996d6fd0b4818e7"
-  integrity sha512-AC3HBt6+rJKNUJxpBA1FQPKjrJ2gV6zXu7uAL95PTqxdBxiHDELWpeJ8N5QK5qwBJqXU18hTsmv+hHjfwQ0gdQ==
+  version "1.5.451"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.451.tgz#864347c1a8e7041ef0a6a70372b6cbaa66564c14"
+  integrity sha512-vUNKPrUzw8ByEMOxloq0a71iD/mPuPxVkbDm3G5YhnxTzOw/I6qAg2MUS0cYj/c267lWmw26yW4Vv7foxTxPLg==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
