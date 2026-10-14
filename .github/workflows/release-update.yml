@@ -69,6 +69,9 @@ on:
       yarn_lock_updated:
         description: 'Whether yarn.lock changed in this run'
         value: ${{ jobs.update.outputs.yarn_lock_updated }}
+      package_updated:
+        description: 'Whether package.json UI dependencies changed in this run'
+        value: ${{ jobs.update.outputs.package_updated }}
       commit_sha:
         description: 'SHA of the commit made by this run, if any'
         value: ${{ jobs.update.outputs.commit_sha }}
@@ -239,6 +242,7 @@ jobs:
       UPDATE_RESULT: ${{ needs.update.result }}
       UPDATED: ${{ needs.update.outputs.updated }}
       YARN_LOCK_UPDATED: ${{ needs.update.outputs.yarn_lock_updated }}
+      PACKAGE_UPDATED: ${{ needs.update.outputs.package_updated }}
       COMMIT_SHA: ${{ needs.update.outputs.commit_sha || github.sha }}
       UPDATES_CNT: ${{ needs.update.outputs.updates_cnt }}
       UPDATES_MARKDOWN: ${{ needs.update.outputs.updates_markdown }}
@@ -298,6 +302,21 @@ jobs:
                   echo "**Commit:** [\`$COMMIT_SHA\`](https://github.com/${{ github.repository }}/commit/$COMMIT_SHA)"
                   echo ""
                 fi
+              elif [[ "$PACKAGE_UPDATED" == "true" ]]; then
+                echo "### ✅ UI Dependencies Updated"
+                echo ""
+                echo "No descriptor changes; UI packages outside the applications were updated in \`package.json\` and \`yarn.lock\`"
+                echo ""
+                if [[ -n "$UI_UPDATES_MARKDOWN" ]]; then
+                  echo "$UI_UPDATES_MARKDOWN"
+                  echo ""
+                fi
+                if [[ "$PR_CREATED" == "true" && -n "$PR_URL" ]]; then
+                  echo "**Pull Request:** [#$PR_NUMBER]($PR_URL)"
+                else
+                  echo "**Commit:** [\`$COMMIT_SHA\`](https://github.com/${{ github.repository }}/commit/$COMMIT_SHA)"
+                fi
+                echo ""
               elif [[ "$YARN_LOCK_UPDATED" == "true" ]]; then
                 echo "### ✅ yarn.lock Updated"
                 echo ""
