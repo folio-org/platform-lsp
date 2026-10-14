@@ -21,6 +21,8 @@ output
 .claude/
 .codemie/
 .codex/
+*opencode*
+*memsearch*
 .specify/
 .mcp.json
 .cursor*
