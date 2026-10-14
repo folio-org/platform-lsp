@@ -77,6 +77,9 @@ on:
       yarn_lock_updated:
         description: 'Whether yarn.lock changed in this run'
         value: ${{ jobs.update-stripes-components.outputs.yarn_lock_updated }}
+      package_updated:
+        description: 'Whether package.json UI dependencies changed in this run'
+        value: ${{ jobs.update-stripes-components.outputs.package_updated }}
       commit_sha:
         description: 'SHA of the commit made by this run, if any'
         value: ${{ jobs.commit-changes.outputs.commit_sha }}
@@ -347,10 +350,11 @@ jobs:
     if: |
       needs.update-platform-descriptor.result == 'success' &&
       needs.update-platform-descriptor.outputs.template_ready == 'true' &&
-      (needs.update-platform-descriptor.outputs.updated == 'true' || inputs.yarn_lock_update == 'always')
+      (needs.update-platform-descriptor.outputs.updated == 'true' || inputs.yarn_lock_update != 'never')
     runs-on: ubuntu-latest
     outputs:
       has_updates: ${{ steps.update-package-json.outputs.has-updates }}
+      package_updated: ${{ steps.update-package-json.outputs.has-updates == 'true' }}
       updated_count: ${{ steps.update-package-json.outputs.updated-count }}
       not_found_ui_report: ${{ steps.update-package-json.outputs.not-found-ui-report }}
       yarn_lock_updated: ${{ steps.check-yarn-lock.outputs.yarn-lock-updated }}
@@ -375,7 +379,6 @@ jobs:
 
       - name: 'Fetch updated UI modules list'
         id: fetch-updated-ui-modules
-        if: needs.update-platform-descriptor.outputs.updated == 'true'
         uses: folio-org/platform-lsp/.github/actions/fetch-updated-ui-modules@master
         with:
           applications: ${{ needs.update-platform-descriptor.outputs.updated_applications }}
@@ -384,7 +387,6 @@ jobs:
 
       - name: 'Fetch base package.json'
         id: fetch-base-package-json
-        if: needs.update-platform-descriptor.outputs.updated == 'true'
         uses: folio-org/platform-lsp/.github/actions/read-file@master
         with:
           file_path: package.json
@@ -397,7 +399,7 @@ jobs:
 
       - name: 'Update package.json dependencies'
         id: update-package-json
-        if: needs.update-platform-descriptor.outputs.updated == 'true' && steps.fetch-updated-ui-modules.outputs.ui-modules != ''
+        if: steps.fetch-updated-ui-modules.outputs.ui-modules != ''
         uses: folio-org/platform-lsp/.github/actions/update-package-json@master
         with:
           package-json: ${{ steps.read-package-json.outputs.file_content }}
@@ -419,13 +421,14 @@ jobs:
           echo "::notice::Successfully updated package.json with ${{ steps.update-package-json.outputs.updated-count }} dependency changes"
 
       - name: 'Setup Node.js'
+        if: inputs.yarn_lock_update == 'always' || (inputs.yarn_lock_update != 'never' && steps.update-package-json.outputs.has-updates == 'true')
         uses: actions/setup-node@v6
         with:
           node-version: ${{ inputs.node_version || '22' }}
           check-latest: true
 
       - name: 'Install dependencies'
-        if: inputs.yarn_lock_update != 'never'
+        if: inputs.yarn_lock_update == 'always' || (inputs.yarn_lock_update != 'never' && steps.update-package-json.outputs.has-updates == 'true')
         run: |
           if [ "${{ inputs.yarn_lock_update }}" = "always" ]; then
             rm -f yarn.lock
@@ -433,12 +436,12 @@ jobs:
           yarn install --ignore-scripts --non-interactive
 
       - name: 'List FOLIO packages'
-        if: inputs.yarn_lock_update != 'never'
+        if: inputs.yarn_lock_update == 'always' || (inputs.yarn_lock_update != 'never' && steps.update-package-json.outputs.has-updates == 'true')
         run: yarn list --pattern @folio
 
       - name: 'Check if yarn.lock was updated'
         id: check-yarn-lock
-        if: inputs.yarn_lock_update != 'never'
+        if: inputs.yarn_lock_update == 'always' || (inputs.yarn_lock_update != 'never' && steps.update-package-json.outputs.has-updates == 'true')
         run: |
           if git diff --name-only | grep -q "^yarn.lock$"; then
             echo "::notice::yarn.lock changed:$(git diff --shortstat -- yarn.lock)"
@@ -449,7 +452,7 @@ jobs:
           fi
 
       - name: 'Upload Stripes Artifact'
-        if: needs.update-platform-descriptor.outputs.updated == 'true'
+        if: needs.update-platform-descriptor.outputs.updated == 'true' || steps.update-package-json.outputs.has-updates == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: 'package-json-files-${{ github.run_id }}-${{ inputs.release_branch }}'
@@ -461,7 +464,7 @@ jobs:
           retention-days: 1
 
       - name: 'Upload yarn.lock Artifact'
-        if: needs.update-platform-descriptor.outputs.updated != 'true' && steps.check-yarn-lock.outputs.yarn-lock-updated == 'true'
+        if: needs.update-platform-descriptor.outputs.updated != 'true' && steps.update-package-json.outputs.has-updates != 'true' && steps.check-yarn-lock.outputs.yarn-lock-updated == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: 'yarn-lock-${{ github.run_id }}-${{ inputs.release_branch }}'
@@ -471,7 +474,9 @@ jobs:
   generate-reports:
     name: 'Generate Diff Reports'
     needs: [determine-source-branch, update-platform-descriptor, update-stripes-components]
-    if: always() && !cancelled() && needs.update-platform-descriptor.result == 'success' && needs.update-platform-descriptor.outputs.updated == 'true'
+    if: |
+      always() && !cancelled() && needs.update-platform-descriptor.result == 'success' &&
+      (needs.update-platform-descriptor.outputs.updated == 'true' || needs.update-stripes-components.outputs.package_updated == 'true')
     runs-on: ubuntu-latest
     outputs:
       updates_markdown: ${{ steps.generate-markdown-reports.outputs.updates_markdown }}
@@ -483,6 +488,7 @@ jobs:
       artifact_name: platform-lsp-update-files-${{ inputs.release_branch }}
     steps:
       - name: 'Download Platform Descriptor Artifact'
+        if: needs.update-platform-descriptor.outputs.updated == 'true'
         uses: actions/download-artifact@v4
         with:
           name: ${{ env.DESCRIPTOR_ARTIFACT }}
@@ -498,6 +504,7 @@ jobs:
 
       - name: 'Find base descriptor file'
         id: find-base-descriptor
+        if: needs.update-platform-descriptor.outputs.updated == 'true'
         env:
           STATE_FILE: ${{ env.STATE_FILE }}
         run: |
@@ -531,6 +538,7 @@ jobs:
 
       - name: 'Generate platform diff report'
         id: build-change-report
+        if: needs.update-platform-descriptor.outputs.updated == 'true'
         uses: folio-org/platform-lsp/.github/actions/generate-platform-diff-report@master
         with:
           base_descriptor_path: ${{ steps.find-base-descriptor.outputs.base_file }}
@@ -550,13 +558,23 @@ jobs:
           update_branch: ${{ inputs.update_branch }}
           dependency_type: dependencies
 
+      - name: 'Descriptor report for a UI-only update'
+        id: no-descriptor-change
+        if: needs.update-platform-descriptor.outputs.updated != 'true'
+        run: |
+          {
+            echo 'markdown<<EOF'
+            printf '### Application & Component Updates\n\nNo application or component updates.\n'
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
       - name: 'Generate Collapsed Markdown Report'
         id: generate-markdown-reports
         uses: folio-org/platform-lsp/.github/actions/generate-markdown-reports@master
         with:
-          updated: ${{ needs.update-platform-descriptor.outputs.updated }}
+          updated: ${{ needs.update-platform-descriptor.outputs.updated == 'true' || needs.update-stripes-components.outputs.package_updated == 'true' }}
           failure_reason: ${{ needs.update-platform-descriptor.outputs.failure_reason }}
-          descriptor_markdown: ${{ steps.build-change-report.outputs.updates_markdown }}
+          descriptor_markdown: ${{ steps.build-change-report.outputs.updates_markdown || steps.no-descriptor-change.outputs.markdown }}
           ui_updates_markdown: ${{ steps.build-ui-diff.outputs.ui_updates_markdown }}
           not_found_ui_report: ${{ needs.update-stripes-components.outputs.not_found_ui_report }}
           package_diff_available: ${{ steps.build-ui-diff.outputs.has_changes != '' && 'true' || 'false' }}
@@ -597,19 +615,20 @@ jobs:
       needs.update-stripes-components.result != 'failure' &&
       (inputs.need_pr || needs.validate-platform.result != 'failure') &&
       (
-        (needs.update-platform-descriptor.outputs.updated == 'true' && needs.generate-reports.result == 'success') ||
-        (needs.update-platform-descriptor.outputs.updated != 'true' && needs.update-stripes-components.outputs.yarn_lock_updated == 'true')
+        ((needs.update-platform-descriptor.outputs.updated == 'true' || needs.update-stripes-components.outputs.package_updated == 'true') && needs.generate-reports.result == 'success') ||
+        (needs.update-platform-descriptor.outputs.updated != 'true' && needs.update-stripes-components.outputs.package_updated != 'true' && needs.update-stripes-components.outputs.yarn_lock_updated == 'true')
       )
     uses: folio-org/kitfox-github/.github/workflows/commit-and-push-changes.yml@master
     with:
       repo: ${{ inputs.repo }}
       branch: ${{ inputs.need_pr && inputs.update_branch || inputs.release_branch }}
-      artifact_name: ${{ needs.update-platform-descriptor.outputs.updated == 'true' && needs.generate-reports.outputs.artifact_name || format('yarn-lock-{0}-{1}', github.run_id, inputs.release_branch) }}
+      artifact_name: ${{ (needs.update-platform-descriptor.outputs.updated == 'true' || needs.update-stripes-components.outputs.package_updated == 'true') && needs.generate-reports.outputs.artifact_name || format('yarn-lock-{0}-{1}', github.run_id, inputs.release_branch) }}
       commit_message: |
-        ${{ needs.update-platform-descriptor.outputs.updated == 'true' && format('Update platform to {0}.', needs.update-platform-descriptor.outputs.new_version) || 'Update yarn.lock.' }}
+        ${{ (needs.update-platform-descriptor.outputs.updated == 'true' && format('Update platform to {0}.', needs.update-platform-descriptor.outputs.new_version)) || (needs.update-stripes-components.outputs.package_updated == 'true' && 'Update UI dependencies.') || 'Update yarn.lock.' }}
 
         ${{ needs.update-platform-descriptor.outputs.updated == 'true' && format('**Total applications/components updated:** {0}', needs.generate-reports.outputs.updates_cnt || '0') || '' }}
         ${{ needs.update-platform-descriptor.outputs.updated == 'true' && needs.generate-reports.outputs.updates_markdown || '' }}
+        ${{ needs.update-stripes-components.outputs.package_updated == 'true' && needs.generate-reports.outputs.ui_updates_markdown || '' }}
       dry_run: ${{ inputs.dry_run }}
       use_github_app: true
       source_branch: ${{ needs.determine-source-branch.outputs.source_branch }}
@@ -627,6 +646,7 @@ jobs:
       needs.update-platform-descriptor.outputs.template_ready == 'true' &&
       (
         needs.update-platform-descriptor.outputs.updated == 'true' ||
+        needs.update-stripes-components.outputs.package_updated == 'true' ||
         (
           needs.determine-source-branch.outputs.pr_exists != 'true' &&
           needs.determine-source-branch.outputs.update_branch_exists == 'true'
@@ -669,7 +689,7 @@ jobs:
           repo: ${{ inputs.repo }}
           base_branch: ${{ inputs.release_branch }}
           head_branch: ${{ inputs.update_branch }}
-          pr_title: "Release: Update to ${{ needs.update-platform-descriptor.outputs.new_version || 'No updates' }}"
+          pr_title: "${{ needs.update-platform-descriptor.outputs.new_version && format('Release: Update to {0}', needs.update-platform-descriptor.outputs.new_version) || (needs.update-stripes-components.outputs.package_updated == 'true' && 'Release: Update UI dependencies') || 'Release: No updates' }}"
           pr_body: ${{ steps.build-pr-body.outputs.pr_body }}
           pr_labels: ${{ inputs.pr_labels }}
           pr_reviewers: ${{ inputs.pr_reviewers }}
@@ -682,7 +702,7 @@ jobs:
         with:
           repo: ${{ inputs.repo }}
           pr_number: ${{ needs.determine-source-branch.outputs.pr_number }}
-          pr_title: "Release: Update to ${{ needs.update-platform-descriptor.outputs.new_version }}"
+          pr_title: "${{ needs.update-platform-descriptor.outputs.new_version && format('Release: Update to {0}', needs.update-platform-descriptor.outputs.new_version) || '' }}"
           pr_body: ${{ steps.build-pr-body.outputs.pr_body }}
           pr_labels: ${{ inputs.pr_labels }}
           pr_reviewers: ${{ inputs.pr_reviewers }}
