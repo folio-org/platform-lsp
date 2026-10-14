@@ -348,7 +348,7 @@ jobs:
           echo 'applied=true' >> "$GITHUB_OUTPUT"
 
       - name: 'Upload Platform Descriptor Artifact'
-        if: steps.calculate-new-version.outputs.updated == 'true'
+        if: steps.validate-template.outputs.valid == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.DESCRIPTOR_ARTIFACT }}
@@ -524,7 +524,6 @@ jobs:
       artifact_name: platform-lsp-update-files-${{ inputs.release_branch }}
     steps:
       - name: 'Download Platform Descriptor Artifact'
-        if: needs.update-platform-descriptor.outputs.updated == 'true'
         uses: actions/download-artifact@v4
         with:
           name: ${{ env.DESCRIPTOR_ARTIFACT }}
@@ -540,7 +539,6 @@ jobs:
 
       - name: 'Find base descriptor file'
         id: find-base-descriptor
-        if: needs.update-platform-descriptor.outputs.updated == 'true'
         env:
           STATE_FILE: ${{ env.STATE_FILE }}
         run: |
@@ -574,14 +572,13 @@ jobs:
 
       - name: 'Generate platform diff report'
         id: build-change-report
-        if: needs.update-platform-descriptor.outputs.updated == 'true'
         uses: folio-org/platform-lsp/.github/actions/generate-platform-diff-report@master
         with:
           base_descriptor_path: ${{ steps.find-base-descriptor.outputs.base_file }}
           head_descriptor_path: ${{ env.STATE_FILE }}
           release_branch: ${{ inputs.release_branch }}
           update_branch: ${{ inputs.update_branch }}
-          platform_version: ${{ needs.update-platform-descriptor.outputs.new_version }}
+          platform_version: ${{ needs.update-stripes-components.outputs.new_version || needs.update-platform-descriptor.outputs.new_version }}
 
       - name: 'Generate package diff report'
         id: build-ui-diff
@@ -594,23 +591,13 @@ jobs:
           update_branch: ${{ inputs.update_branch }}
           dependency_type: dependencies
 
-      - name: 'Descriptor report for a UI-only update'
-        id: no-descriptor-change
-        if: needs.update-platform-descriptor.outputs.updated != 'true'
-        run: |
-          {
-            echo 'markdown<<EOF'
-            printf '### Application & Component Updates\n\nNo application or component updates.\n'
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
-
       - name: 'Generate Collapsed Markdown Report'
         id: generate-markdown-reports
         uses: folio-org/platform-lsp/.github/actions/generate-markdown-reports@master
         with:
           updated: ${{ needs.update-platform-descriptor.outputs.updated == 'true' || needs.update-stripes-components.outputs.package_updated == 'true' }}
           failure_reason: ${{ needs.update-platform-descriptor.outputs.failure_reason }}
-          descriptor_markdown: ${{ steps.build-change-report.outputs.updates_markdown || steps.no-descriptor-change.outputs.markdown }}
+          descriptor_markdown: ${{ steps.build-change-report.outputs.updates_markdown }}
           ui_updates_markdown: ${{ steps.build-ui-diff.outputs.ui_updates_markdown }}
           not_found_ui_report: ${{ needs.update-stripes-components.outputs.not_found_ui_report }}
           package_diff_available: ${{ steps.build-ui-diff.outputs.has_changes != '' && 'true' || 'false' }}
