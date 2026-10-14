@@ -22,7 +22,7 @@ Since RANCHER-3069 it serves **both** cadences — the release branches and `sna
 
 Component resolution is one algorithm for both: list the Docker Hub tags of the namespaces the entry's `preRelease` implies, following pagination, discard `latest`, filter by the template constraint and channel, take the newest by **semver**. Docker Hub orders tags by push time — `folioorg/mgr-tenants` returns `3.0.8, 4.0.1, 3.0.7, 4.0.0 …` because patches to an older line continue after a new major — so the returned order is never trusted.
 
-The `package.json` steps run on every branch and on every scan, except a `yarn_lock_update: never` branch whose descriptor did not change. `fetch-updated-ui-modules` always receives the full resolved application set, so application UI modules follow their descriptors, while packages outside any application (`@folio/stripes`, `stripes-build`, `stripes-erm-components`, `plugin-select-application`) are raised to the latest patch of their major.minor through the npm fallback — whether or not an application was updated in that scan (RANCHER-3209). `update-package-json` rewrites a UI module only when its current value is an exact version; a range constraint is left to yarn, but the version the application descriptor now carries must satisfy it — otherwise the job fails, nothing is committed for that branch, and the constraint has to be corrected in `package.json` by hand. The lock policy is the branch's `yarn_lock_update` key in `update-config.yml` (`always` | `on_package_change` | `never`, default `always`): `always` deletes the lock and re-resolves it on every scan (`snapshot`, whose `>=` floors are otherwise never re-resolved); `on_package_change` runs `yarn install` on top of the existing lock only when `package.json` changed in that run; `never` skips the yarn steps. A run that changes only `package.json` (and with it `yarn.lock`) commits both as `Update UI dependencies.` without a new platform version; a run that changes only the lock commits it alone (`Update yarn.lock.`); otherwise nothing is committed. `need_pr` governs delivery only, so a branch can move from direct commits to PRs without its `package.json` or `yarn.lock` policy changing (RANCHER-3143).
+The `package.json` steps run on every branch and on every scan, except a `yarn_lock_update: never` branch whose descriptor did not change. `fetch-updated-ui-modules` always receives the full resolved application set, so application UI modules follow their descriptors, while packages outside any application (`@folio/stripes`, `stripes-build`, `stripes-erm-components`, `plugin-select-application`) are raised to the latest patch of their major.minor through the npm fallback — whether or not an application was updated in that scan (RANCHER-3209). `update-package-json` rewrites a UI module only when its current value is an exact version; a range constraint is left to yarn, but the version the application descriptor now carries must satisfy it — otherwise the job fails, nothing is committed for that branch, and the constraint has to be corrected in `package.json` by hand. The lock policy is the branch's `yarn_lock_update` key in `update-config.yml` (`always` | `on_package_change` | `never`, default `always`): `always` deletes the lock and re-resolves it on every scan (`snapshot`, whose `>=` floors are otherwise never re-resolved); `on_package_change` runs `yarn install` on top of the existing lock only when `package.json` changed in that run; `never` skips the yarn steps. A run that changes only `package.json` (and with it `yarn.lock`) is a platform update as well: it bumps the platform version in `platform-descriptor.json` exactly as an application update would and commits all three as `Update platform to <version>.`; a run that changes only the lock commits it alone (`Update yarn.lock.`); otherwise nothing is committed. `need_pr` governs delivery only, so a branch can move from direct commits to PRs without its `package.json` or `yarn.lock` policy changing (RANCHER-3143).
 
 **Every** branch reads its constraints from `platform-descriptor.template.json` on the branch being updated. A missing template fails the run — falling back to the descriptor would keep two resolution models alive, which is what RANCHER-3069 removed.
 
@@ -169,7 +169,7 @@ flowchart TD
 
 | Output | Type | Description |
 |--------|------|-------------|
-| `updated` | boolean | Whether platform descriptor was updated |
+| `updated` | boolean | Whether the platform was updated: descriptor or `package.json` UI dependencies (either bumps the version) |
 | `pr_created` | boolean | Whether PR was created or updated |
 | `pr_url` | string | URL of created/updated PR |
 | `pr_number` | string | PR number if created or updated |
@@ -200,9 +200,10 @@ flowchart TD
   - Applications from the FOLIO Application Registry
 - Diffs the result against the descriptor to decide whether anything changed
 - Calculates the new platform version — patch increment, or `<stem>.<offset + run_number>` when `descriptor_build_offset` is set
+- When nothing changed, calculates the version a UI-only update gets (`ui_version`); `update-package-json` applies it only if `package.json` changes
 - Generates the updated descriptor artifact
 
-**Outputs**: `updated`, `updated_components`, `updated_applications`, `new_version`, `failure_reason`
+**Outputs**: `updated`, `updated_components`, `updated_applications`, `new_version`, `ui_version`, `failure_reason`
 
 ### 3. update-package-json
 **Synchronizes package.json UI dependencies with application updates**
@@ -212,9 +213,10 @@ flowchart TD
 - Updates exact pins in the `dependencies` section of package.json
 - Fails the job when a range constraint does not admit the module version the application now carries
 - Tracks missing UI modules for reporting
+- When only `package.json` changed, sets the descriptor version to `ui_version` and uploads the descriptor with `package.json`; fails if no version could be calculated
 - Runs `yarn install` according to `yarn_lock_update` (`on_package_change`: only when `package.json` changed) and uploads `yarn.lock` when it changed — alongside `package.json` when the descriptor or `package.json` moved, alone otherwise
 
-**Outputs**: `has_updates`, `package_updated`, `updated_count`, `not_found_ui_report`, `yarn_lock_updated`
+**Outputs**: `has_updates`, `package_updated`, `updated_count`, `not_found_ui_report`, `yarn_lock_updated`, `new_version` (UI-only bump)
 
 **Condition**: Runs on every scan with a valid template, except a `yarn_lock_update: never` branch whose descriptor did not change
 
@@ -235,7 +237,7 @@ flowchart TD
 **Commits and pushes changes to update branch**
 
 - Downloads the combined artifact (descriptor + package.json + yarn.lock) from `generate-reports`, or the lock-only artifact from `update-stripes-components` when the descriptor did not change
-- Creates commit with detailed message including update count (`Update UI dependencies.` when only `package.json` and `yarn.lock` changed, `Update yarn.lock.` for a lock-only commit)
+- Creates commit with detailed message including update count (`Update platform to <version>.` when the descriptor or `package.json` changed, `Update yarn.lock.` for a lock-only commit)
 - Pushes to update branch (creates branch if needed)
 - Uses GitHub App token for authentication
 
@@ -247,7 +249,7 @@ flowchart TD
 - Builds PR body with collapsible diff reports
 - Creates PR if none exists
 - Updates existing PR title and body (the title is kept when the run has no new platform version)
-- Titles a new PR `Release: Update to <version>`, or `Release: Update UI dependencies` when only `package.json` changed
+- Titles a new PR `Release: Update to <version>`, also when only `package.json` changed
 - Applies labels and reviewers
 - Handles reviewer failures gracefully
 

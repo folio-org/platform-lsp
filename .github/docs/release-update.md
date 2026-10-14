@@ -56,8 +56,8 @@ flowchart LR
 ### Update Information
 | Output | Type | Description |
 |--------|------|-------------|
-| `updated` | boolean | Whether updates were found |
-| `package_updated` | boolean | Whether `package.json` UI dependencies changed (committed as `Update UI dependencies.` when the descriptor did not change) |
+| `updated` | boolean | Whether the platform was updated: descriptor or `package.json` UI dependencies |
+| `package_updated` | boolean | Whether `package.json` UI dependencies changed; a UI-only change bumps the platform version too |
 | `new_version` | string | New platform version if updated |
 | `updates_cnt` | number | Number of modules/components updated |
 

@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+### Fixed - RANCHER-3209: a UI-only update bumps the platform version and is announced in Slack
+
+A run that changed only `package.json` and `yarn.lock` kept the platform version, so its PR carried the
+current version (`Release: Update to R1-2025-ci.17` while `R1-2025-ci` was already at `.17`), and the
+notification, gated on a descriptor change, was skipped.
+
+- `update-platform-descriptor` also calculates the version a UI-only update gets (`ui_version`).
+  `update-stripes-components` writes it to `platform-descriptor.json` when only `package.json` changed, and
+  the descriptor is committed with `package.json` and `yarn.lock`. The job fails rather than commit
+  `package.json` without a version bump.
+- Commit message and PR title are the same as for a descriptor update: `Update platform to <version>.` and
+  `Release: Update to <version>`. `Update UI dependencies.` / `Release: Update UI dependencies` are gone.
+- The `updated` output of `release-update-flow.yml` and `release-update.yml` is true for a descriptor or a
+  `package.json` change, and `new_version` carries the bumped version in both cases. The notification and
+  the run summary therefore treat a UI-only update like any other platform update. `updates_cnt` defaults to
+  `0`.
+
 ### Fixed - RANCHER-3209: UI dependencies outside applications no longer wait for an application update
 
 On `on_package_change` branches (`R1-2025-ci`, `R1-2026`) the npm fallback of `fetch-updated-ui-modules`
