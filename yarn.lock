@@ -6156,9 +6156,9 @@ fast-equals@^4.0.3:
   integrity sha512-G3BSX9cfKttjr+2o1O22tYMLq0DPluZnYtq1rXumE1SpL/F/SLIfHx08WYQoWSIpeMYf8sRbJ8++71+v6Pnxfg==
 
 fast-equals@^5.3.3:
-  version "5.4.4"
-  resolved "https://registry.yarnpkg.com/fast-equals/-/fast-equals-5.4.4.tgz#1f97637cc2f5aef9491ca345653a400695c115b2"
-  integrity sha512-d9/I4rfMfUlO9HOkQqLJgfyRM4siqk1SF3Gjxm4OAMZzV+kCKHe1t/bHxn3xtCPHs3HCQFcvqzkTuanzqECQxw==
+  version "5.4.5"
+  resolved "https://registry.yarnpkg.com/fast-equals/-/fast-equals-5.4.5.tgz#df1401ad0b25f38ceccd94008173576a5bc8f320"
+  integrity sha512-yKEpcFuRPu/pTQL2VB8YKE2yFldrLlIsoWtJeBnAdqEhvu21OgkFT0C8njf/xYc2LSZGEr3K9JGjthHJxnVLvQ==
 
 fast-glob@^3.2.9:
   version "3.3.3"
