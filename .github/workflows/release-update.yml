@@ -64,7 +64,7 @@ on:
         description: 'Result of the update (success/failure/skipped)'
         value: ${{ jobs.update.result }}
       updated:
-        description: 'Whether updates were found'
+        description: 'Whether the platform was updated: descriptor or package.json UI dependencies'
         value: ${{ jobs.update.outputs.updated }}
       yarn_lock_updated:
         description: 'Whether yarn.lock changed in this run'
@@ -188,7 +188,7 @@ jobs:
           workflow_status: ${{ needs.update.outputs.workflow_status }}
           updated: ${{ needs.update.outputs.updated }}
           new_version: ${{ needs.update.outputs.new_version }}
-          updates_cnt: ${{ needs.update.outputs.updates_cnt }}
+          updates_cnt: ${{ needs.update.outputs.updates_cnt || '0' }}
           descriptor_diff_json: ${{ needs.update.outputs.descriptor_diff_json }}
           package_diff_json: ${{ needs.update.outputs.package_diff_json }}
           not_found_ui_report: ${{ needs.update.outputs.not_found_ui_report }}
@@ -215,7 +215,7 @@ jobs:
           workflow_status: ${{ needs.update.outputs.workflow_status }}
           updated: ${{ needs.update.outputs.updated }}
           new_version: ${{ needs.update.outputs.new_version }}
-          updates_cnt: ${{ needs.update.outputs.updates_cnt }}
+          updates_cnt: ${{ needs.update.outputs.updates_cnt || '0' }}
           descriptor_diff_json: ${{ needs.update.outputs.descriptor_diff_json }}
           package_diff_json: ${{ needs.update.outputs.package_diff_json }}
           not_found_ui_report: ${{ needs.update.outputs.not_found_ui_report }}
@@ -242,9 +242,8 @@ jobs:
       UPDATE_RESULT: ${{ needs.update.result }}
       UPDATED: ${{ needs.update.outputs.updated }}
       YARN_LOCK_UPDATED: ${{ needs.update.outputs.yarn_lock_updated }}
-      PACKAGE_UPDATED: ${{ needs.update.outputs.package_updated }}
       COMMIT_SHA: ${{ needs.update.outputs.commit_sha || github.sha }}
-      UPDATES_CNT: ${{ needs.update.outputs.updates_cnt }}
+      UPDATES_CNT: ${{ needs.update.outputs.updates_cnt || '0' }}
       UPDATES_MARKDOWN: ${{ needs.update.outputs.updates_markdown }}
       UI_UPDATES_MARKDOWN: ${{ needs.update.outputs.ui_updates_markdown }}
       NEW_VERSION: ${{ needs.update.outputs.new_version }}
@@ -302,21 +301,6 @@ jobs:
                   echo "**Commit:** [\`$COMMIT_SHA\`](https://github.com/${{ github.repository }}/commit/$COMMIT_SHA)"
                   echo ""
                 fi
-              elif [[ "$PACKAGE_UPDATED" == "true" ]]; then
-                echo "### ✅ UI Dependencies Updated"
-                echo ""
-                echo "No descriptor changes; UI packages outside the applications were updated in \`package.json\` and \`yarn.lock\`"
-                echo ""
-                if [[ -n "$UI_UPDATES_MARKDOWN" ]]; then
-                  echo "$UI_UPDATES_MARKDOWN"
-                  echo ""
-                fi
-                if [[ "$PR_CREATED" == "true" && -n "$PR_URL" ]]; then
-                  echo "**Pull Request:** [#$PR_NUMBER]($PR_URL)"
-                else
-                  echo "**Commit:** [\`$COMMIT_SHA\`](https://github.com/${{ github.repository }}/commit/$COMMIT_SHA)"
-                fi
-                echo ""
               elif [[ "$YARN_LOCK_UPDATED" == "true" ]]; then
                 echo "### ✅ yarn.lock Updated"
                 echo ""

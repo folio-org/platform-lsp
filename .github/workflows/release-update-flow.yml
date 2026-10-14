@@ -72,8 +72,8 @@ on:
         default: '22.x'
     outputs:
       updated:
-        description: 'Whether the platform descriptor was updated'
-        value: ${{ jobs.update-platform-descriptor.outputs.updated }}
+        description: 'Whether the platform was updated: descriptor or package.json UI dependencies'
+        value: ${{ jobs.update-platform-descriptor.outputs.updated == 'true' || jobs.update-stripes-components.outputs.package_updated == 'true' }}
       yarn_lock_updated:
         description: 'Whether yarn.lock changed in this run'
         value: ${{ jobs.update-stripes-components.outputs.yarn_lock_updated }}
@@ -97,7 +97,7 @@ on:
         value: ${{ jobs.update-platform-descriptor.outputs.failure_reason || '' }}
       new_version:
         description: 'New platform version if updated'
-        value: ${{ jobs.update-platform-descriptor.outputs.new_version }}
+        value: ${{ jobs.update-stripes-components.outputs.new_version || jobs.update-platform-descriptor.outputs.new_version }}
       updates_cnt:
         description: 'Number of modules/components updated'
         value: ${{ jobs.generate-reports.outputs.updates_cnt }}
@@ -175,6 +175,7 @@ jobs:
       updated_components: ${{ steps.compare-components.outputs.updated_eureka_components }}
       updated_applications: ${{ steps.compare-components.outputs.updated_applications }}
       new_version: ${{ steps.calculate-new-version.outputs.new_version }}
+      ui_version: ${{ steps.calculate-ui-version.outputs.updated == 'true' && steps.calculate-ui-version.outputs.new_version || '' }}
       failure_reason: ${{ steps.validate-template.outputs.failure_reason || steps.calculate-new-version.outputs.failure_reason }}
       template_ready: ${{ steps.validate-template.outputs.valid }}
     steps:
@@ -307,6 +308,18 @@ jobs:
           current_version: ${{ needs.determine-source-branch.outputs.pr_exists == 'true' && steps.extract-release-version.outputs.release_version || (steps.compare-components.outputs.previous_version != 'unknown' && steps.compare-components.outputs.previous_version || steps.version-stem.outputs.value) }}
           changes_detected: ${{ steps.compare-components.outputs.changes_detected }}
 
+      - name: 'Calculate Version for a UI-only Update'
+        id: calculate-ui-version
+        if: steps.validate-template.outputs.valid == 'true' && steps.calculate-new-version.outputs.updated != 'true'
+        uses: folio-org/platform-lsp/.github/actions/calculate-version-increment@master
+        with:
+          mode: ${{ inputs.descriptor_build_offset != '' && 'build-number' || 'increment' }}
+          base_version: ${{ steps.version-stem.outputs.value }}
+          build_offset: ${{ inputs.descriptor_build_offset }}
+          run_number: ${{ inputs.workflow_run_number }}
+          current_version: ${{ needs.determine-source-branch.outputs.pr_exists == 'true' && steps.extract-release-version.outputs.release_version || (steps.compare-components.outputs.previous_version != 'unknown' && steps.compare-components.outputs.previous_version || steps.version-stem.outputs.value) }}
+          changes_detected: 'true'
+
       - name: 'Apply Descriptor Updates'
         id: apply-updates
         if: steps.calculate-new-version.outputs.updated == 'true'
@@ -358,6 +371,7 @@ jobs:
       updated_count: ${{ steps.update-package-json.outputs.updated-count }}
       not_found_ui_report: ${{ steps.update-package-json.outputs.not-found-ui-report }}
       yarn_lock_updated: ${{ steps.check-yarn-lock.outputs.yarn-lock-updated }}
+      new_version: ${{ steps.bump-version.outputs.new_version }}
     steps:
       - name: 'Checkout Platform Repository'
         uses: actions/checkout@v4
@@ -420,6 +434,27 @@ jobs:
           fi
           echo "::notice::Successfully updated package.json with ${{ steps.update-package-json.outputs.updated-count }} dependency changes"
 
+      - name: 'Bump platform version for a UI-only update'
+        id: bump-version
+        if: needs.update-platform-descriptor.outputs.updated != 'true' && steps.update-package-json.outputs.has-updates == 'true'
+        env:
+          NEW_VERSION: ${{ needs.update-platform-descriptor.outputs.ui_version }}
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          if [ -z "$NEW_VERSION" ]; then
+            echo "::error::package.json changed but no next platform version could be calculated"
+            exit 1
+          fi
+          if [ ! -f "$STATE_FILE" ]; then
+            echo "::error::package.json changed but there is no $STATE_FILE to bump"
+            exit 1
+          fi
+          jq --arg version "$NEW_VERSION" '.version = $version' "$STATE_FILE" > "${STATE_FILE}.tmp"
+          mv "${STATE_FILE}.tmp" "$STATE_FILE"
+          echo "::notice::UI-only update: platform version bumped to $NEW_VERSION"
+          echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+
       - name: 'Setup Node.js'
         if: inputs.yarn_lock_update == 'always' || (inputs.yarn_lock_update != 'never' && steps.update-package-json.outputs.has-updates == 'true')
         uses: actions/setup-node@v6
@@ -460,6 +495,7 @@ jobs:
             package.json
             ${{ steps.fetch-base-package-json.outputs.file_path }}
             ${{ steps.check-yarn-lock.outputs.yarn-lock-updated == 'true' && 'yarn.lock' || '' }}
+            ${{ steps.bump-version.outputs.new_version != '' && env.STATE_FILE || '' }}
           if-no-files-found: warn
           retention-days: 1
 
@@ -624,7 +660,7 @@ jobs:
       branch: ${{ inputs.need_pr && inputs.update_branch || inputs.release_branch }}
       artifact_name: ${{ (needs.update-platform-descriptor.outputs.updated == 'true' || needs.update-stripes-components.outputs.package_updated == 'true') && needs.generate-reports.outputs.artifact_name || format('yarn-lock-{0}-{1}', github.run_id, inputs.release_branch) }}
       commit_message: |
-        ${{ (needs.update-platform-descriptor.outputs.updated == 'true' && format('Update platform to {0}.', needs.update-platform-descriptor.outputs.new_version)) || (needs.update-stripes-components.outputs.package_updated == 'true' && 'Update UI dependencies.') || 'Update yarn.lock.' }}
+        ${{ (needs.update-platform-descriptor.outputs.updated == 'true' || needs.update-stripes-components.outputs.package_updated == 'true') && format('Update platform to {0}.', needs.update-stripes-components.outputs.new_version || needs.update-platform-descriptor.outputs.new_version) || 'Update yarn.lock.' }}
 
         ${{ needs.update-platform-descriptor.outputs.updated == 'true' && format('**Total applications/components updated:** {0}', needs.generate-reports.outputs.updates_cnt || '0') || '' }}
         ${{ needs.update-platform-descriptor.outputs.updated == 'true' && needs.generate-reports.outputs.updates_markdown || '' }}
@@ -673,7 +709,7 @@ jobs:
           needs.commit-changes.result == 'success'
         uses: folio-org/platform-lsp/.github/actions/build-pr-body@master
         with:
-          new_version: ${{ needs.update-platform-descriptor.outputs.new_version }}
+          new_version: ${{ needs.update-stripes-components.outputs.new_version || needs.update-platform-descriptor.outputs.new_version }}
           updates_cnt: ${{ needs.generate-reports.outputs.updates_cnt }}
           updates_markdown: ${{ needs.generate-reports.outputs.updates_markdown }}
           ui_updates_markdown: ${{ needs.generate-reports.outputs.ui_updates_markdown }}
@@ -689,7 +725,7 @@ jobs:
           repo: ${{ inputs.repo }}
           base_branch: ${{ inputs.release_branch }}
           head_branch: ${{ inputs.update_branch }}
-          pr_title: "${{ needs.update-platform-descriptor.outputs.new_version && format('Release: Update to {0}', needs.update-platform-descriptor.outputs.new_version) || (needs.update-stripes-components.outputs.package_updated == 'true' && 'Release: Update UI dependencies') || 'Release: No updates' }}"
+          pr_title: "Release: Update to ${{ needs.update-stripes-components.outputs.new_version || needs.update-platform-descriptor.outputs.new_version || 'No updates' }}"
           pr_body: ${{ steps.build-pr-body.outputs.pr_body }}
           pr_labels: ${{ inputs.pr_labels }}
           pr_reviewers: ${{ inputs.pr_reviewers }}
@@ -702,7 +738,7 @@ jobs:
         with:
           repo: ${{ inputs.repo }}
           pr_number: ${{ needs.determine-source-branch.outputs.pr_number }}
-          pr_title: "${{ needs.update-platform-descriptor.outputs.new_version && format('Release: Update to {0}', needs.update-platform-descriptor.outputs.new_version) || '' }}"
+          pr_title: "${{ (needs.update-platform-descriptor.outputs.updated == 'true' || needs.update-stripes-components.outputs.package_updated == 'true') && format('Release: Update to {0}', needs.update-stripes-components.outputs.new_version || needs.update-platform-descriptor.outputs.new_version) || '' }}"
           pr_body: ${{ steps.build-pr-body.outputs.pr_body }}
           pr_labels: ${{ inputs.pr_labels }}
           pr_reviewers: ${{ inputs.pr_reviewers }}
