@@ -201,7 +201,7 @@ flowchart TD
 - Diffs the result against the descriptor to decide whether anything changed
 - Calculates the new platform version — patch increment, or `<stem>.<offset + run_number>` when `descriptor_build_offset` is set
 - When nothing changed, calculates the version a UI-only update gets (`ui_version`); `update-package-json` applies it only if `package.json` changes
-- Generates the updated descriptor artifact
+- Uploads the descriptor artifact (base and head descriptor) on every run with a valid template
 
 **Outputs**: `updated`, `updated_components`, `updated_applications`, `new_version`, `ui_version`, `failure_reason`
 
@@ -231,7 +231,7 @@ flowchart TD
 
 **Outputs**: `updates_markdown`, `ui_updates_markdown`, `missing_ui_markdown`, `updates_cnt`, `artifact_name`
 
-**Condition**: Runs when the descriptor or `package.json` changed; the descriptor diff is generated only for a descriptor change
+**Condition**: Runs when the descriptor or `package.json` changed. The descriptor diff always compares the release branch with the update branch, so an open PR keeps its application table after a UI-only update
 
 ### 5. commit-changes
 **Commits and pushes changes to update branch**

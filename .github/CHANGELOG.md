@@ -22,6 +22,9 @@ notification, gated on a descriptor change, was skipped.
   `package.json` change, and `new_version` carries the bumped version in both cases. The notification and
   the run summary therefore treat a UI-only update like any other platform update. `updates_cnt` defaults to
   `0`.
+- The descriptor diff in the PR body is built on every run, between the release branch and the update branch.
+  Before, it was built only when the descriptor changed in that run, so a UI-only update on an open PR replaced
+  its application table with "No application or component updates" (#222).
 
 ### Fixed - RANCHER-3209: UI dependencies outside applications no longer wait for an application update
 
