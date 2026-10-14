@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+### Fixed - RANCHER-3209: UI dependencies outside applications no longer wait for an application update
+
+On `on_package_change` branches (`R1-2025-ci`, `R1-2026`) the npm fallback of `fetch-updated-ui-modules`
+(RANCHER-3016) ran only in a scan where the platform descriptor changed, so a new patch of `@folio/stripes`
+and the other packages outside any application reached `package.json` only together with an application
+or component update.
+
+- `update-stripes-components` runs on every scan with a valid template (except a `yarn_lock_update: never`
+  branch whose descriptor did not change). `fetch-updated-ui-modules` always gets the full resolved
+  application set, so application UI modules keep their descriptor versions and only packages outside
+  any application move.
+- `on_package_change`: `yarn install` (on top of the existing lock) runs only when `package.json` changed in
+  that run. `always` and `never` are unchanged.
+- A run that changes only `package.json` and `yarn.lock` commits both as `Update UI dependencies.`, with the
+  package diff in the commit and PR body, and no new platform version. A new PR is titled
+  `Release: Update UI dependencies`; an open PR keeps its title.
+- New output `package_updated` (`release-update-flow.yml`, `release-update.yml`); the run summary reports a
+  UI-only update.
+
 ### Fixed - RANCHER-3143: `yarn.lock` refresh on `snapshot`; `package.json` handling independent of `need_pr`
 
 #### `yarn_lock_update` branch key in `update-config.yml`
