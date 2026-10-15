@@ -1069,13 +1069,13 @@
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz#1d572bfbbe14b7704e0ba0f39b74815b84870d70"
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
-"@dnd-kit/abstract@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/abstract/-/abstract-0.5.0.tgz#37a2e65fab20f073c400ffd5e38f0031a6bc6d42"
-  integrity sha512-hi13iMJgjPX/KDYVKg5VeDIhmYiV6buc9bAX+tCLYf4QdyYjPbsXjn2sPo6m7fQ6SGJBEFgHJ2PemeKDUbwBaA==
+"@dnd-kit/abstract@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/abstract/-/abstract-0.5.1.tgz#7bfe0795033e451750b379de6b86942ddce6bb7e"
+  integrity sha512-XI13sUYRvRgggMocjHlQhLRgENm/2GF94KF7mk+c0uxse7sbn75r0BgxoNPDlzLTDPWx6PkS0YHoeXN9JWhnOA==
   dependencies:
-    "@dnd-kit/geometry" "^0.5.0"
-    "@dnd-kit/state" "^0.5.0"
+    "@dnd-kit/geometry" "^0.5.1"
+    "@dnd-kit/state" "^0.5.1"
     tslib "^2.6.2"
 
 "@dnd-kit/accessibility@^3.1.1":
@@ -1085,13 +1085,13 @@
   dependencies:
     tslib "^2.0.0"
 
-"@dnd-kit/collision@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/collision/-/collision-0.5.0.tgz#46a86f0408c00ad9322a9d12e3e73d95eea87482"
-  integrity sha512-xUqRn3lS7oqLkT0AnnHS/STh/Czvwe1UapZFYiLbsUGxopMsQd4teaPCzPouOThoMdGEe+dHWjfqJl6t9iG4mQ==
+"@dnd-kit/collision@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/collision/-/collision-0.5.1.tgz#907c4f9e195d83a75fac08e4fbebf19eaf7e496b"
+  integrity sha512-exQmBlWWQ6calIup4KNQudiEF8Do61Lpzw/F0M3UOhqdKi9dx0ZXGf+qfdfmew8rJzPMj3MzKeGqNMEbCKA22g==
   dependencies:
-    "@dnd-kit/abstract" "^0.5.0"
-    "@dnd-kit/geometry" "^0.5.0"
+    "@dnd-kit/abstract" "^0.5.1"
+    "@dnd-kit/geometry" "^0.5.1"
     tslib "^2.6.2"
 
 "@dnd-kit/core@^6.2.0", "@dnd-kit/core@^6.3.1":
@@ -1103,23 +1103,23 @@
     "@dnd-kit/utilities" "^3.2.2"
     tslib "^2.0.0"
 
-"@dnd-kit/dom@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/dom/-/dom-0.5.0.tgz#9a33e5a01e197b55a5039a6cd57c1f806df477c0"
-  integrity sha512-f2xFJp5SYQ8EW/Fbtaa8iBb66hpkWc7qa8vU826KW11/tb44sH+AisZnGtwOOTWTQ0GraqBDr5ixTErww+eKXw==
+"@dnd-kit/dom@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/dom/-/dom-0.5.1.tgz#0094f997dab726d07a82bd48b2350b6bea374415"
+  integrity sha512-r7/l4D+nsH1mFXWkplXCkZC9JlY7UjxsVuTu4yCqzC00XgX+SXiK3Oazp42KKG3mshfBNVtm15BI9rKNlkw2fA==
   dependencies:
-    "@dnd-kit/abstract" "^0.5.0"
-    "@dnd-kit/collision" "^0.5.0"
-    "@dnd-kit/geometry" "^0.5.0"
-    "@dnd-kit/state" "^0.5.0"
+    "@dnd-kit/abstract" "^0.5.1"
+    "@dnd-kit/collision" "^0.5.1"
+    "@dnd-kit/geometry" "^0.5.1"
+    "@dnd-kit/state" "^0.5.1"
     tslib "^2.6.2"
 
-"@dnd-kit/geometry@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/geometry/-/geometry-0.5.0.tgz#b685c76e3672590aaf2414f21fbc56d4c2293ad2"
-  integrity sha512-ubHQS1CiSDH8ssYH2xG5BnpwPSFP1tStXXjug7/Ba6qnQdu/EUH47l6QXKIksQnnanfVfDf0aGeevRxgZlj28A==
+"@dnd-kit/geometry@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/geometry/-/geometry-0.5.1.tgz#942690f68ae4b42d6d7a71ec4b3c3947808fcc4c"
+  integrity sha512-7X/Ro2U5qW96SihIukMitnc3pYc5n/PmHmJ28oApLBIJRfLxPLgrL6X0ZbQT7qUEfdUIqXnehobJ3jXAc4hdAA==
   dependencies:
-    "@dnd-kit/state" "^0.5.0"
+    "@dnd-kit/state" "^0.5.1"
     tslib "^2.6.2"
 
 "@dnd-kit/modifiers@^9.0.0":
@@ -1131,13 +1131,13 @@
     tslib "^2.0.0"
 
 "@dnd-kit/react@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/react/-/react-0.5.0.tgz#5bda7289b0bced9b346144b5088c51db398bc14d"
-  integrity sha512-abQPLI8lmfVE+v/n+pqy5WFxrw6T2Yg0UQZsL78dp5DKci7dKTVDjvLWqvass+XTFtzJmsZEjk1NdqE6xG8Jiw==
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/react/-/react-0.5.1.tgz#a988852e2e2d32302da292befc9f30d4bb1c721d"
+  integrity sha512-WL8LvALUL9PqUUVun4xu4e8HO3x6rPwTxnnNwovj/VOUVyWpTmIaAK5Yj8jkzqNK01W74sQbwtffpLep1Ckj/Q==
   dependencies:
-    "@dnd-kit/abstract" "^0.5.0"
-    "@dnd-kit/dom" "^0.5.0"
-    "@dnd-kit/state" "^0.5.0"
+    "@dnd-kit/abstract" "^0.5.1"
+    "@dnd-kit/dom" "^0.5.1"
+    "@dnd-kit/state" "^0.5.1"
     tslib "^2.6.2"
 
 "@dnd-kit/sortable@^10.0.0":
@@ -1156,10 +1156,10 @@
     "@dnd-kit/utilities" "^3.2.2"
     tslib "^2.0.0"
 
-"@dnd-kit/state@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/state/-/state-0.5.0.tgz#d8cebaf21129d98d9b594236f9f4e3d2c08472f9"
-  integrity sha512-y7XbabQqjF58Lk8YmDQuR8l6QjN+Kh4qlGEjUvHuIeasLk1QP+9L5diXS98VMxQIivyMmUtX2//f+3N7qPJX4w==
+"@dnd-kit/state@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/state/-/state-0.5.1.tgz#c51eb8605dea8d8185f13cf5f0092f1062285e4c"
+  integrity sha512-SN0BZ0d/ob9dK8sTqk/0z3eNBWV6xPSrLbHUBbiCo9Sj3xfhPFk6ej2oZpDcqk7LWaujT57ocgdtznY7wQ2yFw==
   dependencies:
     "@preact/signals-core" "^1.10.0"
     tslib "^2.6.2"
@@ -1727,9 +1727,9 @@
     react-query "^3.38.1"
 
 "@folio/eholdings@>=1.1.0":
-  version "11.2.1099000000000722"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000722.tgz#eaab12bd9e7938035f8a2f89544b9e8e49592e84"
-  integrity sha512-NIUg6XG6CIjmY7LBPfDodK70ZQfQVBJ2om+cU22uMo9kw3RpMZbdqjt7QTN9jrNBBYXchfh51PmXo9deIdV7qw==
+  version "11.2.1099000000000731"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000731.tgz#218801a749cb0052e66877aadba251ae08c41a4b"
+  integrity sha512-B9gRLkP3HFm6YJZqEmIHHcJk+fFBTDiGceRxpST2cq+xMFojrHtSY7qtbwOU63ScgEDtkq3qS+ll9/wQRoeL+w==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
@@ -1874,9 +1874,9 @@
     use-deep-compare "^1.1.0"
 
 "@folio/inventory@>=1.4.0":
-  version "14.1.1099000000002177"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.1.1099000000002177.tgz#a34276b3082b5dd9e7e0dce79205c4581cfaf180"
-  integrity sha512-BeowBh62h0NUMN7Dzyld3PCyp9kJ6j7eqgFh7TFr9DKgiyPK/zE1GKkluSwqTjVAmO65BsvMGEsh/t85tAPdYQ==
+  version "14.1.1099000000002193"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.1.1099000000002193.tgz#8d5c2c8ec56650b3eb608d9e1e6dfb187bcf827c"
+  integrity sha512-NJEW0SfCScbxbWzi9SWCJC/miO/JuKIOv4aCFbq78Mg1J6gi3aTol+dpPlm2QqFevzTkg9uSiE/YXJI/K+Ivcw==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -1897,7 +1897,9 @@
     react-final-form "^6.5.6"
     react-final-form-arrays "^3.1.0"
     react-final-form-listeners "^1.0.2"
+    react-redux "^8.0.5"
     react-router-prop-types "^1.0.4"
+    redux "^4.2.1"
     redux-form "^8.3.7"
     use-session-storage-state "^18.2.0"
   optionalDependencies:
@@ -2512,9 +2514,9 @@
     prop-types "^15.6.0"
 
 "@folio/stripes-acq-components@^7.0.0", "@folio/stripes-acq-components@^7.1.0", "@folio/stripes-acq-components@^7.2.0", "@folio/stripes-acq-components@~7.2.0":
-  version "7.2.1099000000000643"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-acq-components/-/stripes-acq-components-7.2.1099000000000643.tgz#05500e3095425447654dd4365acb3dd59d665086"
-  integrity sha512-ClgKZwn5kyub1ochIvAZKZ+ssPTcfHDjcqB7sCSo7BGdRCF/K+QeasUZjK7+X27y8x4TIk9TJ4rZnVmUFLAyTA==
+  version "7.2.1099000000000646"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-acq-components/-/stripes-acq-components-7.2.1099000000000646.tgz#e5d7898bc3ae52057a29d3c28d5a48e93b69e992"
+  integrity sha512-k8anNIMTTYpop6wqy7uWAnfeiTci/doY1sy31PPNmrDTkbnNjRePygpVuHuHF7w747h71Dbayx9w7RmIEibVWg==
   dependencies:
     "@folio/stripes-types" "^3.0.0"
     "@rehooks/local-storage" "^2.4.4"
