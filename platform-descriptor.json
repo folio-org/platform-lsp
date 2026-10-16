@@ -9,7 +9,7 @@
     },
     {
       "name": "folio-keycloak",
-      "version": "26.7.1"
+      "version": "26.8.0"
     },
     {
       "name": "folio-module-sidecar",
@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-minimal",
-        "version": "2.1.17"
+        "version": "2.1.18"
       }
     ],
     "optional": [
