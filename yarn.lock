@@ -1727,9 +1727,9 @@
     react-query "^3.38.1"
 
 "@folio/eholdings@>=1.1.0":
-  version "11.2.1099000000000731"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000731.tgz#218801a749cb0052e66877aadba251ae08c41a4b"
-  integrity sha512-B9gRLkP3HFm6YJZqEmIHHcJk+fFBTDiGceRxpST2cq+xMFojrHtSY7qtbwOU63ScgEDtkq3qS+ll9/wQRoeL+w==
+  version "11.2.1099000000000739"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000739.tgz#79c331e82ba6c0a60ede1c89bc4d15e154544eff"
+  integrity sha512-uMWB30Av3kvPB0+ZMiibNZ3f/+pw9iP2RNj/Gj8wz+4iLkSypqN34BIE4tS39EITQBeIw+czcwBdu0eONF09KA==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
@@ -2642,9 +2642,9 @@
     usehooks-ts "^3.1.1"
 
 "@folio/stripes-connect@^10.0.0":
-  version "10.1.1099000000000089"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-connect/-/stripes-connect-10.1.1099000000000089.tgz#87c2f7a8edeadde5ea7f47d6a97e700e19db33c4"
-  integrity sha512-Heomw3TbWQTMgg+mV09N2IgeF+Jodl8CLSDdrV16rhJ1uikBf/+Ph6vbMR/l8JAD7cvYgIilC00iIEHvKV1GVw==
+  version "10.1.1099000000000096"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-connect/-/stripes-connect-10.1.1099000000000096.tgz#551a384f7c1539843974878bc495b7693d43d2e2"
+  integrity sha512-Z11cBrXuWyQAj9c9PgEmgYoKzzXTZu9ydwaxhbICUOngpzG6WKcDQhSVcU9CKtFQ4g8+SXQYC2v6K4xh9/DdIA==
   dependencies:
     lodash "^4.17.11"
     prop-types "^15.5.10"
