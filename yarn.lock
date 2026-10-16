@@ -2030,9 +2030,9 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/marc-authorities@>=1.0.0":
-  version "8.1.1099000000001703"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/marc-authorities/-/marc-authorities-8.1.1099000000001703.tgz#f47717a298db1acf63e3f8bf3f6d9cb3a1f43d67"
-  integrity sha512-0P8mdUDpCsS+JrG+rvEcPam/KJwCQcdTooscKW5QBsyIiOjquDxLNixyuS7Jrf6E1iS0pCar4AoM8fbDSi7n1g==
+  version "8.1.1099000000001747"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/marc-authorities/-/marc-authorities-8.1.1099000000001747.tgz#60cef271cf1d608846b168df73fdb6fdf196df46"
+  integrity sha512-/4ScYNo3yGpDsUr8U7Vg96MfhYASd01eTQRn8NIIvO+yJbTxtQXq9dJgiteEoRWtsJC9canQz91AvGKZ0xh/8Q==
   dependencies:
     "@folio/stripes-acq-components" "^7.1.0"
     "@rehooks/local-storage" "^2.4.4"
@@ -5838,9 +5838,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.439:
-  version "1.5.457"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.457.tgz#90198ca2f187be9410a2c3c394db204eb76e78aa"
-  integrity sha512-RNKsgErRmkzRgC8nOV1wzFhSbfGlYJ6k4LT/aE7oFrDYaQgHhTh5oTp0ZgSbRRybKR8HlZIdCWc38Y+CDTk1Jw==
+  version "1.5.458"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.458.tgz#fdc608c8ee26eeb4fa20b3447378c6c83a806a76"
+  integrity sha512-/hIH2gRSmxrf4/X4Nw/t/Wc8PVS22l8/3HnWjWTWsTOM5dsnMUPZF/+u+yr3LqweNuTBJE1rq6qAQzKkZVwMfA==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
