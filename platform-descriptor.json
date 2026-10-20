@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.25"
+        "version": "1.0.26"
       },
       {
         "name": "app-licenses",
@@ -130,7 +130,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.0.3"
+        "version": "1.0.4"
       },
       {
         "name": "app-mosaic",
