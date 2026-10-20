@@ -2607,9 +2607,9 @@
     yargs "^17.3.1"
 
 "@folio/stripes-components@^13.0.0":
-  version "13.1.1099000000001895"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001895.tgz#ac38af607d171674719311b264b8c3840d1728e8"
-  integrity sha512-0b/FM8GyMw7dUv+ml2p5iqGVRFhB6wV4eNxTbl7aiSO8GZiY8DL6xwHrLbur0KtscXi1OFWSmqjR58ZA0ZYr+g==
+  version "13.1.1099000000001898"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001898.tgz#bdf4743b3306b360e9fc72700f505c3617a0f5f5"
+  integrity sha512-BsUBqdMu8NO67uon8CXgCtcU9+kFk8aevIrWy6Qy5S+Xv5gMr77ZcXtb9Sk/++DL2IOXy3y+Wm9kkdVMHZVVCQ==
   dependencies:
     "@tiptap/core" "^3.31.3"
     "@tiptap/extension-text-align" "^3.31.3"
