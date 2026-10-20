@@ -63,8 +63,8 @@
     "@folio/plugin-find-package-title": "7.0.0",
     "@folio/plugin-find-po-line": "6.0.1",
     "@folio/plugin-find-user": "8.0.0",
-    "@folio/plugin-select-application": "2.0.0",
     "@folio/plugin-query-builder": "2.0.3",
+    "@folio/plugin-select-application": "2.0.0",
     "@folio/quick-marc": "10.0.4",
     "@folio/reading-room": "2.0.1",
     "@folio/receiving": "7.0.2",
@@ -75,7 +75,7 @@
     "@folio/servicepoints": "8.0.0",
     "@folio/stripes": "10.0.23",
     "@folio/stripes-authority-components": "6.0.3",
-    "@folio/stripes-build": "1.0.0",
+    "@folio/stripes-build": "1.1.1",
     "@folio/stripes-erm-components": "10.0.0",
     "@folio/stripes-inventory-components": "2.0.9",
     "@folio/stripes-marc-components": "2.0.3",
@@ -109,7 +109,7 @@
     "@rehooks/local-storage": "2.4.5",
     "@folio/stripes-acq-components": "7.0.5",
     "@folio/stripes-authorization-components": "2.0.9",
-    "@folio/stripes-webpack": "^6.1.0",
+    "@types/react": "^18",
     "brace-expansion": "^1.1.13",
     "colors": "1.4.0",
     "final-form": "^4.20.4",
@@ -120,7 +120,6 @@
     "qs": "^6.14.1",
     "redux-form": "^8.0.0",
     "typescript": "~5.5",
-    "webpack": "~5.107.2",
-    "@types/react": "^18"
+    "webpack": "~5.107.2"
   }
 }
