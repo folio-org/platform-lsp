@@ -17,15 +17,15 @@
     },
     {
       "name": "mgr-applications",
-      "version": "4.0.2"
+      "version": "4.0.3"
     },
     {
       "name": "mgr-tenants",
-      "version": "4.0.2"
+      "version": "4.0.3"
     },
     {
       "name": "mgr-tenant-entitlements",
-      "version": "4.0.3"
+      "version": "4.0.4"
     }
   ],
   "applications": {
