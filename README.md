@@ -1,5 +1,9 @@
 # Platform-lsp
 
+## ** DEPRECATED **
+
+### This branch was replaced by [R1-2025-ci](https://github.com/folio-org/platform-lsp/tree/R1-2025-ci) after CSP 7 was published in May, 2026.
+
 ## TODO purpose of repo
 Equivalent of platform complete for the Eureka.
 ## branching strategy
