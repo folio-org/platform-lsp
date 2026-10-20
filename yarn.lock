@@ -2607,9 +2607,9 @@
     yargs "^17.3.1"
 
 "@folio/stripes-components@^13.0.0":
-  version "13.1.1099000000001855"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001855.tgz#6548a06c5428de5b8926b52d71d53dad46143b9b"
-  integrity sha512-oo38yPHbAnS6rhsXaV6MIQq6DBD3o4L3q/D2cvD/6hm85YF/tbPDqbXglDBRiIKBzHKJsMrYLPWBACNdDnAd6g==
+  version "13.1.1099000000001895"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001895.tgz#ac38af607d171674719311b264b8c3840d1728e8"
+  integrity sha512-0b/FM8GyMw7dUv+ml2p5iqGVRFhB6wV4eNxTbl7aiSO8GZiY8DL6xwHrLbur0KtscXi1OFWSmqjR58ZA0ZYr+g==
   dependencies:
     "@tiptap/core" "^3.31.3"
     "@tiptap/extension-text-align" "^3.31.3"
@@ -5838,9 +5838,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.459:
-  version "1.5.461"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.461.tgz#6eecfd2feb3e145c42cac3efd9a13b863c6cd7c7"
-  integrity sha512-3WZFARz1By+/rYcqQ0OLj4UcEdhd6tz2LEcDtKBUq7ey77EeJ1OtetY/5hjSUxw7dC5r5mA7FfkhRbqO9vnTCg==
+  version "1.5.462"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.462.tgz#df5cc84b4e343d13d55173f1ae067525ff8ee469"
+  integrity sha512-9qpCBlXPy5v7n1Q7WTO5rW2StI4WNQhl96HpgXRZLPlNoXAD0LbsQUflovQYAO44Yia073ISusqohncvGSMbGA==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
