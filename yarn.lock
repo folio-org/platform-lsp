@@ -2172,9 +2172,9 @@
     react-final-form-listeners "^1.0.2"
 
 "@folio/plugin-eusage-reports@>=1.0.0":
-  version "4.1.1099000000000239"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-eusage-reports/-/plugin-eusage-reports-4.1.1099000000000239.tgz#21b58c3e1a72520207b89f75f6581aa9e45cc0d6"
-  integrity sha512-iP5HURhPqrCeBFfuNYyBelhMweLOOM4cpN28kD/8TEBywFWB9t2/U8yxpTjCWy2AZhVCZ8J7UkOrB3+O3/U6og==
+  version "4.1.1099000000000246"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-eusage-reports/-/plugin-eusage-reports-4.1.1099000000000246.tgz#808909d6f3cb0f1c88f39d22b1eacde6e46c4fee"
+  integrity sha512-2+M+ND53k35b7dyGwU4ngAMLPf6B2N79whW5qAwgFuNuXhAuVLhAMkOpIfq4mZJsXFU+tnHpg8Oz1LpXlQM8BA==
   dependencies:
     chart.js "^4.4.0"
     lodash "^4.17.21"
@@ -2581,9 +2581,9 @@
     react-final-form "^6.3.0"
 
 "@folio/stripes-build@>=1.0.0":
-  version "2.1.1099000000000095"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-build/-/stripes-build-2.1.1099000000000095.tgz#a490134e7f06ee81ef519b7fe3df5976f543f1c5"
-  integrity sha512-1OwLBzOOkjjAOyXrTgFuQASNQybdAi5yiRIPtbHQBAMt1rVs7Lxu7w75UGmrQgXdmVG3seZ8oQY3FdAUp57CcQ==
+  version "2.1.1099000000000102"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-build/-/stripes-build-2.1.1099000000000102.tgz#21b1fb2c47391ee3f3b74f131204836883503076"
+  integrity sha512-j6JumDuSo0eUn840tCoiHjRfTqPFFgYgvofmMgPKNJQuhyaoLNEn4nfc0ckc/ZZJ+61V70Q/RJ41yFcg6e4U7w==
   dependencies:
     "@folio/stripes-webpack" "^7.0.0"
     configstore "^3.1.1"
@@ -4161,9 +4161,9 @@
   integrity sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==
 
 "@types/lodash@^4.14.197":
-  version "4.17.26"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.17.26.tgz#7f83594d70359fc4b2707e344aed9a59138d024c"
-  integrity sha512-48NWfiY6oNcKOh47Z4h+sIvwcQR91h6KPhaYKgeMIrkT2jV82Gy90SErj60vW8jQbeMSOSbhIv3bZ7JoqPPVhA==
+  version "4.17.27"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.17.27.tgz#15fb73275b64dbfe49e2ae8376bb469b352a47a7"
+  integrity sha512-VenMRv/eKNrspX9v3H4dbmjsrnCOYdYBG3kxXKk3dG6X+urBGcj2Prww3xw1U5K4FV/mE4h5GbWd0szEKf+9ew==
 
 "@types/memoizee@^0.4.8":
   version "0.4.12"
