@@ -9756,9 +9756,9 @@ symbol-observable@^4.0.0:
   integrity sha512-b19dMThMV4HVFynSAM1++gBHAbk2Tc/osgLIBZMKsyqh34jb2e8Os7T6ZW/Bt3pJFdBTd2JwAnAAEQV7rSNvcQ==
 
 tabbable@^6.4.0, tabbable@^6.5.0:
-  version "6.5.0"
-  resolved "https://registry.yarnpkg.com/tabbable/-/tabbable-6.5.0.tgz#a65101385a4fd6cbd580b7546da0170f307b535d"
-  integrity sha512-wieBHXygIm7OyQOu5hQlkk62/WyCFYGlWg7L6/ZCUZwx0o398Zkn4pVmMyfYhfMG8kGrj/Krt8eIk6UKC6VzwA==
+  version "6.5.1"
+  resolved "https://registry.yarnpkg.com/tabbable/-/tabbable-6.5.1.tgz#cfca6f3f397db9edbe08ad35915e0d7807050a18"
+  integrity sha512-dMCuwDUY6Noz3zVKLefBC4wq+aJV20yc7vWmM7uTNGwtQSFF5kX7OUIUsxuVajz/bdt5Xqdah3/0NLjth+cM5A==
 
 tai-password-strength@^1.1.1:
   version "1.1.3"
