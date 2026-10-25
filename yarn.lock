@@ -1934,7 +1934,7 @@
 "@folio/linked-data@^1.0.6":
   version "1.0.6"
   resolved "https://repository.folio.org/repository/npm-folio/@folio/linked-data/-/linked-data-1.0.6.tgz#431d860604f7d35fe314c60426d61e09872f4d72"
-  integrity sha512-4CUWRlM5Vg0yL37ZuSnKgy2jqDGJzxKq+rwDQz64hIEaeMcRiA/QpxCARbWjLyuoCAjGqUiDhQDgSyP6FzuVuA==
+  integrity sha512-W879IM908PJGfGsv55vd6lLTBZiDpuonxwx4rWJO/2nl4Ik0D2uTUOkU1KAQYnPWM9WXjUEE2MfjPf7Nzga+Lw==
   dependencies:
     classnames "^2.5.1"
     lodash "^4.17.21"
