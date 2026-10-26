@@ -1693,9 +1693,9 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/erm-usage@>=1.0.3":
-  version "13.0.1099000000001172"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-13.0.1099000000001172.tgz#9019341e756ba10abd93c91a650a9823c538e71c"
-  integrity sha512-j/j8PKBvQ6yYqKmNNTcBijEltoMnOxbpf1RlswDR0uxSxXlKGRQefXc4qDmns/dYG/yai157Gxm4xb3QMItaNQ==
+  version "13.0.1099000000001190"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-13.0.1099000000001190.tgz#f24d74ecde7705b40b325c0e13bd7758baa5c535"
+  integrity sha512-1Ym8RW3kRGA9u6eeBYIDBfakU2MqihowQefX/BMnyScu/0NlvMLVLOmyMCD6jVqgKuzoSZWOuM+e6YJ8vJTxBw==
   dependencies:
     "@folio/stripes-leipzig-components" "^1.1.0"
     compose-function "^3.0.3"
