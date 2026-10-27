@@ -2534,9 +2534,9 @@
     yargs "^17.3.1"
 
 "@folio/stripes-components@^13.0.0":
-  version "13.1.1099000000001920"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001920.tgz#ff3eb5f5a84be242fdf10a2afbc89050a77c6960"
-  integrity sha512-/Jxo5wTDiGhlX74Si30h6EPpeMXF27a4F0LZINZCMZG92e6mW3O7VcIrKAnA7h0GMeVQjqR1i6H7vu4Vw10kQw==
+  version "13.1.1099000000001923"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001923.tgz#5eedce42bc664fe1af34fda57b63a06187e6bd6e"
+  integrity sha512-4bdCGF8WFRqkUFN5cVS7N2vgVFXcnKysFSRH4fXL/KuenbUsgcDeE2wjDcVqxF45O8erbMK/WB8rmj6u14ZVfQ==
   dependencies:
     "@tiptap/core" "^3.31.3"
     "@tiptap/extension-text-align" "^3.31.3"
@@ -3614,9 +3614,9 @@
   integrity sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==
 
 "@preact/signals-core@^1.10.0":
-  version "1.14.4"
-  resolved "https://registry.yarnpkg.com/@preact/signals-core/-/signals-core-1.14.4.tgz#d3588cbda237fcb3c8a8e478f6cc370653609eb7"
-  integrity sha512-HNB6HYeYKhQbJ1aKl+YRjrS4+QWHLKX6qKoUsfS/m0vqzsVaEBiZiaKbG/e+NKk2ch5ALQr/ihWaMHxiCuuWHA==
+  version "1.14.5"
+  resolved "https://registry.yarnpkg.com/@preact/signals-core/-/signals-core-1.14.5.tgz#2bde5271088aac1c0d580770da1333502b70be9e"
+  integrity sha512-vcRv7Ityz5JVmeiVqIluLFzT/PDS/AlhHUpw3/aUWqcVUs6bDGIPXE/6RSC4evBNWYvnniozg5Syfj33al3gkg==
 
 "@rehooks/local-storage@2.4.4", "@rehooks/local-storage@^2.4.4", "@rehooks/local-storage@^2.4.5":
   version "2.4.4"
@@ -8387,7 +8387,15 @@ pvutils@^1.1.3, pvutils@^1.2.0:
   resolved "https://registry.yarnpkg.com/pvutils/-/pvutils-1.2.0.tgz#4b5487a9cccd52d275b0538775790a3ca982bc22"
   integrity sha512-BbubeCEyTuQjVMakvJQ/Sxbc93F2pwmbsxONT/ZRrwU7Ua38d8unYTwXpTVLAKJ4BDuH9IGztCjQcd/N/39Dvg==
 
-qs@^6.14.1, qs@~6.16.0:
+qs@^6.14.1:
+  version "6.17.0"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.17.0.tgz#317fa93f17a6a735622718a6a5aa00356e7db673"
+  integrity sha512-5LK5BZ2XDHMvcUJaf0CQ5HL3aVgKbpklvByC7qLSxYkfE8COEEbJg5xCHWCTqzqi0Gs4Jn5Mv5v3R38W6edscA==
+  dependencies:
+    es-define-property "^1.0.1"
+    side-channel "^1.1.1"
+
+qs@~6.16.0:
   version "6.16.1"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.16.1.tgz#0643e17993e551759c85078e1f0bc4b9fe908020"
   integrity sha512-5Px6J7rfHBAGUhNQ3es4YzcOdBBw0SDcVtThJml4RdnKw4tKs2epA0kPZ+K8X+WiHktT93RHVcQ/3ym5aTCgtg==
@@ -8706,9 +8714,9 @@ react-intl-formatted-duration@^4.0.0:
     intl-unofficial-duration-unit-format "3.0.0"
 
 react-intl@^12.1.5:
-  version "12.1.5"
-  resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-12.1.5.tgz#a79322b86d9281a6e77430d5d12d4dca70635843"
-  integrity sha512-nlyc4qcORgNTUmSHM9ZBoYhuK57yzPlV1oqlo7mwhHDrUDNC+wUzGZufwMjayXo7xqmQyQywAlYllaEBbbfqew==
+  version "12.1.6"
+  resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-12.1.6.tgz#5b1f29a4382b84cd34c35bf625c831ab8ad0a53a"
+  integrity sha512-cxiqHlRK/JdDW/hMzusEv+LAqhfjUCL1YZAlazE39gT6jT3UrrNi3H50cgsveyUaASW14kNM2izIYMPYsYDCgA==
   dependencies:
     "@formatjs/icu-messageformat-parser" "3.5.22"
     "@formatjs/intl" "6.1.4"
