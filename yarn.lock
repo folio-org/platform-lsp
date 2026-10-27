@@ -2534,9 +2534,9 @@
     yargs "^17.3.1"
 
 "@folio/stripes-components@^13.0.0":
-  version "13.1.1099000000001898"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001898.tgz#bdf4743b3306b360e9fc72700f505c3617a0f5f5"
-  integrity sha512-BsUBqdMu8NO67uon8CXgCtcU9+kFk8aevIrWy6Qy5S+Xv5gMr77ZcXtb9Sk/++DL2IOXy3y+Wm9kkdVMHZVVCQ==
+  version "13.1.1099000000001920"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001920.tgz#ff3eb5f5a84be242fdf10a2afbc89050a77c6960"
+  integrity sha512-/Jxo5wTDiGhlX74Si30h6EPpeMXF27a4F0LZINZCMZG92e6mW3O7VcIrKAnA7h0GMeVQjqR1i6H7vu4Vw10kQw==
   dependencies:
     "@tiptap/core" "^3.31.3"
     "@tiptap/extension-text-align" "^3.31.3"
@@ -5727,9 +5727,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.464:
-  version "1.5.464"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.464.tgz#dd0d56e63f35f2c2a1c36c06efd79fa017587a46"
-  integrity sha512-nRa65aFge40viPAKxMKULIY8tcXKwKboJWNn4RoKwyWXJ6SP7BnrDGKUTzc64818jIciH0PK7LSF8QzZes19GA==
+  version "1.5.465"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.465.tgz#1e264826ad1cf843353861c78e32ae2dfa17fb6c"
+  integrity sha512-zg4iUpbeGw7YNZsswc2xKr2uiBex2d8dELAXo92Icw3but1ULbrvK8USe6wVLaWjgJnKBARv0pchx9Owktx6wQ==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -6265,9 +6265,9 @@ focus-trap@^7.5.4:
     tabbable "^6.4.0"
 
 focus-trap@^8.2.2:
-  version "8.2.3"
-  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-8.2.3.tgz#9edfa1725a528fa99552d96efbf9fa3675db822a"
-  integrity sha512-LTNHZwcFM7bSdU1cG1ExoaTEzoGmdjw+EzDotolZmLTCbm0ll2k6J3NL+WfqP14nGLxAp+XDJgwlT2DtNhcukA==
+  version "8.2.4"
+  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-8.2.4.tgz#2d4ffff79cc772fe6d468bd9cf5c7ce382cea1f9"
+  integrity sha512-oy6dj7WZYgMbbpoOA29K5W++473F1zEzdI1oJgPb6x7yWT36YaWedUe6i6YPWEt5quSh0pRMohVyHLWXUxtdxg==
   dependencies:
     tabbable "^6.5.0"
 
