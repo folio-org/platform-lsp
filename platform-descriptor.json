@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.0.27"
+        "version": "1.0.28"
       },
       {
         "name": "app-licenses",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-linked-data",
-        "version": "2.0.5"
+        "version": "2.0.6"
       },
       {
         "name": "app-lists",
