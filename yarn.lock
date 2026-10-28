@@ -1533,9 +1533,9 @@
     lodash "^4.17.21"
 
 "@folio/consortia-settings@>=1.0.0":
-  version "3.2.1099000000000250"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/consortia-settings/-/consortia-settings-3.2.1099000000000250.tgz#8caa7d56034bb723f708699b00f4188249721eae"
-  integrity sha512-lZCAMNkJrhOJAtL16xTPBo6l/p6P+MHWg8gwMeZme2kDqVqZldZbFyuJ3h+0uOZLA4/6vxUoGkLzL9IRQK0ozg==
+  version "3.2.1099000000000264"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/consortia-settings/-/consortia-settings-3.2.1099000000000264.tgz#567e5c5b93e19aaa6ab91e1f379c5781d06c456d"
+  integrity sha512-o2t7YRrIywrwFELJ6/uvnXy2ZSe+AyiW5U1SO9QC7OszoPqCkpJptIA5BmXJ9S6VuiJ4Hj3OSbVTpdN8h692FQ==
   dependencies:
     "@folio/stripes-acq-components" "~7.2.0"
     "@folio/stripes-authorization-components" "^2.0.0"
@@ -1654,9 +1654,9 @@
     react-query "^3.38.1"
 
 "@folio/eholdings@>=1.1.0":
-  version "11.2.1099000000000790"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000790.tgz#5c7901897bc5e7b811d8d4cb642eb37686ab7ac1"
-  integrity sha512-UV1pFdCotZcT5Pk4ZHVfWItXk0E8RRIxNMxuJzFu9yTXkHRzcaUcjzoi3sNbUcFvGX7rK5+JFClsFa7pbD4Zaw==
+  version "11.2.1099000000000799"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000799.tgz#fb775f5095a8563859c92827c20c9c3cb7021465"
+  integrity sha512-Ur6Yjzrv5v9y6mhhCxT8wbAs3sQc91lQ5nJ8ePyQ1UdHYiJH6xhVmdRaIGpL9FPwkdMZeGyMlqqBOTQVRo2VYA==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
