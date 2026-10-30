@@ -1379,9 +1379,9 @@
     zustand "^5.0.0"
 
 "@folio/authorization-policies@>=1.0.0":
-  version "2.0.1099000000000154"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/authorization-policies/-/authorization-policies-2.0.1099000000000154.tgz#e93bddba5675c1360ea1384b4823cc1294130810"
-  integrity sha512-eJjVsSiS0KCl1/r2N2OvxgLUSMIyNK9OTEDV821SeNCaEW7Nm4emlV696HgCpSLgXbe8e/LJOYRICq/RZMIIxQ==
+  version "2.0.1099000000000160"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/authorization-policies/-/authorization-policies-2.0.1099000000000160.tgz#c6aad8900743de106f6852234b51f14e99ef965f"
+  integrity sha512-0NictEr9Wpx2rf0LdUqIidOHmYX1U3qhLpaKbfU6+6Qj2hoR42h6U3citCb7pV8uvKZHEA5fBbsL5uiL779W/Q==
   dependencies:
     "@folio/stripes-authorization-components" "^2.0.0"
     "@k-int/stripes-kint-components" "^5.0.0"
@@ -1398,9 +1398,9 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/authorization-roles@>=1.0.0":
-  version "3.0.1099000000000270"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/authorization-roles/-/authorization-roles-3.0.1099000000000270.tgz#26cac0b3cba95ff7104e19bfcdd130042376e703"
-  integrity sha512-ueTYQYnmPnwLqgxkxaEIn78u9YJLUexZ/K8v3iAogM01zmm2cqZvQOCg6OoJxjAe4kSMISLqhLRFOhHges7Q0w==
+  version "3.0.1099000000000278"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/authorization-roles/-/authorization-roles-3.0.1099000000000278.tgz#563533598d7c3e2e1b40691ca0c1e189f6a58e92"
+  integrity sha512-BkHLVl2gftk4AiS0HdrizeV1QztM15by4OdNCYsMssJdj6lmw6zYGFnsd+i6wSHv7UxEd2FgaTiVlWZqUIJrFg==
   dependencies:
     "@folio/plugin-select-application" "^2.0.0"
     "@folio/stripes-acq-components" "^7.1.0"
@@ -1654,9 +1654,9 @@
     react-query "^3.38.1"
 
 "@folio/eholdings@>=1.1.0":
-  version "11.2.1099000000000808"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000808.tgz#75b957c7a7aedf2c0ccf71a8802509f99a1db332"
-  integrity sha512-vom/6nkrbdoWlpmJv/LBTCcA3WWS1pDnAfcm2p/23yAUQ884b6afL/0EW24PxsYjNtNBsmRxLGC9pJnx2X2DoA==
+  version "11.2.1099000000000813"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000813.tgz#4e9a4cc4b4cbca827ebc4aadc3798afe4581f2c0"
+  integrity sha512-PlLM77J4RHv0VsplyYvJeTWGBA5tQcFn+u1WKl/QwVyC71yZy1f2+QjocQdYtglAE22ULV7F6Rbl2L/JM7x16Q==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
@@ -2304,9 +2304,9 @@
     prop-types "^15.6.0"
 
 "@folio/quick-marc@>=1.0.0", "@folio/quick-marc@^11.0.0":
-  version "11.1.1099000000000628"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/quick-marc/-/quick-marc-11.1.1099000000000628.tgz#a649480de932b303c0d463663301bf90c9ed10eb"
-  integrity sha512-p3jIMDcbANi/bMHx5ujevMy2VIaxWha9r3/+nyRHC1kcDrG2HltPLg1M10oig/sc67pj7IdKb2X/dbHR4vp8ZQ==
+  version "11.1.1099000000000631"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/quick-marc/-/quick-marc-11.1.1099000000000631.tgz#2b39c8cf929c87fbe6ce6c32464fe7098b5649d5"
+  integrity sha512-a64uIi3xDRsdF++g8kDsydQ2V75+EcBJwdkR6CIqvRMaic9FT9pLjtXtQ+KQZVK3xSVUvfbMmCRFcbhgXIMjiA==
   dependencies:
     "@folio/stripes-acq-components" "^7.1.0"
     classnames "^2.5.1"
@@ -7782,9 +7782,9 @@ node-object-hash@^1.2.0:
   integrity sha512-UdS4swXs85fCGWWf6t6DMGgpN/vnlKeSGEQ7hJcrs7PBFoxoKLmibc3QRb7fwiYsjdL7PX8iI/TMSlZ90dgHhQ==
 
 node-releases@^2.0.60:
-  version "2.0.61"
-  resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-2.0.61.tgz#83531ed93275c9d487fbd0bdeea0ad24c62dd5d5"
-  integrity sha512-5NUN6QCxNFrS9oEA9RPS+d0AP+ooGBzzovY2JhIpDRHacPvOhHjXjUsUMX9qp4nLHZ+5jVgXB2jj/P4arGOE/g==
+  version "2.0.62"
+  resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-2.0.62.tgz#e75b147cdb79c4bdfd9f23bdb7aaabdb74070a93"
+  integrity sha512-A0Eq+qVDQI97IbAD6g/HriIuv256el9N8EwF4+xqJ49pwrdRYpdCSmLk0sO4I3fnS6hpYE5v22B73Bk+WArEoQ==
 
 normalize-path@^3.0.0, normalize-path@~3.0.0:
   version "3.0.0"
@@ -8243,9 +8243,9 @@ property-expr@^2.0.5:
   integrity sha512-SVtmxhRE/CGkn3eZY1T6pC8Nln6Fr/lu1mKSgRud0eC73whjGfoAogbn78LkD8aFL0zz3bAFerKSnOl7NlErBA==
 
 prosemirror-changeset@^2.4.4:
-  version "2.4.4"
-  resolved "https://registry.yarnpkg.com/prosemirror-changeset/-/prosemirror-changeset-2.4.4.tgz#406dc360110f16d4eebfb0c28abf72a84e51663e"
-  integrity sha512-Gyuz9jYdrAeA9I7AholyOes9KUmv/lEwsC5O9s5xF5VB3EgTPsXMGUxz4+H1B+wKVPdZbvRcg1Cp3x8qX+8ofA==
+  version "2.4.5"
+  resolved "https://registry.yarnpkg.com/prosemirror-changeset/-/prosemirror-changeset-2.4.5.tgz#fd891f1174cbb2e515292e1d2ffc0c5244647717"
+  integrity sha512-hv3Qhsn5GyoferiBqL8euGvj3Y8Z+2Ef75NnPLChr5DTWArpPAjK6F96Yc0iM7SBYNDPQbQaA+xEtAR8NuWo9A==
   dependencies:
     prosemirror-transform "^1.0.0"
 
@@ -8311,9 +8311,9 @@ prosemirror-model@^1.0.0, prosemirror-model@^1.21.0, prosemirror-model@^1.25.12,
     orderedmap "^2.0.0"
 
 prosemirror-schema-list@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/prosemirror-schema-list/-/prosemirror-schema-list-1.5.1.tgz#5869c8f749e8745c394548bb11820b0feb1e32f5"
-  integrity sha512-927lFx/uwyQaGwJxLWCZRkjXG0p48KpMj6ueoYiu4JX05GGuGcgzAy62dfiV8eFZftgyBUvLx76RsMe20fJl+Q==
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/prosemirror-schema-list/-/prosemirror-schema-list-1.6.0.tgz#91908809e8cf6488ec27c6d65bf07f3df7458498"
+  integrity sha512-G1srDtan+VqWn+qpmWFj/6j0YsZ5zMU+ZIlGVIW41a5JF2jAI3jzfMRWmSABmEH2Qoq1PmAG/o2mucMMdLOsLg==
   dependencies:
     prosemirror-model "^1.0.0"
     prosemirror-state "^1.0.0"
@@ -10325,9 +10325,9 @@ webpack-remove-empty-scripts@^1.0.1:
     ansis "4.0.0-node10"
 
 webpack-sources@^3.3.4, webpack-sources@^3.5.1:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.6.0.tgz#b2e4a4f1aef1a0d60f3011eb47736c5bf7f1ed7f"
-  integrity sha512-EIMmPVvNI0CYXyRPp34F2Qk7W37/BZVZIofS6LAUnrNjCVahS+hO4mxwFJDjQjODTGZDtVzLYoN2+1dYkhk9qA==
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.7.0.tgz#6c145ac83f8220ef20d4b01b9e7d5c15b1598b09"
+  integrity sha512-PdUhbCycwEgiS1hB/FBDksWKg/ashAIuJKqwdbPn8/dFVgU5LxQiBvG0js6VRRIzPujMrStYCczywp82P0KWng==
 
 webpack-virtual-modules@^0.4.3:
   version "0.4.6"
