@@ -5727,9 +5727,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.464:
-  version "1.5.470"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.470.tgz#c18241ba357e37e0ed4e29b510516531b9d662b8"
-  integrity sha512-omO9daK1eC5K0AFhIYtCcKsxm1erRC/SNr9I1RtPZrgdcR5KdAkPT8jtaoPgNhMsUf/zcslmDev4T7KqiDEa9w==
+  version "1.5.471"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.471.tgz#20eeb99b5fbd819d777e27803acfc5a81bfd9b58"
+  integrity sha512-Lo7jyyneHRYUQYM3WZ2rBEei9FcUIwValFPLifTbr4NTpc6oyUB+nN2rrOtbn3CE5pgz930mYxRJeD+glR7d6Q==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -6159,9 +6159,9 @@ file-selector@^2.1.0:
     tslib "^2.7.0"
 
 file-selector@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/file-selector/-/file-selector-5.0.1.tgz#9a8f7a944559efe4115bef40df885ac2092b0651"
-  integrity sha512-v0g/PTeuQgvKCBrVRsfVudvwXlRHSWHEQkVgKawgCGHkEpKA1clp3Om5jvEVhz8G9W/mOYjJH9FhkH4C888PgQ==
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/file-selector/-/file-selector-5.0.2.tgz#83313bda80a6a364bc59c9760af9c6ba03fdfe0a"
+  integrity sha512-1hAy178VaMCWWj/vSUITOTpLWH1PoGW3eO7i3kPIppuSyOHBm3o1cHq+CvKAM5hQKQXlazrDt/3K1HCXgs7MpQ==
 
 fill-range@^7.1.1:
   version "7.1.1"
@@ -8346,9 +8346,9 @@ prosemirror-transform@^1.0.0, prosemirror-transform@^1.1.0, prosemirror-transfor
     prosemirror-model "^1.21.0"
 
 prosemirror-view@^1.0.0, prosemirror-view@^1.1.0, prosemirror-view@^1.27.0, prosemirror-view@^1.31.0, prosemirror-view@^1.41.4, prosemirror-view@^1.42.6:
-  version "1.42.8"
-  resolved "https://registry.yarnpkg.com/prosemirror-view/-/prosemirror-view-1.42.8.tgz#cc58f77bfec2291e89f7c90f65a66d3df396bd0d"
-  integrity sha512-ftDZjCs9AjAekXmCfJRn2U3IdlRCl0Yc4tZT1/jJWCsz4DiSifEBXtWmpJpw/4f1Rg328uAUQ+u2lCJ0+AVZkw==
+  version "1.42.9"
+  resolved "https://registry.yarnpkg.com/prosemirror-view/-/prosemirror-view-1.42.9.tgz#ff0226435968769bee4fe36fe235daa7351410a5"
+  integrity sha512-bKbfzeKZOu2H2JQU2TaJmYu6EBcor3VnGIR4jR31cbEt1ztUnfUB6bKGV1+fJzOJdrVWR+tRU0208zM3oQx4wA==
   dependencies:
     prosemirror-model "^1.25.12"
     prosemirror-state "^1.0.0"
