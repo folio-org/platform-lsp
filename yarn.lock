@@ -1654,9 +1654,9 @@
     react-query "^3.38.1"
 
 "@folio/eholdings@>=1.1.0":
-  version "11.2.1099000000000826"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000826.tgz#220399e0253af92f85039d5140b7a6589aaee820"
-  integrity sha512-aXNi16b9/9k19vKoCDCZwnv92W3MSBgiZw7i21FFc/EiPyI/UMtEQPEpCoJJvVI0+jVy5w5fg2FT0aFKALy7Hg==
+  version "11.2.1099000000000834"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000834.tgz#84e4e5d543d822a7912e222c7362caef79d92b8c"
+  integrity sha512-dWRKNmG5ehGjUt0QUrV4fZ9NUdR8FJoPR2793ux5Cz8ROImJ8IVnedcNrHBVFGcbATI6LTILLIoKLXZYa7HVww==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
@@ -1785,9 +1785,9 @@
     "@folio/plugin-find-user" "^8.1.0"
 
 "@folio/inventory-import@>=4.0.0":
-  version "4.1.2099000000000281"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory-import/-/inventory-import-4.1.2099000000000281.tgz#24df85bcd1ce026957b032278684e23647c81762"
-  integrity sha512-fdgZAE1APU67tQgZWUmV5ePkqJ0RtJo1rITyXiqLR1BGqQKXQ/XpD7Nd+22dnTQdesx7h1IOwvmmwMb5MKL50A==
+  version "4.1.2099000000000287"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory-import/-/inventory-import-4.1.2099000000000287.tgz#8ac3097d1f88541e08634f6db4806bedf6c84842"
+  integrity sha512-yS6i73Tb6diKUdsksklBVHM1Gv371joAFcQZZE5ChxZHwFyyIeoS11LVaBC86OJIfiypm7pVCLH9MkD1Pxuj/g==
   dependencies:
     "@folio/stripes-data-transfer-components" "^7.0.0"
     final-form-arrays "^3.0.2"
@@ -2028,9 +2028,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/orders@>=1.1.0":
-  version "10.0.1099000000001186"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-10.0.1099000000001186.tgz#fb8904856cf736ad42799de9b69cc0ae34e08a63"
-  integrity sha512-b0GxjfYo+9fgWtInrkPpdNKks47wWe48Lax92lozVUcmz3bSk8o0gLaAqkP8oV0v46oSjswzwJdajkfXHhxzKA==
+  version "10.0.1099000000001189"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-10.0.1099000000001189.tgz#d02851a75779b4c43f5940bd3a3ac5bd9ef202b3"
+  integrity sha512-M+cfe8xbDo+BxJdYLovPKVOBwVcl2PLZCAUQhjKD5BBBC1BnvDTSOXBOXwkZgrAHY0MkmneWeH8bIJLdzByL2A==
   dependencies:
     "@folio/plugin-find-po-line" "^7.0.0"
     "@folio/stripes-acq-components" "~7.2.0"
@@ -2795,9 +2795,9 @@
     query-string "^7.1.2"
 
 "@folio/stripes-webpack@^8.0.0":
-  version "8.0.1099000000000378"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-webpack/-/stripes-webpack-8.0.1099000000000378.tgz#4fad519bcefe5929f92bcc9ce8eb35469539658d"
-  integrity sha512-scLkCsHn/rskyotjpWqozeGap/hq6tumtsmQdxRMwrNbAGsycptpRARxPKYf3g8+tAk0XQcQj3K/YN+jbmnuBQ==
+  version "8.0.1099000000000383"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-webpack/-/stripes-webpack-8.0.1099000000000383.tgz#f4628de796d8e3d3f240970d7f4de204cca00007"
+  integrity sha512-hNiUTwrl6iFAC60/m9wD1w5Ml9UeBmqsFQ6OQHP89/gOAxm9VSDt2T2lOcc1Kbkv6H/EI+hdx7WnqQiWaVSKjw==
   dependencies:
     "@cerner/duplicate-package-checker-webpack-plugin" "~2.1.0"
     "@csstools/postcss-global-data" "^3.0.0"
@@ -3746,17 +3746,17 @@
   dependencies:
     defer-to-connect "^2.0.1"
 
-"@tanstack/query-core@5.105.1":
-  version "5.105.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.105.1.tgz#8f44982e87f8b5cb9257737ae10dcfc43cab3f65"
-  integrity sha512-B/rNlZoZ54w1dlddiUt9oEe1SLM+37c00SKLJEg9YH+7as3Y54P81o9Fh+2ujZ36tXPnQJ5oVe7AcyEWkyFhPg==
+"@tanstack/query-core@5.105.3":
+  version "5.105.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.105.3.tgz#6574e94812f491aabdb828cf3d71bfe7ea72320e"
+  integrity sha512-v1rbNy7MB/4Akth7CQH+CerV13K7Ok9hAusEsfz4sCjDdu3/kOSJPoWfoB+YjdEX1eBFBWKNAGE5nqZCgdlHDw==
 
 "@tanstack/react-query@^5.105.0":
-  version "5.105.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.105.1.tgz#3619467713014f3336d67bb9ba5c627d474ba8ee"
-  integrity sha512-qcu+/+PtBOjW8qU4/0l47QVmNG7hPOWsCLzP0bTRhE1X7HYa757C4732wXTUH0QhCjTV1yedX8onsCiEwlNYrA==
+  version "5.105.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.105.3.tgz#e0d3f755aab793e86db04581824e24434283e207"
+  integrity sha512-dj5hGWZmwoc9NG4enoXuYbiYwb5FxgJYPVv06eUgicMTfEMTRXn08Xv9D/r1V8TfjAv+BpxdvZFzJ1h3hSWZcQ==
   dependencies:
-    "@tanstack/query-core" "5.105.1"
+    "@tanstack/query-core" "5.105.3"
 
 "@tiptap/core@3.32.2", "@tiptap/core@^3.31.3":
   version "3.32.2"
@@ -8242,9 +8242,9 @@ property-expr@^2.0.5:
   integrity sha512-SVtmxhRE/CGkn3eZY1T6pC8Nln6Fr/lu1mKSgRud0eC73whjGfoAogbn78LkD8aFL0zz3bAFerKSnOl7NlErBA==
 
 prosemirror-changeset@^2.4.4:
-  version "2.4.5"
-  resolved "https://registry.yarnpkg.com/prosemirror-changeset/-/prosemirror-changeset-2.4.5.tgz#fd891f1174cbb2e515292e1d2ffc0c5244647717"
-  integrity sha512-hv3Qhsn5GyoferiBqL8euGvj3Y8Z+2Ef75NnPLChr5DTWArpPAjK6F96Yc0iM7SBYNDPQbQaA+xEtAR8NuWo9A==
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/prosemirror-changeset/-/prosemirror-changeset-2.4.6.tgz#b3199ca4654061bc42abd4054f9962cc2a8c6df3"
+  integrity sha512-P0cY3DSLm4M2boUOCmHDyaID5o6HgWmb21Bvs9p8lLqfJjKBBEHG5Ma5qW5SCmwOYamtWOLf2k+yvt6077zlTg==
   dependencies:
     prosemirror-transform "^1.0.0"
 
@@ -9347,14 +9347,14 @@ semver-diff@^4.0.0:
     semver "^7.3.5"
 
 semver@^6.3.1:
-  version "6.3.1"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.1.tgz#556d2ef8689146e46dcea4bfdd095f3434dffcb4"
-  integrity sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==
+  version "6.3.2"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.2.tgz#f50413fbe5a686c6379385b2e8789b61c124a3c7"
+  integrity sha512-GYrCADwpu6yV5OAvchkQ27Z5wwMxWAEMg5NNWjyHh/5DboFFqbdbvYNIvZouQpxXyeMPoTOh0vdPYKlf0ZswdQ==
 
 semver@^7.1.3, semver@^7.3.4, semver@^7.3.5, semver@^7.3.7, semver@^7.5.0, semver@^7.5.4, semver@^7.7.2:
-  version "7.8.5"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-7.8.5.tgz#39b646037dd50c14fb451e7e4cac58ed8b863f69"
-  integrity sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==
+  version "7.8.6"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.8.6.tgz#67c0cda133a3ceb6f70b803e67625bf969000424"
+  integrity sha512-9lpSSU4Mly3mrtruwLs1eLK6+gzbzqeBFwRNjIjE+9LuDpWdYctrQlQ3ej1Ilgi7gknpsTRnPoLP8DpCHqHIJw==
 
 send@~0.19.0, send@~0.19.1:
   version "0.19.2"

@@ -1,7 +1,7 @@
 {
   "name": "FOLIO LSP",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2027-SNAPSHOT.100200000003421",
+  "version": "R1-2027-SNAPSHOT.100200000003422",
   "eureka-components": [
     {
       "name": "folio-kong",
@@ -13,36 +13,36 @@
     },
     {
       "name": "folio-module-sidecar",
-      "version": "4.1.0-SNAPSHOT.2460"
+      "version": "4.1.0-SNAPSHOT.2488"
     },
     {
       "name": "mgr-applications",
-      "version": "4.1.0-SNAPSHOT.2435"
+      "version": "4.1.0-SNAPSHOT.2459"
     },
     {
       "name": "mgr-tenants",
-      "version": "4.1.0-SNAPSHOT.2229"
+      "version": "4.1.0-SNAPSHOT.2256"
     },
     {
       "name": "mgr-tenant-entitlements",
-      "version": "4.1.0-SNAPSHOT.2424"
+      "version": "4.1.0-SNAPSHOT.2462"
     }
   ],
   "applications": {
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000012001"
+        "version": "2.2.0-SNAPSHOT.100200000012002"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000011320"
+        "version": "3.4.0-SNAPSHOT.100200000011334"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000012554"
+        "version": "2.1.0-SNAPSHOT.100200000012555"
       },
       {
         "name": "app-agreements",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000004149"
+        "version": "1.1.0-SNAPSHOT.100200000004150"
       },
       {
         "name": "app-dcb",
@@ -90,11 +90,11 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000012640"
+        "version": "1.1.0-SNAPSHOT.100200000012653"
       },
       {
         "name": "app-erm-usage",
-        "version": "3.1.0-SNAPSHOT.100200000012302"
+        "version": "3.1.0-SNAPSHOT.100200000012335"
       },
       {
         "name": "app-fqm",
@@ -110,7 +110,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000005238"
+        "version": "1.1.0-SNAPSHOT.100200000005239"
       },
       {
         "name": "app-licenses",
@@ -126,11 +126,11 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000011738"
+        "version": "3.1.0-SNAPSHOT.100200000011771"
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000010790"
+        "version": "1.1.0-SNAPSHOT.100200000010824"
       },
       {
         "name": "app-mosaic",
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.1.0-SNAPSHOT.100200000006786"
+        "version": "1.1.0-SNAPSHOT.100200000006800"
       },
       {
         "name": "app-reading-room",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000012340"
+        "version": "1.1.0-SNAPSHOT.100200000012364"
       },
       {
         "name": "app-service-interaction",
