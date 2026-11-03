@@ -32,7 +32,7 @@
     "required": [
       {
         "name": "app-platform-complete",
-        "version": "3.3.15"
+        "version": "3.3.16"
       },
       {
         "name": "app-platform-minimal",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.7"
+        "version": "2.2.8"
       },
       {
         "name": "app-eholdings",
