@@ -1834,9 +1834,9 @@
     "@folio/plugin-find-instance" "^10.0.0"
 
 "@folio/invoice@>=1.0.0":
-  version "8.1.1099000000000577"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/invoice/-/invoice-8.1.1099000000000577.tgz#bcc3295238e8781743d96cc381fc00501f07633b"
-  integrity sha512-UlKlrJpvSP0UMba2ItG+1jBfxNuvpB8wDfLNE/g7RSYxyD2tYgq2DooyGdn1YoQHcjFIICOihDHYvHJM0lqmPQ==
+  version "8.1.1099000000000580"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/invoice/-/invoice-8.1.1099000000000580.tgz#5fd27ef3f43de2fc96f445fb3c0d292365e6a268"
+  integrity sha512-O1NU0a7Hm9FvZTL6u6xg5ZJp3dLqW6cVA4pAvLY3g6e3OWFX/L6UVpvtllDQ+4XioZeleSnlwM3ULZv8oZrR3g==
   dependencies:
     "@folio/stripes-acq-components" "~7.2.0"
     file-saver "^2.0.0"
@@ -2534,9 +2534,9 @@
     yargs "^17.3.1"
 
 "@folio/stripes-components@^13.0.0":
-  version "13.1.1099000000001949"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001949.tgz#e355da5a9c99c6a09bd1f469bf312cfa44d2290d"
-  integrity sha512-AcCBeshLvxT0oXDYXzlZssF9xmN69YYZzgbGWNynUOiqmN6gQ0KvNun51FCl5XuP7T1C9ioRKi8lRdUEg6kxVw==
+  version "13.1.1099000000001955"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001955.tgz#b4d5e11053c9f37c8da6fe33862b60178671a5f0"
+  integrity sha512-kNVL93s8JoL2m23orcPfeDg3tDp//iNC/UkpD7xR0w+8uCAzEVP/bw6fNMetBv1hmTy08/ANiNkysG8ZXOwvVA==
   dependencies:
     "@tiptap/core" "^3.31.3"
     "@tiptap/extension-text-align" "^3.31.3"
@@ -2686,9 +2686,9 @@
     zustand "^4.1.1"
 
 "@folio/stripes-leipzig-components@^1.1.0":
-  version "1.1.1099000000000233"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-leipzig-components/-/stripes-leipzig-components-1.1.1099000000000233.tgz#30b6b9a0c21c8d241669fbde5b5033c2fbd533fb"
-  integrity sha512-vrBlxqB+tpyFWidbNGqgzx2phaeMIngNr10Ey1QSAk2UDEIx0CEY4gixLAt2/o4+t4+ANo5DjZ2xx+PchG+PaA==
+  version "1.1.1099000000000236"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-leipzig-components/-/stripes-leipzig-components-1.1.1099000000000236.tgz#cd4db8514392fff37578e5e6ca50b0441da042be"
+  integrity sha512-sw5xJEJg6HpyOaxKPw3YjbNL0eY/WXfiMkDUvqaP9QQbsq12EJLfgjW4Xw6PznDS3BJW3YCRWyCLZYkR4+zwTQ==
   dependencies:
     final-form-arrays "^3.0.2"
     lodash "^4.17.4"
@@ -3418,7 +3418,7 @@
   resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.8.0.tgz#cee43d801fcef9644b11b8194857695acd5f815a"
   integrity sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==
 
-"@nodable/entities@^3.0.1":
+"@nodable/entities@^3.1.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@nodable/entities/-/entities-3.1.0.tgz#2ab366e0e607fdef8d65c5d84c58d191812bbd4b"
   integrity sha512-LsS/DjHr+uDM647Gru/cA8+J3a3HfhttwCKLyuoyN7yXTFCxKBtSgMQBvrW9yNPa2/zDRUNuGPaH5QUFoa4arQ==
@@ -6070,7 +6070,7 @@ fast-uri@^3.0.1:
   resolved "https://registry.yarnpkg.com/fast-uri/-/fast-uri-3.1.9.tgz#f1deba822b1d6ac79da2f860e872a63470cff203"
   integrity sha512-hS/0Wt3Ya043oKXs0sIxrMpKQITXhMLIrVAKKXi4gozGC9v7YRWVnXIZzjNPTO02M9BdxLCWqK1yRXgNziVyJQ==
 
-fast-xml-builder@^1.2.0:
+fast-xml-builder@^1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/fast-xml-builder/-/fast-xml-builder-1.3.1.tgz#ef05b353b45597483dfb09d450a062a2baec3a82"
   integrity sha512-pIM/1n3ntFXKYrUZwW7QCK0gAW7XY+wzj1YMIV3tLDvPj/V+zTGJK5e3/4WJfwj0qWw2ElNXiTixda/R+3YSug==
@@ -6079,15 +6079,15 @@ fast-xml-builder@^1.2.0:
     xml-naming "^0.3.0"
 
 fast-xml-parser@^5.5.8:
-  version "5.11.2"
-  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-5.11.2.tgz#0d4987adf4e7934af11d82a73b2841eca9928a42"
-  integrity sha512-R9iDuNrQYeQut46cn2r2wHKn4HYzVDvDm5J1wW+koZewykv0yuO2HChTYeZtrULyHIDM9cj9TUXloCsueCQUog==
+  version "5.12.0"
+  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-5.12.0.tgz#f8212b65fa5f7d227e67c387e874c7857751fa64"
+  integrity sha512-/pXxRBtwxY9w8z7YbgsvIPPcPvFDsTbIkWwTQJhzNJPokj+TbN6ftmcv4j/pEQDvOCNnKGDzuk5Bo2oogIOiFg==
   dependencies:
-    "@nodable/entities" "^3.0.1"
-    fast-xml-builder "^1.2.0"
-    is-unsafe "^2.0.0"
+    "@nodable/entities" "^3.1.0"
+    fast-xml-builder "^1.3.1"
+    is-unsafe "^2.0.3"
     path-expression-matcher "^1.6.2"
-    strnum "^2.4.2"
+    strnum "^2.5.1"
     xml-naming "^0.3.0"
 
 fastparse@^1.0.0:
@@ -6972,10 +6972,10 @@ is-ci@^3.0.1:
   dependencies:
     ci-info "^3.2.0"
 
-is-core-module@^2.17.0:
-  version "2.17.0"
-  resolved "https://registry.yarnpkg.com/is-core-module/-/is-core-module-2.17.0.tgz#75c1c76236c9f7e38ddbfff292e127dc13b21027"
-  integrity sha512-J/vG0zBCbIKOQFfufSwyXdMrsohyJIUNkrnmo6WZGzoM7tr/lsbfW5b2BvisL6zsyMzK9UxV9L6c7AoFbyXHOA==
+is-core-module@^2.18.0:
+  version "2.18.0"
+  resolved "https://registry.yarnpkg.com/is-core-module/-/is-core-module-2.18.0.tgz#8a988af8d3729fb6bbcaf025bf820cfe46b95f4c"
+  integrity sha512-qyax9fgaKOEC4qK8WZn7Q4IcoZC9RC1O1fFxRcRTq/oMMkWT/uXpqpXa12kzWR409zAt1drYN9N9BO26UmBCmw==
   dependencies:
     hasown "^2.0.4"
 
@@ -7096,7 +7096,7 @@ is-unicode-supported@^0.1.0:
   resolved "https://registry.yarnpkg.com/is-unicode-supported/-/is-unicode-supported-0.1.0.tgz#3f26c76a809593b52bfa2ecb5710ed2779b522a7"
   integrity sha512-knxG2q4UC3u8stRGyAVJCOdxFmv5DZiRcdlIaAQXAbSfJya+OhopNotLQrstBhququ4ZpuKbDc/8S6mgXgPFPw==
 
-is-unsafe@^2.0.0:
+is-unsafe@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/is-unsafe/-/is-unsafe-2.0.3.tgz#c8bc72c9d354dc9483dab9c26ff69bf5ec68d7b0"
   integrity sha512-ZBllczCCO267vgdFb6Tq3pv+LhHaCiGMdr+ZsuL+OopruAg7S+3ZDs1vD0RPC0uSrkjzbraxaGjtX1YBxjPeFQ==
@@ -9176,12 +9176,12 @@ resolve-pkg@^1.0.0:
     resolve-from "^2.0.0"
 
 resolve@^1.1.7, resolve@^1.19.0, resolve@^1.22.11:
-  version "1.22.13"
-  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.22.13.tgz#d542f97758d768f36091251a6b07540b4343f7b5"
-  integrity sha512-Dj/cW9zBV2aRj6XzCxuGIs3ESZKv02jixne3q6jFZYZ3/Tg09gHHviSMDL4kObh9pqSahdRHEnDoaP2gn8YLhA==
+  version "1.22.14"
+  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.22.14.tgz#302388cd2d7731a100db1dedce7b050f74ba38f7"
+  integrity sha512-1ZjYvR9sbkiwC5+9QHetqW5HmA2pHRMaoupD01t2HlYnV/vydC2zPwLixhsMieSWVZt0JJRg5LVIk0Ow1D/TrA==
   dependencies:
     es-errors "^1.3.0"
-    is-core-module "^2.17.0"
+    is-core-module "^2.18.0"
     path-parse "^1.0.7"
     supports-preserve-symlinks-flag "^1.0.0"
 
@@ -9692,7 +9692,7 @@ strip-json-comments@~2.0.1:
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
   integrity sha512-4gB8na07fecVVkOI6Rs4e7T6NOTki5EmL7TUduTs6bu3EdnSycntVJ4re8kgZA+wx9IueI2Y11bfbgwtzuE0KQ==
 
-strnum@^2.4.2:
+strnum@^2.5.1:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/strnum/-/strnum-2.5.1.tgz#6b2f52021fa47589c3cf643afd80032dfa312b78"
   integrity sha512-UM4nTLWzQiDBseVxUGxN0wJzIk0UU89Qi7pKXz9qISo+lhviJikTuikBsK/oFRlpvYHvSdz0TVoLyQ+sEpYwxA==

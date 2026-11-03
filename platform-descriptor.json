@@ -1,7 +1,7 @@
 {
   "name": "FOLIO LSP",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2027-SNAPSHOT.100200000003424",
+  "version": "R1-2027-SNAPSHOT.100200000003425",
   "eureka-components": [
     {
       "name": "folio-kong",
@@ -9,7 +9,7 @@
     },
     {
       "name": "folio-keycloak",
-      "version": "26.9.0-SNAPSHOT.134"
+      "version": "26.9.0-SNAPSHOT.135"
     },
     {
       "name": "folio-module-sidecar",
@@ -17,7 +17,7 @@
     },
     {
       "name": "mgr-applications",
-      "version": "4.1.0-SNAPSHOT.2459"
+      "version": "4.1.0-SNAPSHOT.2470"
     },
     {
       "name": "mgr-tenants",
@@ -25,24 +25,24 @@
     },
     {
       "name": "mgr-tenant-entitlements",
-      "version": "4.1.0-SNAPSHOT.2462"
+      "version": "4.1.0-SNAPSHOT.2467"
     }
   ],
   "applications": {
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000012003"
+        "version": "2.2.0-SNAPSHOT.100200000012005"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000011334"
+        "version": "3.4.0-SNAPSHOT.100200000011337"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000012555"
+        "version": "2.1.0-SNAPSHOT.100200000012558"
       },
       {
         "name": "app-agreements",
@@ -86,7 +86,7 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.3.0-SNAPSHOT.100200000011149"
+        "version": "2.3.0-SNAPSHOT.100200000011181"
       },
       {
         "name": "app-eholdings",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "3.1.0-SNAPSHOT.100200000012335"
+        "version": "3.1.0-SNAPSHOT.100200000012338"
       },
       {
         "name": "app-fqm",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "2.1.0-SNAPSHOT.100200000011941"
+        "version": "2.1.0-SNAPSHOT.100200000011996"
       },
       {
         "name": "app-inventory",
