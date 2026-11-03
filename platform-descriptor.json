@@ -36,7 +36,7 @@
       },
       {
         "name": "app-platform-minimal",
-        "version": "2.1.20"
+        "version": "2.1.21"
       }
     ],
     "optional": [
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "2.0.10"
+        "version": "2.0.11"
       },
       {
         "name": "app-inventory",
