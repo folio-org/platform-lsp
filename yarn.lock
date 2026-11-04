@@ -1504,9 +1504,9 @@
     "@folio/plugin-find-user" "^8.1.0"
 
 "@folio/circulation@>=1.3.0", "@folio/circulation@>=12.0.0":
-  version "12.1.1099000000000508"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/circulation/-/circulation-12.1.1099000000000508.tgz#474bd4495779149f2181944111c90d9f19cf236e"
-  integrity sha512-X0fO6vltg0WeQtDyxb5cXM3YRqfERDxpRgFUzypwmAwKr8xIwT6J97eY2hCmkOM4fUGNon1rdTXg6fa/9pSIew==
+  version "13.0.1099000000000523"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/circulation/-/circulation-13.0.1099000000000523.tgz#191578998676f2f8539c4786ba3bd3de418c1519"
+  integrity sha512-YjRxb6s2s9a+wqBRatLqnZxspZpPD2M7r0bEy9p7EpbcWi0pmXEHypQZBccQ2R8jyjzktLtm3pQgq67SuKTgbg==
   dependencies:
     "@dnd-kit/react" "^0.5.0"
     "@folio/stripes-template-editor" "^3.2.0"
@@ -1654,9 +1654,9 @@
     react-query "^3.38.1"
 
 "@folio/eholdings@>=1.1.0":
-  version "11.2.1099000000000834"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000834.tgz#84e4e5d543d822a7912e222c7362caef79d92b8c"
-  integrity sha512-dWRKNmG5ehGjUt0QUrV4fZ9NUdR8FJoPR2793ux5Cz8ROImJ8IVnedcNrHBVFGcbATI6LTILLIoKLXZYa7HVww==
+  version "11.2.1099000000000837"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000837.tgz#7465adf7423921e9ae0191deab77a068a8443ce6"
+  integrity sha512-cCShY2zNjiaGtTXIGM8V2T7BH8HsqJ/9QydLhxaXZfZG1VZ/T7DvlwS0zy4x9001N6ytzgiuNcnYT1+mX2EtGw==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
@@ -1801,9 +1801,9 @@
     use-deep-compare "^1.1.0"
 
 "@folio/inventory@>=1.4.0":
-  version "14.1.1099000000002208"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.1.1099000000002208.tgz#7de8ce4a5a9ba7443ccd4b07188273fab3d2722a"
-  integrity sha512-lRZrz97wwmu3OfhR4tmxMxN4nJb1gTJJCbGCH2J8jTA5vsgq0HADFTRJL871MOtXDoCwFM0wljUiRiLjqWN2ZA==
+  version "14.1.1099000000002221"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.1.1099000000002221.tgz#69111e34278c14bd666e008bcf753bec5ed56a17"
+  integrity sha512-DOwu87nGipkrG/Hr2BBhj4DCXI2CompLSnrtBlCDrNlcvrQRItDbW+s4ywlAi7Xz4jaFh0/WbAJYoC/vcb0X8g==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -5720,9 +5720,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.464:
-  version "1.5.475"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.475.tgz#944726edc77fd465d47794a56601a1ee0bb3acf6"
-  integrity sha512-S9tceHJbIsHH8VRwh9x+8lJO50SYwTdwVGdEjdz2FERyP59j1N6rdXOSklIusrhxt9GG/WN4V/kRgmDHl9MM5w==
+  version "1.5.476"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.476.tgz#44c2ea2028593195b001b44185e36156e689b01a"
+  integrity sha512-LnPnRZ0esKB9NjsSIaC+mffW+5dAtBui6kbK5f9Qykblj4Q33cn6yIhuCcTVjwpvL3YJPqqQ4IlsNyriGNpyFQ==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
