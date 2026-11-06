@@ -2315,10 +2315,10 @@
     lodash "^4.17.11"
     prop-types "^15.6.0"
 
-"@folio/quick-marc@10.0.4":
-  version "10.0.4"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/quick-marc/-/quick-marc-10.0.4.tgz#f11a4df82f04488a587cde5ac374f47e87a1258a"
-  integrity sha512-doBkIaDzqhC+7mmhV47qykP3q7XVl++tB9B1MUWFEL6bYotgnay0oY8MhC6vA2fX9OncnrIHpty7hysciqrjuw==
+"@folio/quick-marc@10.0.5":
+  version "10.0.5"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/quick-marc/-/quick-marc-10.0.5.tgz#e3dd773f3595f302eed7e62e8a5f846f9199b72d"
+  integrity sha512-z4hYCPq0l4L8s78JzPYH1jzGJSybmD/ebpC4ZY5BUOCSo+3HKZmmh4259QN8xqYFlva6Ux0VQcGeB7/2F6o3GA==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
