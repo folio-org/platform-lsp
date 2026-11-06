@@ -1785,9 +1785,9 @@
     "@folio/plugin-find-user" "^8.1.0"
 
 "@folio/inventory-import@>=4.0.0":
-  version "4.1.2099000000000287"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory-import/-/inventory-import-4.1.2099000000000287.tgz#8ac3097d1f88541e08634f6db4806bedf6c84842"
-  integrity sha512-yS6i73Tb6diKUdsksklBVHM1Gv371joAFcQZZE5ChxZHwFyyIeoS11LVaBC86OJIfiypm7pVCLH9MkD1Pxuj/g==
+  version "4.1.2099000000000290"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory-import/-/inventory-import-4.1.2099000000000290.tgz#3ecc7cb83013a67acb7217dce7b9bb22b7970a65"
+  integrity sha512-WmGKU5d7BoVqEQbE5IDTDrOvFcB/iiLEBweI3gDXAqJ8O7L7KGj2BxPRsVE+wOOvIWDMD5AdIwAyCx19aiQRdA==
   dependencies:
     "@folio/stripes-data-transfer-components" "^7.0.0"
     final-form-arrays "^3.0.2"
@@ -1801,9 +1801,9 @@
     use-deep-compare "^1.1.0"
 
 "@folio/inventory@>=1.4.0":
-  version "14.1.1099000000002226"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.1.1099000000002226.tgz#b3255825c1f7c7b390c89d9d7171445d62169594"
-  integrity sha512-0MGoFR7PknIWMFRCnWazzzxofq+04eZPSFKUWIGyvgSIZQDbDFsQs+2u9c3n2RwG8KB2K8RQVSwO5tcD4crCRw==
+  version "14.1.1099000000002229"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.1.1099000000002229.tgz#5cdf7dae102f9b9882fd4f26b4d53b9927b2b143"
+  integrity sha512-DnXr4yOPMBGl8pjSncGLfa8ovmX/k/+gC9+snUGw1sJa+Rwv0uPS8fSuDh0V7tRu7yZbw8XH4rYDVOCOAg4NQw==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -4832,9 +4832,9 @@ camelcase@^7.0.1:
   integrity sha512-xlx1yCK2Oc1APsPXDL2LdlNP6+uu8OCDdhOBSVT279M/S+y75O30C2VuD8T2ogdePBBl7PfPF4504tnLgX3zfw==
 
 caniuse-lite@^1.0.30001810, caniuse-lite@^1.0.30001819:
-  version "1.0.30001822"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001822.tgz#8fb8d945f5c89b1701f4360745144e3fe2ee7a7a"
-  integrity sha512-Y3fvWQWzc69dlCyr07tuNrEhotv+db5FpMSPD3slZnkPKwRNOKwFBz2dP966XUmWMXLTOt+YShkFoQoom3U7hg==
+  version "1.0.30001823"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001823.tgz#331a7cb49aa317517697e76b0b1295f2225959fe"
+  integrity sha512-TQ5s/djDjNk1axreUW+4rULH+BmdCMLiJkhaXnO5wqivG7tITkSUj4ItIdzqdZHKaXcHAV8dhH3JxOM7/7bwqw==
 
 canvg@^3.0.11:
   version "3.0.11"
@@ -9123,9 +9123,9 @@ schema-utils@4.5.0:
     ajv-keywords "^5.1.0"
 
 schema-utils@^4.0.0, schema-utils@^4.2.0, schema-utils@^4.3.3, schema-utils@^4.6.0:
-  version "4.8.2"
-  resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-4.8.2.tgz#c4504ea7492c58e1b8d1fcc7d3d202c078a6d700"
-  integrity sha512-iKlak3OFHF0dgD1nZRvgWQzG+P1TiEcMnLSBtIVBg937z5Jd6WE1c3SyZkXIyCfPHowL35yMsVvIjotm1c1qiw==
+  version "4.8.3"
+  resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-4.8.3.tgz#128b33e63093a0b225b09570b9ea58ea65150cf2"
+  integrity sha512-qIfo3f+lRNqnMPgpXSKvUhsT3pY5U+ppmgGr4j8LanFP3W/Ze+xj8DY/dPb5qVu3m6qFIMyMWKVRLNKxrNhxWg==
   dependencies:
     "@types/json-schema" "^7.0.15"
     ajv "^8.20.0"
@@ -10326,6 +10326,6 @@ zustand@^4.1.1, zustand@^4.5.4:
     use-sync-external-store "^1.2.2"
 
 zustand@^5.0.0, zustand@^5.0.16:
-  version "5.0.16"
-  resolved "https://registry.yarnpkg.com/zustand/-/zustand-5.0.16.tgz#5d1fbffc43529a4313dd61b7183b93450638e9d4"
-  integrity sha512-Uv7e327ihlCfayfja3hDc0M64Upev1LWBKpRobdK4NyovDDPeeX4imWXc/wzC1yc6fkYPoAY/ncKVPAs2jrtQw==
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-5.1.0.tgz#739f981fa5427f3d3704705726e9c821671b307f"
+  integrity sha512-ciJZlP48M1PTQbVQq81CGVFxHTLpZNrFjKqwjtCU34AWuXTZT/jrF3p9+fI84Cf1eSCMLapxqBy/SNTfwOBuqA==
