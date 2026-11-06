@@ -110,8 +110,10 @@ Each branch represents a specific **platform state** with different purposes:
 |------------|-------------------|-------------|----------------------|
 | **`master`** | **Current Stable Release** | Production-ready state | Latest stable release versions |
 | **`snapshot`** | **Latest Development** | Active development state | Latest SNAPSHOT versions |
-| **`R1-2026`** | **Specific Release** | Tagged release state | Fixed release versions (e.g., 3.9.0) |
-| **`R1-2025-ci`** | **Previous Release** | Historical release state | Previous release versions |
+| **`R1-2027`** | **Specific Release** | Tagged release state | Fixed release versions (e.g., 3.9.0) |
+| **`R1-2026`** | **Previous Release** | Historical release state | Previous release versions |
+
+The `R1-2025-ci` branch was a one-time exception from the naming scheme.
 
 ### Branch Lifecycle
 
