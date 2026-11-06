@@ -1801,9 +1801,9 @@
     use-deep-compare "^1.1.0"
 
 "@folio/inventory@>=1.4.0":
-  version "14.1.1099000000002221"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.1.1099000000002221.tgz#69111e34278c14bd666e008bcf753bec5ed56a17"
-  integrity sha512-DOwu87nGipkrG/Hr2BBhj4DCXI2CompLSnrtBlCDrNlcvrQRItDbW+s4ywlAi7Xz4jaFh0/WbAJYoC/vcb0X8g==
+  version "14.1.1099000000002226"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory/-/inventory-14.1.1099000000002226.tgz#b3255825c1f7c7b390c89d9d7171445d62169594"
+  integrity sha512-0MGoFR7PknIWMFRCnWazzzxofq+04eZPSFKUWIGyvgSIZQDbDFsQs+2u9c3n2RwG8KB2K8RQVSwO5tcD4crCRw==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -2532,9 +2532,9 @@
     yargs "^17.3.1"
 
 "@folio/stripes-components@^13.0.0":
-  version "13.1.1099000000001972"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001972.tgz#81d7a57ab3d3f92035b4be10294e3a12cb15f3dc"
-  integrity sha512-yyNmPm1njgGQRuWlBmEX1NKD/+wqTISKzPAXh8eaXh/47U5l7mRBuQdJFEV9FZSqgH8v9B+gz6lvpjP7QEDrQg==
+  version "13.1.1099000000001975"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000001975.tgz#f7e9805fdd21c65dd2d15fae43660b02cb9fb46a"
+  integrity sha512-MzV7bvg1x3OVA2Fk2+eT11UwHNGxC1Dfsct24s/oBeVQ3sxOLO3El5+L677tnDwsHW3gHT5s3d2IkuqBiYQIuQ==
   dependencies:
     "@tiptap/core" "^3.31.3"
     "@tiptap/extension-text-align" "^3.31.3"
