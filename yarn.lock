@@ -2265,7 +2265,27 @@
     lodash "^4.17.11"
     prop-types "^15.6.0"
 
-"@folio/quick-marc@11.0.1", "@folio/quick-marc@^11.0.0":
+"@folio/quick-marc@11.0.2":
+  version "11.0.2"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/quick-marc/-/quick-marc-11.0.2.tgz#d014ab8cebbcd05606da94d4b07f636171ad42df"
+  integrity sha512-cTjsTfQS+eNPWykRxlAMugEtfxBDdDyTuvhaemSXtONIB7w0Wf0+/QW8vgNTIf9nbv+aOIZi7U+OZHP/VfWNng==
+  dependencies:
+    "@folio/stripes-acq-components" "^7.1.0"
+    classnames "^2.5.1"
+    final-form "^4.18.2"
+    final-form-arrays "^3.0.1"
+    lodash "^4.17.5"
+    prop-types "^15.5.10"
+    react-final-form "^6.3.0"
+    react-final-form-arrays "^3.1.0"
+    react-final-form-listeners "^1.0.2"
+    react-query "^3.39.2"
+    react-router-prop-types "^1.0.4"
+    uuid "^8.3.2"
+  optionalDependencies:
+    "@folio/plugin-find-authority" "^5.0.0"
+
+"@folio/quick-marc@^11.0.0":
   version "11.0.1"
   resolved "https://repository.folio.org/repository/npm-folio/@folio/quick-marc/-/quick-marc-11.0.1.tgz#0770d5fb55da5e4d3e234737dbc887d2bacc9063"
   integrity sha512-XoJRMz5PDaYc4QE21BsRY+LvZtnO7IwMfYpERJB5izUjMUkDNZM9SArZjAtwn8xMvVK7dNHjuzKelcI3CUnORg==
