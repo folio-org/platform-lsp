@@ -2793,9 +2793,9 @@
     query-string "^7.1.2"
 
 "@folio/stripes-webpack@^8.0.0":
-  version "8.0.1099000000000383"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-webpack/-/stripes-webpack-8.0.1099000000000383.tgz#f4628de796d8e3d3f240970d7f4de204cca00007"
-  integrity sha512-hNiUTwrl6iFAC60/m9wD1w5Ml9UeBmqsFQ6OQHP89/gOAxm9VSDt2T2lOcc1Kbkv6H/EI+hdx7WnqQiWaVSKjw==
+  version "8.0.1099000000000395"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-webpack/-/stripes-webpack-8.0.1099000000000395.tgz#1430d9c786e5901630faef70c7a4999e5bce33a3"
+  integrity sha512-tGgrFMqNy2eNYa11G6fUiDJo4WsAal/WN4FCFUVmwL52pvqtuAdAKhpuPqTYIcYsEKOWt5FIsDYXNwEAlpby6g==
   dependencies:
     "@cerner/duplicate-package-checker-webpack-plugin" "~2.1.0"
     "@csstools/postcss-global-data" "^3.0.0"
