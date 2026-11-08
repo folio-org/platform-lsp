@@ -12,7 +12,7 @@ update_config:
     required_checks:
       - context: "eureka-ci/release-platform-validation"
     merge_queue:
-      enabled: false
+      enabled: true
       merge_method: "SQUASH"
       grouping_strategy: "ALLGREEN"
       check_response_timeout_minutes: 60
