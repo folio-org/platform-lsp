@@ -12,9 +12,7 @@ update_config:
     required_checks:
       - context: "eureka-ci/release-platform-validation"
     merge_queue:
-      # Switch to true in RANCHER-3140, once a workflow publishes the required check on merge_group.
-      # Until then the queue would wait for a check that cannot report and eject the PR on timeout.
-      enabled: false
+      enabled: true
       merge_method: "SQUASH"
       grouping_strategy: "ALLGREEN"
       check_response_timeout_minutes: 60
