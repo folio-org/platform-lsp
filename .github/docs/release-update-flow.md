@@ -319,6 +319,8 @@ Prevents simultaneous updates to the same release/update branch combination.
 - **First run**: Checks out `release_branch`, creates `update_branch`
 - **Subsequent runs**: Checks out existing `update_branch`, updates in place
 - PR remains open for iterative updates until manually merged
+- After the merge, [Post-Merge Flow](./post-merge-flow.md) deletes the update branch; the next run creates it again
+  from `release_branch`
 
 ### Artifact Flow
 1. `platform-descriptor-files-*` - Descriptor and base file

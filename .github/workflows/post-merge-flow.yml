@@ -1,0 +1,313 @@
+name: Post-Merge Flow
+
+run-name: >-
+  Post-merge • PR #${{ inputs.pr_number }} • ${{ inputs.repo_name }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo_owner:
+        description: 'Repository owner'
+        required: true
+        type: string
+      repo_name:
+        description: 'Repository name'
+        required: true
+        type: string
+      pr_number:
+        description: 'Pull request number'
+        required: true
+        type: string
+      head_sha:
+        description: 'Head commit SHA of the pull request'
+        required: true
+        type: string
+      base_branch:
+        description: 'Base branch the PR was merged into'
+        required: false
+        type: string
+        default: ''
+      merged:
+        description: 'Whether the PR was merged (true/false)'
+        required: false
+        type: string
+        default: 'false'
+
+permissions:
+  contents: write
+  pull-requests: read
+
+env:
+  GH_TOKEN: ${{ github.token }}
+  REPO: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
+
+jobs:
+  pre-check:
+    name: Pre-Check Merge Status
+    runs-on: ubuntu-latest
+    outputs:
+      should_process: ${{ steps.validate-config.outputs.should_process || steps.check-merge.outputs.should_process }}
+      skip_reason: ${{ steps.validate-config.outputs.skip_reason || steps.check-merge.outputs.skip_reason }}
+      base_branch: ${{ steps.pr-info.outputs.base_ref || inputs.base_branch }}
+      head_branch: ${{ steps.pr-info.outputs.head_ref }}
+      pr_head_sha: ${{ steps.pr-info.outputs.current_head_sha }}
+    steps:
+      - name: Check Merge Status
+        id: check-merge
+        env:
+          MERGED: ${{ inputs.merged }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+        run: |
+          if [[ "$MERGED" != "true" ]]; then
+            echo "should_process=false" >> "$GITHUB_OUTPUT"
+            echo "skip_reason=PR was closed but not merged" >> "$GITHUB_OUTPUT"
+            echo "::notice::PR #$PR_NUMBER was closed without merging, skipping"
+            exit 0
+          fi
+          echo "should_process=true" >> "$GITHUB_OUTPUT"
+          echo "::notice::PR #$PR_NUMBER was merged, proceeding with post-merge processing"
+
+      - name: Get Pull Request Information
+        id: pr-info
+        if: steps.check-merge.outputs.should_process == 'true'
+        uses: folio-org/kitfox-github/.github/actions/get-pr-info@master
+        with:
+          repository: ${{ env.REPO }}
+          pr_number: ${{ inputs.pr_number }}
+          github_token: ${{ env.GH_TOKEN }}
+
+      - name: Get Update Configuration
+        id: get-config
+        if: steps.check-merge.outputs.should_process == 'true'
+        uses: folio-org/kitfox-github/.github/actions/get-update-config@master
+        with:
+          repo: ${{ env.REPO }}
+          branch: master
+          github_token: ${{ env.GH_TOKEN }}
+
+      - name: Validate Configuration
+        id: validate-config
+        if: steps.check-merge.outputs.should_process == 'true'
+        env:
+          TARGET_BRANCH: ${{ steps.pr-info.outputs.base_ref || inputs.base_branch }}
+          HEAD_BRANCH: ${{ steps.pr-info.outputs.head_ref }}
+          CONFIG_EXISTS: ${{ steps.get-config.outputs.config_exists }}
+          ENABLED: ${{ steps.get-config.outputs.enabled }}
+          RELEASE_BRANCHES: ${{ steps.get-config.outputs.branches }}
+          BRANCH_CONFIG: ${{ steps.get-config.outputs.branch_config }}
+        run: |
+          skip() {
+            echo "should_process=false" >> "$GITHUB_OUTPUT"
+            echo "skip_reason=$1" >> "$GITHUB_OUTPUT"
+            echo "::notice::$1, skipping"
+            exit 0
+          }
+
+          [[ "$CONFIG_EXISTS" == "true" ]] || skip "Configuration file .github/update-config.yml not found"
+          [[ "$ENABLED" == "true" ]] || skip "Updates are disabled in configuration"
+
+          BRANCH_EXISTS=$(echo "$RELEASE_BRANCHES" | jq -r ".[] | select(. == \"$TARGET_BRANCH\")" 2>/dev/null)
+          [[ -n "$BRANCH_EXISTS" ]] || skip "Target branch $TARGET_BRANCH is not configured"
+
+          BRANCH_ENTRY=$(echo "$BRANCH_CONFIG" | jq -r ".[] | select(.branch == \"$TARGET_BRANCH\")")
+          NEED_PR=$(echo "$BRANCH_ENTRY" | jq -r ".need_pr // false")
+          UPDATE_BRANCH=$(echo "$BRANCH_ENTRY" | jq -r ".update_branch // empty")
+
+          [[ "$NEED_PR" == "true" ]] || skip "Branch $TARGET_BRANCH is not configured for PR-based updates"
+          [[ "$HEAD_BRANCH" == "$UPDATE_BRANCH" ]] || skip "PR head branch '$HEAD_BRANCH' is not the configured update branch '$UPDATE_BRANCH'"
+
+          echo "should_process=true" >> "$GITHUB_OUTPUT"
+          echo "::notice::Configuration validation successful for branch $TARGET_BRANCH (update_branch: $UPDATE_BRANCH)"
+
+  cleanup-branch:
+    name: Cleanup Update Branch
+    needs: pre-check
+    if: needs.pre-check.outputs.should_process == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      deleted: ${{ steps.delete-branch.outputs.deleted }}
+      failure_reason: ${{ steps.delete-branch.outputs.failure_reason }}
+    steps:
+      - name: Delete Update Branch
+        id: delete-branch
+        env:
+          HEAD_BRANCH: ${{ needs.pre-check.outputs.head_branch }}
+          PR_HEAD_SHA: ${{ needs.pre-check.outputs.pr_head_sha }}
+        run: |
+          if [[ -z "$HEAD_BRANCH" ]]; then
+            echo "::notice::No head branch info available, skipping cleanup"
+            echo "deleted=skipped" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if ! BRANCH_SHA=$(gh api "repos/$REPO/git/ref/heads/$HEAD_BRANCH" --jq '.object.sha' 2>/dev/null); then
+            echo "::notice::Branch '$HEAD_BRANCH' was previously deleted"
+            echo "deleted=already_deleted" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [[ "$BRANCH_SHA" != "$PR_HEAD_SHA" ]]; then
+            echo "::notice::Branch '$HEAD_BRANCH' moved on to $BRANCH_SHA after the merged head $PR_HEAD_SHA, keeping it"
+            echo "deleted=skipped" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "::notice::Deleting merged update branch: $HEAD_BRANCH"
+          if gh api -X DELETE "repos/$REPO/git/refs/heads/$HEAD_BRANCH" >/dev/null; then
+            echo "::notice::Branch '$HEAD_BRANCH' deleted successfully"
+            echo "deleted=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::Failed to delete branch '$HEAD_BRANCH'"
+            echo "deleted=false" >> "$GITHUB_OUTPUT"
+            echo "failure_reason=Failed to delete update branch: $HEAD_BRANCH" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+
+  notify:
+    name: Send Notifications
+    needs: [pre-check, cleanup-branch]
+    if: always() && !cancelled() && (needs.pre-check.outputs.should_process == 'true' || needs.pre-check.result == 'failure')
+    runs-on: ubuntu-latest
+    env:
+      STATUS_TEXT: ${{ (needs.pre-check.result == 'success' && needs.cleanup-branch.result == 'success') && 'completed' || 'failed' }}
+      TITLE_BLOCK: |
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*${{ inputs.repo_name }} post-merge ${{ (needs.pre-check.result == 'success' && needs.cleanup-branch.result == 'success') && 'completed' || 'failed' }} <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>*"
+          }
+        }
+      ATTACHMENT: |
+        {
+          "color": "${{ (needs.pre-check.result == 'success' && needs.cleanup-branch.result == 'success') && 'good' || 'danger' }}",
+          "fields": [
+            {
+              "title": "Release branch",
+              "value": "<https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/tree/${{ needs.pre-check.outputs.base_branch }}|${{ needs.pre-check.outputs.base_branch }}>",
+              "short": true
+            },
+            {
+              "title": "PR Number",
+              "value": "<https://github.com/${{ inputs.repo_owner }}/${{ inputs.repo_name }}/pull/${{ inputs.pr_number }}|#${{ inputs.pr_number }}>",
+              "short": true
+            },
+            {
+              "title": "Branch Cleanup",
+              "value": "${{ needs.cleanup-branch.outputs.deleted == 'true' && 'Deleted' || (needs.cleanup-branch.outputs.deleted == 'already_deleted' && 'Previously deleted' || (needs.cleanup-branch.outputs.deleted == 'skipped' && 'Skipped' || 'Failed')) }}",
+              "short": true
+            }${{ (needs.pre-check.result == 'failure' || needs.cleanup-branch.result == 'failure') && format(',
+            {{
+              "title": "Failure Reason",
+              "value": "{0}",
+              "short": false
+            }}', needs.cleanup-branch.outputs.failure_reason || 'A GitHub API error occurred during pre-check. Please re-trigger the workflow. See run logs.') || '' }}
+          ],
+          "footer": "Eureka CI/CD"
+        }
+    steps:
+      - name: Send to Team Channel
+        if: vars.SLACK_NOTIF_CHANNEL != ''
+        continue-on-error: true
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+          errors: false
+          payload: |
+            {
+              "channel": "${{ vars.SLACK_NOTIF_CHANNEL }}",
+              "text": "${{ inputs.repo_name }} post-merge ${{ env.STATUS_TEXT }}",
+              "blocks": [
+                ${{ env.TITLE_BLOCK }}
+              ],
+              "attachments": [
+                ${{ env.ATTACHMENT }}
+              ]
+            }
+
+      - name: Send to General Channel
+        if: vars.GENERAL_SLACK_NOTIF_CHANNEL != ''
+        continue-on-error: true
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+          errors: false
+          payload: |
+            {
+              "channel": "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}",
+              "text": "${{ inputs.repo_name }} post-merge ${{ env.STATUS_TEXT }}",
+              "blocks": [
+                ${{ env.TITLE_BLOCK }}
+              ],
+              "attachments": [
+                ${{ env.ATTACHMENT }}
+              ]
+            }
+
+  summarize:
+    name: Workflow Summary
+    needs: [pre-check, cleanup-branch, notify]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Workflow Summary
+        env:
+          PR_NUMBER: ${{ inputs.pr_number }}
+          HEAD_SHA: ${{ inputs.head_sha }}
+          MERGED: ${{ inputs.merged }}
+          SHOULD_PROCESS: ${{ needs.pre-check.outputs.should_process }}
+          PRECHECK_RESULT: ${{ needs.pre-check.result }}
+          SKIP_REASON: ${{ needs.pre-check.outputs.skip_reason }}
+          BASE_BRANCH: ${{ needs.pre-check.outputs.base_branch }}
+          HEAD_BRANCH: ${{ needs.pre-check.outputs.head_branch }}
+          DELETED: ${{ needs.cleanup-branch.outputs.deleted }}
+          CLEANUP_FAILURE: ${{ needs.cleanup-branch.outputs.failure_reason }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          {
+            echo "### Post-Merge Summary"
+            echo ""
+            echo "**Repository:** \`$REPO\`"
+            echo "**PR:** [#$PR_NUMBER](https://github.com/$REPO/pull/$PR_NUMBER)"
+            echo "**Head commit:** [\`$HEAD_SHA\`](https://github.com/$REPO/commit/$HEAD_SHA)"
+            echo "**Merged:** $MERGED"
+            echo ""
+
+            echo "### Pre-Check Status"
+            echo ""
+            if [[ "$PRECHECK_RESULT" == "failure" ]]; then
+              echo "**Pre-Check:** Failed"
+              echo "- **Error:** A GitHub API error occurred during pre-check. Please re-trigger the workflow."
+            elif [[ "$SHOULD_PROCESS" == "true" ]]; then
+              echo "**Pre-Check:** Passed"
+              echo "- **Base Branch:** $BASE_BRANCH"
+              echo "- **Head Branch:** $HEAD_BRANCH"
+            else
+              echo "**Pre-Check:** Skipped"
+              echo "- **Reason:** $SKIP_REASON"
+            fi
+            echo ""
+
+            if [[ "$SHOULD_PROCESS" == "true" && "$PRECHECK_RESULT" == "success" ]]; then
+              echo "### Branch Cleanup"
+              echo ""
+              case "$DELETED" in
+                true) echo "- **Branch \`$HEAD_BRANCH\`:** Deleted" ;;
+                already_deleted) echo "- **Branch \`$HEAD_BRANCH\`:** Previously deleted" ;;
+                skipped) echo "- **Branch \`$HEAD_BRANCH\`:** Kept (no head info, or the branch moved on after the merge)" ;;
+                *)
+                  echo "- **Branch \`$HEAD_BRANCH\`:** Failed"
+                  if [[ -n "$CLEANUP_FAILURE" ]]; then
+                    echo "- **Failure Reason:** $CLEANUP_FAILURE"
+                  fi
+                  ;;
+              esac
+              echo ""
+            fi
+
+            echo "---"
+            echo ""
+            echo "**Workflow Run:** [#${{ github.run_number }}]($RUN_URL)"
+          } >> "$GITHUB_STEP_SUMMARY"
