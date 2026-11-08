@@ -20,6 +20,7 @@ This directory contains comprehensive documentation for the FOLIO platform CI/CD
 | [Release Scan](./release-scan.md) | Automated discovery and update orchestration for platform release branches | Workflow Documentation |
 | [Release Update](./release-update.md) | Reusable workflow for updating individual platform release branches | Workflow Documentation |
 | [Release Update Flow](./release-update-flow.md) | Core execution workflow for automated platform release updates | Architecture Guide |
+| [Post-Merge Flow](./post-merge-flow.md) | Cleanup of the update branch after a platform update pull request is merged | Workflow Documentation |
 
 ### Continuous Integration
 
@@ -49,6 +50,7 @@ This directory contains comprehensive documentation for the FOLIO platform CI/CD
 1. **[Release Scan](./release-scan.md)** - Understand how release branches are discovered and update workflows are orchestrated
 2. **[Release Update](./release-update.md)** - Learn about the reusable interface for triggering release updates
 3. **[Release Update Flow](./release-update-flow.md)** - Deep dive into the execution engine for platform updates
+4. **[Post-Merge Flow](./post-merge-flow.md)** - See what happens to the update branch after its pull request is merged
 
 ### For Continuous Integration
 
