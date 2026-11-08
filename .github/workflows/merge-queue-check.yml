@@ -1,0 +1,531 @@
+name: Merge Queue Check
+
+run-name: >-
+  Merge queue check • ${{ inputs.base_branch }} • ${{ inputs.repo_name }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo_owner:
+        description: 'Repository owner'
+        required: true
+        type: string
+      repo_name:
+        description: 'Repository name'
+        required: true
+        type: string
+      head_sha:
+        description: 'Head commit SHA of the merge group'
+        required: true
+        type: string
+      base_branch:
+        description: 'Target branch of the merge group'
+        required: true
+        type: string
+      head_branch:
+        description: 'Merge group ref without refs/heads/ (gh-readonly-queue/<base>/pr-<n>-<base sha>)'
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+env:
+  GH_TOKEN: ${{ github.token }}
+  REPO_OWNER: ${{ inputs.repo_owner }}
+  REPO_NAME: ${{ inputs.repo_name }}
+  HEAD_SHA: ${{ inputs.head_sha }}
+  BASE_BRANCH: ${{ inputs.base_branch }}
+  HEAD_BRANCH: ${{ inputs.head_branch }}
+  CHECK_NAME: 'eureka-ci/release-platform-validation'
+  PLATFORM_DESCRIPTOR_FILE: 'platform-descriptor.json'
+  NODE_VERSION: '22'
+  FOLIO_NPM_REGISTRY: 'https://repository.folio.org/repository/npm-folio/'
+  RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+jobs:
+  create-check-run:
+    name: Create Check Run
+    runs-on: ubuntu-latest
+    outputs:
+      check_run_id: ${{ steps.create-check.outputs.check_run_id }}
+      pr_number: ${{ steps.create-check.outputs.pr_number }}
+    steps:
+      - name: Print Input Parameters
+        run: |
+          echo "::group::Workflow Inputs"
+          echo "repo_owner: $REPO_OWNER"
+          echo "repo_name: $REPO_NAME"
+          echo "head_sha: $HEAD_SHA"
+          echo "base_branch: $BASE_BRANCH"
+          echo "head_branch: $HEAD_BRANCH"
+          echo "::endgroup::"
+
+      - name: Generate App Token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.EUREKA_CI_APP_ID }}
+          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+          owner: ${{ env.REPO_OWNER }}
+          repositories: ${{ env.REPO_NAME }}
+
+      - name: Create Check Run
+        id: create-check
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ steps.app-token.outputs.token }}
+          script: |
+            const { REPO_OWNER, REPO_NAME, HEAD_SHA, BASE_BRANCH, HEAD_BRANCH, CHECK_NAME, RUN_URL } = process.env;
+            const match = /\/pr-(\d+)-[0-9a-f]+$/.exec(HEAD_BRANCH || '');
+            const prNumber = match ? match[1] : '';
+            const subject = prNumber ? `PR #${prNumber}` : 'merge group';
+
+            const { data: checkRun } = await github.rest.checks.create({
+              owner: REPO_OWNER,
+              repo: REPO_NAME,
+              name: CHECK_NAME,
+              head_sha: HEAD_SHA,
+              status: 'in_progress',
+              started_at: new Date().toISOString(),
+              output: {
+                title: 'Merge Queue Verification',
+                summary: `Starting platform verification of ${subject} into ${BASE_BRANCH}...`
+              },
+              details_url: RUN_URL
+            });
+
+            console.log(`Created check run with ID: ${checkRun.id}`);
+            core.setOutput('check_run_id', checkRun.id);
+            core.setOutput('pr_number', prNumber);
+
+  pre-check:
+    name: Pre-Check Configuration
+    needs: create-check-run
+    runs-on: ubuntu-latest
+    outputs:
+      status: ${{ steps.validate.outputs.status }}
+      message: ${{ steps.validate.outputs.message }}
+      branch_entry: ${{ steps.validate.outputs.branch_entry }}
+    steps:
+      - name: Get Update Configuration
+        id: get-config
+        uses: folio-org/kitfox-github/.github/actions/get-update-config@master
+        with:
+          repo: ${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}
+          branch: master
+          github_token: ${{ env.GH_TOKEN }}
+
+      - name: Validate Configuration
+        id: validate
+        env:
+          CONFIG_EXISTS: ${{ steps.get-config.outputs.config_exists }}
+          ENABLED: ${{ steps.get-config.outputs.enabled }}
+          RELEASE_BRANCHES: ${{ steps.get-config.outputs.branches }}
+          BRANCH_CONFIG: ${{ steps.get-config.outputs.branch_config }}
+        run: |
+          not_configured() {
+            echo "status=not_configured" >> "$GITHUB_OUTPUT"
+            echo "message=$1" >> "$GITHUB_OUTPUT"
+            echo "::error::$1; the merge group is rejected"
+            exit 0
+          }
+
+          [[ "$CONFIG_EXISTS" == "true" ]] || not_configured "Configuration file .github/update-config.yml not found"
+          [[ "$ENABLED" == "true" ]] || not_configured "Updates are disabled in configuration"
+
+          BRANCH_EXISTS=$(echo "$RELEASE_BRANCHES" | jq -r ".[] | select(. == \"$BASE_BRANCH\")" 2>/dev/null)
+          [[ -n "$BRANCH_EXISTS" ]] || not_configured "Target branch $BASE_BRANCH is not configured"
+
+          BRANCH_ENTRY=$(echo "$BRANCH_CONFIG" | jq -c ".[] | select(.branch == \"$BASE_BRANCH\")")
+          NEED_PR=$(echo "$BRANCH_ENTRY" | jq -r ".need_pr // false")
+          [[ "$NEED_PR" == "true" ]] || not_configured "Branch $BASE_BRANCH is not configured for PR-based updates"
+
+          echo "status=success" >> "$GITHUB_OUTPUT"
+          echo "message=Configuration validation passed" >> "$GITHUB_OUTPUT"
+          echo "branch_entry=$BRANCH_ENTRY" >> "$GITHUB_OUTPUT"
+          echo "::notice::Configuration validation successful for branch $BASE_BRANCH"
+
+      - name: Checkout Repository
+        if: steps.validate.outputs.status == 'success'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}
+          ref: ${{ env.HEAD_SHA }}
+          token: ${{ env.GH_TOKEN }}
+
+      - name: Upload Platform Descriptor
+        if: steps.validate.outputs.status == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: platform-descriptor
+          path: ./${{ env.PLATFORM_DESCRIPTOR_FILE }}
+          retention-days: 1
+
+  validate-platform:
+    name: Validate Platform
+    needs: [create-check-run, pre-check]
+    if: needs.pre-check.outputs.status == 'success'
+    runs-on: ubuntu-latest
+    outputs:
+      validation_passed: ${{ steps.validate.outputs.validation_passed }}
+      failure_reason: ${{ steps.validate.outputs.failure_reason }}
+    steps:
+      - name: Generate App Token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.EUREKA_CI_APP_ID }}
+          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+          owner: ${{ env.REPO_OWNER }}
+          repositories: ${{ env.REPO_NAME }}
+
+      - name: Update Check Run - Validating
+        uses: actions/github-script@v7
+        env:
+          CHECK_RUN_ID: ${{ needs.create-check-run.outputs.check_run_id }}
+        with:
+          github-token: ${{ steps.app-token.outputs.token }}
+          script: |
+            await github.rest.checks.update({
+              owner: process.env.REPO_OWNER,
+              repo: process.env.REPO_NAME,
+              check_run_id: Number(process.env.CHECK_RUN_ID),
+              status: 'in_progress',
+              output: {
+                title: 'Merge Queue Verification',
+                summary: 'Step 1/2: Validating platform descriptors and dependencies...'
+              }
+            });
+
+      - name: Validate Platform
+        id: validate
+        uses: folio-org/platform-lsp/.github/actions/validate-platform@master
+        with:
+          platform_descriptor_artifact_name: 'platform-descriptor'
+          far_url: ${{ vars.FAR_URL }}
+
+  build-stripes:
+    name: Compile Stripes UI
+    needs: [create-check-run, pre-check, validate-platform]
+    if: needs.validate-platform.outputs.validation_passed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}
+          ref: ${{ env.HEAD_SHA }}
+          token: ${{ env.GH_TOKEN }}
+
+      - name: Generate App Token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.EUREKA_CI_APP_ID }}
+          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+          owner: ${{ env.REPO_OWNER }}
+          repositories: ${{ env.REPO_NAME }}
+
+      - name: Update Check Run - Compiling stripes (UI)
+        uses: actions/github-script@v7
+        env:
+          CHECK_RUN_ID: ${{ needs.create-check-run.outputs.check_run_id }}
+        with:
+          github-token: ${{ steps.app-token.outputs.token }}
+          script: |
+            await github.rest.checks.update({
+              owner: process.env.REPO_OWNER,
+              repo: process.env.REPO_NAME,
+              check_run_id: Number(process.env.CHECK_RUN_ID),
+              status: 'in_progress',
+              output: {
+                title: 'Merge Queue Verification',
+                summary: 'Step 2/2: Compiling stripes (UI)...'
+              }
+            });
+
+      - name: Install Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          check-latest: true
+
+      - name: Set FOLIO NPM registry
+        run: yarn config set @folio:registry "$FOLIO_NPM_REGISTRY"
+
+      - name: Check if lockfile should be frozen
+        id: check-yarn-lock
+        run: echo install-args=$(test -f yarn.lock && echo --frozen-lockfile) | tee -a "$GITHUB_OUTPUT"
+
+      - name: Install dependencies
+        run: yarn install ${{ steps.check-yarn-lock.outputs.install-args }} --ignore-scripts --non-interactive
+
+      - name: List installed FOLIO package versions
+        run: yarn list --pattern @folio
+
+  finalize-check-run:
+    name: Finalize Check Run
+    needs: [create-check-run, pre-check, validate-platform, build-stripes]
+    if: always() && needs.create-check-run.outputs.check_run_id != ''
+    runs-on: ubuntu-latest
+    outputs:
+      conclusion: ${{ steps.finalize.outputs.conclusion }}
+      summary: ${{ steps.finalize.outputs.summary }}
+    steps:
+      - name: Generate App Token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.EUREKA_CI_APP_ID }}
+          private-key: ${{ secrets.EUREKA_CI_APP_KEY }}
+          owner: ${{ env.REPO_OWNER }}
+          repositories: ${{ env.REPO_NAME }}
+
+      - name: Finalize Check Run
+        id: finalize
+        uses: actions/github-script@v7
+        env:
+          CHECK_RUN_ID: ${{ needs.create-check-run.outputs.check_run_id }}
+          PR_NUMBER: ${{ needs.create-check-run.outputs.pr_number }}
+          PRE_CHECK_RESULT: ${{ needs.pre-check.result }}
+          PRE_CHECK_STATUS: ${{ needs.pre-check.outputs.status }}
+          PRE_CHECK_MESSAGE: ${{ needs.pre-check.outputs.message }}
+          VALIDATE_RESULT: ${{ needs.validate-platform.result }}
+          VALIDATION_PASSED: ${{ needs.validate-platform.outputs.validation_passed }}
+          FAILURE_REASON: ${{ needs.validate-platform.outputs.failure_reason }}
+          STRIPES_RESULT: ${{ needs.build-stripes.result }}
+        with:
+          github-token: ${{ steps.app-token.outputs.token }}
+          script: |
+            const env = process.env;
+            const results = [env.PRE_CHECK_RESULT, env.VALIDATE_RESULT, env.STRIPES_RESULT];
+            let conclusion = 'failure';
+            let title = 'Verification Failed';
+            let summary;
+
+            if (results.includes('cancelled')) {
+              conclusion = 'cancelled';
+              title = 'Verification Cancelled';
+              summary = 'The merge queue check was cancelled before it completed.';
+            } else if (env.PRE_CHECK_RESULT !== 'success') {
+              summary = 'The update configuration could not be read. Check the workflow logs for details.';
+            } else if (env.PRE_CHECK_STATUS !== 'success') {
+              title = 'Branch Not Configured';
+              summary = `${env.PRE_CHECK_MESSAGE || 'Configuration validation failed'}. A merge group on this branch is not validated, so it is rejected.`;
+            } else if (env.VALIDATION_PASSED !== 'true') {
+              summary = env.FAILURE_REASON || 'Platform verification failed. Check the logs for details.';
+            } else if (env.STRIPES_RESULT === 'success') {
+              conclusion = 'success';
+              title = 'All Checks Passed';
+              summary = 'Platform verification and Stripes compilation completed successfully.';
+            } else if (env.STRIPES_RESULT === 'failure') {
+              summary = 'Stripes compilation failed. Check build logs for details.';
+            } else {
+              summary = `Stripes compilation did not complete (${env.STRIPES_RESULT || 'unknown'}).`;
+            }
+
+            const pr = env.PR_NUMBER
+              ? `[#${env.PR_NUMBER}](${env.GITHUB_SERVER_URL}/${env.REPO_OWNER}/${env.REPO_NAME}/pull/${env.PR_NUMBER})`
+              : 'unknown';
+            const text = [
+              '## Merge Queue Verification Results',
+              '',
+              `**Target branch:** \`${env.BASE_BRANCH}\``,
+              `**Merge group:** \`${env.HEAD_BRANCH || 'unknown'}\``,
+              `**Commit:** \`${env.HEAD_SHA}\``,
+              `**Pull request:** ${pr}`,
+              '',
+              '### Configuration Check',
+              `- **Status:** ${env.PRE_CHECK_STATUS || env.PRE_CHECK_RESULT}`,
+              `- **Message:** ${env.PRE_CHECK_MESSAGE || 'No message'}`,
+              '',
+              '### Platform Validation',
+              `- **Status:** ${env.VALIDATION_PASSED === 'true' ? 'Passed' : env.VALIDATE_RESULT === 'skipped' ? 'Skipped' : 'Failed'}`,
+              '',
+              '### Stripes Compilation',
+              `- **Status:** ${env.STRIPES_RESULT}`,
+              '',
+              '### Workflow Run',
+              `- **Run URL:** ${env.RUN_URL}`
+            ].join('\n');
+
+            await github.rest.checks.update({
+              owner: env.REPO_OWNER,
+              repo: env.REPO_NAME,
+              check_run_id: Number(env.CHECK_RUN_ID),
+              status: 'completed',
+              conclusion,
+              completed_at: new Date().toISOString(),
+              output: { title, summary, text },
+              details_url: env.RUN_URL
+            });
+
+            console.log(`Check run ${env.CHECK_RUN_ID} completed: ${conclusion} (${summary})`);
+            core.setOutput('conclusion', conclusion);
+            core.setOutput('summary', summary);
+
+  notify:
+    name: Send Notifications
+    needs: [create-check-run, finalize-check-run]
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    env:
+      STATUS_TEXT: ${{ needs.finalize-check-run.outputs.conclusion == 'success' && 'passed' || 'failed' }}
+    steps:
+      - name: Build Notification
+        id: build
+        env:
+          PR_NUMBER: ${{ needs.create-check-run.outputs.pr_number }}
+          CONCLUSION: ${{ needs.finalize-check-run.outputs.conclusion }}
+          SUMMARY: ${{ needs.finalize-check-run.outputs.summary || 'The check run could not be created or finalized. See the run logs.' }}
+        run: |
+          REPO_URL="https://github.com/$REPO_OWNER/$REPO_NAME"
+          TITLE_BLOCK=$(jq -nc --arg text "*$REPO_NAME merge queue check $STATUS_TEXT <$RUN_URL|#${{ github.run_number }}>*" \
+            '{type: "section", text: {type: "mrkdwn", text: $text}}')
+          ATTACHMENT=$(jq -nc \
+            --arg color "$([[ "$CONCLUSION" == "success" ]] && echo good || echo danger)" \
+            --arg branch "<$REPO_URL/tree/$BASE_BRANCH|$BASE_BRANCH>" \
+            --arg pr "$([[ -n "$PR_NUMBER" ]] && echo "<$REPO_URL/pull/$PR_NUMBER|#$PR_NUMBER>" || echo unknown)" \
+            --arg commit "<$REPO_URL/commit/$HEAD_SHA|$HEAD_SHA>" \
+            --arg reason "$SUMMARY" \
+            --argjson failed "$([[ "$CONCLUSION" == "success" ]] && echo false || echo true)" \
+            '{color: $color, footer: "Eureka CI/CD", fields: ([
+              {title: "Target branch", value: $branch, short: true},
+              {title: "PR Number", value: $pr, short: true},
+              {title: "Commit", value: $commit, short: false}
+            ] + (if $failed then [{title: "Failure Reason", value: $reason, short: false}] else [] end))}')
+          echo "title_block=$TITLE_BLOCK" >> "$GITHUB_OUTPUT"
+          echo "attachment=$ATTACHMENT" >> "$GITHUB_OUTPUT"
+
+      - name: Send to Team Channel
+        if: vars.SLACK_NOTIF_CHANNEL != ''
+        continue-on-error: true
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+          errors: false
+          payload: |
+            {
+              "channel": "${{ vars.SLACK_NOTIF_CHANNEL }}",
+              "text": "${{ env.REPO_NAME }} merge queue check ${{ env.STATUS_TEXT }}",
+              "blocks": [
+                ${{ steps.build.outputs.title_block }}
+              ],
+              "attachments": [
+                ${{ steps.build.outputs.attachment }}
+              ]
+            }
+
+      - name: Send to General Channel
+        if: vars.GENERAL_SLACK_NOTIF_CHANNEL != ''
+        continue-on-error: true
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.EUREKA_CI_SLACK_BOT_TOKEN }}
+          errors: false
+          payload: |
+            {
+              "channel": "${{ vars.GENERAL_SLACK_NOTIF_CHANNEL }}",
+              "text": "${{ env.REPO_NAME }} merge queue check ${{ env.STATUS_TEXT }}",
+              "blocks": [
+                ${{ steps.build.outputs.title_block }}
+              ],
+              "attachments": [
+                ${{ steps.build.outputs.attachment }}
+              ]
+            }
+
+  summarize:
+    name: Workflow Summary
+    needs: [create-check-run, pre-check, validate-platform, build-stripes, finalize-check-run, notify]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Workflow Summary
+        env:
+          CREATE_RESULT: ${{ needs.create-check-run.result }}
+          PR_NUMBER: ${{ needs.create-check-run.outputs.pr_number }}
+          PRE_CHECK_RESULT: ${{ needs.pre-check.result }}
+          PRE_CHECK_STATUS: ${{ needs.pre-check.outputs.status }}
+          PRE_CHECK_MESSAGE: ${{ needs.pre-check.outputs.message }}
+          VALIDATE_RESULT: ${{ needs.validate-platform.result }}
+          VALIDATION_PASSED: ${{ needs.validate-platform.outputs.validation_passed }}
+          FAILURE_REASON: ${{ needs.validate-platform.outputs.failure_reason }}
+          STRIPES_RESULT: ${{ needs.build-stripes.result }}
+          FINALIZE_RESULT: ${{ needs.finalize-check-run.result }}
+          CONCLUSION: ${{ needs.finalize-check-run.outputs.conclusion }}
+          CHECK_SUMMARY: ${{ needs.finalize-check-run.outputs.summary }}
+          NOTIFY_RESULT: ${{ needs.notify.result }}
+        run: |
+          REPO_URL="https://github.com/$REPO_OWNER/$REPO_NAME"
+          {
+            echo "### Merge Queue Check Summary"
+            echo ""
+            echo "**Repository:** \`$REPO_OWNER/$REPO_NAME\`"
+            echo "**Target Branch:** \`$BASE_BRANCH\`"
+            echo "**Merge Group:** \`${HEAD_BRANCH:-unknown}\`"
+            if [[ -n "$PR_NUMBER" ]]; then
+              echo "**PR:** [#$PR_NUMBER]($REPO_URL/pull/$PR_NUMBER)"
+            fi
+            echo "**Commit:** [\`$HEAD_SHA\`]($REPO_URL/commit/$HEAD_SHA)"
+            echo ""
+
+            echo "### Check Run \`$CHECK_NAME\`"
+            echo ""
+            if [[ "$CREATE_RESULT" != "success" ]]; then
+              echo "**Not created** ($CREATE_RESULT): the merge group gets no result and waits for the queue timeout"
+            elif [[ "$FINALIZE_RESULT" != "success" ]]; then
+              echo "**Not finalized** ($FINALIZE_RESULT): the check run stays in progress until the queue timeout"
+            else
+              echo "**Conclusion:** $CONCLUSION"
+              echo "- $CHECK_SUMMARY"
+            fi
+            echo ""
+
+            echo "### Pre-Check Status"
+            echo ""
+            if [[ "$PRE_CHECK_RESULT" != "success" ]]; then
+              echo "**Pre-Check:** $PRE_CHECK_RESULT"
+            elif [[ "$PRE_CHECK_STATUS" == "success" ]]; then
+              echo "**Pre-Check:** Passed"
+            else
+              echo "**Pre-Check:** Branch not configured"
+              echo "- **Reason:** $PRE_CHECK_MESSAGE"
+            fi
+            echo ""
+
+            echo "### Platform Validation"
+            echo ""
+            if [[ "$VALIDATION_PASSED" == "true" ]]; then
+              echo "**Platform Validation:** Passed"
+            elif [[ "$VALIDATE_RESULT" == "skipped" ]]; then
+              echo "**Platform Validation:** Skipped"
+            else
+              echo "**Platform Validation:** Failed ($VALIDATE_RESULT)"
+              if [[ -n "$FAILURE_REASON" ]]; then
+                echo "- **Failure Reason:** $FAILURE_REASON"
+              fi
+            fi
+            echo ""
+
+            echo "### Stripes Build"
+            echo ""
+            echo "**Stripes Build:** $STRIPES_RESULT"
+            if [[ "$STRIPES_RESULT" == "success" ]]; then
+              echo "- **Node Version:** $NODE_VERSION"
+              echo "- **Registry:** $FOLIO_NPM_REGISTRY"
+            fi
+            echo ""
+
+            echo "### Notifications"
+            echo ""
+            echo "**Slack:** $NOTIFY_RESULT"
+            echo ""
+            echo "---"
+            echo ""
+            echo "**Workflow Run:** [#${{ github.run_number }}]($RUN_URL)"
+          } >> "$GITHUB_STEP_SUMMARY"
