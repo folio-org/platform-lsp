@@ -12,6 +12,7 @@ This directory contains comprehensive documentation for the FOLIO platform CI/CD
 | [Release Preparation](./release-preparation.md) | Orchestrated preparation of release branches across the entire FOLIO ecosystem | Architecture Guide |
 | [Release Package Flow](./release-package-flow.md) | Workflow for validating, packaging, and uploading platform release artifacts | Workflow Documentation |
 | [Release PR Check](./release-pr-check.md) | Validation of platform release pull requests including descriptors and dependencies | Workflow Documentation |
+| [Merge Queue Check](./merge-queue-check.md) | Validation of merge groups of platform release branches under the same required check | Workflow Documentation |
 
 ### Release Update Workflows
 
@@ -59,6 +60,7 @@ This directory contains comprehensive documentation for the FOLIO platform CI/CD
 ### For Release Quality Assurance
 
 1. **[Release PR Check](./release-pr-check.md)** - Learn about automated validation for release pull requests
+2. **[Merge Queue Check](./merge-queue-check.md)** - See how a queued pull request is validated before GitHub merges it
 
 ---
 
