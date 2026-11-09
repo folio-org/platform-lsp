@@ -114,6 +114,9 @@ on:
       notification_outcome:
         description: 'Outcome of notifications (success/failure/skipped)'
         value: ${{ jobs.notify.outputs.notification_outcome }}
+      merge_queue_locked:
+        description: 'Whether the run was skipped because the update PR is in a merge queue (true/false)'
+        value: ${{ jobs.update.outputs.merge_queue_locked }}
 
 permissions:
   contents: write
@@ -150,7 +153,7 @@ jobs:
   notify:
     name: Send Notifications
     needs: [update]
-    if: always() && !cancelled() && (needs.update.outputs.updated == 'true' || needs.update.result == 'failure')
+    if: always() && !cancelled() && (needs.update.outputs.updated == 'true' || needs.update.result == 'failure' || needs.update.outputs.merge_queue_locked == 'true')
     runs-on: ubuntu-latest
     outputs:
       team_notif_status: ${{ steps.notify-team.outcome }}
@@ -182,7 +185,7 @@ jobs:
         if: inputs.enable_team_notification == true && steps.get-team-channel.outputs.team_channel != ''
         uses: folio-org/platform-lsp/.github/actions/release-update-notification@master
         with:
-          notification_type: ${{ needs.update.result == 'success' && 'success' || 'failure' }}
+          notification_type: ${{ needs.update.outputs.merge_queue_locked == 'true' && 'skipped' || needs.update.result == 'success' && 'success' || 'failure' }}
           release_branch: ${{ inputs.release_branch }}
           update_branch: ${{ inputs.update_branch }}
           workflow_status: ${{ needs.update.outputs.workflow_status }}
@@ -195,6 +198,8 @@ jobs:
           pr_created: ${{ needs.update.outputs.pr_created }}
           pr_url: ${{ needs.update.outputs.pr_url }}
           pr_number: ${{ needs.update.outputs.pr_number }}
+          merge_queue_state: ${{ needs.update.outputs.merge_queue_state }}
+          merge_queue_position: ${{ needs.update.outputs.merge_queue_position }}
           commit_sha: ${{ needs.update.outputs.commit_sha || github.sha }}
           failure_reason: ${{ needs.update.outputs.failure_reason }}
           dry_run: ${{ inputs.dry_run }}
@@ -209,7 +214,7 @@ jobs:
         if: vars.GENERAL_SLACK_NOTIF_CHANNEL != ''
         uses: folio-org/platform-lsp/.github/actions/release-update-notification@master
         with:
-          notification_type: ${{ needs.update.result == 'success' && 'success' || 'failure' }}
+          notification_type: ${{ needs.update.outputs.merge_queue_locked == 'true' && 'skipped' || needs.update.result == 'success' && 'success' || 'failure' }}
           release_branch: ${{ inputs.release_branch }}
           update_branch: ${{ inputs.update_branch }}
           workflow_status: ${{ needs.update.outputs.workflow_status }}
@@ -222,6 +227,8 @@ jobs:
           pr_created: ${{ needs.update.outputs.pr_created }}
           pr_url: ${{ needs.update.outputs.pr_url }}
           pr_number: ${{ needs.update.outputs.pr_number }}
+          merge_queue_state: ${{ needs.update.outputs.merge_queue_state }}
+          merge_queue_position: ${{ needs.update.outputs.merge_queue_position }}
           commit_sha: ${{ needs.update.outputs.commit_sha || github.sha }}
           failure_reason: ${{ needs.update.outputs.failure_reason }}
           dry_run: ${{ inputs.dry_run }}
@@ -251,6 +258,9 @@ jobs:
       PR_URL: ${{ needs.update.outputs.pr_url }}
       PR_NUMBER: ${{ needs.update.outputs.pr_number }}
       FAILURE_REASON: ${{ needs.update.outputs.failure_reason }}
+      MERGE_QUEUE_LOCKED: ${{ needs.update.outputs.merge_queue_locked }}
+      MERGE_QUEUE_STATE: ${{ needs.update.outputs.merge_queue_state }}
+      MERGE_QUEUE_POSITION: ${{ needs.update.outputs.merge_queue_position }}
       TEAM_NOTIF_STATUS: ${{ needs.notify.outputs.team_notif_status || 'skipped' }}
       TEAM_NOTIF_STATUS_ICON: >-
         ${{
@@ -276,7 +286,15 @@ jobs:
             echo "**Workflow Run:** [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
             echo ""
 
-            if [[ "$UPDATE_RESULT" == "success" ]]; then
+            if [[ "$UPDATE_RESULT" == "success" && "$MERGE_QUEUE_LOCKED" == "true" ]]; then
+              echo "### Skipped: Update PR In Merge Queue"
+              echo ""
+              echo "Update PR [#$PR_NUMBER]($PR_URL) is in a merge-queue check on \`$RELEASE_BRANCH\`" \
+                "(state: ${MERGE_QUEUE_STATE:-unknown}, position: ${MERGE_QUEUE_POSITION:-unknown})."
+              echo "GitHub locks \`$UPDATE_BRANCH\` until the queue entry clears, so nothing was pushed in this run."
+              echo "The next run after the entry clears applies the accumulated updates."
+              echo ""
+            elif [[ "$UPDATE_RESULT" == "success" ]]; then
               if [[ "$UPDATED" == "true" ]]; then
                 echo "### ✅ Update Successful"
                 echo ""

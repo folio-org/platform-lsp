@@ -52,6 +52,10 @@ flowchart LR
 | `scan_result` | string | Job result (`success`/`failure`/`skipped`) |
 | `workflow_status` | string | Overall workflow status |
 | `failure_reason` | string | Reason for failure if any |
+| `merge_queue_locked` | boolean | Whether the run was skipped because the update PR is in a merge queue |
+
+A run skipped this way succeeds. It sends a `skipped` notification, warning-coloured and naming the
+branch, the queued PR and its queue entry, and its run summary states the reason.
 
 ### Update Information
 | Output | Type | Description |
