@@ -29,7 +29,7 @@ branches:
       enabled: true
       name: "FOLIO Snapshot Version"
       description: "FOLIO Snapshot LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system."
-      need_pr: false
+      need_pr: true
       pre_release: "only"
       descriptor_build_offset: "100200000000000"
       yarn_lock_update: "always"
@@ -40,8 +40,7 @@ branches:
         poll_interval_seconds: 60
         timeout_minutes: 280
       ruleset:
-        # Enable only with need_pr: true (RANCHER-3118); the merge queue rule rejects the hourly direct commit
-        enabled: false
+        enabled: true
         merge_queue:
           enabled: true
           check_response_timeout_minutes: 300
