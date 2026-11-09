@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+### Changed - RANCHER-3118: snapshot updates are delivered through the update PR and the nightly deployment gate
+
+`snapshot` moves from direct commits to the PR cadence. Hourly updates accumulate on `version-update/snapshot`
+behind one update PR; Jenkins `promoteDailySnapshotEureka` adds it to the merge queue on weekday nights, and it
+merges only when the deployment of the merge group succeeds.
+
+- `.github/update-config.yml`: `snapshot.need_pr: true` and `snapshot.ruleset.enabled: true`, in one commit.
+  `branch-ruleset-automation` creates `snapshot-eureka-ci` with the single required check
+  `eureka-ci/release-platform-validation` and a merge queue of one entry and a 300-minute check timeout.
+- The inline `validate-platform` job of the direct-commit cadence no longer runs on `snapshot`; the PR is
+  validated by `release-pr-check.yml` and the merge group by `merge-queue-check.yml`.
+- `docs/snapshot-flow.md` describes the PR cadence and how to fall back to direct commits.
+
 ### Added - RANCHER-3118: deployment gate for merge groups, and a clean skip while an update PR is queued
 
 A branch can make a deployment part of its merge-queue check. On `snapshot` the nightly environment deployment

@@ -136,37 +136,41 @@ Since RANCHER-3069 the snapshot branch runs through the **same** chain as the re
 ```yaml
   - snapshot:
       enabled: true
-      need_pr: false                              # commit straight to the branch
+      need_pr: true                               # updates accumulate on version-update/snapshot behind one PR
       pre_release: "only"                         # declared, unused — see below
       descriptor_build_offset: "100200000000000"  # + run number = platform build number
       yarn_lock_update: "always"                  # every scan: delete yarn.lock, yarn install, commit the lock if it changed
       deployment:
-        enabled: true                             # merge groups deploy; inert while need_pr is false
+        enabled: true                             # every merge group is deployed before it merges
         jenkins_job: "folioScheduledProvisioning/createDailySnapshotEureka"
         ref_parameter: "PLATFORM_BRANCH"
         poll_interval_seconds: 60
         timeout_minutes: 280
       ruleset:
-        enabled: false                            # no ruleset while the branch takes direct commits
+        enabled: true                             # snapshot-eureka-ci: one required check, merge queue
         merge_queue:
-          enabled: true                           # staged for RANCHER-3118, inert until enabled: true
+          enabled: true
           check_response_timeout_minutes: 300
           max_entries_to_build: 1
           max_entries_to_merge: 1
 ```
 
-The `ruleset` block is declared but switched off, and the two settings are coupled. `need_pr: true` without
-the ruleset opens an update PR that nothing merges, so the snapshot feed freezes. The ruleset without
-`need_pr: true` gates nothing: `commit-and-push-changes` pushes as the Eureka CI App, which is the ruleset's
-bypass actor, so the hourly direct commit would land past the merge queue. RANCHER-3118 flips both in one
-commit, at which point delivery moves from a direct commit to an update PR gated by the nightly deployment.
-The queue parameters are sized for that: one entry at a time, and a 300-minute check timeout against a
+`need_pr` and `ruleset.enabled` are coupled and only ever change together. `need_pr: true` without the ruleset
+opens an update PR that nothing merges, so the snapshot feed freezes. The ruleset without `need_pr: true` gates
+nothing: `commit-and-push-changes` pushes as the Eureka CI App, which is the ruleset's bypass actor, so the
+hourly direct commit would land past the merge queue. RANCHER-3118 switched both on in one commit. The queue
+parameters are sized for the deployment gate: one entry at a time, and a 300-minute check timeout against a
 deployment that runs about two hours.
+
+To fall back to direct commits, set both back to `false` in one commit: the hourly scan then commits straight to
+`snapshot` again, and `branch-ruleset-automation` disables `snapshot-eureka-ci`. Close the open update PR and
+delete `version-update/snapshot` as well: the direct-commit cadence ignores them, and a stale PR merged later
+would land over newer direct commits.
 
 #### Nightly deployment gate
 
-Once both are on, the hourly scan accumulates updates on `version-update/snapshot` behind one PR, and the
-night turns that PR into a deployment:
+The hourly scan accumulates updates on `version-update/snapshot` behind one PR, and the night turns that PR into
+a deployment:
 
 1. Jenkins `promoteDailySnapshotEureka` (weekdays at 04:00) adds the open update PR to the merge queue. With no
    open PR it deploys `snapshot` as it stands, so the environments still rotate on quiet nights.
@@ -191,10 +195,14 @@ The pre-release channel is **not** a branch setting: it is `preRelease` on each 
    - Eureka components: Docker Hub `folioci` tags — the namespace `preRelease: only` implies — newest by semver
    - Every entry declares `latest`, so there is no version window; see below
 2. **Platform Descriptor Update**: versions applied, and `version` set to `<stem>.<offset + run_number>`
-3. **Validation**: `validate-platform` fetches every application descriptor from FAR and posts them to `/applications/validate-descriptors`; a failure blocks the push
-4. **Stripes**: `package.json` is left alone — it carries deliberate `>=` floors — while `yarn install` refreshes `yarn.lock`
-5. **Delivery**: committed straight to `snapshot`, no update branch and no PR
-6. **Notification**: Slack, with the descriptor diff and a commit link rather than a PR link
+3. **Stripes**: `package.json` is left alone — it carries deliberate `>=` floors — while `yarn install` refreshes `yarn.lock`
+4. **Delivery**: committed to `version-update/snapshot` and carried by the open update PR, created on the first run
+   with changes. A run that finds the PR in the merge queue is skipped
+5. **Validation**: `release-pr-check.yml` validates the PR on every push; `merge-queue-check.yml` validates and
+   deploys the merge group at night
+6. **Merge**: GitHub merges the PR when the deployment succeeds; `post-merge-flow.yml` deletes the update branch,
+   and the next run with changes opens a new PR
+7. **Notification**: Slack, with the descriptor diff and a PR link
 
 The snapshot branch carries a `platform-descriptor.template.json` like every other branch the flow processes — a missing template is an error, not a fallback. Every entry looks like this:
 
