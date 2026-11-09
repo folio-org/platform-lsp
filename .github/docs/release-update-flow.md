@@ -171,12 +171,15 @@ flowchart TD
 |--------|------|-------------|
 | `updated` | boolean | Whether the platform was updated: descriptor or `package.json` UI dependencies (either bumps the version) |
 | `pr_created` | boolean | Whether PR was created or updated |
-| `pr_url` | string | URL of created/updated PR |
-| `pr_number` | string | PR number if created or updated |
+| `pr_url` | string | URL of the update PR: created, updated or already open (`pr_created` tells which) |
+| `pr_number` | string | Number of the update PR: created, updated or already open |
 | `workflow_status` | string | Overall status (`success`/`failure`) |
 | `failure_reason` | string | Failure reason if applicable |
 | `new_version` | string | New platform version after update |
 | `updates_cnt` | string | Count of updated modules/components |
+| `merge_queue_locked` | boolean | Whether the run was skipped because the update PR is in a merge queue |
+| `merge_queue_state` | string | Merge queue entry state, when known |
+| `merge_queue_position` | string | Merge queue position, when known |
 
 ## 🔄 Job Descriptions
 
@@ -186,9 +189,11 @@ flowchart TD
 - Checks if update branch already exists
 - Searches for existing PR between update and release branches
 - Outputs source branch (update branch if exists, otherwise release branch)
+- Reports whether the PR is in the release branch's merge queue
 - Used to ensure idempotent updates
 
-**Outputs**: `source_branch`, `update_branch_exists`, `pr_exists`, `pr_number`, `pr_url`
+**Outputs**: `source_branch`, `update_branch_exists`, `pr_exists`, `pr_number`, `pr_url`, `in_merge_queue`,
+`merge_queue_state`, `merge_queue_position`
 
 ### 2. update-platform-descriptor
 **Updates platform-descriptor.json with latest component versions**
@@ -240,6 +245,8 @@ flowchart TD
 - Creates commit with detailed message including update count (`Update platform to <version>.` when the descriptor or `package.json` changed, `Update yarn.lock.` for a lock-only commit)
 - Pushes to update branch (creates branch if needed)
 - Uses GitHub App token for authentication
+- With `need_pr`, a push rejected because the update PR entered the merge queue after `determine-source-branch`
+  ran ends the job successfully with `merge_queue_locked=true` instead of failing it
 
 **Condition**: Runs if the descriptor or `package.json` changed, or if only `yarn.lock` changed on a `yarn_lock_update: always` branch
 
@@ -255,7 +262,24 @@ flowchart TD
 
 **Outputs**: `pr_created`, `pr_updated`, `pr_number`, `pr_url`, `successful_reviewers`, `failed_reviewers`
 
-**Condition**: Runs if the descriptor or `package.json` changed OR update branch exists without PR
+**Condition**: Runs if the descriptor or `package.json` changed OR update branch exists without PR, and only
+when `commit-changes` neither failed nor skipped its push
+
+## ⏸️ A branch whose update PR is in the merge queue
+
+While an update PR is in a merge-queue check, GitHub locks its head branch: a push to it is rejected until the
+entry clears. On `snapshot` the check is a deployment of about two hours, so the hourly scan meets the lock
+about twice a night.
+
+- **Detected before pushing.** `determine-source-branch` reports `in_merge_queue`. When it is `true`,
+  `update-platform-descriptor` is skipped and every later job skips with it, because nothing could be delivered.
+  The run completes as a success with `merge_queue_locked=true`.
+- **Race backstop.** The PR can be enqueued between that check and the push. `commit-changes` then turns the
+  rejected push into the same skip instead of a failure, and `manage-pr` does not run.
+- **Nothing is lost.** The resolvers read live sources on every run, so the first run after the entry clears
+  applies everything that accumulated.
+
+`release-update.yml` reports the skip as a warning-coloured Slack notification and in the run summary.
 
 ## 🚀 Usage
 

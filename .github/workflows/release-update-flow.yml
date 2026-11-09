@@ -87,8 +87,8 @@ on:
         description: 'Whether a PR was created or updated'
         value: ${{ jobs.manage-pr.outputs.pr_created == 'true' || jobs.manage-pr.outputs.pr_updated == 'true' }}
       pr_url:
-        description: 'PR URL if created or updated'
-        value: ${{ jobs.manage-pr.outputs.pr_url }}
+        description: 'URL of the update PR: created, updated or already open'
+        value: ${{ jobs.manage-pr.outputs.pr_url || jobs.determine-source-branch.outputs.pr_url }}
       workflow_status:
         description: 'Overall workflow status (success/failure)'
         value: ${{ (jobs.update-platform-descriptor.result == 'failure' || jobs.validate-platform.result == 'failure' || jobs.commit-changes.result == 'failure' || jobs.manage-pr.result == 'failure') && 'failure' || 'success' }}
@@ -102,8 +102,8 @@ on:
         description: 'Number of modules/components updated'
         value: ${{ jobs.generate-reports.outputs.updates_cnt }}
       pr_number:
-        description: 'PR number if created or updated'
-        value: ${{ jobs.manage-pr.outputs.pr_number }}
+        description: 'Number of the update PR: created, updated or already open'
+        value: ${{ jobs.manage-pr.outputs.pr_number || jobs.determine-source-branch.outputs.pr_number }}
       updates_markdown:
         description: 'Formatted markdown for applications/components updates'
         value: ${{ jobs.generate-reports.outputs.updates_markdown }}
@@ -119,6 +119,15 @@ on:
       not_found_ui_report:
         description: 'JSON object of UI modules not found in package.json'
         value: ${{ jobs.update-stripes-components.outputs.not_found_ui_report }}
+      merge_queue_locked:
+        description: 'Whether the run was skipped because the update PR is in a merge queue (true/false)'
+        value: ${{ jobs.determine-source-branch.outputs.in_merge_queue == 'true' || jobs.commit-changes.outputs.merge_queue_locked == 'true' }}
+      merge_queue_state:
+        description: 'Merge queue entry state of the update PR, when known'
+        value: ${{ jobs.determine-source-branch.outputs.merge_queue_state }}
+      merge_queue_position:
+        description: 'Merge queue position of the update PR, when known'
+        value: ${{ jobs.determine-source-branch.outputs.merge_queue_position }}
 
 permissions:
   contents: write
@@ -152,6 +161,9 @@ jobs:
       pr_exists: ${{ inputs.need_pr && steps.check-status.outputs.pr_exists || 'false' }}
       pr_number: ${{ inputs.need_pr && steps.check-status.outputs.pr_number || '' }}
       pr_url: ${{ inputs.need_pr && steps.check-status.outputs.pr_url || '' }}
+      in_merge_queue: ${{ inputs.need_pr && steps.check-status.outputs.in_merge_queue || 'false' }}
+      merge_queue_state: ${{ inputs.need_pr && steps.check-status.outputs.merge_queue_state || '' }}
+      merge_queue_position: ${{ inputs.need_pr && steps.check-status.outputs.merge_queue_position || '' }}
     steps:
       - name: 'Check branch and PR status'
         id: check-status
@@ -162,6 +174,11 @@ jobs:
           release_branch: ${{ inputs.release_branch }}
           update_branch: ${{ inputs.update_branch }}
 
+      - name: 'Report merge-queue skip'
+        if: steps.check-status.outputs.in_merge_queue == 'true'
+        run: |
+          echo "::warning::PR #${{ steps.check-status.outputs.pr_number }} is in the merge queue of '${{ inputs.release_branch }}', so '${{ inputs.update_branch }}' is locked; this run is skipped and the next one after the queue entry clears picks up the updates"
+
       - name: 'Report direct-commit cadence'
         if: ${{ !inputs.need_pr }}
         run: echo "::notice::need_pr is false; updates commit directly to '${{ inputs.release_branch }}'"
@@ -169,6 +186,7 @@ jobs:
   update-platform-descriptor:
     name: 'Update Platform Descriptor'
     needs: determine-source-branch
+    if: needs.determine-source-branch.outputs.in_merge_queue != 'true'
     runs-on: ubuntu-latest
     outputs:
       updated: ${{ steps.calculate-new-version.outputs.updated }}
@@ -655,6 +673,7 @@ jobs:
       dry_run: ${{ inputs.dry_run }}
       use_github_app: true
       source_branch: ${{ needs.determine-source-branch.outputs.source_branch }}
+      skip_on_merge_queue_lock: ${{ inputs.need_pr }}
     secrets: inherit
 
   manage-pr:
@@ -667,6 +686,8 @@ jobs:
       !cancelled() &&
       needs.update-platform-descriptor.result == 'success' &&
       needs.update-platform-descriptor.outputs.template_ready == 'true' &&
+      needs.commit-changes.result != 'failure' &&
+      needs.commit-changes.outputs.merge_queue_locked != 'true' &&
       (
         needs.update-platform-descriptor.outputs.updated == 'true' ||
         needs.update-stripes-components.outputs.package_updated == 'true' ||
