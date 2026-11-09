@@ -33,6 +33,12 @@ branches:
       pre_release: "only"
       descriptor_build_offset: "100200000000000"
       yarn_lock_update: "always"
+      deployment:
+        enabled: true
+        jenkins_job: "folioScheduledProvisioning/createDailySnapshotEureka"
+        ref_parameter: "PLATFORM_BRANCH"
+        poll_interval_seconds: 60
+        timeout_minutes: 280
       ruleset:
         # Enable only with need_pr: true (RANCHER-3118); the merge queue rule rejects the hourly direct commit
         enabled: false

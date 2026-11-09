@@ -46,6 +46,9 @@ This composite action encapsulates the logic for determining the source branch t
 | `pr_exists` | Whether a PR exists from update_branch to release_branch | `true` or `false` |
 | `pr_number` | PR number if found, empty string otherwise | `123` or `` |
 | `pr_url` | PR URL if found, empty string otherwise | `https://github.com/org/repo/pull/123` or `` |
+| `in_merge_queue` | Whether the PR is in the merge queue of `release_branch` | `true` or `false` |
+| `merge_queue_state` | Merge queue entry state if queued, empty otherwise | `AWAITING_CHECKS` or `` |
+| `merge_queue_position` | Merge queue position if queued, empty otherwise | `1` or `` |
 
 ## Logic Flow
 
@@ -54,7 +57,10 @@ This composite action encapsulates the logic for determining the source branch t
    - If `update_branch` exists → use it as `source_branch`
    - If `update_branch` does not exist → use `release_branch` as `source_branch`
 3. **Check for PR:** If `update_branch` exists, search for an open PR from `update_branch` to `release_branch`
-4. **Return Status:** Output all status information for use by downstream jobs
+4. **Check the merge queue:** If a PR exists, read `isInMergeQueue` and `mergeQueueEntry` through GraphQL. GitHub
+   rejects pushes to the head branch of a queued PR, so a caller uses `in_merge_queue` to skip its push. A failed
+   lookup logs a warning and reports `false`
+5. **Return Status:** Output all status information for use by downstream jobs
 
 ## Requirements
 
