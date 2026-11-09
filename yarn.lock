@@ -1906,15 +1906,15 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/linked-data@^2.0.5":
-  version "2.0.4099000000002739"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.4099000000002739.tgz#4f60c6a8318d48178b5494345111a60d8e9e0543"
-  integrity sha512-oF+fLUlWLyff13bKJjHn2sMHa+SbnlKD1n4lenqU9G5Lb0HvCpMtAE2tUt0vS1dwUa0L0K38djFIHDIOd8TnAg==
+  version "2.0.4099000000002742"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.4099000000002742.tgz#00d4b09a25590fdcf9ff68472ec30836b875a6d6"
+  integrity sha512-5Mxerwp4JNiBWNCi7yCD6+AAEb7WWyAqIt7xcpASEiwQDaj1Qylwi/26VeiLjLjQO+TJ/M+KL1220gG5w1AGrg==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
     "@dnd-kit/sortable" "^10.0.0"
     "@dnd-kit/utilities" "^3.2.2"
-    "@tanstack/react-query" "^5.105.0"
+    "@tanstack/react-query" "^5.106.0"
     classnames "^2.5.1"
     focus-trap-react "^12.0.3"
     lodash "^4.17.21"
@@ -2054,9 +2054,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/organizations@>=1.0.0":
-  version "7.1.1099000000000260"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/organizations/-/organizations-7.1.1099000000000260.tgz#934a7bece432e37ec6fe681f090621f7da52171a"
-  integrity sha512-OI75rsd0W4nTaNX5Ujk8LLXhaIQ7Qlj+JMoT3ZDbxxzv9FrwYKPmIvU5Ksx3w8NcH6ptj+vDCARYJ0GD0I1dKQ==
+  version "7.1.1099000000000265"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/organizations/-/organizations-7.1.1099000000000265.tgz#0e17239a7bb1e8f565064a551f5585f773eceac5"
+  integrity sha512-LwSnkX9kS0vuFAYtZQqDsPhyrVWkbs/ctrWfgTC6SGODQqAMiai49l3GD52Lr39WJCY9SfeFcWP9y5+Go2e6vw==
   dependencies:
     "@folio/plugin-find-organization" "^6.0.0"
     "@folio/stripes-acq-components" "~7.2.0"
@@ -2684,9 +2684,9 @@
     zustand "^4.1.1"
 
 "@folio/stripes-leipzig-components@^1.1.0":
-  version "1.1.1099000000000236"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-leipzig-components/-/stripes-leipzig-components-1.1.1099000000000236.tgz#cd4db8514392fff37578e5e6ca50b0441da042be"
-  integrity sha512-sw5xJEJg6HpyOaxKPw3YjbNL0eY/WXfiMkDUvqaP9QQbsq12EJLfgjW4Xw6PznDS3BJW3YCRWyCLZYkR4+zwTQ==
+  version "1.1.1099000000000245"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-leipzig-components/-/stripes-leipzig-components-1.1.1099000000000245.tgz#ae71437452e62dfd7db85f1e23170729f8de8c8c"
+  integrity sha512-XNme4/8AQGt7FLx9Oh2ltewqV9j2MexCaY6pCqhEhVCloN9Lp8jNBYT8bKRRf4tT/314pafqOq4sU7s1C2eKuA==
   dependencies:
     final-form-arrays "^3.0.2"
     lodash "^4.17.4"
@@ -3741,7 +3741,7 @@
   resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.107.1.tgz#cd1f9952b4d623e66349931df631b287d9c4a3fe"
   integrity sha512-PSyAik11oQBEVOiVy5hjZWHmoUqOXqK1WYy4v55mcxozEfKaQgpUMsgnXhWjuESzSht8JfzqMS1m6M/9CpNgvg==
 
-"@tanstack/react-query@^5.105.0":
+"@tanstack/react-query@^5.106.0":
   version "5.107.1"
   resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.107.1.tgz#277e4b8c4d6d0496047ef15afacbc8c091ce0532"
   integrity sha512-udCOOLp3ZAheUrIHLCe+ZZge6nr2ZUrGMSWcCuXsjY1Bf2JeeE09oxst97PILiCY6N8xo/7bIo3Hvz13zh06FA==
