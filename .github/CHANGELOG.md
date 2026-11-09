@@ -6,6 +6,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+### Added - RANCHER-3118: deployment gate for merge groups, and a clean skip while an update PR is queued
+
+A branch can make a deployment part of its merge-queue check. On `snapshot` the nightly environment deployment
+then decides whether the update PR merges: green merges it, red or timed out ejects it and leaves `snapshot`
+at the last deployed state.
+
+- `merge-queue-check.yml` gains a `deploy` job, taken when the branch's `deployment.enabled` is true. It runs
+  `deployment.jenkins_job` with `deployment.ref_parameter` set to the merge group ref, through kitfox-github's
+  `trigger-jenkins-job`, and its result is folded into the single `eureka-ci/release-platform-validation`
+  check. Job, parameter and timeouts come from `.github/update-config.yml`; the workflow holds no branch names.
+- `pre-check` concludes the check as `failure` ("Deployment Misconfigured") before anything runs when an
+  enabled deployment lacks `jenkins_job` or `ref_parameter`, when `timeout_minutes` + 10 is not below the
+  queue's `check_response_timeout_minutes`, or when `JENKINS_URL`, `JENKINS_USER` or `JENKINS_API_TOKEN` is
+  not set. The deployment timeout stops the Jenkins build and fails the check; the job timeout sits 10 minutes
+  above it and the queue timeout above that, so the check always reports a conclusion.
+- `snapshot` declares the `deployment` block (`createDailySnapshotEureka`, `PLATFORM_BRANCH`, 280 minutes). It
+  stays inert until `need_pr` is true, since `pre-check` rejects a branch without PR-based updates first.
+- `check-branch-and-pr-status` reports `in_merge_queue`, `merge_queue_state` and `merge_queue_position`.
+  `release-update-flow.yml` skips the whole update when the PR is queued, because GitHub locks the update branch
+  until the entry clears. A push rejected by that lock after the check is turned into the same skip by
+  `commit-and-push-changes` (`skip_on_merge_queue_lock`). The run succeeds with `merge_queue_locked=true`.
+- `pr_number` and `pr_url` of `release-update-flow.yml` fall back to the already open update PR, so a skipped
+  run still names it.
+- `manage-pr` no longer runs after a failed or skipped push.
+- `release-update.yml` and `release-update-notification` report the skip as a warning-coloured `skipped`
+  notification with the PR and its queue entry, and in the run summary.
+
+Requires the kitfox-github change for `get-update-config` (`deployment`), `trigger-jenkins-job` and
+`commit-and-push-changes` (`skip_on_merge_queue_lock`) on `master`, and the `JENKINS_URL` variable plus the
+`JENKINS_USER` and `JENKINS_API_TOKEN` secrets.
+
 ### Fixed - RANCHER-3209: a UI-only update bumps the platform version and is announced in Slack
 
 A run that changed only `package.json` and `yarn.lock` kept the platform version, so its PR carried the
