@@ -1,7 +1,7 @@
 {
   "name": "FOLIO LSP",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2027-SNAPSHOT.100200000003448",
+  "version": "R1-2027-SNAPSHOT.100200000003449",
   "eureka-components": [
     {
       "name": "folio-kong",
@@ -32,17 +32,17 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000012017"
+        "version": "2.2.0-SNAPSHOT.100200000012030"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000011350"
+        "version": "3.4.0-SNAPSHOT.100200000011363"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000012566"
+        "version": "2.1.0-SNAPSHOT.100200000012583"
       },
       {
         "name": "app-agreements",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000004150"
+        "version": "1.1.0-SNAPSHOT.100200000004177"
       },
       {
         "name": "app-dcb",
@@ -90,7 +90,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000012668"
+        "version": "1.1.0-SNAPSHOT.100200000012681"
       },
       {
         "name": "app-erm-usage",
@@ -126,11 +126,11 @@
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000011771"
+        "version": "3.1.0-SNAPSHOT.100200000011799"
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000010824"
+        "version": "1.1.0-SNAPSHOT.100200000010852"
       },
       {
         "name": "app-mosaic",
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-quick-marc",
-        "version": "1.1.0-SNAPSHOT.100200000006800"
+        "version": "1.1.0-SNAPSHOT.100200000006829"
       },
       {
         "name": "app-reading-room",
@@ -178,7 +178,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000012376"
+        "version": "1.1.0-SNAPSHOT.100200000012392"
       },
       {
         "name": "app-service-interaction",
