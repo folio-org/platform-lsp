@@ -4,7 +4,7 @@ author: 'FOLIO DevOps'
 
 inputs:
   notification_type:
-    description: 'Type of notification (success/failure)'
+    description: 'Type of notification (success/failure/skipped)'
     required: true
   release_branch:
     description: 'Release branch name'
@@ -70,6 +70,14 @@ inputs:
     description: 'Whether this is a dry run'
     required: false
     default: 'false'
+  merge_queue_state:
+    description: 'Merge queue entry state of the update PR, when known'
+    required: false
+    default: ''
+  merge_queue_position:
+    description: 'Merge queue position of the update PR, when known'
+    required: false
+    default: ''
   workflow_run_id:
     description: 'GitHub workflow run ID'
     required: true
@@ -203,6 +211,10 @@ runs:
   - name: Prepare notification metadata
     id: prepare-metadata
     shell: bash
+    env:
+      UPDATE_BRANCH: ${{ inputs.update_branch }}
+      MERGE_QUEUE_STATE: ${{ inputs.merge_queue_state }}
+      MERGE_QUEUE_POSITION: ${{ inputs.merge_queue_position }}
     run: |
       set -euo pipefail
 
@@ -211,6 +223,16 @@ runs:
         echo "color=good" >> "$GITHUB_OUTPUT"
         echo "emoji=✅" >> "$GITHUB_OUTPUT"
         echo "status_text=updated" >> "$GITHUB_OUTPUT"
+      elif [[ "${{ inputs.notification_type }}" == "skipped" ]]; then
+        echo "color=warning" >> "$GITHUB_OUTPUT"
+        echo "emoji=" >> "$GITHUB_OUTPUT"
+        echo "status_text=skipped" >> "$GITHUB_OUTPUT"
+        if [[ -n "$MERGE_QUEUE_STATE" ]]; then
+          echo "queue_entry=${MERGE_QUEUE_STATE}, position ${MERGE_QUEUE_POSITION:-unknown}" >> "$GITHUB_OUTPUT"
+        else
+          echo "queue_entry=queued (push rejected)" >> "$GITHUB_OUTPUT"
+        fi
+        echo "skip_text=The update PR is in a merge-queue check, so GitHub keeps \`$UPDATE_BRANCH\` locked until the entry clears. Nothing was pushed in this run; the next run after the entry clears applies the accumulated updates." >> "$GITHUB_OUTPUT"
       else
         echo "color=danger" >> "$GITHUB_OUTPUT"
         echo "emoji=❌" >> "$GITHUB_OUTPUT"
@@ -239,7 +261,7 @@ runs:
               "type": "section",
               "text": {
                 "type": "mrkdwn",
-                "text": "*${{ steps.prepare-metadata.outputs.emoji }} ${{ steps.prepare-metadata.outputs.title_prefix }}${{ inputs.repo }} `${{ inputs.release_branch }}` ${{ steps.prepare-metadata.outputs.status_text }}* <https://github.com/${{ inputs.repo }}/actions/runs/${{ inputs.workflow_run_id }}|#${{ inputs.workflow_run_number }}>"
+                "text": "*${{ steps.prepare-metadata.outputs.emoji != '' && format('{0} ', steps.prepare-metadata.outputs.emoji) || '' }}${{ steps.prepare-metadata.outputs.title_prefix }}${{ inputs.repo }} `${{ inputs.release_branch }}` ${{ steps.prepare-metadata.outputs.status_text }}* <https://github.com/${{ inputs.repo }}/actions/runs/${{ inputs.workflow_run_id }}|#${{ inputs.workflow_run_number }}>"
               }
             },
             {
@@ -262,6 +284,7 @@ runs:
             ${{ inputs.notification_type == 'success' && inputs.pr_created != 'true' && format('{{"color": "{0}", "title": "Release Update Summary", "fields": [{{"title": "New Version", "value": "{1}", "short": true}}, {{"title": "Updated", "value": "{2}", "short": true}}, {{"title": "Commit", "value": "<https://github.com/{3}/commit/{4}|{4}>", "short": true}}]}}', steps.prepare-metadata.outputs.color, inputs.new_version, inputs.updates_cnt, inputs.repo, inputs.commit_sha) || '' }}
             ${{ inputs.notification_type == 'success' && inputs.pr_created != 'true' && steps.format-descriptor-updates.outputs.has_applications == 'true' && format(',{{"color": "{0}", "mrkdwn_in": ["text"], "title": "Applications Updated", "text": {1}}}', steps.prepare-metadata.outputs.color, toJSON(steps.format-descriptor-updates.outputs.applications)) || '' }}
             ${{ inputs.notification_type == 'success' && inputs.pr_created != 'true' && steps.format-descriptor-updates.outputs.has_components == 'true' && format(',{{"color": "{0}", "mrkdwn_in": ["text"], "title": "Components Updated", "text": {1}}}', steps.prepare-metadata.outputs.color, toJSON(steps.format-descriptor-updates.outputs.components)) || '' }}
+            ${{ inputs.notification_type == 'skipped' && format('{{"color": "{0}", "title": "Update Skipped: PR In Merge Queue", "mrkdwn_in": ["text"], "text": {1}, "fields": [{{"title": "Branch", "value": "<https://github.com/{2}/tree/{3}|{3}>", "short": true}}, {{"title": "Pull Request", "value": "{4}", "short": true}}, {{"title": "Queue Entry", "value": "{5}", "short": true}}]}}', steps.prepare-metadata.outputs.color, toJSON(steps.prepare-metadata.outputs.skip_text), inputs.repo, inputs.release_branch, inputs.pr_url != '' && format('<{0}|#{1}>', inputs.pr_url, inputs.pr_number) || 'unknown', steps.prepare-metadata.outputs.queue_entry) || '' }}
             ${{ inputs.notification_type == 'failure' && format('{{"color": "{0}", "title": "Update Failed", "fields": [{{"title": "Branch", "value": "{1}", "short": true}}, {{"title": "Failure Reason", "value": "{2}", "short": false}}]}}', steps.prepare-metadata.outputs.color, inputs.release_branch, inputs.failure_reason || 'Check workflow logs for details') || '' }}
           ]
         }
