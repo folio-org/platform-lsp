@@ -140,6 +140,12 @@ Since RANCHER-3069 the snapshot branch runs through the **same** chain as the re
       pre_release: "only"                         # declared, unused — see below
       descriptor_build_offset: "100200000000000"  # + run number = platform build number
       yarn_lock_update: "always"                  # every scan: delete yarn.lock, yarn install, commit the lock if it changed
+      deployment:
+        enabled: true                             # merge groups deploy; inert while need_pr is false
+        jenkins_job: "folioScheduledProvisioning/createDailySnapshotEureka"
+        ref_parameter: "PLATFORM_BRANCH"
+        poll_interval_seconds: 60
+        timeout_minutes: 280
       ruleset:
         enabled: false                            # no ruleset while the branch takes direct commits
         merge_queue:
@@ -149,12 +155,30 @@ Since RANCHER-3069 the snapshot branch runs through the **same** chain as the re
           max_entries_to_merge: 1
 ```
 
-The `ruleset` block is declared but switched off, and the two settings are coupled. A merge-queue rule
-rejects direct pushes, so an active ruleset would stop the hourly commit dead — `release-update-flow` pushes
-under `GITHUB_TOKEN`, which is not the configured bypass actor. RANCHER-3118 flips `need_pr: true` and
-`ruleset.enabled: true` in one commit, at which point delivery moves from a direct commit to an update PR
-gated by the nightly deployment. The queue parameters are sized for that: one entry at a time, and a
-300-minute check timeout against a deployment that runs about two hours.
+The `ruleset` block is declared but switched off, and the two settings are coupled. `need_pr: true` without
+the ruleset opens an update PR that nothing merges, so the snapshot feed freezes. The ruleset without
+`need_pr: true` gates nothing: `commit-and-push-changes` pushes as the Eureka CI App, which is the ruleset's
+bypass actor, so the hourly direct commit would land past the merge queue. RANCHER-3118 flips both in one
+commit, at which point delivery moves from a direct commit to an update PR gated by the nightly deployment.
+The queue parameters are sized for that: one entry at a time, and a 300-minute check timeout against a
+deployment that runs about two hours.
+
+#### Nightly deployment gate
+
+Once both are on, the hourly scan accumulates updates on `version-update/snapshot` behind one PR, and the
+night turns that PR into a deployment:
+
+1. Jenkins `promoteDailySnapshotEureka` (weekdays at 04:00) adds the open update PR to the merge queue. With no
+   open PR it deploys `snapshot` as it stands, so the environments still rotate on quiet nights.
+2. GitHub builds the immutable `gh-readonly-queue/snapshot/pr-<n>-<base sha>` ref and dispatches
+   `merge-queue-check.yml`, which validates the platform, compiles Stripes and then, because of the `deployment`
+   block, runs `createDailySnapshotEureka` with `PLATFORM_BRANCH` set to that ref.
+3. A green deployment merges the PR. A red or timed-out one ejects it: `snapshot` stays at the last deployed
+   state and the PR keeps accumulating for the next night.
+
+While the PR is queued GitHub locks `version-update/snapshot`, and the hourly runs in that window complete as
+skipped with a warning instead of pushing. See
+[release-update-flow.md](./release-update-flow.md#️-a-branch-whose-update-pr-is-in-the-merge-queue).
 
 The branch inherits the global `required_checks` — a single context, `eureka-ci/release-platform-validation`,
 published by `release-pr-check.yml` on a pull request and by the merge-group workflow on a merge group.
