@@ -41,6 +41,15 @@ outputs:
   pr_url:
     description: 'PR URL if found'
     value: ${{ steps.check.outputs.pr_url }}
+  in_merge_queue:
+    description: 'Whether the PR is in the merge queue of the release branch, which locks the update branch'
+    value: ${{ steps.check.outputs.in_merge_queue }}
+  merge_queue_state:
+    description: 'Merge queue entry state (QUEUED, AWAITING_CHECKS, MERGEABLE, UNMERGEABLE, LOCKED) if queued'
+    value: ${{ steps.check.outputs.merge_queue_state }}
+  merge_queue_position:
+    description: 'Position of the PR in the merge queue if queued'
+    value: ${{ steps.check.outputs.merge_queue_position }}
 
 runs:
   using: 'composite'
@@ -57,6 +66,12 @@ runs:
     run: |
       set -euo pipefail
       IFS=$'\n\t'
+
+      {
+        echo "in_merge_queue=false"
+        echo "merge_queue_state="
+        echo "merge_queue_position="
+      } >> "$GITHUB_OUTPUT"
 
       # Validate inputs
       if [[ ! "$REPO" =~ ^[a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+$ ]]; then
@@ -94,6 +109,29 @@ runs:
           echo "pr_exists=true" >> "$GITHUB_OUTPUT"
           echo "pr_number=$pr_number" >> "$GITHUB_OUTPUT"
           echo "pr_url=$pr_url" >> "$GITHUB_OUTPUT"
+
+          # A queued PR's head branch is locked by GitHub until the queue entry clears
+          if queue_json=$(gh api graphql \
+            -f query='query($owner: String!, $name: String!, $number: Int!) {
+              repository(owner: $owner, name: $name) {
+                pullRequest(number: $number) { isInMergeQueue mergeQueueEntry { state position } }
+              }
+            }' \
+            -f owner="${REPO%%/*}" -f name="${REPO##*/}" -F number="$pr_number" \
+            --jq '.data.repository.pullRequest'); then
+            if [[ "$(echo "$queue_json" | jq -r '.isInMergeQueue')" == "true" ]]; then
+              queue_state=$(echo "$queue_json" | jq -r '.mergeQueueEntry.state // ""')
+              queue_position=$(echo "$queue_json" | jq -r '.mergeQueueEntry.position // ""')
+              echo "::notice::PR #$pr_number is in the merge queue of $RELEASE_BRANCH (state $queue_state, position $queue_position)"
+              {
+                echo "in_merge_queue=true"
+                echo "merge_queue_state=$queue_state"
+                echo "merge_queue_position=$queue_position"
+              } >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo "::warning::Could not read the merge queue state of PR #$pr_number; assuming it is not queued"
+          fi
         else
           echo "::notice::No existing PR found"
           echo "pr_exists=false" >> "$GITHUB_OUTPUT"
