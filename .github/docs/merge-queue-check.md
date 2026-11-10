@@ -179,6 +179,10 @@ request goes out.
 
 The check never concludes as `neutral` or `skipped`: GitHub treats both as passing a required check.
 
+Every check run update retries up to 5 times, 404 included, because GitHub can answer 404 for a check run in
+the first seconds after it is created. The interim status updates (`Validating`, `Compiling`, `Deploying`) do
+not fail their job.
+
 **Outputs**:
 - `conclusion`: Conclusion of the check run
 - `summary`: Summary of the check run

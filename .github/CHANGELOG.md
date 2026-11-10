@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+### Fixed - RANCHER-3228: check runs never conclude as neutral, and survive a 404 right after creation
+
+A required check accepts `neutral`, so a validation that did not finish must fail the check instead.
+
+- `release-pr-check.yml`: a cancelled Stripes build or a missing validation result concludes `failure`
+  (`Verification Incomplete`) with the Re-run action, instead of `neutral`.
+- `release-pr-check.yml`, `merge-queue-check.yml`: check run updates retry 404 up to 5 times. The interim
+  status updates run with `continue-on-error`, so they no longer fail the validation, build or deploy job.
+
 ### Changed - RANCHER-3118: snapshot updates are delivered through the update PR and the nightly deployment gate
 
 `snapshot` moves from direct commits to the PR cadence. Hourly updates accumulate on `version-update/snapshot`

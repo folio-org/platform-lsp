@@ -123,9 +123,10 @@ flowchart TD
 Mints its own App token first, like every job that touches the check run.
 
 **Conclusion Logic**:
-- `failure`: Validation or build failed
+- `failure`: Validation or build failed, the build was cancelled, or a step produced no result
 - `success`: Both validation and build passed
-- `neutral`: Build cancelled or incomplete
+
+The check never concludes as `neutral`: GitHub treats it as passing a required check. Every check run update retries up to 5 times, 404 included, because GitHub can answer 404 for a check run in the first seconds after it is created; the interim status updates do not fail their job.
 
 **Output Sections**:
 - Configuration check status
@@ -261,8 +262,7 @@ synchronized or marked ready for review, and on `check_suite` / `check_run` even
 ## Exit Codes
 
 - **Success**: All validations and builds passed
-- **Failure**: Validation failed or build failed
-- **Neutral**: Build cancelled or workflow incomplete
+- **Failure**: Validation failed, build failed or cancelled, or the workflow did not complete
 
 ## Related Documentation
 
