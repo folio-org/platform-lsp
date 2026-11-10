@@ -1418,9 +1418,9 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/bulk-edit@>=1.0.0":
-  version "5.1.1099000000001200"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/bulk-edit/-/bulk-edit-5.1.1099000000001200.tgz#3375fdb1638b3c04ad256a59d49ff2af9d608910"
-  integrity sha512-cc0zPhzQUpAK4blrsPsz6jymUwjN7VsKZpBFSmuroo3VkuvWUER+gTM+gm82jSldApDy6zYa4+ZBDysvPdu9qA==
+  version "5.1.1099000000001207"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/bulk-edit/-/bulk-edit-5.1.1099000000001207.tgz#d68ea1899b98c5d94cac3a42e5765c5ccaa1d904"
+  integrity sha512-JQeAYTe0XaE65ZSyqbwdWZpu88CLjkpZsUEYr6N5VrNiTrO3BA0GIxznnzvWcARXOJiaBpApe3dDQeFqSoSrTg==
   dependencies:
     "@folio/plugin-query-builder" "^3.0.0"
     "@folio/stripes-acq-components" "^7.0.0"
@@ -2267,9 +2267,9 @@
     prop-types "^15.6.0"
 
 "@folio/plugin-query-builder@>=1.0.0", "@folio/plugin-query-builder@^3.0.0":
-  version "3.0.2099000000001713"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-query-builder/-/plugin-query-builder-3.0.2099000000001713.tgz#13adfbb2b1c71ac10134fda97823feec7a45d50e"
-  integrity sha512-rmXRvrQ4prQaPuSAe7IpXgji8bWV9LPwID1aRG9bIeu3opMTxXdTbHyiaWf/jOCHlFRIJTLprWomibndv21NhA==
+  version "3.0.2099000000001718"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-query-builder/-/plugin-query-builder-3.0.2099000000001718.tgz#c9a23b018d584f6882db65cdd0f51d72bfed4c20"
+  integrity sha512-JBOnkwhG9i4xP7/yaL5k0DLHT/XQ5h+KPgozkZ1qeDoP3yt4kmBjZXQ/dLEl+xgmpufnYlXfyCQ3aIr7HGyXKw==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
@@ -5491,9 +5491,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.464:
-  version "1.5.479"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.479.tgz#879b8b0c0447b3d9beec2954eae77e7271844784"
-  integrity sha512-uAJdJQ7vHa4TvPfzt1TOqoRgHmav5gwmqHMPLxBH6m8Cbj5R9/z/rygTOQiZ8pe5g0ZAEogga1bP6HoKcOzx/Q==
+  version "1.5.480"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.480.tgz#4f8bd2842e66efabb4cf41b0136267dc9a57cd5f"
+  integrity sha512-7WLDoWPKc+YiH37GshK2sLagySSbcQk3K2s6swA3x+BtWUH8BtphwL+YqarJQi09Sbf+LOCIW75RQooN2PqXsA==
 
 emoji-regex@^10.3.0:
   version "10.6.0"
