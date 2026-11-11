@@ -9,6 +9,11 @@
       "preRelease": "only"
     },
     {
+      "name": "folio-apisix",
+      "version": "latest",
+      "preRelease": "only"
+    },
+    {
       "name": "folio-keycloak",
       "version": "latest",
       "preRelease": "only"
