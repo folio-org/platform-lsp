@@ -40,6 +40,7 @@ env:
   HEAD_BRANCH: ${{ inputs.head_branch }}
   CHECK_NAME: 'eureka-ci/release-platform-validation'
   PLATFORM_DESCRIPTOR_FILE: 'platform-descriptor.json'
+  DEPLOY_PATHS_REGEX: '^(platform-descriptor\.json|package\.json|yarn\.lock|stripes\.[a-z]+\.js)$'
   NODE_VERSION: '22'
   FOLIO_NPM_REGISTRY: 'https://repository.folio.org/repository/npm-folio/'
   RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -110,6 +111,7 @@ jobs:
       branch_entry: ${{ steps.validate.outputs.branch_entry }}
       deployment_enabled: ${{ steps.validate.outputs.deployment_enabled }}
       deployment: ${{ steps.validate.outputs.deployment }}
+      deployment_note: ${{ steps.validate.outputs.deployment_note }}
       deploy_job_timeout: ${{ steps.validate.outputs.deploy_job_timeout }}
       step_total: ${{ steps.validate.outputs.step_total }}
     steps:
@@ -154,6 +156,7 @@ jobs:
           DEPLOYMENT_ENABLED=$(echo "$DEPLOYMENT" | jq -r '.enabled == true')
           DEPLOY_JOB_TIMEOUT=10
           STEP_TOTAL=2
+          DEPLOYMENT_NOTE=""
 
           if [[ "$DEPLOYMENT_ENABLED" == "true" ]]; then
             JENKINS_JOB=$(echo "$DEPLOYMENT" | jq -r '.jenkins_job // ""')
@@ -171,8 +174,21 @@ jobs:
             [[ -n "$HEAD_BRANCH" ]] || misconfigured "No merge group ref was passed, so there is nothing to deploy"
             [[ -n "$JENKINS_URL" && "$JENKINS_CREDENTIALS_SET" == "true" ]] || \
               misconfigured "deployment is enabled for $BASE_BRANCH but vars.JENKINS_URL, secrets.JENKINS_USER or secrets.JENKINS_API_TOKEN is not set"
-            STEP_TOTAL=3
-            echo "::notice::Deployment enabled: $JENKINS_JOB with $REF_PARAMETER=$HEAD_BRANCH, timeout ${TIMEOUT}m"
+            [[ "$HEAD_BRANCH" =~ ^gh-readonly-queue/.+/pr-[0-9]+-([0-9a-f]{40})$ ]] || \
+              misconfigured "Merge group ref '$HEAD_BRANCH' carries no base commit, so the changed files cannot be resolved"
+            BASE_SHA="${BASH_REMATCH[1]}"
+            CHANGED_FILES=$(gh api "repos/$REPO_OWNER/$REPO_NAME/compare/$BASE_SHA...$HEAD_SHA" --jq '.files[].filename' 2>&1) || \
+              misconfigured "Changed files of the merge group could not be resolved ($BASE_SHA...$HEAD_SHA): ${CHANGED_FILES//$'\n'/ }"
+            PLATFORM_FILES=$(grep -E "$DEPLOY_PATHS_REGEX" <<< "$CHANGED_FILES" || true)
+
+            if [[ -z "$PLATFORM_FILES" ]]; then
+              DEPLOYMENT_ENABLED=false
+              DEPLOYMENT_NOTE="Deployment skipped: the merge group changes no platform files"
+              echo "::notice::$DEPLOYMENT_NOTE. Changed files: $(paste -sd, - <<< "$CHANGED_FILES")"
+            else
+              STEP_TOTAL=3
+              echo "::notice::Deployment enabled: $JENKINS_JOB with $REF_PARAMETER=$HEAD_BRANCH, timeout ${TIMEOUT}m. Platform files changed: $(paste -sd, - <<< "$PLATFORM_FILES")"
+            fi
           fi
 
           echo "status=success" >> "$GITHUB_OUTPUT"
@@ -180,6 +196,7 @@ jobs:
           echo "branch_entry=$BRANCH_ENTRY" >> "$GITHUB_OUTPUT"
           echo "deployment_enabled=$DEPLOYMENT_ENABLED" >> "$GITHUB_OUTPUT"
           echo "deployment=$DEPLOYMENT" >> "$GITHUB_OUTPUT"
+          echo "deployment_note=$DEPLOYMENT_NOTE" >> "$GITHUB_OUTPUT"
           echo "deploy_job_timeout=$DEPLOY_JOB_TIMEOUT" >> "$GITHUB_OUTPUT"
           echo "step_total=$STEP_TOTAL" >> "$GITHUB_OUTPUT"
           echo "::notice::Configuration validation successful for branch $BASE_BRANCH"
@@ -406,6 +423,7 @@ jobs:
           FAILURE_REASON: ${{ needs.validate-platform.outputs.failure_reason }}
           STRIPES_RESULT: ${{ needs.build-stripes.result }}
           DEPLOYMENT_ENABLED: ${{ needs.pre-check.outputs.deployment_enabled }}
+          DEPLOYMENT_NOTE: ${{ needs.pre-check.outputs.deployment_note }}
           DEPLOY_JOB_TIMEOUT: ${{ needs.pre-check.outputs.deploy_job_timeout }}
           DEPLOY_RESULT: ${{ needs.deploy.result }}
           DEPLOY_BUILD_URL: ${{ needs.deploy.outputs.build_url }}
@@ -444,7 +462,8 @@ jobs:
             } else if (!deploying) {
               conclusion = 'success';
               title = 'All Checks Passed';
-              summary = 'Platform verification and Stripes compilation completed successfully.';
+              summary = 'Platform verification and Stripes compilation completed successfully.'
+                + (env.DEPLOYMENT_NOTE ? ` ${env.DEPLOYMENT_NOTE}.` : '');
             } else if (env.DEPLOY_RESULT === 'success') {
               conclusion = 'success';
               title = 'All Checks Passed';
@@ -482,6 +501,10 @@ jobs:
                 '### Deployment',
                 `- **Status:** ${env.DEPLOY_JENKINS_RESULT || env.DEPLOY_RESULT || 'not started'}`,
                 `- **Jenkins build:** ${env.DEPLOY_BUILD_URL || 'not started'}`,
+                ''
+              ] : env.DEPLOYMENT_NOTE ? [
+                '### Deployment',
+                '- **Status:** skipped (no platform files changed)',
                 ''
               ] : []),
               '### Workflow Run',
@@ -597,6 +620,7 @@ jobs:
           FAILURE_REASON: ${{ needs.validate-platform.outputs.failure_reason }}
           STRIPES_RESULT: ${{ needs.build-stripes.result }}
           DEPLOYMENT_ENABLED: ${{ needs.pre-check.outputs.deployment_enabled }}
+          DEPLOYMENT_NOTE: ${{ needs.pre-check.outputs.deployment_note }}
           DEPLOY_RESULT: ${{ needs.deploy.result }}
           DEPLOY_BUILD_URL: ${{ needs.deploy.outputs.build_url }}
           DEPLOY_JENKINS_RESULT: ${{ needs.deploy.outputs.jenkins_result }}
@@ -679,6 +703,11 @@ jobs:
               if [[ -n "$DEPLOY_FAILURE_REASON" ]]; then
                 echo "- **Failure Reason:** $DEPLOY_FAILURE_REASON"
               fi
+              echo ""
+            elif [[ -n "$DEPLOYMENT_NOTE" ]]; then
+              echo "### Deployment"
+              echo ""
+              echo "**Deployment:** skipped (no platform files changed)"
               echo ""
             fi
 

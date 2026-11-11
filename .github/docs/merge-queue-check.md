@@ -11,6 +11,10 @@ A branch whose configuration carries an enabled `deployment` block is also deplo
 runs against the merge group ref, and its result is part of the same check. On `snapshot` this makes the nightly
 environment deployment the gate for the update PR.
 
+Only a merge group that changes the platform is deployed: one of the files matched by `DEPLOY_PATHS_REGEX`
+(`platform-descriptor.json`, `package.json`, `yarn.lock`, `stripes.*.js`). Any other merge group, for example one
+that changes only `platform-descriptor.template.json` or the CI files, is validated and built but not deployed.
+
 ## Triggers
 
 - **workflow_dispatch**: the only declared trigger.
@@ -75,8 +79,10 @@ merge queue.
 - `status`: `success`, `not_configured` or `misconfigured`
 - `message`: Validation message
 - `branch_entry`: The target branch's entry from `get-update-config` `branch_config`, as compact JSON
-- `deployment_enabled`: `true` when the branch's `deployment.enabled` is `true`
+- `deployment_enabled`: `true` when the branch's `deployment.enabled` is `true` and the merge group changes a
+  platform file
 - `deployment`: The branch's resolved `deployment` block, as compact JSON
+- `deployment_note`: Why a configured deployment is skipped, empty otherwise
 - `deploy_job_timeout`: `deployment.timeout_minutes` plus 10, the `timeout-minutes` of the `deploy` job
 - `step_total`: Number of steps reported in the check run (2, or 3 with a deployment)
 
@@ -91,6 +97,12 @@ merge queue.
 - `deployment.timeout_minutes` plus 10 is not below `ruleset.merge_queue.check_response_timeout_minutes`
 - No `head_branch` was passed, so there is no ref to deploy
 - `vars.JENKINS_URL`, `secrets.JENKINS_USER` or `secrets.JENKINS_API_TOKEN` is not set
+- `head_branch` does not end with the base commit (`pr-<n>-<base sha>`), or the changed files between the base
+  commit and `head_sha` cannot be read from the compare API
+
+**Changed files**: with a deployment configured, the job compares the base commit taken from `head_branch` with
+`head_sha`. When no changed file matches `DEPLOY_PATHS_REGEX`, `deployment_enabled` becomes `false` and
+`deployment_note` explains why; the changed files are listed in a notice.
 
 On `success` the job checks out `head_sha` and uploads `platform-descriptor.json` as the `platform-descriptor`
 artifact.
@@ -127,7 +139,8 @@ fails the install.
 **Responsibility**: Trigger the branch's `deployment.jenkins_job` with `deployment.ref_parameter` set to
 `head_branch`, the immutable merge group ref, and wait for the build to finish.
 
-**Runs**: When `build-stripes` succeeded and `deployment_enabled` is `true`
+**Runs**: When `build-stripes` succeeded and `deployment_enabled` is `true`, i.e. a deployment is configured and
+the merge group changes a platform file
 
 **Timeouts**: three layers, innermost first, so the check always reports a real conclusion:
 
@@ -168,6 +181,7 @@ request goes out.
 | Outcome | Conclusion |
 |---------|------------|
 | Validation and Stripes build passed, no deployment configured | `success` |
+| Validation and Stripes build passed, deployment skipped because no platform file changed | `success` |
 | Validation, Stripes build and deployment passed | `success` |
 | Target branch not configured | `failure` |
 | Deployment misconfigured | `failure` |
