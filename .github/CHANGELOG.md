@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+### Changed - RANCHER-3227: merge group deploys only when it changes platform files
+
+A pull request that does not change the platform no longer runs the environment deployment in the merge queue.
+
+- `merge-queue-check.yml`: with a deployment configured, `pre-check` compares the base commit of the merge group
+  ref with `head_sha` and deploys only when a file matched by `DEPLOY_PATHS_REGEX` changed
+  (`platform-descriptor.json`, `package.json`, `yarn.lock`, `stripes.*.js`). Otherwise the merge group is
+  validated and built, and the check concludes `success` with the deployment reported as skipped.
+- A merge group ref without a base commit, or a failed compare, rejects the merge group as misconfigured.
+- `docs/merge-queue-check.md` describes the changed-files gate.
+
 ### Fixed - RANCHER-3228: check runs never conclude as neutral, and survive a 404 right after creation
 
 A required check accepts `neutral`, so a validation that did not finish must fail the check instead.
