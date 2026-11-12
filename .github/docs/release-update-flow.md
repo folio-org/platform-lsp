@@ -323,6 +323,12 @@ jobs:
 | `ARTIFACT_NAME` | `platform-lsp-update-files` | Artifact name for file sharing |
 | `GH_TOKEN` | `${{ github.token }}` | GitHub CLI authentication |
 
+### Repository Variables
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `SYNC_APPLICATIONS_TO_FAR` | not set | `true` runs `Sync Application Descriptors to FAR` on `need_pr` branches. Off by default: application CI publishes the descriptors |
+
 ### Concurrency Control
 
 ```yaml
