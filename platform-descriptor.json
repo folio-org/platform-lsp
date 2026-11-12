@@ -1,7 +1,7 @@
 {
   "name": "FOLIO LSP",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2027-SNAPSHOT.100200000003459",
+  "version": "R1-2027-SNAPSHOT.100200000003464",
   "eureka-components": [
     {
       "name": "folio-kong",
@@ -21,7 +21,7 @@
     },
     {
       "name": "mgr-applications",
-      "version": "4.1.0-SNAPSHOT.2478"
+      "version": "4.1.0-SNAPSHOT.2486"
     },
     {
       "name": "mgr-tenants",
@@ -40,13 +40,13 @@
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000011367"
+        "version": "3.4.0-SNAPSHOT.100200000011373"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000012589"
+        "version": "2.1.0-SNAPSHOT.100200000012593"
       },
       {
         "name": "app-agreements",
@@ -58,11 +58,11 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "2.1.0-SNAPSHOT.100200000012038"
+        "version": "2.1.0-SNAPSHOT.100200000012042"
       },
       {
         "name": "app-consortia",
-        "version": "1.5.0-SNAPSHOT.100200000012826"
+        "version": "1.5.0-SNAPSHOT.100200000012852"
       },
       {
         "name": "app-consortia-manager",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.1.0-SNAPSHOT.100200000010483"
+        "version": "1.1.0-SNAPSHOT.100200000010658"
       },
       {
         "name": "app-data-import",
@@ -98,11 +98,11 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "3.1.0-SNAPSHOT.100200000012366"
+        "version": "3.1.0-SNAPSHOT.100200000012374"
       },
       {
         "name": "app-fqm",
-        "version": "2.1.0-SNAPSHOT.100200000012533"
+        "version": "2.1.0-SNAPSHOT.100200000012536"
       },
       {
         "name": "app-gobi",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000005274"
+        "version": "1.1.0-SNAPSHOT.100200000005275"
       },
       {
         "name": "app-licenses",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.2.0-SNAPSHOT.100200000012481"
+        "version": "1.2.0-SNAPSHOT.100200000012568"
       },
       {
         "name": "app-marc-migrations",
@@ -138,11 +138,11 @@
       },
       {
         "name": "app-mosaic",
-        "version": "1.2.0-SNAPSHOT.100200000012409"
+        "version": "1.2.0-SNAPSHOT.100200000012412"
       },
       {
         "name": "app-notification",
-        "version": "1.1.0-SNAPSHOT.100200000007827"
+        "version": "1.1.0-SNAPSHOT.100200000007859"
       },
       {
         "name": "app-oa",
