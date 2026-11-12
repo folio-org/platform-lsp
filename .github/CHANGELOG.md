@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+### Changed - RANCHER-3230: the hourly update no longer syncs application descriptors to FAR
+
+Application CI publishes the descriptors to FAR, so the sync took about 10 minutes per branch on every
+hourly run without adding anything.
+
+- `release-update-flow.yml`: `Sync Application Descriptors to FAR` runs only when the repository variable
+  `SYNC_APPLICATIONS_TO_FAR` is `true`. The variable is not set, so the step is skipped; setting it brings
+  the sync back without a code change. The `sync-applications-to-far` action is unchanged.
+- `docs/release-update-flow.md`: documents the variable.
+
 ### Changed - RANCHER-3227: merge group deploys only when it changes platform files
 
 A pull request that does not change the platform no longer runs the environment deployment in the merge queue.
