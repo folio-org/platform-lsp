@@ -1655,9 +1655,9 @@
     react-query "^3.38.1"
 
 "@folio/eholdings@>=1.1.0":
-  version "11.2.1099000000000837"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000837.tgz#7465adf7423921e9ae0191deab77a068a8443ce6"
-  integrity sha512-cCShY2zNjiaGtTXIGM8V2T7BH8HsqJ/9QydLhxaXZfZG1VZ/T7DvlwS0zy4x9001N6ytzgiuNcnYT1+mX2EtGw==
+  version "11.2.1099000000000853"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000853.tgz#f9ed86aae7fbdf1aeea4265b078f4cd0a914ba40"
+  integrity sha512-ld7UkZ5HwuYZv/FnUh4FnapmXrje2zSrV0pZMH9/5SMcU+ZTncDAAOANK29Uv2P7NByqOewy/5ejqgd2iGRQ0Q==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
@@ -1865,9 +1865,9 @@
     prop-types "^15.6.0"
 
 "@folio/ldp@>=1.1.0":
-  version "3.3.1099000000000352"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/ldp/-/ldp-3.3.1099000000000352.tgz#0da508d6182bc24fec0c5683168702d644ddb3a2"
-  integrity sha512-KKX27YVVM7j712gQhubNQYLelCdkf/5LpyD8oiod6o+4rsFA5e2ReGeZuUqzzhpFoiYSKYEI0EkhkBxV4U0ZAg==
+  version "3.3.1099000000000356"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/ldp/-/ldp-3.3.1099000000000356.tgz#86b440f2063828e65252446d1db2f6e48414844b"
+  integrity sha512-CYGfLq7xO8jksyP8HmTxkM8I3xazEL+hQPxFTIk1UT21HQbNcr94KaE/WblDVFnaXnjJrDfx49LBHPXf5NidAA==
   dependencies:
     "@e965/xlsx" "^0.20.2"
     chart.js "^2.9.3"
@@ -1977,9 +1977,9 @@
     "@folio/stripes-acq-components" "^7.0.0"
 
 "@folio/myprofile@>=1.0.0":
-  version "11.0.1099000000000206"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/myprofile/-/myprofile-11.0.1099000000000206.tgz#1ac46d541c404d03fd469bd1bb0e83ae97d8ac5a"
-  integrity sha512-ZZCWB/utgbuBJ0FkdzSNaN7QNUYigd/ZweQyP6ogQ8TwTUS7hMiJp+h9tCh1DkrJMlHbtf0xgGDm6Kv2GNvMPQ==
+  version "11.1.1099000000000231"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/myprofile/-/myprofile-11.1.1099000000000231.tgz#f6dc8627fc01e04ac46f19ad060d9120cdd855a6"
+  integrity sha512-YyfZpqb/H5n2kutVzjXg4MqqikwqocVp/IOqc+P5/5l+YvTuHD3C7nXWLBQhazHQratoNim+T8tVZtltaKxPIQ==
   dependencies:
     "@dnd-kit/core" "^6.2.0"
     "@dnd-kit/modifiers" "^9.0.0"
@@ -2305,9 +2305,9 @@
     prop-types "^15.6.0"
 
 "@folio/quick-marc@>=1.0.0", "@folio/quick-marc@^11.0.0":
-  version "11.1.1099000000000631"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/quick-marc/-/quick-marc-11.1.1099000000000631.tgz#2b39c8cf929c87fbe6ce6c32464fe7098b5649d5"
-  integrity sha512-a64uIi3xDRsdF++g8kDsydQ2V75+EcBJwdkR6CIqvRMaic9FT9pLjtXtQ+KQZVK3xSVUvfbMmCRFcbhgXIMjiA==
+  version "11.1.1099000000000638"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/quick-marc/-/quick-marc-11.1.1099000000000638.tgz#e3ab608a311d88e04c71304171fc62d25dbff58f"
+  integrity sha512-q9rs+xDaWat02smMGgEfLMK4U0lYU/VWtXJl2k0K7oeuvi0K4WB+8HDOzBmm+7x+92NhBKbPECrFr7hcd7PcmQ==
   dependencies:
     "@folio/stripes-acq-components" "^7.1.0"
     classnames "^2.5.1"
@@ -2532,9 +2532,9 @@
     yargs "^18.2.0"
 
 "@folio/stripes-components@^13.0.0":
-  version "13.1.1099000000002003"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000002003.tgz#3a7a30555b4e5dfc6b45675267e33f03e190154a"
-  integrity sha512-bafN61ASdgGG2E8NWB6H3/Ml/XFnQwBfq7xFxU7l4AYe3m4Dusv3XQuSLcuE8AEfSSGDsFy3bMIksnBbYBg0ew==
+  version "13.1.1099000000002018"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-components/-/stripes-components-13.1.1099000000002018.tgz#bf297d24015a638637f689d7e11e36f3fec6ed39"
+  integrity sha512-AUtTVQvXmpbOzOskzb4r6GywMoctDC4+o1iDbdg0KncsDb6XnEti2i/LvClGteYPey6sm2KH4zOodQa2VY4JVg==
   dependencies:
     "@tiptap/core" "^3.31.3"
     "@tiptap/extension-text-align" "^3.31.3"
@@ -5512,9 +5512,9 @@ encodeurl@~2.0.0:
   integrity sha512-ddmxiyS6ETq/v5/+mdA4fykK7JgEmqcShrGmQFTaKf5o43tL8XLuMzNLLsspuIC3/qGupS7Ci2TF+feJRkYY0w==
 
 enhanced-resolve@^5.24.4:
-  version "5.26.2"
-  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.26.2.tgz#b8b5e5ea175ae0a45a0e68bf63ef647df241675f"
-  integrity sha512-sQeK9D5kN5T+O0Hh+Cn8t39FZ0VJVARcoacJ7x1I0N+3/WqlckcS8D4NUKjMyTh4P5ly1SMgJQstou2aL3rmZQ==
+  version "5.27.0"
+  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.27.0.tgz#5a5b25b79e79500f3710995c7a50cabe08fdcdb1"
+  integrity sha512-Do6BB2xzlcc/odFg+XEYyneAx4T/WfywO71yw9ePS2tVfRsf7JVR4mUeELadIeHzixkzbG5DpluiEFPi2WGfYQ==
   dependencies:
     graceful-fs "^4.2.4"
     tapable "^2.3.3"
@@ -7660,9 +7660,9 @@ postcss-modules-values@^4.0.0:
     icss-utils "^5.0.0"
 
 postcss-selector-parser@^7.0.0:
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/postcss-selector-parser/-/postcss-selector-parser-7.2.0.tgz#e892f2002e8997690c080c9690b727a16151fb16"
-  integrity sha512-Khh/tERVBn0I1499dvBSHY0pWJloMJWUxDsOBM0CCDPAcVZ10Jl2L1qy1f19uEX22spa8Mv7DCdEQJc0cGwBhQ==
+  version "7.2.1"
+  resolved "https://registry.yarnpkg.com/postcss-selector-parser/-/postcss-selector-parser-7.2.1.tgz#7d53306479cfe1f40117f80aa6331e31667bc845"
+  integrity sha512-GwxlMgTTXwIom+ebC7an3k6RaJDwklRQQnfiXsLPGicu8FYV/k/+1/9YY2OU2+r938H2t4X0TDxoif+HP2rjzQ==
   dependencies:
     util-deprecate "^1.0.2"
 
