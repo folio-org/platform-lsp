@@ -228,13 +228,11 @@ jobs:
         with:
           template-file: ${{ steps.detect-template.outputs.source_file }}
 
-      # TEMPORARY: Sync application descriptors from GitHub to FAR
-      # This is a temporary solution until Eureka CI process is finalized.
-      # Once Eureka CI automatically publishes descriptors to FAR on release,
-      # this step can be removed.
+      # Disabled: application CI publishes descriptors to FAR. Set the repository variable
+      # SYNC_APPLICATIONS_TO_FAR to 'true' to run the sync again.
       - name: 'Sync Application Descriptors to FAR'
         id: sync-to-far
-        if: inputs.need_pr && steps.validate-template.outputs.valid == 'true'
+        if: vars.SYNC_APPLICATIONS_TO_FAR == 'true' && inputs.need_pr && steps.validate-template.outputs.valid == 'true'
         uses: folio-org/platform-lsp/.github/actions/sync-applications-to-far@master
         with:
           descriptor-path: ${{ env.STATE_FILE }}
