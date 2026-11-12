@@ -1418,9 +1418,9 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/bulk-edit@>=1.0.0":
-  version "5.1.1099000000001207"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/bulk-edit/-/bulk-edit-5.1.1099000000001207.tgz#d68ea1899b98c5d94cac3a42e5765c5ccaa1d904"
-  integrity sha512-JQeAYTe0XaE65ZSyqbwdWZpu88CLjkpZsUEYr6N5VrNiTrO3BA0GIxznnzvWcARXOJiaBpApe3dDQeFqSoSrTg==
+  version "5.1.1099000000001210"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/bulk-edit/-/bulk-edit-5.1.1099000000001210.tgz#be7d08f145a8aa2f691d18f197069d20a9674794"
+  integrity sha512-afOQUfCHbP4hRonEXIx7pKaGFDqqIxvqMPv+2auGtR+woD3idNLceVRDp78kN/oBGeJarWI1+iOgWSJ8pBqt9g==
   dependencies:
     "@folio/plugin-query-builder" "^3.0.0"
     "@folio/stripes-acq-components" "^7.0.0"
@@ -2649,9 +2649,9 @@
     validator "^13.11.0"
 
 "@folio/stripes-final-form@^10.0.0":
-  version "10.0.1099000000000155"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-final-form/-/stripes-final-form-10.0.1099000000000155.tgz#1804cd4c308c3b4f3aa9a56c7685d5f679b5b06f"
-  integrity sha512-y3vivBOfahy0Kls4RTcPGCN/CZ9ORxaX05QSu6HG98jWd3483H0IJC4+N+UMx0Q2gS01krDbfa7sPR/Tm8di0Q==
+  version "10.0.1099000000000164"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-final-form/-/stripes-final-form-10.0.1099000000000164.tgz#59d45e66189342a5c8a73de85d5b6238c303c80c"
+  integrity sha512-ffnY0qkLXao2JWkG7LFkbyKTn9WF4Kou/tw9AOHK8W7iEV22S8Jl4wl8q08H0CSnci+ACKt3gwhlHCzQIMuLpg==
   dependencies:
     final-form "^4.18.2"
     final-form-arrays "^3.0.1"
@@ -4757,9 +4757,9 @@ camelcase@^6.2.0:
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
 caniuse-lite@^1.0.30001810, caniuse-lite@^1.0.30001819:
-  version "1.0.30001823"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001823.tgz#331a7cb49aa317517697e76b0b1295f2225959fe"
-  integrity sha512-TQ5s/djDjNk1axreUW+4rULH+BmdCMLiJkhaXnO5wqivG7tITkSUj4ItIdzqdZHKaXcHAV8dhH3JxOM7/7bwqw==
+  version "1.0.30001826"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001826.tgz#6c2cc43e4858e54d6f7200fa87b4de93cb39aa77"
+  integrity sha512-wTB+9tIbLro/BCXwLuNV1meHE4L9dS6dArMDwgYfNBPMYScqClHyGunhkCSDtHhe/69Xl0sHlKgBVZ+fNsYtWA==
 
 canvg@^3.0.11:
   version "3.0.11"
@@ -5491,9 +5491,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.464:
-  version "1.5.480"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.480.tgz#4f8bd2842e66efabb4cf41b0136267dc9a57cd5f"
-  integrity sha512-7WLDoWPKc+YiH37GshK2sLagySSbcQk3K2s6swA3x+BtWUH8BtphwL+YqarJQi09Sbf+LOCIW75RQooN2PqXsA==
+  version "1.5.481"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.481.tgz#cb6d3067ae0611e0f2004fffc6b9d821f24a88b3"
+  integrity sha512-dNUsbAP6E2S1dHIYEuN3cQ0dViThjMtpVRheGdvv5HgHFtzLi4Cu4Mbzms85YggP3Eh2VVZTl5+XxEN8ofCbmQ==
 
 emoji-regex@^10.3.0:
   version "10.6.0"
