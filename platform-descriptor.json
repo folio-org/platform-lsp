@@ -1,7 +1,7 @@
 {
   "name": "FOLIO LSP",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2027-SNAPSHOT.100200000003468",
+  "version": "R1-2027-SNAPSHOT.100200000003469",
   "eureka-components": [
     {
       "name": "folio-kong",
@@ -36,17 +36,17 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000012041"
+        "version": "2.2.0-SNAPSHOT.100200000012044"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000011374"
+        "version": "3.4.0-SNAPSHOT.100200000011377"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000012594"
+        "version": "2.1.0-SNAPSHOT.100200000012597"
       },
       {
         "name": "app-agreements",
@@ -58,11 +58,11 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "2.1.0-SNAPSHOT.100200000012042"
+        "version": "2.1.0-SNAPSHOT.100200000012046"
       },
       {
         "name": "app-consortia",
-        "version": "1.5.0-SNAPSHOT.100200000012852"
+        "version": "1.5.0-SNAPSHOT.100200000012858"
       },
       {
         "name": "app-consortia-manager",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.1.0-SNAPSHOT.100200000010662"
+        "version": "1.1.0-SNAPSHOT.100200000010665"
       },
       {
         "name": "app-data-import",
@@ -90,11 +90,11 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.3.0-SNAPSHOT.100200000011210"
+        "version": "2.3.0-SNAPSHOT.100200000011221"
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000012692"
+        "version": "1.1.0-SNAPSHOT.100200000012695"
       },
       {
         "name": "app-erm-usage",
@@ -102,7 +102,7 @@
       },
       {
         "name": "app-fqm",
-        "version": "2.1.0-SNAPSHOT.100200000012543"
+        "version": "2.1.0-SNAPSHOT.100200000012545"
       },
       {
         "name": "app-gobi",
@@ -110,11 +110,11 @@
       },
       {
         "name": "app-inn-reach",
-        "version": "2.1.0-SNAPSHOT.100200000012007"
+        "version": "2.1.0-SNAPSHOT.100200000012034"
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000005279"
+        "version": "1.1.0-SNAPSHOT.100200000005282"
       },
       {
         "name": "app-licenses",
@@ -138,11 +138,11 @@
       },
       {
         "name": "app-mosaic",
-        "version": "1.2.0-SNAPSHOT.100200000012412"
+        "version": "1.2.0-SNAPSHOT.100200000012419"
       },
       {
         "name": "app-notification",
-        "version": "1.1.0-SNAPSHOT.100200000007859"
+        "version": "1.1.0-SNAPSHOT.100200000007866"
       },
       {
         "name": "app-oa",
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "2.1.0-SNAPSHOT.100200000011982"
+        "version": "2.1.0-SNAPSHOT.100200000012022"
       },
       {
         "name": "app-quick-marc",
@@ -166,7 +166,7 @@
       },
       {
         "name": "app-requests-ecs",
-        "version": "2.1.0-SNAPSHOT.100200000011871"
+        "version": "2.1.0-SNAPSHOT.100200000011874"
       },
       {
         "name": "app-requests-mediated",
