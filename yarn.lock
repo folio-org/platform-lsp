@@ -5494,9 +5494,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.464:
-  version "1.5.485"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.485.tgz#c679751783f7d6c1415aefd5b3471f833569fbaf"
-  integrity sha512-m3uadzR0Z+sR19HGWgfxoZcKv9hE/edVM9OZ+FJ4wNRyfuFtkwZJIDoehEty5sisYVwmge8lKV1tenWOyClVgw==
+  version "1.5.486"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.486.tgz#8d46dcbd2ec08d98ffd67af164f38f58ff1238da"
+  integrity sha512-rpybw4Ac4ak/An6G1Me2+61xzwobowDGyuJe71QHHOVpkZv4fPVobsLl7WH6zHSKusAMpaHxGKTpOvpy7+r3dQ==
 
 emoji-regex@^10.3.0:
   version "10.6.0"
@@ -6007,12 +6007,12 @@ flexboxgrid2@^7.2.0:
     normalize.css "^7.0.0"
 
 focus-trap-react@^12.0.3:
-  version "12.0.3"
-  resolved "https://registry.yarnpkg.com/focus-trap-react/-/focus-trap-react-12.0.3.tgz#710dd253934ba34b7f06abaa55be441ad7923b94"
-  integrity sha512-4eXtzhRTtFrxle9Tkl0Wkj8SFJnWz3i3yb5e53Mdn4E8XZQ/Lzqom9U4uUAJ8wd7yDmyGVP96dxwQZXLXd4sbg==
+  version "12.0.4"
+  resolved "https://registry.yarnpkg.com/focus-trap-react/-/focus-trap-react-12.0.4.tgz#7ecb06845b5058dada5445aa4e575edbdeffdf3a"
+  integrity sha512-R5hmH2F9TmRgczBU9wdSmx66uaJcH1OaksSoELQefrfKiOJPAzdnUr8766xxOu56tso6XkSED5Czqtv7Ehuy7Q==
   dependencies:
-    focus-trap "^8.2.2"
-    tabbable "^6.5.0"
+    focus-trap "^8.2.5"
+    tabbable "^6.5.2"
 
 focus-trap@^7.5.4:
   version "7.8.0"
@@ -6021,12 +6021,12 @@ focus-trap@^7.5.4:
   dependencies:
     tabbable "^6.4.0"
 
-focus-trap@^8.2.2:
-  version "8.2.4"
-  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-8.2.4.tgz#2d4ffff79cc772fe6d468bd9cf5c7ce382cea1f9"
-  integrity sha512-oy6dj7WZYgMbbpoOA29K5W++473F1zEzdI1oJgPb6x7yWT36YaWedUe6i6YPWEt5quSh0pRMohVyHLWXUxtdxg==
+focus-trap@^8.2.5:
+  version "8.2.5"
+  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-8.2.5.tgz#5dd31584607f1a1f8b46e7866c3def5fcc46ce99"
+  integrity sha512-VrqfyRXaHZ0EkhXlfyalszmhnSN9yjdYXwlwLSRoJrDJ0/eswY5J5Avj/Hcd/PrOHCMnsMhwx7+7+s1kmv9Asg==
   dependencies:
-    tabbable "^6.5.0"
+    tabbable "^6.5.2"
 
 follow-redirects@^1.0.0:
   version "1.16.3"
@@ -9168,7 +9168,7 @@ symbol-observable@^4.0.0:
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-4.0.0.tgz#5b425f192279e87f2f9b937ac8540d1984b39205"
   integrity sha512-b19dMThMV4HVFynSAM1++gBHAbk2Tc/osgLIBZMKsyqh34jb2e8Os7T6ZW/Bt3pJFdBTd2JwAnAAEQV7rSNvcQ==
 
-tabbable@^6.4.0, tabbable@^6.5.0:
+tabbable@^6.4.0, tabbable@^6.5.2:
   version "6.5.2"
   resolved "https://registry.yarnpkg.com/tabbable/-/tabbable-6.5.2.tgz#5ef16ebfc9bb600ecb48dfb0e699ebf067ffe97e"
   integrity sha512-XgdnB1nGU6KU4VgMnZPaZCx7M1hBrLyEiZYau2G2gq9UT0d7d4FUBlNX7vvPlm/B1vk1PjrzJBx9Lbv4fsqS9g==
