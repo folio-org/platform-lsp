@@ -5910,9 +5910,9 @@ file-selector@^2.1.0:
     tslib "^2.7.0"
 
 file-selector@^5.0.1:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/file-selector/-/file-selector-5.0.2.tgz#83313bda80a6a364bc59c9760af9c6ba03fdfe0a"
-  integrity sha512-1hAy178VaMCWWj/vSUITOTpLWH1PoGW3eO7i3kPIppuSyOHBm3o1cHq+CvKAM5hQKQXlazrDt/3K1HCXgs7MpQ==
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/file-selector/-/file-selector-5.0.3.tgz#a02aa989b711bfe3d4435685edfa2c4c96a8c31b"
+  integrity sha512-d15nlW+KKq82TlItRvCHtJ8NXCX0nwz2SEUR1MOT8W50c5q2se551ZFdhITFrWohl/5wbRPfMMF9jq4Oj1xRGQ==
 
 fill-range@^7.1.1:
   version "7.1.1"
