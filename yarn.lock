@@ -1931,9 +1931,9 @@
     zustand "^5.0.16"
 
 "@folio/lists@>=1.2.0":
-  version "5.0.2099000000001139"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.2099000000001139.tgz#3c601629dcd09ccfb18ac33a982a5f4b63b240c9"
-  integrity sha512-yjYRbbqAiTmg2zx9IUmnS+TIAYDEuxMOe13Vo/9WgUnIMippTv+lHU4YSbo7Qn7kkBjBxMiKezlVbvIUTgui1A==
+  version "5.0.2099000000001152"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.2099000000001152.tgz#109c8c5d4199a0b2b6a81f88f3c3733feeae119e"
+  integrity sha512-MjxFczrgX/WVFDx5v8i6zBdw0dKCUhruBGIqAkkLBWbkaAgwKQ0GztDjK8GqX7Kj3sFAU69yByzV52ILNYnHtA==
   dependencies:
     "@folio/plugin-find-user" "^8.1.0"
     "@folio/plugin-query-builder" "^3.0.0"
@@ -2652,9 +2652,9 @@
     validator "^13.11.0"
 
 "@folio/stripes-final-form@^10.0.0":
-  version "10.0.1099000000000164"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-final-form/-/stripes-final-form-10.0.1099000000000164.tgz#59d45e66189342a5c8a73de85d5b6238c303c80c"
-  integrity sha512-ffnY0qkLXao2JWkG7LFkbyKTn9WF4Kou/tw9AOHK8W7iEV22S8Jl4wl8q08H0CSnci+ACKt3gwhlHCzQIMuLpg==
+  version "10.0.1099000000000173"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-final-form/-/stripes-final-form-10.0.1099000000000173.tgz#d806fd81fcc7e61cdbff8c3d0908dfdaf4087d71"
+  integrity sha512-sQ5+ePy3voidOqbDhnA/dG0Qdz0ROqHzuIWy9M3WwN2pBZEKAkJGiQCvpZ6SVLVZGUwl6hGf9qycd8DgC+YQ3w==
   dependencies:
     final-form "^4.18.2"
     final-form-arrays "^3.0.1"
@@ -9593,9 +9593,9 @@ wbuf@^1.1.0, wbuf@^1.7.3:
     minimalistic-assert "^1.0.0"
 
 webpack-bundle-analyzer@^5.4.0:
-  version "5.4.2"
-  resolved "https://registry.yarnpkg.com/webpack-bundle-analyzer/-/webpack-bundle-analyzer-5.4.2.tgz#67bd67d0a1d6b6f3c64693086effab133e167cb1"
-  integrity sha512-STw41VwPFXH2SDo/S9E3V1MRNOwusR0OOnqvrO1RYoaFRq01hZaSPsHzn1LuJ0nXnyHVQoe2ELMcJKmUyXPdbg==
+  version "5.4.3"
+  resolved "https://registry.yarnpkg.com/webpack-bundle-analyzer/-/webpack-bundle-analyzer-5.4.3.tgz#7bd60573b9e0cae23be067ab37d4e4dd761f4c97"
+  integrity sha512-MIdBirXyiUmQeIc6C0SSBQtbDdwGRL2UsyHVzWqOYu2ZrPRgZEewjydVR81qgMPXbtxT1o1/zCr3yBJ1Q6FIsA==
   dependencies:
     "@discoveryjs/json-ext" "^0.6.3"
     acorn "^8.0.4"
