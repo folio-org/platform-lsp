@@ -1,7 +1,7 @@
 {
   "name": "FOLIO LSP",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2027-SNAPSHOT.100200000003482",
+  "version": "R1-2027-SNAPSHOT.100200000003483",
   "eureka-components": [
     {
       "name": "folio-kong",
@@ -82,11 +82,11 @@
       },
       {
         "name": "app-dcb",
-        "version": "2.1.0-SNAPSHOT.100200000011015"
+        "version": "2.1.0-SNAPSHOT.100200000011930"
       },
       {
         "name": "app-ebsconet",
-        "version": "1.2.0-SNAPSHOT.100200000009759"
+        "version": "1.2.0-SNAPSHOT.100200000011088"
       },
       {
         "name": "app-edge-complete",
@@ -106,7 +106,7 @@
       },
       {
         "name": "app-gobi",
-        "version": "1.2.0-SNAPSHOT.100200000011797"
+        "version": "1.2.0-SNAPSHOT.100200000012127"
       },
       {
         "name": "app-inn-reach",
@@ -118,7 +118,7 @@
       },
       {
         "name": "app-licenses",
-        "version": "1.1.0-SNAPSHOT.100200000010972"
+        "version": "1.1.0-SNAPSHOT.100200000011953"
       },
       {
         "name": "app-linked-data",
@@ -162,7 +162,7 @@
       },
       {
         "name": "app-reporting",
-        "version": "1.6.0-SNAPSHOT.100200000011333"
+        "version": "1.6.0-SNAPSHOT.100200000012140"
       },
       {
         "name": "app-requests-ecs",
@@ -196,7 +196,7 @@
     "experimental": [
       {
         "name": "app-finc",
-        "version": "1.1.0-SNAPSHOT.100200000010401"
+        "version": "1.1.0-SNAPSHOT.100200000011736"
       },
       {
         "name": "app-rtac-cache",

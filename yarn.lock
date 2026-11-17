@@ -2580,9 +2580,9 @@
     uuid "^14.0.2"
 
 "@folio/stripes-core@^11.2.0":
-  version "11.2.1099000000002112"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.2.1099000000002112.tgz#9d9a6b4b8b70aa44c2da73ccb819ccc66d8b37de"
-  integrity sha512-GbJJ5h3B50X7DhbE/+AZGM15Aqd8PXeVSpuVp283/kL+x2GgugLlWJ0W6qsIP8e01q7vxjpGc3LRzJSZKuTGlw==
+  version "11.2.1099000000002117"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.2.1099000000002117.tgz#132283ca66a866825205e3516fdc4c4d754e3bce"
+  integrity sha512-xwTaUbgUs4D48DBDdyNyR5hDkpEUYRTKGg6KOmqoh+j2d+10NsaW1WRvPXc3Uq12p6oV12ExpIXDKXDw+HbN5g==
   dependencies:
     "@apollo/client" "^3.2.1"
     "@module-federation/runtime" "^2.0.0"
@@ -3705,17 +3705,17 @@
     "@svgr/plugin-jsx" "8.1.0"
     "@svgr/plugin-svgo" "8.1.0"
 
-"@tanstack/query-core@5.107.1":
-  version "5.107.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.107.1.tgz#cd1f9952b4d623e66349931df631b287d9c4a3fe"
-  integrity sha512-PSyAik11oQBEVOiVy5hjZWHmoUqOXqK1WYy4v55mcxozEfKaQgpUMsgnXhWjuESzSht8JfzqMS1m6M/9CpNgvg==
+"@tanstack/query-core@5.107.2":
+  version "5.107.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.107.2.tgz#7914fc5abc67f0b6d8d1f6b1b9754a614c9f20b0"
+  integrity sha512-npIQ9T9CpaEHgwCeqmazMtiBePlaSxfzt5qee2C8KLJnA9Kmiri0Rxls9bCdd0GXu9xCvdWA16t4GWP/bcOXbw==
 
 "@tanstack/react-query@^5.107.1":
-  version "5.107.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.107.1.tgz#277e4b8c4d6d0496047ef15afacbc8c091ce0532"
-  integrity sha512-udCOOLp3ZAheUrIHLCe+ZZge6nr2ZUrGMSWcCuXsjY1Bf2JeeE09oxst97PILiCY6N8xo/7bIo3Hvz13zh06FA==
+  version "5.107.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.107.2.tgz#3755dbc302ca71709785cdf4c717b810ea03fa5b"
+  integrity sha512-3MSu2ORVbZXTSAyatzyksNBpb8RlhyjU7QMNkmxkwvOEYaYo5HfUTnOBQ6+zsbOEpI4HQLeIECd0jcZRKHRI5w==
   dependencies:
-    "@tanstack/query-core" "5.107.1"
+    "@tanstack/query-core" "5.107.2"
 
 "@tiptap/core@3.34.0", "@tiptap/core@^3.31.3":
   version "3.34.0"
@@ -5183,9 +5183,9 @@ csso@^5.0.5:
     css-tree "~2.2.0"
 
 csstype@^3.0.2, csstype@^3.2.2:
-  version "3.2.3"
-  resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.2.3.tgz#ec48c0f3e993e50648c86da559e2610995cf989a"
-  integrity sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==
+  version "3.2.4"
+  resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.2.4.tgz#e3c565add00793c36f089cc14b70d04d784daa19"
+  integrity sha512-PoKaoPzQapnEoqUSnHx1u6W6ku8CVEgKsnpmmzU3m1nwkidpPBQ8V/Zq2+bWNrsOKoKLwTGdbx6xF7BXP1zLVQ==
 
 csv-loader@^3.0.3:
   version "3.0.5"
@@ -6917,9 +6917,9 @@ jwt-decode@^3.1.2:
   integrity sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==
 
 keyboardjs@^2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/keyboardjs/-/keyboardjs-2.7.0.tgz#d4f6a56d9f3f1822d7383c6d2d39b12f534ffb2c"
-  integrity sha512-3tiQuAoLM1M5Xyo/eQVaqsq9joByTRkB0Byga+0S7BYJvY4HIlfW0SofOj4a20YSAFjv0SIFU/lw+Qjp6KYHPA==
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/keyboardjs/-/keyboardjs-2.8.1.tgz#053f473fc86db56e62dc980b1210853bbe36df9e"
+  integrity sha512-mMQGbP1OtNOnKBYFFOYW9Imzohtr51x7xcW9e2v+VjW8GNxsl59sr1Ld2B+SY3xhbP8GFkhplKST2c66ElUUdw==
 
 keyboardjs@~2.5.1:
   version "2.5.1"
