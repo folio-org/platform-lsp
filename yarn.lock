@@ -1505,9 +1505,9 @@
     "@folio/plugin-find-user" "^8.1.0"
 
 "@folio/circulation@>=1.3.0", "@folio/circulation@>=12.0.0":
-  version "13.0.1099000000000538"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/circulation/-/circulation-13.0.1099000000000538.tgz#72a69fb1b150e2685115202537a9b1687879facc"
-  integrity sha512-Uts2mnV5r922fWD72paTDibakDGgk8Bhixf8tiHkaDqytXcER4/KWIGwK/Vf5An8uVcl898rjplkc/EQni9UaQ==
+  version "13.0.1099000000000541"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/circulation/-/circulation-13.0.1099000000000541.tgz#c922b9db79aa18b33b9abbbf3d55b85e2b9b9990"
+  integrity sha512-bSrgfxT50m/RJ8nxRFsZYEvW7sCahH0jVbzC62whEjW/ILz1LKhB/uGQPu9qUlF/ZjfzpWCnxgXRoWOx/uU15g==
   dependencies:
     "@dnd-kit/react" "^0.5.0"
     "@folio/stripes-template-editor" "^3.2.0"
@@ -1655,9 +1655,9 @@
     react-query "^3.38.1"
 
 "@folio/eholdings@>=1.1.0":
-  version "11.2.1099000000000868"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000868.tgz#976f1c01974c11eb8388026af714aba1b84140a3"
-  integrity sha512-g2nKOZpV/NLCS714OqM7dLEmxU2SBFnBxUsk4j0bnV0NaAIAMbPJVfSCbnOsG3CFJfRdoyr4iW+qlY1wVi2XIw==
+  version "11.2.1099000000000884"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000884.tgz#74191cdeb1b0c2393aa370124190fda412d6697c"
+  integrity sha512-vTDm1o03SSmFBAQGXoJ98vl0UeD2LL9uRlVAiZGMjaruWF7SBc7oinqgrKMVeGpVWAKFjdcAS/TZ+JcikwXuoQ==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
@@ -1694,9 +1694,9 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/erm-usage@>=1.0.3":
-  version "13.0.1099000000001197"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-13.0.1099000000001197.tgz#a686e36fa8ac876987a5c3161042ec5634a6848d"
-  integrity sha512-Gudd0yCQNbGvyPrLbta2zWqFTwR1xfOoc6+GTSeAmTUR5oBOftURmZ8ElVsTlx2NynlUwKmxQ21y16M26PsKFw==
+  version "13.0.1099000000001214"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-13.0.1099000000001214.tgz#493f197acd7589824319c1c2aed488f7375fbe24"
+  integrity sha512-H+hdsJon38v/gvm/0Qc5JvEGKOGKPmKUgwexyy5sWJq0xNbntIA1qowhDTm75sZDbLqcl3nrYN2qS4FaCCZbTQ==
   dependencies:
     "@folio/stripes-leipzig-components" "^1.1.0"
     compose-function "^3.0.3"
@@ -1909,31 +1909,31 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/linked-data@^2.0.5":
-  version "2.0.4099000000002742"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.4099000000002742.tgz#00d4b09a25590fdcf9ff68472ec30836b875a6d6"
-  integrity sha512-5Mxerwp4JNiBWNCi7yCD6+AAEb7WWyAqIt7xcpASEiwQDaj1Qylwi/26VeiLjLjQO+TJ/M+KL1220gG5w1AGrg==
+  version "2.0.4099000000002745"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/linked-data/-/linked-data-2.0.4099000000002745.tgz#88369ab1048feffb8e6cf3ab863322b1b8da0027"
+  integrity sha512-8BWq6zs/8WfvM+i/uMeAC8Z1LheGLdIsWzEr81efSHOTTf2kgbpuD8KDGlOGnPpf5SCaenM3tvBd6XcDtxf1ug==
   dependencies:
     "@dnd-kit/core" "^6.3.1"
     "@dnd-kit/modifiers" "^9.0.0"
     "@dnd-kit/sortable" "^10.0.0"
     "@dnd-kit/utilities" "^3.2.2"
-    "@tanstack/react-query" "^5.106.0"
+    "@tanstack/react-query" "^5.107.1"
     classnames "^2.5.1"
     focus-trap-react "^12.0.3"
     lodash "^4.17.21"
     react "^19.3.1"
     react-dom "^19.3.1"
-    react-dropzone "^20.1.4"
-    react-intl "^12.1.6"
+    react-dropzone "^20.2.0"
+    react-intl "^12.1.7"
     react-router-dom "^7.18.5"
     react-select "^5.10.2"
     uuid "^14.0.3"
-    zustand "^5.0.16"
+    zustand "^5.1.0"
 
 "@folio/lists@>=1.2.0":
-  version "5.0.2099000000001152"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.2099000000001152.tgz#109c8c5d4199a0b2b6a81f88f3c3733feeae119e"
-  integrity sha512-MjxFczrgX/WVFDx5v8i6zBdw0dKCUhruBGIqAkkLBWbkaAgwKQ0GztDjK8GqX7Kj3sFAU69yByzV52ILNYnHtA==
+  version "5.0.2099000000001158"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.2099000000001158.tgz#e03297c834e24a46412292798f6af72226fbea9c"
+  integrity sha512-T9GKYBpPIebQ887KNkOBJ3DbxQhNF6Wftrq8iiuxooNF244I8yOw1ECq7CNXcv5CD7b3oqbvx4qgVuUuuhfXAQ==
   dependencies:
     "@folio/plugin-find-user" "^8.1.0"
     "@folio/plugin-query-builder" "^3.0.0"
@@ -2270,9 +2270,9 @@
     prop-types "^15.6.0"
 
 "@folio/plugin-query-builder@>=1.0.0", "@folio/plugin-query-builder@^3.0.0":
-  version "3.0.2099000000001721"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-query-builder/-/plugin-query-builder-3.0.2099000000001721.tgz#090a01f4fbcf3539c1c230aad5f3fe057fcc7cca"
-  integrity sha512-WcYLA/UJNob5ozFPpLOmLVVX/R+zHaAdM3pZwa5/AIF7EbgkM0Rf6f09YF5B1SwPsLamp2x2pJu6/1DkqLlVmw==
+  version "3.0.2099000000001724"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-query-builder/-/plugin-query-builder-3.0.2099000000001724.tgz#278975768ad29130193fe4c0878c51aeb1c99011"
+  integrity sha512-p3+zgWr9SRuZfxbLltMkV8ZNSuZLth9F3Yj2cDRnq9lY3SKPrJoPiZ102adEj3pBbBd57fe/YZU64JnvJDkJ/Q==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
@@ -2887,9 +2887,9 @@
     uuid "9.0.0"
 
 "@folio/users@>=2.17.0":
-  version "13.1.1099000000001651"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/users/-/users-13.1.1099000000001651.tgz#d1369c04b439708dc96eb0ba44253d124b3f8038"
-  integrity sha512-wuDZARfx+/NPkwecF1iqEcPlTi1NCDTcloT26/K70BUblPBeZBlwesNW3Sg0NhMRklm6QhuFNQuBa474OTm5nw==
+  version "13.1.1099000000001657"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/users/-/users-13.1.1099000000001657.tgz#6dec3a53b467f0d4c0d2349e2ae1442f7d74e583"
+  integrity sha512-4WTlMVbhF4c9xpbm8VHhfZp+Btp3FrKcDnDET6mt1BfE1j6SFtmy20DLudvVEXog0Gnp2jvWi42mUwBSy40VEg==
   dependencies:
     compressorjs "^1.2.1"
     dompurify "^3.2.0"
@@ -3710,7 +3710,7 @@
   resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.107.1.tgz#cd1f9952b4d623e66349931df631b287d9c4a3fe"
   integrity sha512-PSyAik11oQBEVOiVy5hjZWHmoUqOXqK1WYy4v55mcxozEfKaQgpUMsgnXhWjuESzSht8JfzqMS1m6M/9CpNgvg==
 
-"@tanstack/react-query@^5.106.0":
+"@tanstack/react-query@^5.107.1":
   version "5.107.1"
   resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.107.1.tgz#277e4b8c4d6d0496047ef15afacbc8c091ce0532"
   integrity sha512-udCOOLp3ZAheUrIHLCe+ZZge6nr2ZUrGMSWcCuXsjY1Bf2JeeE09oxst97PILiCY6N8xo/7bIo3Hvz13zh06FA==
@@ -4584,7 +4584,7 @@ base64-js@^1.3.1:
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
 
-baseline-browser-mapping@^2.11.33:
+baseline-browser-mapping@^2.11.37:
   version "2.11.37"
   resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.11.37.tgz#a6170da13a37d1423bec6e99bcd7889a9db77036"
   integrity sha512-QYph+vfurmaxhNwi9FprfmtkT5cx2Keg8FzZ0vnjO8ukscIybVyZGMFwdllKGlTI6qyU8ck43OM9UXh+IFJihQ==
@@ -4675,15 +4675,15 @@ broadcast-channel@^3.4.1:
     unload "2.2.0"
 
 browserslist@^4.24.0, browserslist@^4.28.1, browserslist@^4.28.9, browserslist@^4.29.3:
-  version "4.29.5"
-  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.29.5.tgz#e835ff9a00f683305b33f02828c908b397410d4a"
-  integrity sha512-khTmKu5NGYTotqcYo8Bew2k4RAE9PuXRSFRXG2lQBrCEQHyeQ/vX6gKMxfokwywBsLiXZMnHsmWMG1pnO8J7uQ==
+  version "4.29.6"
+  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.29.6.tgz#1a1873937c88f82aca6d0ae6ebba262d971a3b16"
+  integrity sha512-CmVVIQ3RVc5HxYEc9X84GvxK/C8C1wH8TlKAiO7uTxF8PDwt7r8t9Qk3J9NkMOVzX5O/HbLv3yzxZg9HPrnI9w==
   dependencies:
-    baseline-browser-mapping "^2.11.33"
-    caniuse-lite "^1.0.30001819"
-    electron-to-chromium "^1.5.464"
-    node-releases "^2.0.60"
-    update-browserslist-db "^1.3.4"
+    baseline-browser-mapping "^2.11.37"
+    caniuse-lite "^1.0.30001826"
+    electron-to-chromium "^1.5.486"
+    node-releases "^2.0.64"
+    update-browserslist-db "^1.4.0"
 
 buffer-from@^1.0.0:
   version "1.1.2"
@@ -4759,7 +4759,7 @@ camelcase@^6.2.0:
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-6.3.0.tgz#5685b95eb209ac9c0c177467778c9c84df58ba9a"
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
-caniuse-lite@^1.0.30001810, caniuse-lite@^1.0.30001819:
+caniuse-lite@^1.0.30001810, caniuse-lite@^1.0.30001826:
   version "1.0.30001826"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001826.tgz#6c2cc43e4858e54d6f7200fa87b4de93cb39aa77"
   integrity sha512-wTB+9tIbLro/BCXwLuNV1meHE4L9dS6dArMDwgYfNBPMYScqClHyGunhkCSDtHhe/69Xl0sHlKgBVZ+fNsYtWA==
@@ -5493,7 +5493,7 @@ ee-first@1.1.1:
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
-electron-to-chromium@^1.5.464:
+electron-to-chromium@^1.5.486:
   version "1.5.486"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.486.tgz#8d46dcbd2ec08d98ffd67af164f38f58ff1238da"
   integrity sha512-rpybw4Ac4ak/An6G1Me2+61xzwobowDGyuJe71QHHOVpkZv4fPVobsLl7WH6zHSKusAMpaHxGKTpOvpy7+r3dQ==
@@ -7333,7 +7333,7 @@ node-object-hash@^1.2.0:
   resolved "https://registry.yarnpkg.com/node-object-hash/-/node-object-hash-1.4.2.tgz#385833d85b229902b75826224f6077be969a9e94"
   integrity sha512-UdS4swXs85fCGWWf6t6DMGgpN/vnlKeSGEQ7hJcrs7PBFoxoKLmibc3QRb7fwiYsjdL7PX8iI/TMSlZ90dgHhQ==
 
-node-releases@^2.0.60:
+node-releases@^2.0.64:
   version "2.0.64"
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-2.0.64.tgz#f98f49ee9592be46c78780a5246e3b2c8b8d6f4d"
   integrity sha512-zAPCKqMcnqs2nGy6nlkm7JduFseiBJy3EXHGLh+8pFR+TxGCBxxiEN21+UROU5CKwX/f4TlUcYjiM+vs/tsyxw==
@@ -8095,7 +8095,7 @@ react-dropzone@^15.0.0:
     file-selector "^2.1.0"
     prop-types "^15.8.1"
 
-react-dropzone@^20.1.4:
+react-dropzone@^20.2.0:
   version "20.2.0"
   resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-20.2.0.tgz#b5868a4b1f1ec0b0855a921d884bd247bccb1861"
   integrity sha512-FRlcSp6UFT9Etg57U4+g6O6qF/jH7sUh2Hz67lQlrZJa/3FjfAFvw7DwDSItiG2vBUXTdh2wroEwXPPg7o/jkg==
@@ -8175,7 +8175,7 @@ react-intl-formatted-duration@^4.0.0:
   dependencies:
     intl-unofficial-duration-unit-format "3.0.0"
 
-react-intl@^12.1.6:
+react-intl@^12.1.7:
   version "12.1.7"
   resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-12.1.7.tgz#fb24e2fe107acb070903a44a6dbb68cb7e749974"
   integrity sha512-DKPrDYGQfQpyW8g8dbEPd6abvinwHPw85LcAT6nmd8+kzexea5egLQu6KZTEGDgP+3ap8dn+sX3JTuS7v0xD4g==
@@ -9444,10 +9444,10 @@ unpipe@~1.0.0:
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
   integrity sha512-pjy2bYhSsufwWlKwPc+l3cN7+wuJlK6uz0YdJEOlQDbl6jo/YlPi4mb8agUkVC8BF7V8NuzeyPNqRksA3hztKQ==
 
-update-browserslist-db@^1.3.4:
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/update-browserslist-db/-/update-browserslist-db-1.3.4.tgz#e8bd4596f6900805f9f12c5a5200c83c59c38faf"
-  integrity sha512-t8wonIOdQyOjtPd2VktlBu6QjTVTks6v8bSi7kd0r2Vll8TK1JYDZtRRdbmCHOAMphkZgrzK+L+vXK4pyZ8t4A==
+update-browserslist-db@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/update-browserslist-db/-/update-browserslist-db-1.4.0.tgz#2b03b1089585b595fd2c38a9c021c0e40a441633"
+  integrity sha512-WPJuOnjI9FWDct4fB+ej4Mz8opLaw5CDcZ2t44tFZ0vIQVYWzBhWR3mkixuUj/A7+vY4V9+ApOZ2YYLwdgq46w==
   dependencies:
     escalade "^3.2.0"
     picocolors "^1.1.1"
@@ -9853,7 +9853,7 @@ zustand@^4.1.1, zustand@^4.5.4:
   dependencies:
     use-sync-external-store "^1.2.2"
 
-zustand@^5.0.0, zustand@^5.0.16:
+zustand@^5.0.0, zustand@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/zustand/-/zustand-5.1.0.tgz#739f981fa5427f3d3704705726e9c821671b307f"
   integrity sha512-ciJZlP48M1PTQbVQq81CGVFxHTLpZNrFjKqwjtCU34AWuXTZT/jrF3p9+fI84Cf1eSCMLapxqBy/SNTfwOBuqA==
