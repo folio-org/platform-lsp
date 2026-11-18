@@ -2991,10 +2991,10 @@
     intl-messageformat "10.7.18"
     tslib "^2.8.0"
 
-"@formatjs/intl@6.1.6":
-  version "6.1.6"
-  resolved "https://registry.yarnpkg.com/@formatjs/intl/-/intl-6.1.6.tgz#057f40937d70d73673edbcdeacc476b8af7c6aee"
-  integrity sha512-82puHaUuaqw9kuy2URLXW1PrIRxlUwPAWp15ERGKY0C2ReE6g17Ul2w02D4KJVaebU8jAUzP3Y8F6LVpT6Y6Ow==
+"@formatjs/intl@6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl/-/intl-6.2.0.tgz#3c080be89fce29804efe5b9e95566c66828d5377"
+  integrity sha512-HVu+quR1XS8L/yK+5bdPsiTwdDx0NJ7+9RfyqzEgOOlIdDW4fCu74eXLkVyYYVHdRsrdPdCaVBAJmG5rxWEDXA==
   dependencies:
     "@formatjs/fast-memoize" "3.1.7"
     "@formatjs/icu-messageformat-parser" "3.5.23"
@@ -5494,9 +5494,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.486:
-  version "1.5.489"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.489.tgz#4d7be5051f3ea8f29ec0c32fc1ef16b944f3dc8a"
-  integrity sha512-1cF87WItryk9lj5wg5SLsNegUihdkcHuOfrANPpO02y/d2krm1Oc3GjA9KBwlT5o145FTa1bbjdLc7pZnvtnYQ==
+  version "1.5.490"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.490.tgz#c3ba1cea6989fbead178c8d917ea3fb88677111f"
+  integrity sha512-I0dPyEsiaYAlbGJlr0SdRRGSWk9BpOz8AIo/4f93A6bAGuN3YafmT71rpss72SA05isaAkcAOYcW0F0H48om4Q==
 
 emoji-regex@^10.3.0:
   version "10.6.0"
@@ -8176,12 +8176,12 @@ react-intl-formatted-duration@^4.0.0:
     intl-unofficial-duration-unit-format "3.0.0"
 
 react-intl@^12.1.7:
-  version "12.1.8"
-  resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-12.1.8.tgz#9c8873842f4668cdd02e1b7a6e94a100f2973d28"
-  integrity sha512-Wl8m/zodiXPuhOEUWBZZ+CI4TapngapRdRGjJhFTArSnGw6Wpqfrn0kTGiI6UgBkHEtDYk9viMmb9eq8IMxE6g==
+  version "12.2.0"
+  resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-12.2.0.tgz#b98c71ae666a199a87e9bfbba8aab01a8214adf5"
+  integrity sha512-GUSrHGBmOzPqiINvII3x2h8VwLyyhDaZFymSmN7gYQj0pGT1y4eiL6SbLVHelP2z5ItgIikrwXTIx05XgZllUw==
   dependencies:
     "@formatjs/icu-messageformat-parser" "3.5.23"
-    "@formatjs/intl" "6.1.6"
+    "@formatjs/intl" "6.2.0"
     intl-messageformat "12.2.0"
 
 react-intl@^7.1.10:
