@@ -1534,9 +1534,9 @@
     lodash "^4.17.21"
 
 "@folio/consortia-settings@>=1.0.0":
-  version "3.2.1099000000000264"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/consortia-settings/-/consortia-settings-3.2.1099000000000264.tgz#567e5c5b93e19aaa6ab91e1f379c5781d06c456d"
-  integrity sha512-o2t7YRrIywrwFELJ6/uvnXy2ZSe+AyiW5U1SO9QC7OszoPqCkpJptIA5BmXJ9S6VuiJ4Hj3OSbVTpdN8h692FQ==
+  version "3.2.1099000000000272"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/consortia-settings/-/consortia-settings-3.2.1099000000000272.tgz#f6569401016996fe54de3e3c4df847fe3e981a56"
+  integrity sha512-wpv/VDdJeGnB20nTRCw+sreHAIRiKAI59bcAHg4zFwUFAQ9Y+0etXVWxf3tGVhTJvkfrfNkhmL+j6lG0+dd9Pg==
   dependencies:
     "@folio/stripes-acq-components" "~7.2.0"
     "@folio/stripes-authorization-components" "^2.0.0"
@@ -1655,9 +1655,9 @@
     react-query "^3.38.1"
 
 "@folio/eholdings@>=1.1.0":
-  version "11.2.1099000000000884"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000884.tgz#74191cdeb1b0c2393aa370124190fda412d6697c"
-  integrity sha512-vTDm1o03SSmFBAQGXoJ98vl0UeD2LL9uRlVAiZGMjaruWF7SBc7oinqgrKMVeGpVWAKFjdcAS/TZ+JcikwXuoQ==
+  version "11.2.1099000000000887"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000887.tgz#cb716fe3b0ca1a32c7dc27f8f62f982c0110bb11"
+  integrity sha512-3OU6lQB3uYpkq6nwzAfgvQUwrw+0545iqAfd2tXv23xYiFKo8MWHA+cUHA6mOkpr5l/3/nnwgz5qEWnnSI7QAw==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
@@ -2580,9 +2580,9 @@
     uuid "^14.0.2"
 
 "@folio/stripes-core@^11.2.0":
-  version "11.2.1099000000002117"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.2.1099000000002117.tgz#132283ca66a866825205e3516fdc4c4d754e3bce"
-  integrity sha512-xwTaUbgUs4D48DBDdyNyR5hDkpEUYRTKGg6KOmqoh+j2d+10NsaW1WRvPXc3Uq12p6oV12ExpIXDKXDw+HbN5g==
+  version "11.2.1099000000002133"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-core/-/stripes-core-11.2.1099000000002133.tgz#7f60130ca308954d1ec5924f2f744fe03443f1b4"
+  integrity sha512-Pv1lSXILfwmSvvJ9GRqIsJ1V1MqROVy+iUIbSGQ78Uit+M0C+JukmhfgloSE8i2XvDpOAwHc5pa54gLMDdYnPg==
   dependencies:
     "@apollo/client" "^3.2.1"
     "@module-federation/runtime" "^2.0.0"
@@ -2697,11 +2697,6 @@
     react-final-form "^6.3.5"
     react-final-form-arrays "^3.1.1"
 
-"@folio/stripes-logger@^1.0.0":
-  version "1.0.100012"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-logger/-/stripes-logger-1.0.100012.tgz#1362cceff6aa31af4687604f6fc3fd8ba33bde67"
-  integrity sha512-MDJaynBk+5c+Cu5EPnAbQBb+ja8zphSeOSTqAsaY3Ghh4YewYgNW4U243jdeaO85wYqMVK3R7Tqq2kJvRNS4xA==
-
 "@folio/stripes-marc-components@>=1.0.0":
   version "2.1.1099000000000244"
   resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-marc-components/-/stripes-marc-components-2.1.1099000000000244.tgz#b92fd4d840874d31a5780d4253af7fa2c49072eb"
@@ -2725,9 +2720,9 @@
     prop-types "^15.7.2"
 
 "@folio/stripes-smart-components@^10.0.0":
-  version "10.1.1099000000000896"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-smart-components/-/stripes-smart-components-10.1.1099000000000896.tgz#2d444d0a335be3da93af6d23a94b211188d23851"
-  integrity sha512-jzuhSUpA5c2QRwmiJxCgW0Tg5vUvim+rNz94b7uB7o/hgH5nUIcGhMYT+jp7Z1H2Se/E5VTs55VnNHzYvexjRw==
+  version "10.1.1099000000000912"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-smart-components/-/stripes-smart-components-10.1.1099000000000912.tgz#167f26c1c8db1515a1a722b02f11cbc5bf48efd6"
+  integrity sha512-BxdvFO4JB2vo9z6tndEHRNAc5DcUzZVP09E8RZTWFX+n6xU9kEJSZCNxNyHz4V87oWGSOS/azu0UY2cqv5K44g==
   dependencies:
     "@babel/runtime" "^7.28.6"
     "@rehooks/local-storage" "^2.4.4"
@@ -2848,20 +2843,20 @@
     webpack-virtual-modules "^0.4.3"
 
 "@folio/stripes@>=10.0.0":
-  version "10.2.1099000000000270"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes/-/stripes-10.2.1099000000000270.tgz#c1a8b7ba687360eb85e45ed8da08321f33132439"
-  integrity sha512-ZNq2D3a13qDYl+RXLCitY590/0W/bX1h4d8/ARo/r9PYtQ/EhZ472iWk6ksPEULyCLF1mo6c5zEFSjovcQHTuQ==
+  version "10.2.1099000000000289"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes/-/stripes-10.2.1099000000000289.tgz#4ad1629e4a76e3a43a22473a62a12e3205e37c38"
+  integrity sha512-xZ0ypv6LdPCXbcffwGYtxdLiNSatWCx9aa8QfUpdQnKQ2dqBHjI9HOvnak3xIOWi2ijWTlKovKxREt1n63bBIQ==
   dependencies:
     "@folio/stripes-components" "^13.0.0"
     "@folio/stripes-connect" "^10.0.0"
     "@folio/stripes-core" "^11.2.0"
     "@folio/stripes-final-form" "^10.0.0"
     "@folio/stripes-form" "^11.0.0"
-    "@folio/stripes-logger" "^1.0.0"
     "@folio/stripes-smart-components" "^10.0.0"
     "@folio/stripes-types" "^3.0.0"
     "@folio/stripes-ui" "^3.0.0"
     "@folio/stripes-util" "^7.0.0"
+    categorical-logger "^1.0.0"
     redux "^4.2.1"
 
 "@folio/tags@>=1.1.0":
@@ -2996,14 +2991,14 @@
     intl-messageformat "10.7.18"
     tslib "^2.8.0"
 
-"@formatjs/intl@6.1.5":
-  version "6.1.5"
-  resolved "https://registry.yarnpkg.com/@formatjs/intl/-/intl-6.1.5.tgz#ca9beb65b240b697760af90fd7d91f97b81e0bc2"
-  integrity sha512-WicSXzsz4wO1ksJb6Pp9a+vdOpIkidcEm8ldVtXkqFoMB/o/ETEikyPeCFgTVuSTLBb7ZNJ3ZLKXSQ/X/0+BAg==
+"@formatjs/intl@6.1.6":
+  version "6.1.6"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl/-/intl-6.1.6.tgz#057f40937d70d73673edbcdeacc476b8af7c6aee"
+  integrity sha512-82puHaUuaqw9kuy2URLXW1PrIRxlUwPAWp15ERGKY0C2ReE6g17Ul2w02D4KJVaebU8jAUzP3Y8F6LVpT6Y6Ow==
   dependencies:
     "@formatjs/fast-memoize" "3.1.7"
     "@formatjs/icu-messageformat-parser" "3.5.23"
-    intl-messageformat "12.1.5"
+    intl-messageformat "12.2.0"
 
 "@graphql-typed-document-node/core@^3.1.1":
   version "3.2.0"
@@ -3705,17 +3700,17 @@
     "@svgr/plugin-jsx" "8.1.0"
     "@svgr/plugin-svgo" "8.1.0"
 
-"@tanstack/query-core@5.107.2":
-  version "5.107.2"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.107.2.tgz#7914fc5abc67f0b6d8d1f6b1b9754a614c9f20b0"
-  integrity sha512-npIQ9T9CpaEHgwCeqmazMtiBePlaSxfzt5qee2C8KLJnA9Kmiri0Rxls9bCdd0GXu9xCvdWA16t4GWP/bcOXbw==
+"@tanstack/query-core@5.108.0":
+  version "5.108.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.108.0.tgz#1ba1f9ee4f86cdf500a100b623a8cda6e1ce9573"
+  integrity sha512-X9zJUtEV/0D2q9pmGS/Bza8S4bNovSBhZOtdhtu0fzsHwizC6C+Eh/q5CX3MQBchsRMrirWVQmv7Fp4OStzV9g==
 
 "@tanstack/react-query@^5.107.1":
-  version "5.107.2"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.107.2.tgz#3755dbc302ca71709785cdf4c717b810ea03fa5b"
-  integrity sha512-3MSu2ORVbZXTSAyatzyksNBpb8RlhyjU7QMNkmxkwvOEYaYo5HfUTnOBQ6+zsbOEpI4HQLeIECd0jcZRKHRI5w==
+  version "5.108.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.108.0.tgz#01f0e0c122e399ae1d1ba6966b4530deb2ed6a16"
+  integrity sha512-DpMbB8pVorEZcsHRa0Z13KQGfmndqvJbuLy9h+xfP8XpuEZBOxzq+QfXGonQ0fAgRSWhc+QsfoRETSTWxAEAVw==
   dependencies:
-    "@tanstack/query-core" "5.107.2"
+    "@tanstack/query-core" "5.108.0"
 
 "@tiptap/core@3.34.0", "@tiptap/core@^3.31.3":
   version "3.34.0"
@@ -4778,6 +4773,11 @@ canvg@^3.0.11:
     stackblur-canvas "^2.0.0"
     svg-pathdata "^6.0.3"
 
+categorical-logger@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/categorical-logger/-/categorical-logger-1.0.0.tgz#dc93d3f3cc1a281261ab63d5698ddd646ae45cd2"
+  integrity sha512-/7547NN23px6XFVVs+gtpkWZYuy8JlI6O9sy9G37m8qiuMpbn6dGECKb/QEk0UVFmN7S8Ynl0kQadPzs65+G3Q==
+
 chalk@4.1.2, chalk@^4.0.0, chalk@^4.1.0:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-4.1.2.tgz#aac4e2b7734a740867aeb16bf02aad556a1e7a01"
@@ -5494,9 +5494,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.486:
-  version "1.5.487"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.487.tgz#9a1e2861c50b08b0d2a4f3b6e3a37f9d72b00700"
-  integrity sha512-qWotOhQYeYEj+DK4+Y+cfPj44qiC6ETIiWtJLfmDJydED2BJJ7loPA4SfBbbrMI6X/X3tryJgxnY9nxsO545Zw==
+  version "1.5.489"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.489.tgz#4d7be5051f3ea8f29ec0c32fc1ef16b944f3dc8a"
+  integrity sha512-1cF87WItryk9lj5wg5SLsNegUihdkcHuOfrANPpO02y/d2krm1Oc3GjA9KBwlT5o145FTa1bbjdLc7pZnvtnYQ==
 
 emoji-regex@^10.3.0:
   version "10.6.0"
@@ -6565,10 +6565,10 @@ intl-messageformat@10.7.18:
     "@formatjs/icu-messageformat-parser" "2.11.4"
     tslib "^2.8.0"
 
-intl-messageformat@12.1.5:
-  version "12.1.5"
-  resolved "https://registry.yarnpkg.com/intl-messageformat/-/intl-messageformat-12.1.5.tgz#1b902dd7f68764c69318a7afe363cbc34b426486"
-  integrity sha512-quhcDFAxy4wr/GrgWgmMjuegoedNUIxGNLORfXgDgdjuv8cBM88ClLTLXmfYC1roMSR1PPc55yUEkpJ5m67W2g==
+intl-messageformat@12.2.0:
+  version "12.2.0"
+  resolved "https://registry.yarnpkg.com/intl-messageformat/-/intl-messageformat-12.2.0.tgz#6cfb751fa66f858dcffd8d915043b34df69d48f9"
+  integrity sha512-zFzW80iYSSJm4V185g3ItJQ96lBZ2RDO8O8qmRiPAAVKYXJeHfDQN2ITdtLlV+CjSi9Lo7zVW9xGt9CPCx7J6A==
   dependencies:
     "@formatjs/fast-memoize" "3.1.7"
     "@formatjs/icu-messageformat-parser" "3.5.23"
@@ -8176,13 +8176,13 @@ react-intl-formatted-duration@^4.0.0:
     intl-unofficial-duration-unit-format "3.0.0"
 
 react-intl@^12.1.7:
-  version "12.1.7"
-  resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-12.1.7.tgz#fb24e2fe107acb070903a44a6dbb68cb7e749974"
-  integrity sha512-DKPrDYGQfQpyW8g8dbEPd6abvinwHPw85LcAT6nmd8+kzexea5egLQu6KZTEGDgP+3ap8dn+sX3JTuS7v0xD4g==
+  version "12.1.8"
+  resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-12.1.8.tgz#9c8873842f4668cdd02e1b7a6e94a100f2973d28"
+  integrity sha512-Wl8m/zodiXPuhOEUWBZZ+CI4TapngapRdRGjJhFTArSnGw6Wpqfrn0kTGiI6UgBkHEtDYk9viMmb9eq8IMxE6g==
   dependencies:
     "@formatjs/icu-messageformat-parser" "3.5.23"
-    "@formatjs/intl" "6.1.5"
-    intl-messageformat "12.1.5"
+    "@formatjs/intl" "6.1.6"
+    intl-messageformat "12.2.0"
 
 react-intl@^7.1.10:
   version "7.1.14"

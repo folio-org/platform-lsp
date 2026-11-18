@@ -1,7 +1,7 @@
 {
   "name": "FOLIO LSP",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2027-SNAPSHOT.100200000003484",
+  "version": "R1-2027-SNAPSHOT.100200000003486",
   "eureka-components": [
     {
       "name": "folio-kong",
@@ -21,32 +21,32 @@
     },
     {
       "name": "mgr-applications",
-      "version": "4.1.0-SNAPSHOT.2486"
+      "version": "4.1.0-SNAPSHOT.2489"
     },
     {
       "name": "mgr-tenants",
-      "version": "4.1.0-SNAPSHOT.2271"
+      "version": "4.1.0-SNAPSHOT.2275"
     },
     {
       "name": "mgr-tenant-entitlements",
-      "version": "4.1.0-SNAPSHOT.2563"
+      "version": "4.1.0-SNAPSHOT.2603"
     }
   ],
   "applications": {
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000012059"
+        "version": "2.2.0-SNAPSHOT.100200000012061"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000011390"
+        "version": "3.4.0-SNAPSHOT.100200000011393"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000012610"
+        "version": "2.1.0-SNAPSHOT.100200000012615"
       },
       {
         "name": "app-agreements",
@@ -66,7 +66,7 @@
       },
       {
         "name": "app-consortia-manager",
-        "version": "1.5.0-SNAPSHOT.100200000012396"
+        "version": "1.5.0-SNAPSHOT.100200000012474"
       },
       {
         "name": "app-dashboard",
@@ -94,7 +94,7 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000012708"
+        "version": "1.1.0-SNAPSHOT.100200000012710"
       },
       {
         "name": "app-erm-usage",
@@ -134,7 +134,7 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000010878"
+        "version": "1.1.0-SNAPSHOT.100200000010881"
       },
       {
         "name": "app-mosaic",
@@ -162,7 +162,7 @@
       },
       {
         "name": "app-reporting",
-        "version": "1.6.0-SNAPSHOT.100200000012140"
+        "version": "1.6.0-SNAPSHOT.100200000012141"
       },
       {
         "name": "app-requests-ecs",
