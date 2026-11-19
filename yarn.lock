@@ -1534,9 +1534,9 @@
     lodash "^4.17.21"
 
 "@folio/consortia-settings@>=1.0.0":
-  version "3.2.1099000000000272"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/consortia-settings/-/consortia-settings-3.2.1099000000000272.tgz#f6569401016996fe54de3e3c4df847fe3e981a56"
-  integrity sha512-wpv/VDdJeGnB20nTRCw+sreHAIRiKAI59bcAHg4zFwUFAQ9Y+0etXVWxf3tGVhTJvkfrfNkhmL+j6lG0+dd9Pg==
+  version "3.2.1099000000000276"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/consortia-settings/-/consortia-settings-3.2.1099000000000276.tgz#06ba4c02a51c1e6642d99201518710928d622833"
+  integrity sha512-Pu5QXGB8fgGXAtGqRgrCondXwYfM6LdwLZalBvfPQZesCls1YLZRYmPvfSlRFbe3N1CjpUkFZ655oeGLehbdxg==
   dependencies:
     "@folio/stripes-acq-components" "~7.2.0"
     "@folio/stripes-authorization-components" "^2.0.0"
@@ -1641,9 +1641,9 @@
     "@folio/plugin-find-organization" "^6.0.0"
 
 "@folio/developer@>=1.5.0":
-  version "11.0.1099000000000428"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/developer/-/developer-11.0.1099000000000428.tgz#837d73ef2a22201389b462461e6c910b57e64541"
-  integrity sha512-djOcm7hBvwm7srlHK93w2MRpxD5evhFERay4BrMPLISSExzHp1mTuwxtLeefHN9A3uYZGjXtRDF3h+GauB3kuw==
+  version "11.0.1099000000000431"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/developer/-/developer-11.0.1099000000000431.tgz#486752b42b85c97455e01978347c99955cb1676a"
+  integrity sha512-OvMaoyWCGxZjHDqi2VfYfoPAHK5r+LQNAgciy41DrNmqyFdydswURyz2X3ZUA3862Qf+uXBYaDh490adJ/Pn+g==
   dependencies:
     chart.js "^4.4.0"
     ky "^0.23.0"
@@ -1655,9 +1655,9 @@
     react-query "^3.38.1"
 
 "@folio/eholdings@>=1.1.0":
-  version "11.2.1099000000000887"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000887.tgz#cb716fe3b0ca1a32c7dc27f8f62f982c0110bb11"
-  integrity sha512-3OU6lQB3uYpkq6nwzAfgvQUwrw+0545iqAfd2tXv23xYiFKo8MWHA+cUHA6mOkpr5l/3/nnwgz5qEWnnSI7QAw==
+  version "11.2.1099000000000893"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/eholdings/-/eholdings-11.2.1099000000000893.tgz#307efdde5ec461f44e214f36dfd89917cc56d7ef"
+  integrity sha512-SbYur/Kw/cT9bzE85L+vbnl7gh/HXnYvnFjKas9uUf3CXrVFD7t9rKLSIBlBLmXiptWWEQxXVkpmSbm2X90XtA==
   dependencies:
     classnames "^2.2.5"
     currency-symbol-map "^4.0.4"
@@ -2860,9 +2860,9 @@
     redux "^4.2.1"
 
 "@folio/tags@>=1.1.0":
-  version "10.0.1099000000000115"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/tags/-/tags-10.0.1099000000000115.tgz#e388abf40ec46b28acdf63b1f544b81536b4baa7"
-  integrity sha512-r7qYfzI3nJOAa7172rPdGTX5fOfGkOo2/oIcS9FtS1a29wojN/0fdg07bms9RDFhJW76gwkjHPrALGy0gt7etg==
+  version "11.0.1099000000000128"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/tags/-/tags-11.0.1099000000000128.tgz#714b23c78434278d034cbf6e72d6adbe413faa81"
+  integrity sha512-A++1Lla+S7HWJDpx5n740EtIAWLs5/rvhOys0oPISPKcf3Ubpxz2o7dNjlS5YXcH42V/cOZiRVD5TgIHLjWfRw==
   dependencies:
     prop-types "^15.5.10"
     redux-form "^8.3.7"
@@ -3700,17 +3700,17 @@
     "@svgr/plugin-jsx" "8.1.0"
     "@svgr/plugin-svgo" "8.1.0"
 
-"@tanstack/query-core@5.108.0":
-  version "5.108.0"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.108.0.tgz#1ba1f9ee4f86cdf500a100b623a8cda6e1ce9573"
-  integrity sha512-X9zJUtEV/0D2q9pmGS/Bza8S4bNovSBhZOtdhtu0fzsHwizC6C+Eh/q5CX3MQBchsRMrirWVQmv7Fp4OStzV9g==
+"@tanstack/query-core@5.108.1":
+  version "5.108.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.108.1.tgz#d9a90082fb6436435b74b3a18896be96a34fc3b2"
+  integrity sha512-GBX6Xsc9E+9eVLLxuM7orQNbssQjpruOCbocBYwT78MjxOWT5I+CWdvEo0N+UM6+oCZEKxuSud1oFLvE3OEmIg==
 
 "@tanstack/react-query@^5.107.1":
-  version "5.108.0"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.108.0.tgz#01f0e0c122e399ae1d1ba6966b4530deb2ed6a16"
-  integrity sha512-DpMbB8pVorEZcsHRa0Z13KQGfmndqvJbuLy9h+xfP8XpuEZBOxzq+QfXGonQ0fAgRSWhc+QsfoRETSTWxAEAVw==
+  version "5.108.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.108.1.tgz#3aabce3fedf32909568a70017473867d50c76d55"
+  integrity sha512-8/p7fpIdmUiKIukQ5ddAMUUSKC7Z8CcgUOBR2r3WqRvMg9Lzc4CXeoFchjfATKvqi23SyYFvesDdOULrvyunNg==
   dependencies:
-    "@tanstack/query-core" "5.108.0"
+    "@tanstack/query-core" "5.108.1"
 
 "@tiptap/core@3.34.0", "@tiptap/core@^3.31.3":
   version "3.34.0"
@@ -7767,9 +7767,9 @@ prosemirror-gapcursor@^1.4.1:
     prosemirror-view "^1.0.0"
 
 prosemirror-history@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/prosemirror-history/-/prosemirror-history-1.5.1.tgz#200fa741bc775c04a563d1208d0a0b4385f4efcb"
-  integrity sha512-onlwnqKvgtFg6srZOmDOAhlAy1FIHQpOExORybX0S+DvJepE5tPALrB9iGet/2sqqqrelSnB10OoiOJqAvu2DA==
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/prosemirror-history/-/prosemirror-history-1.5.2.tgz#6b8eef006b063daf5d5c924f47a6f8e61e817498"
+  integrity sha512-/VCI9OUPT69PzzoKmLJ6xLTkMCXmpt/M6/tOlctR5DjSAinniYgjkw6Ao/Obmq/f5mG5csTQi6a9AWhwFVLSNA==
   dependencies:
     prosemirror-state "^1.2.2"
     prosemirror-transform "^1.0.0"
@@ -7777,9 +7777,9 @@ prosemirror-history@^1.5.1:
     rope-sequence "^1.3.0"
 
 prosemirror-inputrules@^1.5.1:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/prosemirror-inputrules/-/prosemirror-inputrules-1.6.0.tgz#7c33663410d7b8f6db25971009254ee1b17fa1bb"
-  integrity sha512-e/Ukf5qy6Pq49l7M7/ObOQThIyBR2Is5g2qJq4e6LXKuCGr66/Rr4MjghkL3kB5ty4MOG92P8LyqwC5ET7Qx7g==
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/prosemirror-inputrules/-/prosemirror-inputrules-1.7.0.tgz#be550d63bafe15bef916ca0f24eb00da556f197e"
+  integrity sha512-8osbijqTD9BtFWbtWbrJ47zvwwiC4/+Y993VzCKRYjPw3jK+CixvRlFu7UgT6mExqPnu12WOh+IF9l6921vqhA==
   dependencies:
     prosemirror-state "^1.0.0"
     prosemirror-transform "^1.0.0"
@@ -7800,9 +7800,9 @@ prosemirror-model@^1.0.0, prosemirror-model@^1.21.0, prosemirror-model@^1.25.12,
     orderedmap "^2.0.0"
 
 prosemirror-schema-list@^1.5.1:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/prosemirror-schema-list/-/prosemirror-schema-list-1.6.0.tgz#91908809e8cf6488ec27c6d65bf07f3df7458498"
-  integrity sha512-G1srDtan+VqWn+qpmWFj/6j0YsZ5zMU+ZIlGVIW41a5JF2jAI3jzfMRWmSABmEH2Qoq1PmAG/o2mucMMdLOsLg==
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/prosemirror-schema-list/-/prosemirror-schema-list-1.6.1.tgz#44f6e9317b9a528c65f2e0647fc764b738a97043"
+  integrity sha512-QiL/QjgCWr+3Mhukm48E5d3XCC8lVEIanixGkXbWKUyxCUGy4ntVffFapmMwQ4vxhZw+8i7117W2N6FSyqyWfA==
   dependencies:
     prosemirror-model "^1.0.0"
     prosemirror-state "^1.0.0"
@@ -7829,16 +7829,16 @@ prosemirror-tables@^1.8.5:
     prosemirror-view "^1.41.4"
 
 prosemirror-transform@^1.0.0, prosemirror-transform@^1.1.0, prosemirror-transform@^1.10.2, prosemirror-transform@^1.10.5, prosemirror-transform@^1.12.2, prosemirror-transform@^1.7.3:
-  version "1.12.6"
-  resolved "https://registry.yarnpkg.com/prosemirror-transform/-/prosemirror-transform-1.12.6.tgz#b949ccefd34ccd850abd1441bf9027bc034b60e3"
-  integrity sha512-Npot0uIQTDObbDLCiw3TUc08EIT1jNcqbuadG+y5T4jT+4NN8f46AP5h/x+6wE++q7NcW8++oBvc1M0wXvFD/g==
+  version "1.12.7"
+  resolved "https://registry.yarnpkg.com/prosemirror-transform/-/prosemirror-transform-1.12.7.tgz#a750cde5e3bb92fd47dd22ee0afe8bea9a4917f5"
+  integrity sha512-/e87cbxcM5WJOJrL1IrM9gJqO3EK8LdQoPvs+r4ss1lRO5t5QeqkU0SlmDvcitCSDUbm8s/MxbBB6ds4pY6Xlg==
   dependencies:
     prosemirror-model "^1.21.0"
 
 prosemirror-view@^1.0.0, prosemirror-view@^1.1.0, prosemirror-view@^1.27.0, prosemirror-view@^1.31.0, prosemirror-view@^1.41.4, prosemirror-view@^1.42.6:
-  version "1.42.9"
-  resolved "https://registry.yarnpkg.com/prosemirror-view/-/prosemirror-view-1.42.9.tgz#ff0226435968769bee4fe36fe235daa7351410a5"
-  integrity sha512-bKbfzeKZOu2H2JQU2TaJmYu6EBcor3VnGIR4jR31cbEt1ztUnfUB6bKGV1+fJzOJdrVWR+tRU0208zM3oQx4wA==
+  version "1.43.0"
+  resolved "https://registry.yarnpkg.com/prosemirror-view/-/prosemirror-view-1.43.0.tgz#0d4b504fb8fa0afba6550fc18db0ec2c3cb47307"
+  integrity sha512-MZOUuhD+Gv7Cp7UlgvyhptUfb920NkLBgymhyhaM8xp+JXQyLhkssS2EXZvMI3ZU3vRoz5z7mRC32udVgNYHqg==
   dependencies:
     prosemirror-model "^1.25.12"
     prosemirror-state "^1.0.0"
@@ -8922,9 +8922,9 @@ sockjs@^0.3.24:
     websocket-driver "^0.7.4"
 
 source-map-js@^1.0.1, source-map-js@^1.0.2, source-map-js@^1.2.2:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.2.3.tgz#4cf1e31a10db87e8234840ebc2b85a255cf7705e"
-  integrity sha512-xj+WrAkyv5Qp+t7r9N5HvCBu7g1qOe6CKRNpq22X1GGcPEQADFU54v5qsPVs3/vrUFQ7XivFrcAVKA2stI0kWA==
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.2.4.tgz#b9303bf27115446da5e6ca3a4a2ee3e9f7b69633"
+  integrity sha512-J7ZjMvHd9O1fcT/5V09QWaaSl2BbWx3F6O08spde82Namf9UB0GxRVIPiNbVsdKkoizHiSpTodo3vp2bAy91MA==
 
 source-map-loader@^4.0.0:
   version "4.0.2"

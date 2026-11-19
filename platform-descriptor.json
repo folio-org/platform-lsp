@@ -1,7 +1,7 @@
 {
   "name": "FOLIO LSP",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2027-SNAPSHOT.100200000003489",
+  "version": "R1-2027-SNAPSHOT.100200000003491",
   "eureka-components": [
     {
       "name": "folio-kong",
@@ -29,18 +29,18 @@
     },
     {
       "name": "mgr-tenant-entitlements",
-      "version": "4.1.0-SNAPSHOT.2603"
+      "version": "4.1.0-SNAPSHOT.2622"
     }
   ],
   "applications": {
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000012064"
+        "version": "2.2.0-SNAPSHOT.100200000012066"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000011396"
+        "version": "3.4.0-SNAPSHOT.100200000011399"
       }
     ],
     "optional": [
@@ -66,7 +66,7 @@
       },
       {
         "name": "app-consortia-manager",
-        "version": "1.5.0-SNAPSHOT.100200000012474"
+        "version": "1.5.0-SNAPSHOT.100200000012480"
       },
       {
         "name": "app-dashboard",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-export",
-        "version": "1.1.0-SNAPSHOT.100200000010665"
+        "version": "1.1.0-SNAPSHOT.100200000010689"
       },
       {
         "name": "app-data-import",
@@ -150,7 +150,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "2.1.0-SNAPSHOT.100200000012022"
+        "version": "2.1.0-SNAPSHOT.100200000012044"
       },
       {
         "name": "app-quick-marc",
@@ -162,7 +162,7 @@
       },
       {
         "name": "app-reporting",
-        "version": "1.6.0-SNAPSHOT.100200000012145"
+        "version": "1.6.0-SNAPSHOT.100200000012147"
       },
       {
         "name": "app-requests-ecs",
@@ -196,7 +196,7 @@
     "experimental": [
       {
         "name": "app-finc",
-        "version": "1.1.0-SNAPSHOT.100200000011736"
+        "version": "1.1.0-SNAPSHOT.100200000011743"
       },
       {
         "name": "app-rtac-cache",
