@@ -29,7 +29,7 @@
     },
     {
       "name": "mgr-tenant-entitlements",
-      "version": "4.1.0-SNAPSHOT.2603"
+      "version": "4.1.0-SNAPSHOT.2f00dc2"
     }
   ],
   "applications": {
