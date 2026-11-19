@@ -1,7 +1,7 @@
 {
   "name": "FOLIO LSP",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2027-SNAPSHOT.100200000003488",
+  "version": "R1-2027-SNAPSHOT.100200000003489",
   "eureka-components": [
     {
       "name": "folio-kong",
@@ -36,11 +36,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000012063"
+        "version": "2.2.0-SNAPSHOT.100200000012064"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000011393"
+        "version": "3.4.0-SNAPSHOT.100200000011396"
       }
     ],
     "optional": [
@@ -98,11 +98,11 @@
       },
       {
         "name": "app-erm-usage",
-        "version": "3.1.0-SNAPSHOT.100200000012392"
+        "version": "3.1.0-SNAPSHOT.100200000012399"
       },
       {
         "name": "app-fqm",
-        "version": "2.1.0-SNAPSHOT.100200000012557"
+        "version": "2.1.0-SNAPSHOT.100200000012564"
       },
       {
         "name": "app-gobi",
@@ -126,7 +126,7 @@
       },
       {
         "name": "app-lists",
-        "version": "1.2.0-SNAPSHOT.100200000012589"
+        "version": "1.2.0-SNAPSHOT.100200000012596"
       },
       {
         "name": "app-marc-migrations",
@@ -162,7 +162,7 @@
       },
       {
         "name": "app-reporting",
-        "version": "1.6.0-SNAPSHOT.100200000012141"
+        "version": "1.6.0-SNAPSHOT.100200000012145"
       },
       {
         "name": "app-requests-ecs",

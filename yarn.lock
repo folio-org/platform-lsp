@@ -1694,9 +1694,9 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/erm-usage@>=1.0.3":
-  version "13.0.1099000000001214"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-13.0.1099000000001214.tgz#493f197acd7589824319c1c2aed488f7375fbe24"
-  integrity sha512-H+hdsJon38v/gvm/0Qc5JvEGKOGKPmKUgwexyy5sWJq0xNbntIA1qowhDTm75sZDbLqcl3nrYN2qS4FaCCZbTQ==
+  version "13.0.1099000000001236"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-13.0.1099000000001236.tgz#1f079362cdc0eec398be0c64c1f5e69c811596e2"
+  integrity sha512-tkxKRaMTIMMyBVl9XkHGdRYNnFknNpwSWQ4ZAGn8u7bbCYu1xqIKr9RGkmEYlyuuH21m1yE54RZKJomcn6Qupw==
   dependencies:
     "@folio/stripes-leipzig-components" "^1.1.0"
     compose-function "^3.0.3"
@@ -1931,9 +1931,9 @@
     zustand "^5.1.0"
 
 "@folio/lists@>=1.2.0":
-  version "5.0.2099000000001158"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.2099000000001158.tgz#e03297c834e24a46412292798f6af72226fbea9c"
-  integrity sha512-T9GKYBpPIebQ887KNkOBJ3DbxQhNF6Wftrq8iiuxooNF244I8yOw1ECq7CNXcv5CD7b3oqbvx4qgVuUuuhfXAQ==
+  version "5.0.2099000000001173"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/lists/-/lists-5.0.2099000000001173.tgz#0274b20eb31ddf4bac9790072f6ef5321f269485"
+  integrity sha512-EIJ+sSy45wYKyDrWoBGQ3v/yhCTg9QSXaGZQ+7etyKUHaGZzfVu4zt+vk0WZ9kuUoxOdWI35Q9G0+Q/HhT17qA==
   dependencies:
     "@folio/plugin-find-user" "^8.1.0"
     "@folio/plugin-query-builder" "^3.0.0"
@@ -2270,9 +2270,9 @@
     prop-types "^15.6.0"
 
 "@folio/plugin-query-builder@>=1.0.0", "@folio/plugin-query-builder@^3.0.0":
-  version "3.0.2099000000001724"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-query-builder/-/plugin-query-builder-3.0.2099000000001724.tgz#278975768ad29130193fe4c0878c51aeb1c99011"
-  integrity sha512-p3+zgWr9SRuZfxbLltMkV8ZNSuZLth9F3Yj2cDRnq9lY3SKPrJoPiZ102adEj3pBbBd57fe/YZU64JnvJDkJ/Q==
+  version "3.0.2099000000001734"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-query-builder/-/plugin-query-builder-3.0.2099000000001734.tgz#bd21f0b8e409170ec515496c240821778a33dbab"
+  integrity sha512-Yh1ruqr4I+oKT1j7L4cHrBG7pmBIaLnqruT7z9xPiKh1JYHKb5hTySYbDEHQD0pCrR42guqAOC7ppw075evb6g==
   dependencies:
     "@folio/stripes-acq-components" "^7.0.0"
     classnames "^2.5.1"
@@ -2720,9 +2720,9 @@
     prop-types "^15.7.2"
 
 "@folio/stripes-smart-components@^10.0.0":
-  version "10.1.1099000000000912"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-smart-components/-/stripes-smart-components-10.1.1099000000000912.tgz#167f26c1c8db1515a1a722b02f11cbc5bf48efd6"
-  integrity sha512-BxdvFO4JB2vo9z6tndEHRNAc5DcUzZVP09E8RZTWFX+n6xU9kEJSZCNxNyHz4V87oWGSOS/azu0UY2cqv5K44g==
+  version "10.1.1099000000000916"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/stripes-smart-components/-/stripes-smart-components-10.1.1099000000000916.tgz#75d4e7339d359ccb15afedd69a0ecb8cc54da966"
+  integrity sha512-BKKrTNZBS/BLp6PmfwpgdgHhmDjpXhmLH8V7qyV2GzT2GCgTQp1G2JpY7hDEKJT5YoMhp/6qwRkucapxIwkhCQ==
   dependencies:
     "@babel/runtime" "^7.28.6"
     "@rehooks/local-storage" "^2.4.4"
@@ -5909,7 +5909,7 @@ file-selector@^2.1.0:
   dependencies:
     tslib "^2.7.0"
 
-file-selector@^5.0.1:
+file-selector@^5.0.2:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/file-selector/-/file-selector-5.0.3.tgz#a02aa989b711bfe3d4435685edfa2c4c96a8c31b"
   integrity sha512-d15nlW+KKq82TlItRvCHtJ8NXCX0nwz2SEUR1MOT8W50c5q2se551ZFdhITFrWohl/5wbRPfMMF9jq4Oj1xRGQ==
@@ -8096,12 +8096,12 @@ react-dropzone@^15.0.0:
     prop-types "^15.8.1"
 
 react-dropzone@^20.2.0:
-  version "20.2.0"
-  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-20.2.0.tgz#b5868a4b1f1ec0b0855a921d884bd247bccb1861"
-  integrity sha512-FRlcSp6UFT9Etg57U4+g6O6qF/jH7sUh2Hz67lQlrZJa/3FjfAFvw7DwDSItiG2vBUXTdh2wroEwXPPg7o/jkg==
+  version "20.2.1"
+  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-20.2.1.tgz#cb75938e4159e496cf1178323c349cf6e56a3891"
+  integrity sha512-8ldzI42a+iz6jlC5t0HoOO5ce65dU8ZGo8ZpesL2E57JByC8LBUieMrkGj97YYfgMaYKwkhpkfYxKOCKAekywA==
   dependencies:
     attr-accept "^4.0.1"
-    file-selector "^5.0.1"
+    file-selector "^5.0.2"
 
 react-easy-crop@^5.0.5:
   version "5.5.7"
