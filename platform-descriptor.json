@@ -1,7 +1,7 @@
 {
   "name": "FOLIO LSP",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2027-SNAPSHOT.100200000003493",
+  "version": "R1-2027-SNAPSHOT.100200000003494",
   "eureka-components": [
     {
       "name": "folio-kong",
@@ -36,11 +36,11 @@
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000012066"
+        "version": "2.2.0-SNAPSHOT.100200000012069"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000011399"
+        "version": "3.4.0-SNAPSHOT.100200000011402"
       }
     ],
     "optional": [
@@ -58,7 +58,7 @@
       },
       {
         "name": "app-bulk-edit",
-        "version": "2.1.0-SNAPSHOT.100200000012064"
+        "version": "2.1.0-SNAPSHOT.100200000012071"
       },
       {
         "name": "app-consortia",
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000004203"
+        "version": "1.1.0-SNAPSHOT.100200000004217"
       },
       {
         "name": "app-dcb",
@@ -94,11 +94,11 @@
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000012718"
+        "version": "1.1.0-SNAPSHOT.100200000012721"
       },
       {
         "name": "app-erm-usage",
-        "version": "3.1.0-SNAPSHOT.100200000012399"
+        "version": "3.1.0-SNAPSHOT.100200000012404"
       },
       {
         "name": "app-fqm",
@@ -114,7 +114,7 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000005303"
+        "version": "1.1.0-SNAPSHOT.100200000005309"
       },
       {
         "name": "app-licenses",
@@ -182,7 +182,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000012424"
+        "version": "1.1.0-SNAPSHOT.100200000012430"
       },
       {
         "name": "app-service-interaction",
@@ -200,7 +200,7 @@
       },
       {
         "name": "app-rtac-cache",
-        "version": "1.1.0-SNAPSHOT.100200000008131"
+        "version": "1.1.0-SNAPSHOT.100200000008183"
       }
     ]
   },
