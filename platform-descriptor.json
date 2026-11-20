@@ -1,7 +1,7 @@
 {
   "name": "FOLIO LSP (Trillium)",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2026.51",
+  "version": "R1-2026.52",
   "eureka-components": [
     {
       "name": "folio-kong",
@@ -32,17 +32,17 @@
     "required": [
       {
         "name": "app-platform-complete",
-        "version": "3.3.21"
+        "version": "3.3.23"
       },
       {
         "name": "app-platform-minimal",
-        "version": "2.1.23"
+        "version": "2.1.24"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.0.17"
+        "version": "2.0.19"
       },
       {
         "name": "app-agreements",
@@ -58,7 +58,7 @@
       },
       {
         "name": "app-consortia",
-        "version": "1.4.2"
+        "version": "1.4.3"
       },
       {
         "name": "app-consortia-manager",
@@ -74,7 +74,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.0.5"
+        "version": "1.0.6"
       },
       {
         "name": "app-dcb",
@@ -82,15 +82,15 @@
       },
       {
         "name": "app-ebsconet",
-        "version": "1.1.0"
+        "version": "1.1.1"
       },
       {
         "name": "app-edge-complete",
-        "version": "2.2.9"
+        "version": "2.2.11"
       },
       {
         "name": "app-eholdings",
-        "version": "1.0.4"
+        "version": "1.0.5"
       },
       {
         "name": "app-erm-usage",
@@ -102,15 +102,15 @@
       },
       {
         "name": "app-gobi",
-        "version": "1.1.1"
+        "version": "1.1.2"
       },
       {
         "name": "app-inn-reach",
-        "version": "2.0.11"
+        "version": "2.0.12"
       },
       {
         "name": "app-inventory",
-        "version": "1.0.30"
+        "version": "1.0.31"
       },
       {
         "name": "app-licenses",
@@ -130,11 +130,11 @@
       },
       {
         "name": "app-marc-storage",
-        "version": "1.0.5"
+        "version": "1.0.6"
       },
       {
         "name": "app-mosaic",
-        "version": "1.1.2"
+        "version": "1.1.4"
       },
       {
         "name": "app-notification",
@@ -142,7 +142,7 @@
       },
       {
         "name": "app-oai-pmh",
-        "version": "2.0.5"
+        "version": "2.0.6"
       },
       {
         "name": "app-quick-marc",
