@@ -8112,9 +8112,9 @@ react-easy-crop@^5.0.5:
     tslib "^2.0.1"
 
 react-fast-compare@^3.2.0:
-  version "3.2.3"
-  resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.3.tgz#a75b55fe54463ed5b8733d91289da7a6c897b2dc"
-  integrity sha512-WY9YHI1jjYC5a2lNRfHbeaNVQqiY+mMKWBSw1mPU0FgevlxI6V7izhNYz7Vp5ieFxetuRb6RmihPQxXEzg7oWQ==
+  version "3.2.4"
+  resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.4.tgz#b9d457ef9b2fea716dc31c9cec20901ccd0bf203"
+  integrity sha512-YbkgZfjvuokdt6zR8Oki8Bt4QXAZim/9HKSUr5J23GVyX2o8sYD/JlKSFrJvEFIPjotWvkGY7DgUS+udyr8cEw==
 
 react-final-form-arrays@^3.0.0, react-final-form-arrays@^3.1.0, react-final-form-arrays@^3.1.1, react-final-form-arrays@^3.1.2, react-final-form-arrays@^3.1.3, react-final-form-arrays@^3.1.4:
   version "3.1.4"
