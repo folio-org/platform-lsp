@@ -6022,9 +6022,9 @@ focus-trap@^7.5.4:
     tabbable "^6.4.0"
 
 focus-trap@^8.2.5:
-  version "8.2.5"
-  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-8.2.5.tgz#5dd31584607f1a1f8b46e7866c3def5fcc46ce99"
-  integrity sha512-VrqfyRXaHZ0EkhXlfyalszmhnSN9yjdYXwlwLSRoJrDJ0/eswY5J5Avj/Hcd/PrOHCMnsMhwx7+7+s1kmv9Asg==
+  version "8.2.6"
+  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-8.2.6.tgz#d5013d1cfef4ab21a3828f3c72ee4e46ce17eb26"
+  integrity sha512-4V7uTf/7Ax3ynfbey6K3o8NOfIz+go9atKNtFU+KCP5NWhyvn2M/Qk4HY+9kOi8NWujpglRGe0y6G3r/L5M/Pw==
   dependencies:
     tabbable "^6.5.2"
 
