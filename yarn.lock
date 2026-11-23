@@ -2031,9 +2031,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/orders@>=1.1.0":
-  version "10.0.1099000000001189"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-10.0.1099000000001189.tgz#d02851a75779b4c43f5940bd3a3ac5bd9ef202b3"
-  integrity sha512-M+cfe8xbDo+BxJdYLovPKVOBwVcl2PLZCAUQhjKD5BBBC1BnvDTSOXBOXwkZgrAHY0MkmneWeH8bIJLdzByL2A==
+  version "10.0.1099000000001208"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-10.0.1099000000001208.tgz#de130efa74f6ec7645063a170e397d1747ed0cf4"
+  integrity sha512-AQLTVd1R6hm+M3/63unRwyWJCMi2maebmBSB6Udr2jXMwDDHT22kKoyPsQVKwdMiItJqCaDNuKwVQfzyOwezIg==
   dependencies:
     "@folio/plugin-find-po-line" "^7.0.0"
     "@folio/stripes-acq-components" "~7.2.0"
@@ -2932,6 +2932,11 @@
   resolved "https://registry.yarnpkg.com/@formatjs/fast-memoize/-/fast-memoize-3.1.7.tgz#5f79b3756e4bcb5faee47b3a2f01216e1212c9e4"
   integrity sha512-zXfhLpvA6T7+efdt9JLbBwZ00tT7NsBMDVnDu8rpHeNNv8KfRZAMo2gkG0k9lK/Nzc//3kJ9pImsfuJxk3KhUA==
 
+"@formatjs/fast-memoize@3.1.8":
+  version "3.1.8"
+  resolved "https://registry.yarnpkg.com/@formatjs/fast-memoize/-/fast-memoize-3.1.8.tgz#1442251fe4107ba127904c22a815fae33a961c98"
+  integrity sha512-Y9YFFfeBDkAWmLWD3LVNHbHlyELsP2lYRNoY6+QhtPh1/ujCiX5QYBzAqe0cWdkCxKVezHLt0qjWz1veEUV7UA==
+
 "@formatjs/icu-messageformat-parser@2.11.4":
   version "2.11.4"
   resolved "https://registry.yarnpkg.com/@formatjs/icu-messageformat-parser/-/icu-messageformat-parser-2.11.4.tgz#63bd2cd82d08ae2bef55adeeb86486df68826f32"
@@ -2991,14 +2996,14 @@
     intl-messageformat "10.7.18"
     tslib "^2.8.0"
 
-"@formatjs/intl@6.2.0":
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/@formatjs/intl/-/intl-6.2.0.tgz#3c080be89fce29804efe5b9e95566c66828d5377"
-  integrity sha512-HVu+quR1XS8L/yK+5bdPsiTwdDx0NJ7+9RfyqzEgOOlIdDW4fCu74eXLkVyYYVHdRsrdPdCaVBAJmG5rxWEDXA==
+"@formatjs/intl@6.2.1":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl/-/intl-6.2.1.tgz#5a280734eb2047dc5bfa8a1835a9aadd705585e3"
+  integrity sha512-ONOk8qLnUD0NOlWj6uSNEjeq/Ta9rJ6Z4LytoZMh2ILqXeCtlWGExgc5pYiLZ37kCBKkm3Pr365nz9Lmnhq7AQ==
   dependencies:
-    "@formatjs/fast-memoize" "3.1.7"
+    "@formatjs/fast-memoize" "3.1.8"
     "@formatjs/icu-messageformat-parser" "3.5.23"
-    intl-messageformat "12.2.0"
+    intl-messageformat "12.2.1"
 
 "@graphql-typed-document-node/core@^3.1.1":
   version "3.2.0"
@@ -6565,12 +6570,12 @@ intl-messageformat@10.7.18:
     "@formatjs/icu-messageformat-parser" "2.11.4"
     tslib "^2.8.0"
 
-intl-messageformat@12.2.0:
-  version "12.2.0"
-  resolved "https://registry.yarnpkg.com/intl-messageformat/-/intl-messageformat-12.2.0.tgz#6cfb751fa66f858dcffd8d915043b34df69d48f9"
-  integrity sha512-zFzW80iYSSJm4V185g3ItJQ96lBZ2RDO8O8qmRiPAAVKYXJeHfDQN2ITdtLlV+CjSi9Lo7zVW9xGt9CPCx7J6A==
+intl-messageformat@12.2.1:
+  version "12.2.1"
+  resolved "https://registry.yarnpkg.com/intl-messageformat/-/intl-messageformat-12.2.1.tgz#c1ec4668282dc3559eb23aa24f5ba9a4dc995030"
+  integrity sha512-GvlBHj5Blu0ro39QT/QEbX3I23GAYvDh9/B+l33NnXjmYe/UoqFgZjNZoqPa6QdWwAliP/i27y5JeKjFkqlbRA==
   dependencies:
-    "@formatjs/fast-memoize" "3.1.7"
+    "@formatjs/fast-memoize" "3.1.8"
     "@formatjs/icu-messageformat-parser" "3.5.23"
 
 intl-messageformat@^11.1.2:
@@ -8176,13 +8181,13 @@ react-intl-formatted-duration@^4.0.0:
     intl-unofficial-duration-unit-format "3.0.0"
 
 react-intl@^12.1.7:
-  version "12.2.0"
-  resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-12.2.0.tgz#b98c71ae666a199a87e9bfbba8aab01a8214adf5"
-  integrity sha512-GUSrHGBmOzPqiINvII3x2h8VwLyyhDaZFymSmN7gYQj0pGT1y4eiL6SbLVHelP2z5ItgIikrwXTIx05XgZllUw==
+  version "12.2.1"
+  resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-12.2.1.tgz#aaf2cfe00aceedaea7853083d948f24232c5aac3"
+  integrity sha512-RAvv36BaFDw/4HAUDmTBStvdfrKxmg0UOMv3ojeB4qPBs7tXbv8qeSThKrpe3MeSaRijJtUeZK9SP/WBcFoKDg==
   dependencies:
     "@formatjs/icu-messageformat-parser" "3.5.23"
-    "@formatjs/intl" "6.2.0"
-    intl-messageformat "12.2.0"
+    "@formatjs/intl" "6.2.1"
+    intl-messageformat "12.2.1"
 
 react-intl@^7.1.10:
   version "7.1.14"
