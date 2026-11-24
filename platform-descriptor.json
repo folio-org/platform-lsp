@@ -32,11 +32,11 @@
     "required": [
       {
         "name": "app-platform-complete",
-        "version": "3.3.25"
+        "version": "3.3.26"
       },
       {
         "name": "app-platform-minimal",
-        "version": "2.1.24"
+        "version": "2.1.25"
       }
     ],
     "optional": [
