@@ -2031,9 +2031,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/orders@>=1.1.0":
-  version "10.0.1099000000001212"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-10.0.1099000000001212.tgz#6bcb4e3a91ded5c64757e57b261669e8b487e1c2"
-  integrity sha512-kt+XSUvHK009Kci/rKaUkxze+yzk9OA+/MyUVRozvZ0JuxoeX942ql7ucROMwjeVn1hXYcNdYiaBMxnz2fZilQ==
+  version "10.0.1099000000001223"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-10.0.1099000000001223.tgz#86f9e54835548c502ca78b35b627763d2003f893"
+  integrity sha512-++3bi0jxU12mvgObUWuk3OC4VwswoK1EtdPGuXbf3XGshv6/J+DElKBbOOi5dBCM/JyBWE0hnYzXbT3MTzAOzw==
   dependencies:
     "@folio/plugin-find-po-line" "^7.0.0"
     "@folio/stripes-acq-components" "~7.2.0"
@@ -2327,9 +2327,9 @@
     "@folio/plugin-find-authority" "^5.0.0"
 
 "@folio/reading-room@>=1.0.0":
-  version "3.0.1099000000000195"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/reading-room/-/reading-room-3.0.1099000000000195.tgz#b71146fb755f16e1f9111eb636c1acd8bcb5cd41"
-  integrity sha512-SOM5pXQOypoWCQo7lJG2KV5/NTIuj18E+IpfaCipm/uGpRMNW7xeXepM+mOjAplOqeOBeEqyD/WjjO1jPPnhyQ==
+  version "3.1.1099000000000201"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/reading-room/-/reading-room-3.1.1099000000000201.tgz#96f76171c285a06ff6b4571d7401048347acf533"
+  integrity sha512-arTmH6YqBNT2/Gq9dAcMtPIygoxlawS+Rw8Y/w1e0Ek0XbU1pOaorx9FLRKO1UsS8APV6e6v/GAz7v5vJiwggQ==
   dependencies:
     classnames "^2.2.5"
     prop-types "^15.6.0"
@@ -2386,9 +2386,9 @@
     "@folio/plugin-find-user" "^8.0.0"
 
 "@folio/requests@>=1.4.1":
-  version "13.1.1099000000000507"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/requests/-/requests-13.1.1099000000000507.tgz#100a68b6aca66609a374e9f602696c7c596982a2"
-  integrity sha512-EQLAy7qbI3Vrxo6vjGlnAtF8ckdazfRgWy3qAHiOmEk5a+ZBLO58w1F872Q8bbIMvPCOnQ+3gspyUQqijRpRUw==
+  version "13.1.1099000000000512"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/requests/-/requests-13.1.1099000000000512.tgz#de5b13669c0ed913edb0dc6ccee96e9600eeb208"
+  integrity sha512-Gcs0t0gTekRptf41xxoSLvYOzM2SkYOHXp2URAwCsw8uPOUv0k/22SJYWN87VFrdnTDm8sEeg8AV2RJmNwJp5g==
   dependencies:
     dompurify "^3.0.9"
     final-form "^4.20.7"
@@ -4760,9 +4760,9 @@ camelcase@^6.2.0:
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
 caniuse-lite@^1.0.30001826:
-  version "1.0.30001827"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001827.tgz#42db7cf8d15cbd4d66e2f4fde885009565f8bdeb"
-  integrity sha512-YWEDr46gSO81M8w6uPbaIy4++IXsirx2asUqvllNiD4BPf75ibxclUjWEqp8ObCenRv+UM2n5Y8xuRPT8V8FrQ==
+  version "1.0.30001828"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001828.tgz#cf8d703ed2e29b917ddf2bcdb64483c604339709"
+  integrity sha512-7MWeT+3DlrpuDybTWHl4Zb1Z80Z1fLLnOXuBjDXebzDVcqnEWUlV8JcbASg8B8BhcW8QT2UiR1KAtzYFIZHZYA==
 
 canvg@^3.0.11:
   version "3.0.11"
@@ -7841,9 +7841,9 @@ prosemirror-transform@^1.0.0, prosemirror-transform@^1.1.0, prosemirror-transfor
     prosemirror-model "^1.21.0"
 
 prosemirror-view@^1.0.0, prosemirror-view@^1.1.0, prosemirror-view@^1.27.0, prosemirror-view@^1.31.0, prosemirror-view@^1.41.4, prosemirror-view@^1.42.6:
-  version "1.43.1"
-  resolved "https://registry.yarnpkg.com/prosemirror-view/-/prosemirror-view-1.43.1.tgz#3dc114706f9d9b7c1338e90828e10a4142c03708"
-  integrity sha512-rInvs6bSncGi5ns8FfHdmSlqAg8u+fFwmwME6xx9zxnMgq4evMiiswqvam7LnOPLrMNjhw6ax542LWLIXDH1EA==
+  version "1.44.0"
+  resolved "https://registry.yarnpkg.com/prosemirror-view/-/prosemirror-view-1.44.0.tgz#9b98d3c3c2a4c500670df580054e533d20f38243"
+  integrity sha512-Ga7889C0DYI1AI0zzgXBNVElPRLh6B2+K87XLjza90Bm/02XyEGXUr0gnla+Oefv7krvo3VIUDwM+YHKU9xGxg==
   dependencies:
     prosemirror-model "^1.25.12"
     prosemirror-state "^1.0.0"
