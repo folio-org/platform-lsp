@@ -1694,9 +1694,9 @@
     react-final-form-arrays "^3.1.1"
 
 "@folio/erm-usage@>=1.0.3":
-  version "13.0.1099000000001283"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-13.0.1099000000001283.tgz#1bfac53dbb87648e319c2bb33dc42805db798f5b"
-  integrity sha512-gl9GPNEeZTgKz6fduogJEUoIq29BkF1RJKQPnI10Rzl6PIOcAb+Z2/xFcfCH9SOGJfo/DAQB7vZ7Mi0BhcVe4A==
+  version "13.0.1099000000001290"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/erm-usage/-/erm-usage-13.0.1099000000001290.tgz#9ea0f84db8347163798347dd3a3cb34f5f6b51c4"
+  integrity sha512-w2Gs0o7AdM4oS4pyorqtDJzEnRSqyOXijUnZoigiH/6P5SZC+2rXYuVy9rNbXx/pre417dgRnsc9xSralyzZ4A==
   dependencies:
     "@folio/stripes-leipzig-components" "^1.1.0"
     compose-function "^3.0.3"
@@ -2102,9 +2102,9 @@
     react-final-form-listeners "^1.0.2"
 
 "@folio/plugin-eusage-reports@>=1.0.0":
-  version "4.1.1099000000000246"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-eusage-reports/-/plugin-eusage-reports-4.1.1099000000000246.tgz#808909d6f3cb0f1c88f39d22b1eacde6e46c4fee"
-  integrity sha512-2+M+ND53k35b7dyGwU4ngAMLPf6B2N79whW5qAwgFuNuXhAuVLhAMkOpIfq4mZJsXFU+tnHpg8Oz1LpXlQM8BA==
+  version "4.1.1099000000000249"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/plugin-eusage-reports/-/plugin-eusage-reports-4.1.1099000000000249.tgz#3bb8e81852f0c50fd192deecbfd7df32abf0c4ec"
+  integrity sha512-zYrj8PDi7PvBetweVFVEKaZYSKS51JQC9d2G8WfSSs8GF5TZ6rUoVF1AhfRgsi2XjfOskcUpqSq5aFZ7gQ6J+A==
   dependencies:
     chart.js "^4.4.0"
     lodash "^4.17.21"
@@ -9741,9 +9741,9 @@ websocket-driver@^0.7.4:
     websocket-extensions ">=0.1.1"
 
 websocket-extensions@>=0.1.1, websocket-extensions@>=0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.2.0.tgz#9b0dbdfd847e9dc2755854924d1c79025b800001"
-  integrity sha512-vQaTTgDDgwlrreIJAprknlnvEtZMMxfLqoxyQYnWO8dgcz2qIzQNysCpwOekz8kqLvzrZ0dcaL9hejZ+2AszCA==
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.3.0.tgz#c91b2cf99bacff7cc520819673b660f138d5647b"
+  integrity sha512-BPYQfFy0QTIibncavBZWTnHn1SpJzq1f+2u6qPN6SnoaTwKNV5U/PKhgddcmGdPZuPnXXw41AYi0u8BqOkbEbA==
 
 when-exit@^2.1.4:
   version "2.1.5"
