@@ -1726,9 +1726,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/finance@>=1.1.0":
-  version "9.1.1099000000000745"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/finance/-/finance-9.1.1099000000000745.tgz#035fca5f8abcf6a9e573e9244dbaa55f6e0badad"
-  integrity sha512-sRHl8LzihR/dMR1SFKepWiKAL2ihgZExtXXbctQL7A7+ePqxQnUhmmDrpVkAZS/n4iSU1NUNMv1YGk9lXdth1Q==
+  version "9.1.1099000000000750"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/finance/-/finance-9.1.1099000000000750.tgz#736daad8bf2ba2ae0e4404b926bb6514a396fba1"
+  integrity sha512-pMf5Zgk3gq80Hp/X9JL+S435GVeaJwZ4DgJV0t/0BI0lT57d/S6d8Gbrt362/IrQ6w4qviTMwlU4QO1K0Um7Mw==
   dependencies:
     "@folio/stripes-acq-components" "~7.2.0"
     "@folio/stripes-data-transfer-components" "~7.1.0"
@@ -1865,9 +1865,9 @@
     prop-types "^15.6.0"
 
 "@folio/ldp@>=1.1.0":
-  version "3.3.1099000000000360"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/ldp/-/ldp-3.3.1099000000000360.tgz#4f29edf076b75aea0fdc9c1cc30ce2f1157a28ac"
-  integrity sha512-FM56v3/geKzSWiFzWWJ88T+2nTBlcaMkc2PTKDfeaY8WyFCtJR+ghZZhCDisD2aKuMGa4CGnwA5LzYqsf7+Idw==
+  version "3.3.1099000000000363"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/ldp/-/ldp-3.3.1099000000000363.tgz#dc267bfa447714385ba1449689efd6d1dd111403"
+  integrity sha512-QftTOOffCmsHcy4ztG7qpiHiOxvWQun6CeWdgSrkp0T/kekZJgUntN1QI6FxQLlEpi6PEZux4E2CScY/JMV9iQ==
   dependencies:
     "@e965/xlsx" "^0.20.2"
     chart.js "^2.9.3"
@@ -4041,9 +4041,9 @@
   integrity sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==
 
 "@types/node@*":
-  version "26.6.6"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-26.6.6.tgz#9ed7b5817e728ed9216ef7c5b7d373fe3b777104"
-  integrity sha512-MzQj+8Kx3XI40OmUAE6Qoh58ZMNstNNMwn2nfd3qWsfe7nDNSqJNzes4njhz6AHwrSHOffSLwXU6yb474Q4aog==
+  version "26.6.7"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-26.6.7.tgz#882494202d3e60d3b83829bc4f9be7039458874a"
+  integrity sha512-tovuRfrUILu6v46bMG+BgXxMvsqPBx2WO2as8Rpln+JTff1dbexMtAM4KFTejmL0axsnSWViCW7MecUQpLuBRA==
   dependencies:
     undici-types "~8.9.0"
 
@@ -4117,9 +4117,9 @@
   integrity sha512-8TV6R3h2j7a91c+1DXdJi3Syo69zzIZbz7Lg5tORM5LEJG7X/E6a1V3drRyBRZq7/utz7A+c4OgYLiLcYGHG6w==
 
 "@types/react@*", "@types/react@16 || 17 || 18 || 19", "@types/react@^18.3.14":
-  version "18.3.31"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.3.31.tgz#b5e95e28ffcceab8d982f33f2eb076e17653c2a4"
-  integrity sha512-vfEqpXTvwT91yhmwdfouStN2hSKwTvyRs8qpLfADyrq/kxDw0hZM7Wk9Ug1FELj8hIby+S/+kQCSRFF32nv2Qw==
+  version "18.3.32"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.3.32.tgz#354289c02f52b1fe03c1c38c73af42a426b8c2b1"
+  integrity sha512-hKTeN+STHjfr2eS1uLImPsGpmIQD5SD8DUTQ+14zSne5CTwRpYh25ggOKG/pFIs2r0JmNYrSv4ZqIL07ipSvOA==
   dependencies:
     "@types/prop-types" "*"
     csstype "^3.2.2"
@@ -5499,9 +5499,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.486:
-  version "1.5.493"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.493.tgz#4ef245924d84e294e2b34e052f10ed18afef1870"
-  integrity sha512-/Wto2sKd0EpepzMqwSP2il2TNc+rnBDF6k1poCvhRKpaSSD4sLGRBE+FydqHs2QwcW9cXKLVDqnauzJy1oByYw==
+  version "1.5.494"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.494.tgz#395edb7b233beebe025db41cbf7a1194beb28ea3"
+  integrity sha512-Tph7ohL4Xc0ft3DXElYEIVTmPI3H0MtPCTdgtz5AwWGZG6q+vMiT3IzJ3RJX/HJQ8pYzeimQyvi6SsBTOS0nyQ==
 
 emoji-regex@^10.3.0:
   version "10.6.0"
@@ -8299,11 +8299,11 @@ react-router-dom@^5.2.0:
     tiny-warning "^1.0.0"
 
 react-router-dom@^7.18.6:
-  version "7.18.6"
-  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-7.18.6.tgz#f924708031845e12158c5c63302dc644b3ede88e"
-  integrity sha512-a8JzFsKEY3EY9QL7t4T1b1OhuY0ngEfwMzXQNgBO/2cuIW9028JbVq3uk2rKnjLredzcIoDKLzUkguIq6fnkFA==
+  version "7.18.7"
+  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-7.18.7.tgz#d3b95d5387b0563c8f602c5b63f2c0366b58fdfc"
+  integrity sha512-EBWBKV1TjvScebAIvidowN0Bfh9Bg7p54IDBRVJkFXz0wBKTBblDNLxUvCewx/GdzTiC7VWV/MOjWqsLWEMygA==
   dependencies:
-    react-router "7.18.6"
+    react-router "7.18.7"
 
 react-router-prop-types@^1.0.4, react-router-prop-types@^1.0.5:
   version "1.0.5"
@@ -8328,10 +8328,10 @@ react-router@5.3.4, react-router@^5.2.0:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
-react-router@7.18.6:
-  version "7.18.6"
-  resolved "https://registry.yarnpkg.com/react-router/-/react-router-7.18.6.tgz#b769c92ec74a89e20b57b40725175d74038880a2"
-  integrity sha512-SP8KqKfRLlJzqzPseC+r6yYFsqPEavtQCC4BKV810tBGijjESLtwVPam+gPOO+wYeXrYN/TNy2CAykQVcNg4iQ==
+react-router@7.18.7:
+  version "7.18.7"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-7.18.7.tgz#cd05e26d2e1797057c79108a55dff1b4edcc81cb"
+  integrity sha512-nXl672FFobymVY/Ywbo0DnlXV/+VXOB5pOslCeuVqoegwwL7sau2yASdyGoWHvPRxAoqUBrAiFZRdli4nT7Wow==
   dependencies:
     cookie "^1.0.1"
     set-cookie-parser "^2.6.0"
