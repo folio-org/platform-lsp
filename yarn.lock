@@ -2820,10 +2820,10 @@
     "@folio/stripes-util" "~7.2.0"
     redux "^4.2.1"
 
-"@folio/tags@10.0.0":
-  version "10.0.0"
-  resolved "https://repository.folio.org/repository/npm-folio/@folio/tags/-/tags-10.0.0.tgz#c5e971eacd117704442331986bede1a7289a4ec2"
-  integrity sha512-8FkLf8KO6yauMpPYQSabq1uGo8JYkwTd1xG2+s56KE9TghJfb4pAzKXAlUFDGsSxepDPGdUVtK49Dg4WjUkR5A==
+"@folio/tags@10.0.1":
+  version "10.0.1"
+  resolved "https://repository.folio.org/repository/npm-folio/@folio/tags/-/tags-10.0.1.tgz#ec4a2f70faf17585d948e4912dff55d5e5a3128b"
+  integrity sha512-ba5sK7N/HvpfTnT7HjEfzU3AnFVZcV/7xu8v7xwBwpw7hRVSMKJ9UroP0sPSZ7DG/Sh/M6R9PJSKSewIarqj+g==
   dependencies:
     prop-types "^15.5.10"
     redux-form "^8.3.7"
