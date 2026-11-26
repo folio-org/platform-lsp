@@ -1786,9 +1786,9 @@
     "@folio/plugin-find-user" "^8.1.0"
 
 "@folio/inventory-import@>=4.0.0":
-  version "4.1.2099000000000290"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory-import/-/inventory-import-4.1.2099000000000290.tgz#3ecc7cb83013a67acb7217dce7b9bb22b7970a65"
-  integrity sha512-WmGKU5d7BoVqEQbE5IDTDrOvFcB/iiLEBweI3gDXAqJ8O7L7KGj2BxPRsVE+wOOvIWDMD5AdIwAyCx19aiQRdA==
+  version "4.1.2099000000000293"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/inventory-import/-/inventory-import-4.1.2099000000000293.tgz#f1379f0d007a780a44d91b492dadcb854e0c610a"
+  integrity sha512-wQNUWT9TrZKPX8mRkuUbRxaEjeCB2nGauRv2Dj73nHDU8DDMeuSLJC7xZGIP+/g6U6Hbci3K/ehWvLjWeOX0hg==
   dependencies:
     "@folio/stripes-data-transfer-components" "^7.0.0"
     final-form-arrays "^3.0.2"
@@ -2031,9 +2031,9 @@
     react-router-prop-types "^1.0.4"
 
 "@folio/orders@>=1.1.0":
-  version "10.0.1099000000001223"
-  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-10.0.1099000000001223.tgz#86f9e54835548c502ca78b35b627763d2003f893"
-  integrity sha512-++3bi0jxU12mvgObUWuk3OC4VwswoK1EtdPGuXbf3XGshv6/J+DElKBbOOi5dBCM/JyBWE0hnYzXbT3MTzAOzw==
+  version "10.0.1099000000001230"
+  resolved "https://repository.folio.org/repository/npm-folioci/@folio/orders/-/orders-10.0.1099000000001230.tgz#311850d61c26888d0c6892b2455c7d94cbea320b"
+  integrity sha512-QaXIbfiDaZ83ggyA/+STUlcR/VWvoQS4QtHcHxBLWqwgKIaHXooo9fBwKD9Wk4+m1iIdp5eYzXBYOiQbD5Ftow==
   dependencies:
     "@folio/plugin-find-po-line" "^7.0.0"
     "@folio/stripes-acq-components" "~7.2.0"
@@ -4585,9 +4585,9 @@ base64-js@^1.3.1:
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
 
 baseline-browser-mapping@^2.11.37:
-  version "2.11.39"
-  resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.11.39.tgz#4e99c4845e0c2100b6b1ef189bce3643d11e604e"
-  integrity sha512-Q9buOYhr2ggrEZpImICecZTJHCCd8yXkRUokFlUEQ8uiD6oP82F4W4jWnhOHZYV+wlvrC51V7Wy0ULyWjil5Wg==
+  version "2.11.40"
+  resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.11.40.tgz#a7ca6570664b554a87e62572e39b45b9623d1206"
+  integrity sha512-WJhaQ3kW5+5BpOduI64ewvykhCyK/IHHG5jCIzivmW2nkYPRowUjs0DbBXY4CAr1LLrN7QEzZGL9727aXH9sJA==
 
 batch@0.6.1:
   version "0.6.1"
@@ -5499,9 +5499,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.486:
-  version "1.5.494"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.494.tgz#395edb7b233beebe025db41cbf7a1194beb28ea3"
-  integrity sha512-Tph7ohL4Xc0ft3DXElYEIVTmPI3H0MtPCTdgtz5AwWGZG6q+vMiT3IzJ3RJX/HJQ8pYzeimQyvi6SsBTOS0nyQ==
+  version "1.5.495"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.495.tgz#4a89f4ce124303d5e0fcedbf75653ebb98195010"
+  integrity sha512-dZcmtNbDI5oeT9uP9Z+D7h/H5C1mvBewDTLgZgo9WgyPmqOXSt2cmoCK99evPygUOn9lyXZ4w0Eb8APrkBjqBA==
 
 emoji-regex@^10.3.0:
   version "10.6.0"
@@ -9070,9 +9070,9 @@ string-width@^8.2.1:
     strip-ansi "^7.1.2"
 
 string_decoder@^1.1.1:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/string_decoder/-/string_decoder-1.3.0.tgz#42f114594a46cf1a8e30b0a84f56c78c3edac21e"
-  integrity sha512-hkRX8U1WjJFd8LsDJ2yQ/wWWxaopEsABU1XfkM8A+j0+85JAGppt16cr1Whg6KIbb4okU6Mql6BOj+uup/wKeA==
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/string_decoder/-/string_decoder-1.4.0.tgz#aaddaac5179c6cf72f840d82d01862ea1d57f5c4"
+  integrity sha512-r8azg21Y67ckRmeG0hHol5CeDXMs4ZFkFT6eXMO39hX7khvJcopBcYTCeWZ0rQXkMoPh8lVdbjmsOMGL8krxRQ==
   dependencies:
     safe-buffer "~5.2.0"
 
@@ -9723,9 +9723,9 @@ webpack@^5.112.2, webpack@~5.109:
     webpack-sources "^3.5.1"
 
 websocket-driver@>=0.5.1:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/websocket-driver/-/websocket-driver-0.8.0.tgz#6701084cbf675d1d052bee12e5a7bdfa10dbb3f6"
-  integrity sha512-upjjWCo/1ZysdZ3rMvXXUDk9PmbYne+wSD1t78HAvIvjmR+avda0MsLWhtkn5PW8Ht34EXhhWF6OseWJ8nTGlg==
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/websocket-driver/-/websocket-driver-0.8.1.tgz#8f0032e8bed906f190a31ae13ecc68bc4b669073"
+  integrity sha512-Pp2Dio/XE6xCI5if9noFTRpnFsHI6g/bC2IPzKWWtjHodk9v8v8xOHE/XQl64fLiNuJlDSK7gsFdVB+W08Z7Zw==
   dependencies:
     http-parser-js ">=0.5.1"
     safe-buffer ">=5.1.0"
