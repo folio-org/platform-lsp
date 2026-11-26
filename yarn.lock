@@ -4041,9 +4041,9 @@
   integrity sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==
 
 "@types/node@*":
-  version "26.6.10"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-26.6.10.tgz#fddc9af08f561789c54e49bc6785177cf516c6a2"
-  integrity sha512-WJuPHoGB8WNQuTksNF7SOQpnH02PXeDYz4iueWbBT6/hTWnShY5F3T/hoJA3fY9+uYReDZ7pyTKKx83jQa7aGg==
+  version "26.6.11"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-26.6.11.tgz#17799a1ddc1edfc99222a906a0952b3c9be8794a"
+  integrity sha512-uUyQ2XLEz+EXh34lmS3GhKrkqn/8FU7KUiKRpk347At2bmnMVWss45yz8b4FG/tUtmV1tV/+TVkITItPROyeeQ==
   dependencies:
     undici-types "~8.9.0"
 
@@ -8181,9 +8181,9 @@ react-intl-formatted-duration@^4.0.0:
     intl-unofficial-duration-unit-format "3.0.0"
 
 react-intl@^12.2.0:
-  version "12.2.1"
-  resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-12.2.1.tgz#aaf2cfe00aceedaea7853083d948f24232c5aac3"
-  integrity sha512-RAvv36BaFDw/4HAUDmTBStvdfrKxmg0UOMv3ojeB4qPBs7tXbv8qeSThKrpe3MeSaRijJtUeZK9SP/WBcFoKDg==
+  version "12.2.2"
+  resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-12.2.2.tgz#cc2c08209a7977113f8f4d42d0662485c742fe18"
+  integrity sha512-98Cf56W6JvChOHLdqgPi5PenkptaBh364rDbt/bUAHSAdFTVTrwvYYyVUvAxI0IoHTFwtQgHhMuMoYYY7LRdRg==
   dependencies:
     "@formatjs/icu-messageformat-parser" "3.5.23"
     "@formatjs/intl" "6.2.1"
