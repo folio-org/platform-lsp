@@ -9792,9 +9792,9 @@ xdg-basedir@^5.1.0:
   integrity sha512-GCPAHLvrIH13+c0SuacwvRYj2SxJXQ4kaVTT5xgL3kPrz56XxkF21IGhjSE1+W0aw7gpBWRGXLCPnPby6lSpmQ==
 
 xml-naming@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/xml-naming/-/xml-naming-0.3.0.tgz#46c1e18bfe2858479982dd2accf34d16e749eda2"
-  integrity sha512-ghig2TBE/H11aOVgmahA3MhimvkBr6JIYknH/Dhdk10nXwdbIqBJsbfMxpvFPG8bAw77gN29aQWvKpmVoPlvPQ==
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/xml-naming/-/xml-naming-0.3.1.tgz#e6efc5a78844b95bad49132bd5d8a7d1e639e51a"
+  integrity sha512-EJ9yNAfjrIz2z7chbVlj4CD3HkPxXNPD6U6LzhKEfIFlRmEHtl7CN6C0qdPGL4hplTuj2wePPgIZN8aklE/2Og==
 
 xtend@^4.0.2:
   version "4.0.2"
