@@ -1,11 +1,11 @@
 {
   "name": "FOLIO LSP",
   "description": "FOLIO LSP (Library Services Platform) is a set of microservices and applications that provide a complete library management system.",
-  "version": "R1-2027-SNAPSHOT.100200000003491",
+  "version": "R1-2027-SNAPSHOT.100200000003515",
   "eureka-components": [
     {
       "name": "folio-kong",
-      "version": "3.10.0-SNAPSHOT.42"
+      "version": "3.10.0-SNAPSHOT.45"
     },
     {
       "name": "folio-apisix",
@@ -13,40 +13,40 @@
     },
     {
       "name": "folio-keycloak",
-      "version": "26.9.0-SNAPSHOT.137"
+      "version": "26.9.0-SNAPSHOT.139"
     },
     {
       "name": "folio-module-sidecar",
-      "version": "4.1.0-SNAPSHOT.2488"
+      "version": "4.1.0-SNAPSHOT.2517"
     },
     {
       "name": "mgr-applications",
-      "version": "4.1.0-SNAPSHOT.2489"
+      "version": "4.1.0-SNAPSHOT.2499"
     },
     {
       "name": "mgr-tenants",
-      "version": "4.1.0-SNAPSHOT.2275"
+      "version": "4.1.0-SNAPSHOT.2281"
     },
     {
       "name": "mgr-tenant-entitlements",
-      "version": "4.1.0-SNAPSHOT.2622"
+      "version": "4.1.0-SNAPSHOT.2698"
     }
   ],
   "applications": {
     "required": [
       {
         "name": "app-platform-minimal",
-        "version": "2.2.0-SNAPSHOT.100200000012066"
+        "version": "2.2.0-SNAPSHOT.100200000012083"
       },
       {
         "name": "app-platform-complete",
-        "version": "3.4.0-SNAPSHOT.100200000011399"
+        "version": "3.4.0-SNAPSHOT.100200000011418"
       }
     ],
     "optional": [
       {
         "name": "app-acquisitions",
-        "version": "2.1.0-SNAPSHOT.100200000012615"
+        "version": "2.1.0-SNAPSHOT.100200000012644"
       },
       {
         "name": "app-agreements",
@@ -54,15 +54,15 @@
       },
       {
         "name": "app-authority-records",
-        "version": "1.1.0-SNAPSHOT.100200000007633"
+        "version": "1.1.0-SNAPSHOT.100200000007656"
       },
       {
         "name": "app-bulk-edit",
-        "version": "2.1.0-SNAPSHOT.100200000012064"
+        "version": "2.1.0-SNAPSHOT.100200000012071"
       },
       {
         "name": "app-consortia",
-        "version": "1.5.0-SNAPSHOT.100200000012871"
+        "version": "1.5.0-SNAPSHOT.100200000012897"
       },
       {
         "name": "app-consortia-manager",
@@ -78,7 +78,7 @@
       },
       {
         "name": "app-data-import",
-        "version": "1.1.0-SNAPSHOT.100200000004203"
+        "version": "1.1.0-SNAPSHOT.100200000004227"
       },
       {
         "name": "app-dcb",
@@ -90,19 +90,19 @@
       },
       {
         "name": "app-edge-complete",
-        "version": "2.3.0-SNAPSHOT.100200000011221"
+        "version": "2.3.0-SNAPSHOT.100200000011246"
       },
       {
         "name": "app-eholdings",
-        "version": "1.1.0-SNAPSHOT.100200000012714"
+        "version": "1.1.0-SNAPSHOT.100200000012732"
       },
       {
         "name": "app-erm-usage",
-        "version": "3.1.0-SNAPSHOT.100200000012399"
+        "version": "3.1.0-SNAPSHOT.100200000012426"
       },
       {
         "name": "app-fqm",
-        "version": "2.1.0-SNAPSHOT.100200000012564"
+        "version": "2.1.0-SNAPSHOT.100200000012580"
       },
       {
         "name": "app-gobi",
@@ -114,27 +114,27 @@
       },
       {
         "name": "app-inventory",
-        "version": "1.1.0-SNAPSHOT.100200000005303"
+        "version": "1.1.0-SNAPSHOT.100200000005328"
       },
       {
         "name": "app-licenses",
-        "version": "1.1.0-SNAPSHOT.100200000011953"
+        "version": "1.1.0-SNAPSHOT.100200000011978"
       },
       {
         "name": "app-linked-data",
-        "version": "2.1.0-SNAPSHOT.100200000012602"
+        "version": "2.1.0-SNAPSHOT.100200000012652"
       },
       {
         "name": "app-lists",
-        "version": "1.2.0-SNAPSHOT.100200000012596"
+        "version": "1.2.0-SNAPSHOT.100200000012613"
       },
       {
         "name": "app-marc-migrations",
-        "version": "3.1.0-SNAPSHOT.100200000011825"
+        "version": "3.1.0-SNAPSHOT.100200000011848"
       },
       {
         "name": "app-marc-storage",
-        "version": "1.1.0-SNAPSHOT.100200000010885"
+        "version": "1.1.0-SNAPSHOT.100200000010903"
       },
       {
         "name": "app-mosaic",
@@ -158,15 +158,15 @@
       },
       {
         "name": "app-reading-room",
-        "version": "3.1.0-SNAPSHOT.100200000010933"
+        "version": "3.1.0-SNAPSHOT.100200000011943"
       },
       {
         "name": "app-reporting",
-        "version": "1.6.0-SNAPSHOT.100200000012147"
+        "version": "1.6.0-SNAPSHOT.100200000012172"
       },
       {
         "name": "app-requests-ecs",
-        "version": "2.1.0-SNAPSHOT.100200000011874"
+        "version": "2.1.0-SNAPSHOT.100200000011914"
       },
       {
         "name": "app-requests-mediated",
@@ -182,7 +182,7 @@
       },
       {
         "name": "app-search",
-        "version": "1.1.0-SNAPSHOT.100200000012424"
+        "version": "1.1.0-SNAPSHOT.100200000012444"
       },
       {
         "name": "app-service-interaction",
@@ -196,11 +196,11 @@
     "experimental": [
       {
         "name": "app-finc",
-        "version": "1.1.0-SNAPSHOT.100200000011743"
+        "version": "1.1.0-SNAPSHOT.100200000011765"
       },
       {
         "name": "app-rtac-cache",
-        "version": "1.1.0-SNAPSHOT.100200000008131"
+        "version": "1.1.0-SNAPSHOT.100200000008183"
       }
     ]
   },
